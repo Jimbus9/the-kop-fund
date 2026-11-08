@@ -1,0 +1,14 @@
+{
+  "name": "crowdlock-relay-inbox",
+  "private": true,
+  "type": "module",
+  "description": "Collects Crowdlock registrations and locks posted to Nostr relays and adds the valid ones to the register.",
+  "scripts": {
+    "test": "node inbox.test.mjs",
+    "inbox": "node inbox.mjs",
+    "selftest": "node selftest.mjs"
+  },
+  "dependencies": {
+    "nostr-tools": "2.25.2"
+  }
+}

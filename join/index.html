@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Join — The Kop Fund</title>
+<meta name="description" content="Sign the Supporters' Declaration and become a member. It costs nothing, moves no money, and takes about five minutes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="../style.css">
+<style>
+  /* A step number in a heading, so a reader can see where they are without
+     counting headings themselves. */
+  h2 .num {
+    display: inline-grid; place-items: center;
+    width: 30px; height: 30px; margin-right: 10px;
+    background: var(--accent); color: var(--accent-ink);
+    font-size: 16px; vertical-align: 2px;
+  }
+  /* The plan at the top: the same five steps, before they begin. */
+  .plan { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 7px; }
+  .plan li { font-size: 16px; }
+
+  /* The wallet picker and the live verdict are specific to this page. */
+  .wallets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .wallets button {
+    font-family: var(--display); font-size: 13px; letter-spacing: .06em;
+    text-transform: uppercase; padding: 9px 14px; cursor: pointer;
+    background: var(--surface); color: var(--muted);
+    border: 1px solid var(--line); border-radius: 0;
+  }
+  .wallets button:hover { color: var(--fg); }
+  .wallets button[aria-pressed="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .howto { margin-top: 18px; }
+  .howto ol { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; }
+  .howto li { padding-left: 2px; }
+  .howto .menu { font-family: var(--mono); font-size: .92em; background: var(--surface-2); padding: 1px 5px; }
+  textarea, input[type=text] {
+    width: 100%; font-family: var(--mono); font-size: 14px;
+    background: var(--surface); color: var(--fg);
+    border: 1px solid var(--line); padding: 11px 12px; margin-top: 6px;
+  }
+  textarea { min-height: 86px; resize: vertical; }
+  label b { font-family: var(--display); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; }
+  .field + .field { margin-top: 16px; }
+  .verdict-live { margin-top: 18px; padding: 16px 18px; border: 1px solid var(--line); background: var(--surface); }
+  .verdict-live.ok { border-color: #1a7f45; }
+  .verdict-live.bad { border-color: var(--accent); }
+  .verdict-live b { font-family: var(--display); font-size: 15px; letter-spacing: .06em; text-transform: uppercase; }
+  .verdict-live.ok b { color: #1a7f45; }
+  .verdict-live.bad b { color: var(--accent); }
+  .verdict-live p { margin: 6px 0 0; font-size: 15px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="bleed disclaimer"><div class="inner">An independent supporters' initiative. Not affiliated with, endorsed by, or connected to Liverpool Football Club.</div></div>
+<nav class="bleed"><div class="inner">
+  <a href="../">The declaration</a>
+  <a href="../why/">Why</a>
+  <a href="../how/">How it works</a>
+  <a href="../society/">The society</a>
+  <a href="./" aria-current="page">Join</a>
+  <a href="../register/">The register</a>
+  <a href="../risk/">Risks</a>
+  <a href="../spec/">The documents</a>
+</div></nav>
+
+<main class="inner">
+
+  <header class="page">
+    <span class="eyebrow">Five minutes, no money</span>
+    <h1>Join</h1>
+    <p class="lede">Joining means signing one line of text with a bitcoin wallet. It costs nothing, moves nothing, and commits you to no payment ever. Putting money behind it is a separate decision, taken later or never.</p>
+    <p class="note" id="openInApp" hidden>Have the Crowdlock app? <a id="openInAppLink" href="#">Open this Crowdlock in it</a> and sign there in one tap.</p>
+  </header>
+
+  <section>
+    <h2>What you are putting your name to</h2>
+    <p>You are signing the <a href="../">Supporters' Declaration</a> — read it first if you have not. In short: supporters buying a stake in Liverpool Football Club, with nobody ever holding anybody else's money, and nothing ever paid out to any member.</p>
+    <p>You are not sending money, and you are not promising to. Signing is free and binds you to no payment, ever.</p>
+    <p class="note" id="paramStatus">Loading this Crowdlock's details…</p>
+  </section>
+
+  <section>
+    <h2>What is about to happen</h2>
+    <p>Five steps, and the whole thing takes about five minutes. Nothing leaves your device until the last one.</p>
+    <ol class="plan">
+      <li><b>Get a bitcoin wallet</b> — skip this if you already have one.</li>
+      <li><b>Copy one line of text</b> from this page.</li>
+      <li><b>Sign that line in your wallet.</b> This is a built-in feature called "sign message". It is not a payment.</li>
+      <li><b>Paste the result back here.</b> Your own browser checks it and tells you straight away whether it worked.</li>
+      <li><b>Press the button</b> to go on the register.</li>
+    </ol>
+    <p class="note">If you get stuck at any step, nothing is lost and nothing has been sent. Close the page and come back.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">1</span> Get a wallet, if you have not got one</h2>
+    <p>A bitcoin wallet is an app that holds your keys. You need one you control yourself — <strong>an account at an exchange will not work</strong>, because the exchange holds the keys rather than you, and most will not sign a message at all.</p>
+    <p>You do not need to put any money in it. A brand new, empty wallet signs just as well as one holding a fortune.</p>
+    <div class="stack">
+      <div class="card">
+        <b class="head">On a computer: Sparrow</b>
+        <p>Free, open source, and the one these instructions know best. Download it from <span class="mono">sparrowwallet.com</span>. When it asks, choose a <b>Native Segwit</b> wallet — that gives you an address starting <code>bc1q</code>, which is what the register accepts.</p>
+      </div>
+      <div class="card">
+        <b class="head">On a phone: BlueWallet</b>
+        <p>From your app store. Make a new wallet and it will be the right type by default.</p>
+      </div>
+      <div class="card">
+        <b class="head">If you may put money behind this: a hardware wallet</b>
+        <p>A small dedicated device — a Ledger or a Trezor, usually somewhere around £50 to £80 or the local equivalent — that keeps the key off your computer entirely. It is the right place for a key that will one day own locked money, and it signs this statement just as well as anything else.</p>
+        <p>You do not need one to join, and buying one is not a condition of anything. But it is worth knowing now rather than later, for the reason below.</p>
+      </div>
+    </div>
+    <p class="note"><strong>Worth ten seconds of thought before you pick, because this choice is stickier than it looks.</strong> The key you sign with is the key that would own your locks if you ever commit money. So use a wallet you mean to keep and have written the recovery words down for — not one you will wipe next month, and not a throwaway you would later want to move off. You can always register a second address later, but you would be a second member rather than the one you started as. Nobody loses anything by that; it is just tidier to start where you intend to stay.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">2</span> Copy the statement</h2>
+    <p>This is the line you will sign. It carries the declaration's fingerprint, which is what stops anyone ever claiming you agreed to different words — your signature only matches this exact document.</p>
+
+    <div class="block" id="statement">…</div>
+    <button class="btn" id="copyBtn" type="button">Copy the statement</button>
+    <p class="note">Use the button rather than retyping it. One wrong character anywhere and the signature will not verify.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">3</span> Sign it in your wallet</h2>
+    <p>Signing a message is not a transaction. It never touches the blockchain, costs no fee, and works on a wallet that has never held a penny. All it proves is that you hold the key.</p>
+    <p>Every wallet puts it in a different menu, so pick yours and the exact clicks appear below.</p>
+
+    <p><strong>Which wallet are you using?</strong></p>
+    <div class="wallets" id="wallets"></div>
+    <div class="howto" id="howto"></div>
+
+    <p class="note" style="margin-top:18px">Your wallet will give you back two things: <b>the address</b> you signed with, and <b>the signature</b> — a long scramble of letters and numbers, usually ending in <code>=</code>. Keep both. You need them for the next step.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">4</span> Paste it back here</h2>
+    <p>This page checks the signature on your own device. Nothing is sent anywhere, and nothing is recorded, until you press the button in step 5.</p>
+
+    <div class="field">
+      <label for="addr"><b>Your address</b></label>
+      <input type="text" id="addr" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="bc1q…">
+    </div>
+    <div class="field">
+      <label for="sig"><b>The signature</b></label>
+      <textarea id="sig" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="A long scramble of letters and numbers, usually ending in =" aria-describedby="verdict"></textarea>
+    </div>
+
+    <div class="verdict-live" id="verdict" role="status" aria-live="polite">
+      <b>Waiting</b>
+      <p>Fill both boxes and this will tell you straight away.</p>
+    </div>
+  </section>
+
+  <section id="submitSection" hidden>
+    <h2><span class="num">5</span> Join the register</h2>
+    <p>This is your entire membership record. No name, no email, no account — these two fields are the whole thing.</p>
+    <pre id="record"></pre>
+    <button class="btn" id="copyRecord" type="button">Copy my registration</button>
+    <div class="card">
+      <b class="head">Join now</b>
+      <p>One button. Your record is sent to the register, where the signature is checked again before anything is written.</p>
+      <button class="btn" id="joinNow" type="button">Add me to the register</button>
+      <div class="verdict-live" id="joinResult" role="status" aria-live="polite" hidden></div>
+    </div>
+
+    <p>That is the quick way. It is not the only way, and the two below count exactly the same — a signature cannot be forged, so it needs nobody's permission to pass on. If the button above is broken, or you would simply rather not route it through us, use one of these and you lose nothing:</p>
+    <div class="stack">
+      <div class="card">
+        <b class="head">Open a pull request</b>
+        <p>Add your record to <span class="mono">registrations.json</span> in <a href="https://github.com/Jimbus9/the-kop-fund">the repository</a>. Needs a GitHub account.</p>
+      </div>
+      <div class="card">
+        <b class="head">Hand it to anybody who will publish it</b>
+        <p>A signature cannot be forged and needs nobody's permission to pass on. Post it anywhere, give it to a friend who uses GitHub, or send it to whoever is collecting. Nobody you pass it through can alter it without breaking it — that part is cryptography. What is <em>not</em> yet true is that no operator can keep you out: today there is one published register, merged by one person. Anyone can run their own, and until somebody does, that is a fact worth knowing rather than a promise we can make.</p>
+      </div>
+    </div>
+    <p class="note">Your number is assigned in the order signatures arrive, and it is a record of arrival and nothing more. It carries no weight, no priority and no privilege.</p>
+  </section>
+
+  <section>
+    <h2>Before you put money behind it</h2>
+    <p>Signing is free and commits you to nothing. Committing money is the decision with consequences, and <a href="../risk/">the risks page</a> is short, specific and not reassuring. Read it before, not after.</p>
+    <p><strong>You will need bitcoin you already hold, or time to get some.</strong> Locking means sending bitcoin out of your own wallet, so it has to be in there first. Buying it for the first time is not instant anywhere: expect to prove who you are, wait on a bank transfer, and in some countries wait again before anything can be moved out of the account. <strong>How long depends entirely on where you live and who you buy from</strong> — it can be an afternoon, it can be a week. That is their process, not ours, and nothing on this page can shorten it.</p>
+    <p>So if you are starting from nothing: <strong>sign now, sort the money out in your own time.</strong> The two steps are deliberately separate and there is no deadline on the second. Nobody is counted as having contributed until their money is locked, and nobody is chased.</p>
+  </section>
+
+</main>
+
+<footer class="inner">
+  <p><strong>This is not an investment.</strong> There is no return, no dividend and no payout, now or ever. Nothing here is legal or financial advice.</p>
+  <p>An independent initiative by supporters of Liverpool Football Club. Not affiliated with, endorsed by or connected to Liverpool Football Club, its owners, or any official supporters' organisation.</p>
+  <p><a href="https://github.com/Jimbus9/the-kop-fund/issues">Questions and corrections</a> · <a href="https://github.com/Jimbus9/the-kop-fund">Source and documents on GitHub</a></p>
+</footer>
+
+<!-- nostr-tools 2.25.2, the standard Nostr library (public domain), as its own
+     ready-built browser file: it signs the message that carries a registration
+     to the relays, so this page writes none of that itself. -->
+<script src="../js/vendor/nostr-tools-2.25.2.bundle.js"></script>
+<script type="module">
+import { verifyMembership } from "../js/verify.mjs";
+import { membershipStatement } from "../js/crowdlock.mjs";
+import { recordEventTemplate } from "../js/inbox.mjs";
+
+const el = (id) => document.getElementById(id);
+
+// ---------------------------------------------------------------------------
+// Wallet-specific instructions.
+//
+// "Every wallet has a sign message option" is true and useless. It cost the
+// author of this project an entire evening. Each entry says where the thing
+// actually is, and what to watch for.
+// ---------------------------------------------------------------------------
+
+const WALLETS = [
+  {
+    id: "sparrow", name: "Sparrow",
+    steps: [
+      'Open the wallet you want to sign with, then <span class="menu">Tools → Sign/Verify Message</span>.',
+      'Go to the <span class="menu">Addresses</span> tab and copy one of your receive addresses. It should start <span class="menu">bc1q</span>.',
+      "Paste that address into the address box, and the statement above into the message box.",
+      'Click <span class="menu">Sign</span>. The signature appears in the box underneath.',
+    ],
+  },
+  {
+    id: "ledger", name: "Ledger",
+    note: "Ledger Live cannot sign messages at all, so you drive the device through Sparrow. Confirmed on a Nano X — this is how the first signature on the register was made. If Sparrow ever refuses, Electrum is the documented fallback.",
+    steps: [
+      "Install Sparrow, plug the Ledger in and unlock it with the Bitcoin app open.",
+      'In Sparrow: <span class="menu">File → New Wallet</span>, name it, then <span class="menu">Import Keystore</span> → <span class="menu">Native Segwit (P2WPKH)</span>.',
+      'That imports the <em>public</em> key only. Nothing private ever leaves the device.',
+      '<span class="menu">Tools → Sign/Verify Message</span>, paste an address of that wallet and the statement, then <span class="menu">Sign</span>.',
+      "Confirm on the Ledger itself — it will ask.",
+    ],
+  },
+  {
+    id: "trezor", name: "Trezor",
+    steps: [
+      "Open Trezor Suite with the device connected.",
+      'Pick your Bitcoin account, then <span class="menu">Sign &amp; Verify</span>.',
+      "Choose a native segwit address, paste the statement, and sign.",
+      "Confirm on the device.",
+    ],
+  },
+  {
+    id: "electrum", name: "Electrum",
+    steps: [
+      'Go to the <span class="menu">Addresses</span> tab. If you cannot see it, turn it on under <span class="menu">View → Show Addresses</span>.',
+      "Right-click a receive address → <span class=\"menu\">Sign/verify message</span>.",
+      "Paste the statement into the message box and click Sign.",
+    ],
+  },
+  {
+    id: "bluewallet", name: "BlueWallet",
+    note: "The easiest route if you are on a phone.",
+    steps: [
+      "Open your wallet, then the menu in the top right.",
+      '<span class="menu">Sign/Verify message</span>.',
+      "Pick an address, paste the statement, sign.",
+    ],
+  },
+  {
+    id: "other", name: "Something else",
+    steps: [
+      'Look for "Sign message", "Sign/Verify" or "Message signing" — usually under a Tools, Settings or address menu.',
+      "Use a native segwit address, the kind beginning bc1q.",
+      "If your wallet has no such option, it cannot be used to join. Most that cannot are exchange accounts, which are not really your wallet anyway.",
+    ],
+  },
+];
+
+function drawWallets() {
+  el("wallets").innerHTML = WALLETS.map((w) =>
+    `<button type="button" data-id="${w.id}" aria-pressed="false">${w.name}</button>`).join("");
+  el("wallets").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-id]");
+    if (!b) return;
+    for (const other of el("wallets").querySelectorAll("button")) {
+      other.setAttribute("aria-pressed", String(other === b));
+    }
+    const w = WALLETS.find((x) => x.id === b.dataset.id);
+    el("howto").innerHTML =
+      (w.note ? `<p class="note">${w.note}</p>` : "") +
+      "<ol>" + w.steps.map((s) => `<li>${s}</li>`).join("") + "</ol>";
+  });
+}
+
+// ---------------------------------------------------------------------------
+// This Crowdlock's own details, read from its file rather than hardcoded.
+// ---------------------------------------------------------------------------
+
+let STATEMENT = null;
+let ENDPOINT = null;   // this Crowdlock's join endpoint, from its own file; may be absent
+let RELAYS = null;     // this Crowdlock's Nostr relays, from its own file; preferred when present
+let FINGERPRINT = null;
+
+async function loadCrowdlock() {
+  try {
+    const index = await (await fetch("../crowdlocks/index.json")).json();
+    const name = index.crowdlocks[0];
+    const c = await (await fetch(`../crowdlocks/${name}.json`)).json();
+    STATEMENT = membershipStatement(c);
+    ENDPOINT = typeof c.join_endpoint === "string" && /^https:\/\//.test(c.join_endpoint) ? c.join_endpoint : null;
+    RELAYS = Array.isArray(c.relays) && c.relays.length ? c.relays : null;
+    FINGERPRINT = c.declaration.sha256;
+    // The app opens straight onto this Crowdlock from a crowdlock:// link.
+    const fileUrl = new URL(`../crowdlocks/${name}.json`, location.href).href;
+    el("openInAppLink").href = `crowdlock://add?url=${encodeURIComponent(fileUrl)}`;
+    el("openInApp").hidden = false;
+    el("statement").textContent = STATEMENT;
+    el("paramStatus").innerHTML =
+      `Signing <strong>${c.declaration.title} v${c.declaration.version}</strong> ` +
+      `· fingerprint <span class="mono">sha256:${c.declaration.sha256.slice(0, 8)}…${c.declaration.sha256.slice(-7)}</span> ` +
+      `· <a href="../${c.declaration.file}">read the exact text</a>`;
+  } catch (e) {
+    el("paramStatus").textContent =
+      "Could not load this Crowdlock's details. Do not sign anything from this page until it loads — the statement must carry the right fingerprint.";
+    el("statement").textContent = "—";
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Live checking, entirely on this device.
+// ---------------------------------------------------------------------------
+
+function setVerdict(kind, head, body) {
+  const v = el("verdict");
+  v.className = "verdict-live" + (kind ? " " + kind : "");
+  v.innerHTML = `<b>${head}</b><p>${body}</p>`;
+}
+
+function check() {
+  const address = el("addr").value.trim();
+  const signature = el("sig").value.trim();
+  el("submitSection").hidden = true;
+
+  if (!STATEMENT) { setVerdict("bad", "Not ready", "This Crowdlock's details have not loaded, so there is nothing to check against."); return; }
+  if (!address || !signature) { setVerdict("", "Waiting", "Fill both boxes and this will tell you straight away."); return; }
+
+  let r;
+  try { r = verifyMembership({ address, signature, message: STATEMENT }); }
+  catch (e) { setVerdict("bad", "Not valid", "That did not parse as a signature. Check you copied all of it."); return; }
+
+  if (r.valid) {
+    setVerdict("ok", "Valid", "That address really did sign this exact declaration. You can submit it below.");
+    el("record").textContent = JSON.stringify({ address, signature }, null, 2);
+    el("submitSection").hidden = false;
+    return;
+  }
+
+  // Say which of the several possible things went wrong, rather than "invalid".
+  let why = "The signature does not match that address for this statement.";
+  if (r.derived && r.derived !== address) {
+    why = `That signature is valid, but it was made by a different address — <span class="mono">${r.derived}</span>. ` +
+          "Either paste that address instead, or sign again with the one you entered.";
+  } else if (r.reason) {
+    why = r.reason;
+  }
+  setVerdict("bad", "Not valid", why +
+    " Common causes: the statement was retyped rather than copied, a taproot address was used (bc1p — not yet supported), or only part of the signature was pasted.");
+}
+
+el("addr").addEventListener("input", check);
+el("sig").addEventListener("input", check);
+
+// --- Sending it to the register -------------------------------------------
+//
+// The endpoint checks the signature again before writing anything, so this
+// button is a convenience and not a trust decision: it can fail, refuse, or
+// be switched off without costing anybody their membership, because the two
+// routes below it do not involve us at all. Every failure here says so.
+
+// The endpoint's address comes from this Crowdlock's file (join_endpoint), so
+// it changes in one place and an app reads the same field. A Crowdlock with no
+// endpoint simply has no button; the two routes below still work.
+
+function joinOutcome(kind, head, body) {
+  const box = el("joinResult");
+  box.hidden = false;
+  box.className = "verdict-live" + (kind ? " " + kind : "");
+  box.innerHTML = `<b>${head}</b><p>${body}</p>`;
+}
+
+// A Crowdlock that names Nostr relays takes registrations from there: the
+// signed record is posted publicly, and the Crowdlock's own repository collects
+// and checks it every two minutes. No endpoint, account or key is in the path,
+// and anybody can see the post was made.
+async function postToRelays(record) {
+  const { finalizeEvent, generateSecretKey, Relay } = globalThis.NostrTools;
+  const event = finalizeEvent(recordEventTemplate(record, FINGERPRINT, Math.floor(Date.now() / 1000)), generateSecretKey());
+  const limit = (p) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error("no answer")), 12000))]);
+  const results = await Promise.all(RELAYS.map(async (url) => {
+    let relay;
+    try { relay = await limit(Relay.connect(url)); await limit(relay.publish(event)); return true; }
+    catch { return false; }
+    finally { try { relay?.close(); } catch {} }
+  }));
+  return { accepted: results.filter(Boolean).length, total: RELAYS.length };
+}
+
+el("joinNow").addEventListener("click", async () => {
+  const btn = el("joinNow");
+  const address = el("addr").value.trim();
+  const signature = el("sig").value.trim();
+
+  if (RELAYS && globalThis.NostrTools) {
+    btn.disabled = true;
+    btn.textContent = "Posting…";
+    joinOutcome("", "Posting", "Sending your signed registration to the relays…");
+    const p = await postToRelays({ type: "join", address, signature });
+    if (p.accepted > 0) {
+      btn.textContent = "Posted";
+      joinOutcome("ok", "Posted — you'll be on the register in a few minutes",
+        `${p.accepted} of ${p.total} relays took it. The register collects new registrations every two minutes; `
+        + `open <a href="../register/">the register</a> in a few minutes and you'll be there, with your signature `
+        + `checked by your own browser like everybody else's.`);
+      return;
+    }
+    btn.disabled = false;
+    btn.textContent = "Add me to the register";
+    joinOutcome("bad", "No relay took it just now",
+      "Your signature is fine. Check your connection, or turn off any VPN, and try again — or use either of the routes below; they count exactly the same.");
+    return;
+  }
+
+  if (!ENDPOINT) {
+    joinOutcome("bad", "No register button for this Crowdlock",
+      "This Crowdlock has not published a join endpoint. Copy your registration above and use either of the routes below; they count exactly the same.");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Sending…";
+  joinOutcome("", "Sending", "Checking your signature at the register…");
+
+  try {
+    const res = await fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ address, signature }),
+    });
+    const body = await res.json();
+
+    if (res.ok && body.ok) {
+      btn.textContent = `You are member ${body.n}`;
+      joinOutcome("ok", `You are member ${body.n}`,
+        `The <a href="../register/">register</a> will show you within a minute, where your `
+        + `browser and everybody else's will check your signature for themselves.`);
+      return;
+    }
+
+    btn.disabled = false;
+    btn.textContent = "Add me to the register";
+    joinOutcome("bad", "Not added", `${body.error ?? "The register refused it."}`
+      + (body.alternative ? ` You can still ${body.alternative} — nothing about that is second best.` : ""));
+  } catch {
+    // The endpoint is unreachable. This is exactly the case the two routes
+    // below exist for, so say so plainly rather than asking them to wait.
+    btn.disabled = false;
+    btn.textContent = "Add me to the register";
+    joinOutcome("bad", "Could not reach the register",
+      "Your signature is fine — this is our end, not yours. Copy your registration above "
+      + "and use either of the routes below; they count exactly the same.");
+  }
+});
+
+async function copyTo(btn, text, done) {
+  try { await navigator.clipboard.writeText(text); }
+  catch { return; }
+  const was = btn.textContent;
+  btn.textContent = done;
+  setTimeout(() => { btn.textContent = was; }, 1600);
+}
+el("copyBtn").addEventListener("click", (e) => STATEMENT && copyTo(e.target, STATEMENT, "Copied"));
+el("copyRecord").addEventListener("click", (e) => copyTo(e.target, el("record").textContent, "Copied"));
+
+drawWallets();
+el("wallets").querySelector("button").click(); // open on the first wallet
+loadCrowdlock();
+</script>
+
+</body>
+</html>

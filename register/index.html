@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The register — The Kop Fund</title>
+<meta name="description" content="Everything committed, checked in your own browser rather than taken on trust. Locked bitcoin only — a signature is free, so signatures are not counted as support.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="bleed disclaimer"><div class="inner" id="disclaimer">An independent supporters' initiative. Not affiliated with, endorsed by, or connected to Liverpool Football Club.</div></div>
+<nav class="bleed"><div class="inner">
+  <a href="../">The declaration</a>
+  <a href="../why/">Why</a>
+  <a href="../how/">How it works</a>
+  <a href="../society/">The society</a>
+  <a href="../join/">Join</a>
+  <a href="./" aria-current="page">The register</a>
+  <a href="../risk/">Risks</a>
+  <a href="../spec/">The documents</a>
+</div></nav>
+
+<main class="inner">
+
+  <header class="page">
+    <span class="eyebrow">Checked by your browser, not by us</span>
+    <h1>The register</h1>
+    <p class="lede">Everything committed, and every signature behind it. Your own browser checks each signature as this page loads — nothing here is taken on our word.</p>
+    <p class="note" id="whichCrowdlock" hidden></p>
+  </header>
+
+  <section>
+    <div class="figure">
+      <span class="big" id="lockedTotal">—</span>
+      <span class="label">Committed right now</span>
+    </div>
+    <div class="facts">
+      <div><span class="v" id="memberCount">—</span><span class="k">committed members</span></div>
+    </div>
+    <p class="note" id="asOf">Loading the register…</p>
+    <p class="note"><strong>What is counted.</strong> Only bitcoin that is locked, confirmed, still in date and above the minimum, and only the members who hold it. Signing the declaration is a member giving their word, and every signature is published in full below. This page does not count them, because a signature costs nothing to make, and the only figures worth putting here are ones nobody can fake.</p>
+  </section>
+
+  <section>
+    <h2>The co-signer's record</h2>
+    <div class="panel">
+      <div class="verdict" id="releaseVerdict"><span class="dot"></span><span id="releaseText">Checking…</span></div>
+      <p class="note" id="releaseDetail">Read from the blockchain in your browser.</p>
+      <div id="releaseArea"></div>
+    </div>
+    <p class="note"><strong>Why this is here.</strong> A lock opens two ways: by its owner alone once its date has passed, or by its owner and the co-signer together at any time. The second is meant only for a purchase, but Bitcoin can't enforce that — a co-signer willing to sign anything could let members take counted money back early, and the total above would mean nothing. What Bitcoin does record, for everyone to see, is which way each lock was opened. So every lock opened early with the co-signer's signature, other than to pay a listed destination, is shown here. Nobody can keep one off this list, the co-signer included.</p>
+  </section>
+
+  <section>
+    <h2>What your browser just checked</h2>
+    <div class="panel">
+      <div class="verdict" id="verdict"><span class="dot"></span><span id="verdictText">Checking…</span></div>
+      <p class="note" id="verdictDetail">Each member's signature is verified against the declaration's fingerprint using code running on your device. If a signature did not match, it would be shown below as failed rather than quietly dropped.</p>
+    </div>
+    <p class="note">The declaration this register is counting: <span class="mono" id="declHash">—</span></p>
+  </section>
+
+  <section>
+    <h2>Members</h2>
+    <div id="memberArea">
+      <p class="note">Loading…</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Check a signature yourself</h2>
+    <p>Paste an address and a signature and this page will tell you whether that address really signed the declaration. Useful if you have just signed and want to confirm it before submitting, and useful for checking anybody else's.</p>
+    <div class="panel">
+      <label for="addrIn" class="note">Address</label>
+      <input id="addrIn" type="text" inputmode="text" autocomplete="off" spellcheck="false"
+             placeholder="bc1q…" style="font-family:var(--mono);font-size:13px;padding:10px 12px;border:1px solid var(--line);background:var(--surface);color:var(--fg);width:100%">
+      <label for="sigIn" class="note">Signature</label>
+      <textarea id="sigIn" rows="3" autocomplete="off" spellcheck="false"
+                placeholder="base64 signature from your wallet"
+                style="font-family:var(--mono);font-size:13px;padding:10px 12px;border:1px solid var(--line);background:var(--surface);color:var(--fg);width:100%;resize:vertical"></textarea>
+      <button id="checkBtn" type="button">Check it</button>
+      <div class="verdict" id="checkVerdict" hidden><span class="dot"></span><span id="checkText"></span></div>
+      <p class="note" id="checkDetail" hidden></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>How to get on it</h2>
+    <p>Sign the declaration with a bitcoin wallet, then submit the two lines it gives you. It costs nothing, moves no money, and takes about five minutes. <a href="../join/">The joining page</a> walks through the whole thing, including what to do if you have no wallet yet, and checks your signature in your own browser before anything is sent.</p>
+    <p><a class="cta" href="../join/">Join the register</a></p>
+    <p class="note">There are two other ways in, and they count exactly the same, because a signature cannot be forged and so needs nobody's permission to pass on: open a pull request adding your record to <code id="regFile">registrations.json</code>, or hand your two lines to anybody willing to publish them for you. Both are listed on the joining page. They matter: they are what stops the button above being a gate anyone can shut on you.</p>
+    <p class="note"><strong>Submissions are pull requests on purpose, but be clear about what that does and does not give you.</strong> Every change is timestamped in public, and anyone can keep a complete copy of the register, so an alteration is detectable by anybody holding one. It is <em>not</em> append-only: git history can be rewritten, and the person who controls the repository can do it. Until each day's register is anchored to the blockchain — which is planned and not yet built — "nobody could quietly remove you" rests on somebody having kept a copy, not on proof. Keep one.</p>
+  </section>
+
+  <section>
+    <h2>Run your own copy</h2>
+    <p>This page is static. It reads one file and checks it in your browser — there is no server deciding what you see. So you can run the identical register yourself, and if your total ever disagrees with ours, ours is wrong.</p>
+    <pre>git clone https://github.com/Jimbus9/the-kop-fund
+cd the-kop-fund
+node method/js/verify.test.mjs     # check the verifier against another library
+node method/js/crowdlock.test.mjs  # check the Crowdlock files, needs no installs
+python3 -m http.server      # then open localhost:8000/register/</pre>
+  </section>
+
+</main>
+
+<footer class="inner">
+  <p><strong>This is not an investment.</strong> There is no return, no dividend and no payout, now or ever. Nothing here is legal or financial advice.</p>
+  <p id="footDisclaimer">An independent initiative by supporters of Liverpool Football Club. Not affiliated with, endorsed by or connected to Liverpool Football Club, its owners, or any official supporters' organisation.</p>
+  <p><a href="https://github.com/Jimbus9/the-kop-fund">Source and documents on GitHub</a> · <a href="https://github.com/Jimbus9/the-kop-fund/issues">Questions, problems or ideas: open an issue</a></p>
+</footer>
+
+<script type="module">
+import { verifyMembership } from "../js/verify.mjs";
+import { checkCrowdlock, checkRegisterFiles, membershipStatement } from "../js/crowdlock.mjs";
+import { earlyReleases } from "../js/release.mjs";
+
+const el = (id) => document.getElementById(id);
+const fmtBtc = (sats) => (sats / 1e8).toFixed(8).replace(/0+$/, "").replace(/\.$/, "") || "0";
+
+function setVerdict(node, textNode, ok, text) {
+  node.className = "verdict " + (ok ? "ok" : "bad");
+  textNode.textContent = text;
+  node.hidden = false;
+}
+
+// ---- Which Crowdlock ----------------------------------------------------
+// Nothing about any one Crowdlock is written into this page. It reads the
+// Crowdlock named in the address (?c=name), or the first one listed, and
+// everything below comes from that Crowdlock's own file.
+
+function refuse(why, detail) {
+  el("asOf").textContent = why;
+  el("memberArea").innerHTML = '<p class="note">Nothing is being claimed on this page until that is fixed.</p>';
+  setVerdict(el("verdict"), el("verdictText"), false, why);
+  el("verdictDetail").textContent = detail;
+  throw new Error(why);
+}
+
+const getJson = async (path) => {
+  const res = await fetch(path, { cache: "no-store" });
+  if (!res.ok) throw new Error(`${path}: ${res.status}`);
+  return res.json();
+};
+
+let index, crowdlock, data;
+try {
+  index = await getJson("../crowdlocks/index.json");
+} catch (e) {
+  refuse("Could not load the list of Crowdlocks", String(e.message));
+}
+const asked = new URLSearchParams(location.search).get("c");
+// Only names on the published list are ever loaded.
+const slug = index.crowdlocks.includes(asked) ? asked : index.crowdlocks[0];
+
+try {
+  crowdlock = await getJson(`../crowdlocks/${slug}.json`);
+} catch (e) {
+  refuse("Could not load this Crowdlock's file", String(e.message));
+}
+
+let declarationText;
+try {
+  const res = await fetch(`../${crowdlock.declaration.file}`, { cache: "no-store" });
+  declarationText = await res.text();
+} catch { declarationText = undefined; }
+
+const fileCheck = checkCrowdlock(crowdlock, { declarationText });
+if (!fileCheck.ok) refuse(`${crowdlock.name ?? slug}'s file does not check out`, fileCheck.problems.join(" "));
+
+try {
+  data = await getJson(`../${crowdlock.register.registrations}`);
+} catch (e) {
+  refuse("Could not load the register file", String(e.message));
+}
+
+const agree = checkRegisterFiles(crowdlock, { registrations: data });
+if (!agree.ok) refuse("The register does not match this Crowdlock", agree.problems.join(" "));
+
+// The statement is rebuilt from the Crowdlock's own file, never read from the
+// register — so a register cannot swap in different words to sign.
+const statement = membershipStatement(crowdlock);
+const CHAIN_API = crowdlock.chain_api;
+
+el("declHash").textContent = "sha256:" + crowdlock.declaration.sha256;
+el("regFile").textContent = crowdlock.register.registrations;
+if (crowdlock.disclaimer) {
+  el("disclaimer").textContent = crowdlock.disclaimer;
+  el("footDisclaimer").textContent = crowdlock.disclaimer;
+}
+if (index.crowdlocks.length > 1) {
+  const which = el("whichCrowdlock");
+  which.hidden = false;
+  which.textContent = `Showing the register of ${crowdlock.name}. Others published here: `;
+  index.crowdlocks.filter((s) => s !== slug).forEach((s, i) => {
+    if (i) which.append(", ");
+    const a = document.createElement("a");
+    a.href = `?c=${encodeURIComponent(s)}`;
+    a.textContent = s;
+    which.append(a);
+  });
+}
+
+const members = data.members || [];
+const locks = data.locks || [];
+
+const checked = members.map((m) => ({
+  ...m,
+  result: verifyMembership({ address: m.address, signature: m.signature, message: statement }),
+}));
+const verified = checked.filter((m) => m.result.valid);
+const failed = checked.filter((m) => !m.result.valid);
+
+// No count of signatures anywhere on this page. A signature is a member giving
+// their word, so the page does not rank or label it; and it is free to make,
+// so a count of them can be inflated by anyone. Every one is published below.
+
+if (members.length === 0) {
+  setVerdict(el("verdict"), el("verdictText"), true, "Nothing to check yet");
+  el("verdictDetail").textContent =
+    "No signatures have been submitted, so there is nothing for your browser to verify. The moment one is, this is where it gets checked.";
+} else if (failed.length === 0) {
+  setVerdict(el("verdict"), el("verdictText"), true, "Every signature verified");
+} else {
+  setVerdict(el("verdict"), el("verdictText"), false,
+    `${failed.length} signature${failed.length === 1 ? "" : "s"} did not verify`);
+  el("verdictDetail").textContent =
+    "A signature that does not verify is shown below rather than removed. It stays on the record and it is not counted.";
+}
+
+// ---- Members -------------------------------------------------------------
+
+if (members.length === 0) {
+  el("memberArea").innerHTML = `
+    <div class="panel">
+      <p><strong>Nobody has signed yet.</strong></p>
+      <p class="note">That includes the person who wrote this. When the first signature is submitted it will appear here as member 1, with the signature published so that anyone can check it for themselves.</p>
+      <p class="note">An empty register that works is worth more than a full one that cannot be checked. If you want to see what this page looks like with people in it, there is a <a href="../mock/register.html">mock-up using invented figures</a>.</p>
+    </div>`;
+} else {
+  const rows = checked.map((m) => `
+    <tr>
+      <td class="num">${m.n ?? ""}</td>
+      <td class="mono">${m.address}</td>
+      <td>${m.signed ?? ""}</td>
+      <td><span class="pill ${m.result.valid ? "ok" : "bad"}">${m.result.valid ? "verified" : "failed"}</span></td>
+    </tr>`).join("");
+  el("memberArea").innerHTML = `
+    <div class="scroller"><table>
+      <thead><tr><th>No.</th><th>Address</th><th>Signed</th><th>Signature</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+}
+
+// ---- Committed total -----------------------------------------------------
+
+// The counting rule: confirmed coins at each lock whose date is still ahead
+// and which meets the minimum, each address once. Committed members are the
+// members holding at least one lock that counts.
+if (locks.length === 0) {
+  el("lockedTotal").textContent = "0";
+  el("memberCount").textContent = "0";
+  el("asOf").textContent =
+    "No money has been committed. This figure counts locked bitcoin only — coins someone merely owns are not counted, and neither is support anybody merely feels.";
+} else {
+  el("lockedTotal").textContent = "…";
+  const now = Math.floor(Date.now() / 1000);
+  const minimum = Number(crowdlock.minimum_counted_lock_sats);
+  const seen = new Set();
+  const committed = new Set();
+  let sats = 0;
+  let unreachable = 0;
+  for (const lock of locks) {
+    const address = String(lock.address).toLowerCase();
+    if (seen.has(address) || !(lock.locktime > now)) continue;
+    seen.add(address);
+    try {
+      const res = await fetch(`${CHAIN_API}/address/${lock.address}`);
+      const s = (await res.json()).chain_stats;   // confirmed coins only
+      const here = s.funded_txo_sum - s.spent_txo_sum;
+      if (here >= minimum) {
+        sats += here;
+        if (lock.member) committed.add(String(lock.member).toLowerCase());
+      }
+    } catch { unreachable++; }
+  }
+  el("lockedTotal").textContent = fmtBtc(sats) + " BTC";
+  el("memberCount").textContent = String(committed.size);
+  el("asOf").textContent = unreachable === 0
+    ? "Read from the blockchain just now, in your browser."
+    : `${unreachable} lock${unreachable === 1 ? "" : "s"} could not be read from the chain, so this figure is incomplete.`;
+}
+
+// ---- The co-signer's record ----------------------------------------------
+
+{
+  const seenRel = new Set();
+  const found = [];
+  let unread = 0;
+  let destinations = null;
+  try { destinations = await getJson(`../${crowdlock.register.destinations}`); } catch {}
+  for (const lock of locks) {
+    const address = String(lock.address).toLowerCase();
+    if (seenRel.has(address)) continue;
+    seenRel.add(address);
+    try {
+      const res = await fetch(`${CHAIN_API}/address/${lock.address}/txs`);
+      if (!res.ok) throw new Error(String(res.status));
+      for (const r of earlyReleases(lock, await res.json(), destinations)) found.push({ ...r, address: lock.address });
+    } catch { unread++; }
+  }
+  const short = (x) => (x ? `${String(x).slice(0, 8)}…${String(x).slice(-6)}` : "");
+  // The explorer's own page for the transaction, so anyone can see it for themselves.
+  const txLink = (txid) => `${String(CHAIN_API).replace(/\/api$/, "")}/tx/${txid}`;
+  const esc = (x) => String(x ?? "").replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`);
+  if (found.length === 0) {
+    setVerdict(el("releaseVerdict"), el("releaseText"), unread === 0,
+      locks.length === 0 ? "No locks yet, so nothing to release" : unread === 0 ? "No early releases" : "Could not check every lock");
+    el("releaseDetail").textContent = locks.length === 0
+      ? "When members lock money, any lock the co-signer opens early will show here."
+      : unread === 0
+      ? "Every lock on the register has either stayed shut, opened on its date, or paid a listed destination."
+      : `${unread} lock${unread === 1 ? "" : "s"} could not be read from the chain just now. Reload to try again.`;
+  } else {
+    setVerdict(el("releaseVerdict"), el("releaseText"), false,
+      `${found.length} lock${found.length === 1 ? "" : "s"} released early by the co-signer`);
+    el("releaseDetail").textContent = "Each of these opened before its date with the co-signer's signature, and did not pay a listed destination.";
+    el("releaseArea").innerHTML = `<div class="scroller"><table>
+      <thead><tr><th>When</th><th>Amount</th><th>Co-signer</th><th>Transaction</th></tr></thead>
+      <tbody>${found.map((r) => `<tr>
+        <td>${r.confirmed ? new Date(r.at * 1000).toISOString().slice(0, 10) : "not yet in a block"}</td>
+        <td>${fmtBtc(r.sats)} BTC</td>
+        <td class="mono" title="${esc(r.cosigner ?? "")}">${esc(short(r.cosigner))}</td>
+        <td class="mono"><a href="${esc(txLink(r.txid))}" title="${esc(r.txid)}">${esc(short(r.txid))}</a></td>
+      </tr>`).join("")}</tbody>
+    </table></div>`;
+  }
+}
+
+// ---- Check-your-own tool -------------------------------------------------
+
+el("checkBtn").addEventListener("click", () => {
+  const address = el("addrIn").value.trim();
+  const signature = el("sigIn").value.trim();
+  const detail = el("checkDetail");
+
+  if (!address || !signature) {
+    setVerdict(el("checkVerdict"), el("checkText"), false, "Both fields are needed");
+    detail.hidden = true;
+    return;
+  }
+  const r = verifyMembership({ address, signature, message: statement });
+  setVerdict(el("checkVerdict"), el("checkText"), r.valid,
+    r.valid ? "Valid — that address signed the declaration" : "Not valid");
+  detail.hidden = false;
+  detail.textContent = r.valid
+    ? "You can submit these two lines to the register."
+    : r.derived
+      ? `${r.reason}. The signature you pasted belongs to ${r.derived}.`
+      : r.reason;
+});
+</script>
+
+</body>
+</html>

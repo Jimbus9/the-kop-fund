@@ -1,0 +1,10 @@
+{
+  "format": 1,
+  "instance": "3a0a0bca96ec2161d98ff9da05ae885d6b8d68e55ed412bc85dcc7fb16209b96",
+  "updated": "2026-10-24",
+  "minimum_age_days": 14,
+  "threshold": 1,
+  "attestors": [],
+  "entries": [],
+  "note": "Empty, and it should be. No destination can be attested until there is something to buy and a body to receive it. An address appearing here before then would be the clearest possible sign that something is wrong. See spec/destinations-format.md. The `instance` field is this instance's declaration hash, and every entry carries it, so an attestation made here cannot verify against anybody else's copy of these documents."
+}

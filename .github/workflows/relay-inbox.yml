@@ -1,0 +1,73 @@
+# This Crowdlock's relay inbox. Every two minutes it collects the registrations
+# and locks members post to the Nostr relays this Crowdlock names, checks each
+# one, adds the valid ones to the register, and republishes the site. It uses
+# no secrets: only the permission GitHub gives every repository's own jobs to
+# write to that repository. Each run keeps going for about fifty minutes and
+# then starts the next; the hourly schedule only restarts it if that chain
+# ever breaks. Set up by the Crowdlock app; the code is the Crowdlock method's
+# reference copy, published at github.com/Jimbus9/the-kop-fund.
+
+name: Relay inbox
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  actions: write
+
+concurrency:
+  group: relay-inbox
+  cancel-in-progress: false
+
+jobs:
+  inbox:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install the relay library
+        working-directory: relay
+        run: npm ci --no-audit --no-fund
+
+      - name: Collect records from the relays, every two minutes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "Crowdlock relay inbox"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for pass in $(seq 1 24); do
+            git pull --rebase -q || true
+            (cd relay && node inbox.mjs) || echo "This pass failed; trying again next pass."
+            if [ -n "$(git status --porcelain -- crowdlocks registrations.json test relay/health.json relay/announced.json)" ]; then
+              # Only the paths this Crowdlock has: a test-only one has no
+              # top-level register, and git refuses a path that isn't there.
+              for f in crowdlocks registrations.json test relay/health.json relay/announced.json; do
+                if [ -e "$f" ]; then git add "$f"; fi
+              done
+              git commit -q -m "$(cat relay/.message 2>/dev/null || echo 'Records via relays')"
+              pushed=no
+              for i in 1 2 3; do
+                if git pull --rebase -q && git push -q; then pushed=yes; break; fi
+                sleep 5
+              done
+              if [ "$pushed" = yes ]; then
+                gh api -X POST "repos/${{ github.repository }}/pages/builds" > /dev/null || echo "Could not request a site rebuild."
+              fi
+            fi
+            rm -f relay/.message
+            if [ "$pass" -lt 24 ]; then sleep 110; fi
+          done
+
+      - name: Start the next run
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/actions/workflows/relay-inbox.yml/dispatches" -f ref="${{ github.ref_name }}"

@@ -1,0 +1,50 @@
+{
+  "format": 1,
+  "name": "The Kop Fund",
+  "about": "Supporters buying a stake in Liverpool Football Club.",
+  "site": "https://jimbus9.github.io/the-kop-fund/join/",
+  "disclaimer": "An independent initiative by supporters of Liverpool Football Club. Not affiliated with, endorsed by or connected to Liverpool Football Club, its owners, or any official supporters' organisation.",
+  "declaration": {
+    "title": "Supporters' Declaration",
+    "version": 1,
+    "file": "spec/declaration-v1.txt",
+    "sha256": "3a0a0bca96ec2161d98ff9da05ae885d6b8d68e55ed412bc85dcc7fb16209b96"
+  },
+  "network": "mainnet",
+  "unit": "BTC",
+  "lock_lengths_years": [
+    1,
+    3,
+    5
+  ],
+  "minimum_counted_lock_sats": 200000,
+  "cosigner_keys": [
+    "03811ead45a2cf0870ba7c2d31b3ca20d2875e02b5dc91b8f3d4e55f9c86baf68b"
+  ],
+  "cosigner_xpubs": [
+    "xpub6CntvpexEbhzNCZPTqfRUNkNZDG5FjuWNopshKmXEkm6RHxvL43u2B6ZADmvEs4UUJWnG3YehtuKXNLsvEnuxYETGd6q5XqwqNEo8pFv7yn"
+  ],
+  "gathering_window_max_days": 28,
+  "settlement_window_max_days": 14,
+  "destination_wait_days": 14,
+  "attestor_keys": [],
+  "attestor_threshold": 1,
+  "max_commitment_fee": 0.01,
+  "register": {
+    "registrations": "registrations.json",
+    "destinations": "destinations.json"
+  },
+  "chain_api": "https://mempool.space/api",
+  "relays": [
+    "wss://relay.damus.io",
+    "wss://nos.lol",
+    "wss://relay.primal.net",
+    "wss://nostr.mom",
+    "wss://offchain.pub"
+  ],
+  "spare_relays": [
+    "wss://relay.snort.social",
+    "wss://nostr-pub.wellorder.net",
+    "wss://relay.nostr.bg"
+  ]
+}

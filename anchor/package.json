@@ -1,0 +1,7 @@
+{
+  "name": "kop-fund-anchor",
+  "private": true,
+  "type": "module",
+  "description": "Anchoring the declaration to the Bitcoin blockchain",
+  "dependencies": { "javascript-opentimestamps": "0.4.5" }
+}

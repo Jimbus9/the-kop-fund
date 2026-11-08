@@ -1,0 +1,5 @@
+{
+  "format": 1,
+  "note": "Every Crowdlock this site knows about, by the name of its file in this folder. To add one, write its file and add its name here. The first is shown by default.",
+  "crowdlocks": ["kop-fund"]
+}

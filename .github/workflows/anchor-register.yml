@@ -1,0 +1,111 @@
+# Anchor the register in Bitcoin, weekly, with nobody at a keyboard.
+#
+# An anchor only proves what a file looked like on the day it was taken, and
+# the register changes with every member and lock. So once a week this takes a
+# dated copy of the register in anchors/, stamps that copy with OpenTimestamps
+# (anchor/stamp.mjs) and commits copy and proof. Every proof therefore
+# covers one exact set of bytes that stays in the repository forever.
+#
+# Every day it also asks the calendar servers to finish any proof that is still
+# waiting (anchor/verify.mjs). A proof older than three days that is
+# still not in a block FAILS the run, so a broken anchor shows up as a red
+# cross and an email rather than as silence.
+#
+# Uses no secrets: only the permission GitHub gives every repository's own jobs.
+# Run it by hand from the Actions tab ("Run workflow").
+
+name: Anchor the register
+
+on:
+  schedule:
+    # Daily, at an odd minute away from the top of the hour.
+    - cron: "41 5 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Take a new snapshot even if one is less than 7 days old"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+# Both this and the relay inbox push to main; a run waits for its turn.
+concurrency:
+  group: anchor-register
+  cancel-in-progress: false
+
+jobs:
+  anchor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install the anchoring library
+        working-directory: anchor
+        run: npm ci --no-audit --no-fund
+
+      - name: Finish any proof still waiting
+        working-directory: anchor
+        shell: bash
+        run: |
+          mkdir -p ../../anchors
+          for proof in ../../anchors/*.ots; do
+            [ -e "$proof" ] || continue
+            file="${proof%.ots}"
+            echo "== $file"
+            node verify.mjs "$file" | tee /tmp/verify.out
+            if grep -q "have not got it into a block" /tmp/verify.out; then
+              day=$(basename "$file" .json | sed 's/^registrations-//')
+              age=$(( ( $(date -u +%s) - $(date -u -d "$day" +%s) ) / 86400 ))
+              echo "waiting, $age day(s) old"
+              if [ "$age" -gt 3 ]; then
+                echo "::error::$file is $age days old and still not in a Bitcoin block"
+                exit 1
+              fi
+            fi
+          done
+
+      - name: Take a new snapshot if one is due
+        env:
+          FORCE: ${{ inputs.force }}
+        run: |
+          today=$(date -u +%F)
+          latest=$(ls anchors/registrations-*.json 2>/dev/null | sort | tail -1 || true)
+          due=yes
+          if [ -n "$latest" ] && [ "$FORCE" != "true" ]; then
+            day=$(basename "$latest" .json | sed 's/^registrations-//')
+            age=$(( ( $(date -u +%s) - $(date -u -d "$day" +%s) ) / 86400 ))
+            [ "$age" -lt 7 ] && due=no
+            echo "latest snapshot $day ($age days ago)"
+          fi
+          if [ "$due" = yes ] && [ -n "$latest" ] && cmp -s registrations.json "$latest"; then
+            echo "register unchanged since $latest; nothing new to anchor"
+            due=no
+          fi
+          if [ "$due" = yes ]; then
+            cp registrations.json "anchors/registrations-$today.json"
+            (cd anchor && node stamp.mjs "../../anchors/registrations-$today.json")
+            test -s "anchors/registrations-$today.json.ots"
+          fi
+
+      - name: Commit what changed
+        run: |
+          git config user.name "Crowdlock anchor"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add anchors
+          if [ -z "$(git status --porcelain -- anchors)" ]; then
+            echo "nothing to commit"
+            exit 0
+          fi
+          git commit -q -m "Anchor the register"
+          for i in 1 2 3 4 5; do
+            if git pull --rebase -q && git push -q; then exit 0; fi
+            sleep 5
+          done
+          echo "::error::could not push the anchor"
+          exit 1
