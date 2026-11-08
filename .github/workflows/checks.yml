@@ -1,0 +1,26 @@
+# Checks that the public pages can run as published (every file they load is
+# actually served), and that the fund's own file and register agree.
+name: Checks
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "registrations.json"
+      - "relay/health.json"
+      - "relay/announced.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node tests/publishable.test.mjs
