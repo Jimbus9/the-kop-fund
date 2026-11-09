@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lock — The Kop Fund</title>
-<meta name="description" content="Lock bitcoin for a length you choose, with a Ledger on a laptop or in the Crowdlock app.">
+<meta name="description" content="Lock bitcoin for a length you choose, from any wallet, without the app.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap">
@@ -62,7 +62,7 @@
   <header class="page">
     <span class="eyebrow">Real money behind your word</span>
     <h1>Lock</h1>
-    <p class="lede">Locking sends bitcoin to an address that only you can open, on a date you choose. Nobody can move it in the meantime. This page works out your lock, and a Ledger on a laptop can make it and take it home. On a phone, use the Crowdlock app.</p>
+    <p class="lede">Locking sends bitcoin to an address that only you can open, on a date you choose. Nobody can move it in the meantime. This page works out that address for you; the bitcoin goes there from any wallet you already use, and no app is needed.</p>
   </header>
 
   <section id="closed" hidden>
@@ -101,12 +101,14 @@
   </section>
 
   <section id="plan" hidden>
-    <h2><span class="num">3</span> Your lock</h2>
-    <p>This is your lock's address, shown so you can check it. <strong>Do not send to it from another wallet.</strong> Only lock with a tool that can also take the money home: a Ledger on this page, or the Crowdlock app.</p>
+    <h2><span class="num">3</span> Send bitcoin here</h2>
+    <p>From any wallet you control: send to this address, and nowhere else.</p>
     <div class="address" id="address"></div>
+    <button class="btn" id="copyAddress" type="button">Copy the address</button>
+    <a class="btn" id="openWallet" href="#">Open in my wallet</a>
     <p id="amountNote" class="note"></p>
-    <p><strong>This address is for this length, made today.</strong> The date is rounded to midnight (UTC), so on a different day the same choice gives a different address. That is fine — it is simply another lock — but everything for one lock goes to the one address.</p>
-    <p><strong>Check it.</strong> The address above can be rebuilt by anybody from the three facts below, and the <a href="../spec/lock-format.md">lock format</a> says how. If it does not rebuild, do not lock.</p>
+    <p><strong>This address is for this length, made today.</strong> The date is rounded to midnight (UTC), so on a different day the same choice gives a different address. That is fine — it is simply another lock — but send everything for one lock to the one address you were shown.</p>
+    <p><strong>Check it before you send.</strong> The address above can be rebuilt by anybody from the three facts below, and your wallet or the <a href="../spec/lock-format.md">lock format</a> can confirm it independently. If it does not rebuild, do not send.</p>
 
     <div class="card">
       <b class="head">For checking — you do not do anything with these by hand</b>
@@ -116,7 +118,7 @@
     </div>
 
     <div class="card" id="ledgerFund">
-      <b class="head">Lock with a Ledger</b>
+      <b class="head">Or lock straight from a Ledger</b>
       <p class="note">Chrome, Edge or Brave on a computer, with your Ledger plugged in, unlocked and the <span id="ledgerAppName">Bitcoin</span> app open. Close Ledger Live first. The Ledger shows you the payment and you approve it on the device; this page never sees a key.</p>
       <button class="btn" id="ledgerConnect" type="button">Connect my Ledger</button>
       <div class="verdict-live" id="ledgerStatus" role="status" aria-live="polite" hidden></div>
@@ -159,7 +161,7 @@
     <h2>Taking it home</h2>
     <p>On the date, the key you signed the declaration with can move the money to any address you choose, with nobody else involved. Until then, nobody can.</p>
     <p><strong>What you will actually do:</strong> not paste anything or work anything out. You will open a tool that knows about locks, tell it which lock, and approve one payment with your own wallet or device. That tool does the rest. The facts above are only what it reads. Which tool, for which wallet, is the part still being proved, which is why this page is closed for real bitcoin.</p>
-    <p><strong>What has been proved, and what has not.</strong> Anyone can send to a lock's address, but that proves nothing: taking the money <em>out</em> needs a wallet that can sign for a custom script, and that is where wallets differ. So this page offers locking only through tools whose way home has been tried.</p>
+    <p><strong>What has been proved, and what has not.</strong> Making this address and sending to it works from any wallet, because sending to an address needs no special support. Taking the money <em>out</em> needs your wallet to sign for a custom script, and that is where wallets differ.</p>
     <ul>
       <li><strong>The Crowdlock app's own wallet:</strong> proved on a test network.</li>
       <li><strong>A Ledger:</strong> proved on a test network, in the Crowdlock app over USB and Bluetooth, and built into this page for the same test network. Not yet proved on this page with a real Ledger, and not on real bitcoin.</li>
@@ -238,7 +240,7 @@ async function load() {
       el("closed").hidden = false;
       el("closedWhy").textContent =
         "Locking real bitcoin from this page opens once taking a lock home has been proved for the wallets people use. "
-        + "Getting the money out again is what has to be certain first. "
+        + "Funding a lock is easy from any wallet; getting the money out again is what has to be certain first. "
         + "The \"Taking it home\" section below says where that stands.";
       el("form").hidden = true;
       return;
@@ -279,10 +281,12 @@ function update() {
     + `${lengthLabel(YEARS)}, opening on ${r.unlocks}.`);
 
   el("address").textContent = r.address;
+  const bitcoin = `bitcoin:${r.address}`;
+  el("openWallet").href = bitcoin;
   const min = r.minimumSats;
   el("amountNote").textContent =
     `This Crowdlock counts a lock of ${min.toLocaleString("en-GB")} sats (${(min / 1e8).toFixed(8)} BTC) or more. `
-    + "A smaller lock is valid and published, but is left out of the total."
+    + "A smaller lock is valid and published, but is left out of the total. Add a little extra for the network fee your wallet will charge."
     + (r.alreadyOnRegister ? " This exact lock is already on the register, so sending more to it simply adds to it." : "");
   el("terms").textContent = [
     `Crowdlock      ${C.name}`,
@@ -305,6 +309,7 @@ async function copyTo(btn, text, done) {
   btn.textContent = done;
   setTimeout(() => { btn.textContent = was; }, 1600);
 }
+el("copyAddress").addEventListener("click", (e) => PLAN && copyTo(e.target, PLAN.address, "Copied"));
 el("copyTerms").addEventListener("click", (e) => copyTo(e.target, el("terms").textContent, "Copied"));
 
 // --- Telling the register -----------------------------------------------------
