@@ -106,7 +106,6 @@
     <p><strong>Know the way home before you send.</strong> The tested routes are a Ledger on this page and the Crowdlock app. Sparrow, Electrum and other wallets can fund a lock, but nobody has yet shown they can sign for this script to take it home, so use them only if you can do that yourself. See "Taking it home" below.</p>
     <div class="address" id="address"></div>
     <button class="btn" id="copyAddress" type="button">Copy the address</button>
-    <a class="btn" id="openWallet" href="#">Open in my wallet</a>
     <p id="amountNote" class="note"></p>
     <p><strong>This address is for this length, made today.</strong> The date is rounded to midnight (UTC), so on a different day the same choice gives a different address. That is fine — it is simply another lock — but send everything for one lock to the one address you were shown.</p>
     <p><strong>Check it before you send.</strong> The address above can be rebuilt by anybody from the three facts below, and your wallet or the <a href="../spec/lock-format.md">lock format</a> can confirm it independently. If it does not rebuild, do not send.</p>
@@ -282,8 +281,6 @@ function update() {
     + `${lengthLabel(YEARS)}, opening on ${r.unlocks}.`);
 
   el("address").textContent = r.address;
-  const bitcoin = `bitcoin:${r.address}`;
-  el("openWallet").href = bitcoin;
   const min = r.minimumSats;
   el("amountNote").textContent =
     `This Crowdlock counts a lock of ${min.toLocaleString("en-GB")} sats (${(min / 1e8).toFixed(8)} BTC) or more. `
