@@ -5,7 +5,7 @@
 # write to that repository. Each run keeps going for about fifty minutes and
 # then starts the next; the hourly schedule only restarts it if that chain
 # ever breaks. Set up by the Crowdlock app; the code is the Crowdlock method's
-# reference copy, published at github.com/Jimbus9/the-kop-fund.
+# reference copy, published at github.com/Jimbus9/fanfund.
 
 name: Relay inbox
 
