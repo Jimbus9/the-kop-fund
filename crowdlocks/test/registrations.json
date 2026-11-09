@@ -92,12 +92,12 @@
       "submitted": "2026-11-09"
     },
     {
-      "address": "tb1q335emmzm2g7739vcya7nujnfsph2m25zuzg5xpfnlp9awvm2v68q0vldue",
+      "address": "tb1qajuk3n6r8ae6kwx8zwqd39tpdn5h6vvgh2ftkxh57j9k3ndxq82s9t5nlc",
       "member": "tb1q63zju9hpvfqhu8mw4wr8fqq800zt9jycx97lsz",
       "owner_pubkey": "03f6772b0b5bd170a3e87674e9996cb974fedcc9711659c374b0141598a4ebe7cd",
       "cosigner_pubkey": "020818f8a38dd1bb06a79af42d1cb98f466cddcbed39905379daa9a5bbf1103605",
-      "locktime": 1794267663,
-      "unlocks": "2026-11-09",
+      "locktime": 1794272210,
+      "unlocks": "2026-11-10",
       "submitted": "2026-11-09"
     }
   ]
