@@ -1,0 +1,95 @@
+{
+  "format": 1,
+  "declaration": {
+    "sha256": "29f943a5bf2c110200cb33d0299b00960b19f10f1942d14699aec154b39316df",
+    "statement": "I agree to the Test Declaration v1 (sha256:29f943a5bf2c110200cb33d0299b00960b19f10f1942d14699aec154b39316df) and join as a member."
+  },
+  "members": [
+    {
+      "n": 1,
+      "address": "tb1qslfryaahfjx7ns38a436f2zzp9rrz3nm4gyd68",
+      "signature": "IGFn/hsk9mPgYj3zg2t2UUJ3dzQOnn+/Hxh5+UHhKaZeZkHniZe5aO5GJAh96e1qjPxnVNxkJ9dihKqGaDW57ak=",
+      "signed": "2026-10-29"
+    },
+    {
+      "n": 2,
+      "address": "tb1qcdvch25flrw98run3ga0acy58ln3fsgjadkhpr",
+      "signature": "H5tnfCfa2Isy0sXeyx8F7TGLH/u+4zj4UhY9BhviR9cVdahgp+Q1ue3LwGB58mOY9HbPrEzLvfPHVTJA5kaLl7I=",
+      "signed": "2026-10-30"
+    },
+    {
+      "n": 3,
+      "address": "tb1qsfu4p07ucp98yr6gg22nqtxgcfsy69ejmnq6qz",
+      "signature": "IATK1saMRN/qFtaWDjBW+TNsGpRUPMif25wxfCPS5d/cRgSgMT17O94yLIfJc2/D9nZjPv6W2uESECWLKpUO8+g=",
+      "signed": "2026-11-02"
+    },
+    {
+      "n": 4,
+      "address": "tb1qje6a9mazk4s8l2mxyg6pxt7xhpg6fcamn7n6gd",
+      "signature": "Hy5Px7BjzVPL1hmbRk/Q5EQ4msqdFGTAReDa0kiEEOwEftUG3teA0fOhiyG5sAoa2BFvyY8K58aGtcSR6YuRva4=",
+      "signed": "2026-11-02"
+    },
+    {
+      "n": 5,
+      "address": "tb1q63zju9hpvfqhu8mw4wr8fqq800zt9jycx97lsz",
+      "signature": "HwD2OCPjoOzP/9xm/ZjIfWRwsuGEFl1qlT69uEFimQteIh/2VbQ1tIR+Px+6pf/XLfY88ESyp2ocQ20PnfDB5HI=",
+      "signed": "2026-11-07"
+    }
+  ],
+  "locks": [
+    {
+      "address": "tb1qnry2h8e2xtyagn2nlp4222xt5h295ydg9aynqpzdlqc6gzmzqutqw3zhue",
+      "member": "tb1qslfryaahfjx7ns38a436f2zzp9rrz3nm4gyd68",
+      "owner_pubkey": "021ddaa5fec043760645ed615b8e9ef229766d8c09ddc8cf6f461cfc511f49aee2",
+      "cosigner_pubkey": "020818f8a38dd1bb06a79af42d1cb98f466cddcbed39905379daa9a5bbf1103605",
+      "locktime": 1793491200,
+      "unlocks": "2026-11-01",
+      "submitted": "2026-10-30"
+    },
+    {
+      "address": "tb1qmk0vtpnlxh00h4rv7z8tzefk90aqy4rkxhp3mqpxahm8h8m4dl3sqagzpk",
+      "member": "tb1qslfryaahfjx7ns38a436f2zzp9rrz3nm4gyd68",
+      "owner_pubkey": "021ddaa5fec043760645ed615b8e9ef229766d8c09ddc8cf6f461cfc511f49aee2",
+      "cosigner_pubkey": "020818f8a38dd1bb06a79af42d1cb98f466cddcbed39905379daa9a5bbf1103605",
+      "locktime": 1825027200,
+      "unlocks": "2027-11-01",
+      "submitted": "2026-10-31"
+    },
+    {
+      "address": "tb1qmvhvq9chhc268u2xeskf3pgu9y34uzwngltv6rsh3js0dk4er4ps56hct4",
+      "member": "tb1qslfryaahfjx7ns38a436f2zzp9rrz3nm4gyd68",
+      "owner_pubkey": "021ddaa5fec043760645ed615b8e9ef229766d8c09ddc8cf6f461cfc511f49aee2",
+      "cosigner_pubkey": "020818f8a38dd1bb06a79af42d1cb98f466cddcbed39905379daa9a5bbf1103605",
+      "locktime": 1793516711,
+      "unlocks": "2026-11-01",
+      "submitted": "2026-11-01"
+    },
+    {
+      "address": "tb1qluqzxq5ke3lj4pn8hzppvktxf7h09vvejgc66ml5kgr9l6x5wj3que8r8y",
+      "member": "tb1qslfryaahfjx7ns38a436f2zzp9rrz3nm4gyd68",
+      "owner_pubkey": "021ddaa5fec043760645ed615b8e9ef229766d8c09ddc8cf6f461cfc511f49aee2",
+      "cosigner_pubkey": "020818f8a38dd1bb06a79af42d1cb98f466cddcbed39905379daa9a5bbf1103605",
+      "locktime": 1793664000,
+      "unlocks": "2026-11-03",
+      "submitted": "2026-11-01"
+    },
+    {
+      "address": "tb1q7kh5uc3h5vdln9szq9la222ten34qfn60jpaq84nmscvp7qz2h2qf39c4k",
+      "member": "tb1qslfryaahfjx7ns38a436f2zzp9rrz3nm4gyd68",
+      "owner_pubkey": "021ddaa5fec043760645ed615b8e9ef229766d8c09ddc8cf6f461cfc511f49aee2",
+      "cosigner_pubkey": "022d292cdd06b930b79f74167f14727645aa06c439323e6e4c00070524b9a80341",
+      "locktime": 1793836800,
+      "unlocks": "2026-11-05",
+      "submitted": "2026-11-03"
+    },
+    {
+      "address": "tb1qpggjh9k42mx282yumk7d5xd534hy85kds5z7asjrrz965cnjrn3qtn8sl6",
+      "member": "tb1q63zju9hpvfqhu8mw4wr8fqq800zt9jycx97lsz",
+      "owner_pubkey": "03f6772b0b5bd170a3e87674e9996cb974fedcc9711659c374b0141598a4ebe7cd",
+      "cosigner_pubkey": "022d292cdd06b930b79f74167f14727645aa06c439323e6e4c00070524b9a80341",
+      "locktime": 1794259599,
+      "unlocks": "2026-11-09",
+      "submitted": "2026-11-09"
+    }
+  ]
+}

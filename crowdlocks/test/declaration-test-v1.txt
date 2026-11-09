@@ -1,0 +1,13 @@
+THE TEST DECLARATION
+
+This is a test. It exists only so that software can be tried with test money
+on Bitcoin's test network (testnet4), and it means nothing.
+
+Signing it does not make anybody a member of The Kop Fund or of anything else.
+It is not the Supporters' Declaration, and a signature over this text can
+never be counted as one: the two have different fingerprints.
+
+Test bitcoin has no value. Nothing on this register is real money, and
+nothing on it will ever be counted towards any real total.
+
+Anyone may sign it, as often as they like, to see how joining works.
