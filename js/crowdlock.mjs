@@ -130,6 +130,9 @@ export function checkCrowdlock(c, { declarationText } = {}) {
 
   need(typeof c.register?.registrations === "string" && typeof c.register?.destinations === "string",
     "register must name the registrations and destinations files");
+  // Optional: where the Crowdlock publishes its proposals (method/js/proposals.mjs).
+  need(c.register?.proposals === undefined || (typeof c.register.proposals === "string" && /\.json$/.test(c.register.proposals)),
+    "register.proposals, if given, must name a .json file");
   need(typeof c.chain_api === "string" && /^https:\/\//.test(c.chain_api), "chain_api must be an https address");
   // Optional. Where this Crowdlock accepts signed registrations. Leaving it out
   // is allowed — joining by pull request needs no endpoint — but if it is
