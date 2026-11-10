@@ -193,7 +193,7 @@ There is no way to withdraw a commitment. You cannot un-sign, and while your loc
 is in date you cannot move those coins elsewhere.
 
 **This must be stated plainly wherever a supporter commits.** The bound period is
-six weeks at worst and usually far less, since gathering ends the moment the
+six weeks at worst (four of gathering, two of settling) and usually far less, since gathering ends the moment the
 target is met. But it is real, and a supporter who did not understand it was
 misled.
 

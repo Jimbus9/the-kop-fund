@@ -2,7 +2,7 @@
   "format": 1,
   "instance": "3a0a0bca96ec2161d98ff9da05ae885d6b8d68e55ed412bc85dcc7fb16209b96",
   "updated": "2026-10-24",
-  "minimum_age_days": 14,
+  "minimum_age_days": 7,
   "threshold": 1,
   "attestors": [],
   "entries": [],

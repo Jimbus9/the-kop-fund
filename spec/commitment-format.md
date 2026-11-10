@@ -63,11 +63,15 @@ until that date, which helps nobody.
 **The witness takes the purchase branch**, with the co-signer's slot left empty:
 
 ```
-[ <empty>, <owner signature>, <empty>, <witness script> ]
+[ <empty>, <empty>, <owner signature>, <witness script> ]
 ```
 
-The first empty item is the co-signer's place, filled at settlement. The third
-empty item selects the ELSE branch of the lock script.
+The first empty item is the co-signer's place, filled at settlement. The
+second empty item selects the ELSE branch of the lock script — the purchase
+branch. (Until 10 November 2026 this showed the owner's signature second and
+the selector third. That order was never what `method/lock/commitment.mjs`
+builds, checks or completes, nor what Bitcoin accepted on the test chain: the
+script checks the owner's signature first, so it must sit nearest the script.)
 
 ## The committed amount is output 0, not the lock's balance
 
@@ -153,7 +157,7 @@ It builds a commitment, verifies one against a proposal and a destinations list,
 and completes one with the co-signer's signature. The tests cover the ways a
 commitment is supposed to be rejected as well as the way it is supposed to work:
 a tampered destination, a forged owner signature, an unlisted destination, one
-that has not waited out its fourteen days, a revoked one, a declared locktime, an
+that has not waited out its waiting period, a revoked one, a declared locktime, an
 absurd fee, and a remainder output that would smuggle coins out of the lock.
 
 ## Amendments

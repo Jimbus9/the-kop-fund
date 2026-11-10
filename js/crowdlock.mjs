@@ -79,9 +79,16 @@ export function checkCrowdlock(c, { declarationText } = {}) {
   need(Number.isInteger(c.minimum_counted_lock_sats) && c.minimum_counted_lock_sats >= 0,
     "minimum_counted_lock_sats must be a whole number of sats");
 
-  for (const k of ["gathering_window_max_days", "settlement_window_max_days", "destination_wait_days"]) {
+  for (const k of ["gathering_window_max_days", "settlement_window_max_days"]) {
     need(posInt(c[k]), `${k} must be a whole number of days`);
   }
+  // How long a destination must be public before a proposal may name it: the
+  // real protection while there are few attestors. At least seven days on real
+  // bitcoin; a test Crowdlock may use none, so a proposal can be tried at once.
+  need(Number.isInteger(c.destination_wait_days) && c.destination_wait_days >= (c.network === "mainnet" ? 7 : 0),
+    c.network === "mainnet"
+      ? "destination_wait_days must be a whole number of days, at least 7 on real bitcoin"
+      : "destination_wait_days must be a whole number of days");
 
   for (const k of ["cosigner_keys", "attestor_keys"]) {
     const keys = c[k];

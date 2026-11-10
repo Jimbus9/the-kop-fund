@@ -119,7 +119,7 @@ Fund's is `crowdlocks/kop-fund.json`: copy it and change the values.
 | `cosigner_xpubs` | *Optional.* Each co-signer key's xpub, so members with a hardware wallet can lock (see below). Each must stand for one of `cosigner_keys` | Left out |
 | `gathering_window_max_days` | Longest a proposal may gather | 28 |
 | `settlement_window_max_days` | Longest settlement may take after that | 14 |
-| `destination_wait_days` | How long a destination must be public before a proposal may name it | 14 |
+| `destination_wait_days` | How long a destination must be public before a proposal may name it. At least 7 on real bitcoin; a test Crowdlock may use 0 | 7 |
 | `attestor_keys` | Who attests destinations. **Never a co-signer's key** | **Not yet chosen** — an empty list |
 | `attestor_threshold` | How many attestations an entry needs | 1 |
 | `max_commitment_fee` | Fee cap on a commitment, as a fraction of the amount committed | 0.01 |

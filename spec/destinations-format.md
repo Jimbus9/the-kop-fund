@@ -117,13 +117,18 @@ field so that a verifier never has to guess.
 
 ## The waiting period
 
-**An entry must be publicly visible for fourteen days before a proposal naming
-it may open.**
+**An entry must be publicly visible for the Crowdlock's waiting period before
+a proposal naming it may open.** The waiting period is the Crowdlock's
+`destination_wait_days`, recorded in the list as `minimum_age_days`. **On real
+bitcoin it must be at least seven days.** A test Crowdlock may set it to zero,
+so a proposal can be tried in one sitting. (Until 10 November 2026 the floor
+was fourteen days, for every Crowdlock. The Kop Fund's founder judged a
+fortnight longer than needed and set seven; nobody had committed to anything.)
 
-This is the real protection while there is one attestor. A fraudulent addition
-has to survive a fortnight in public, in a file people watch, followed by up to
-four weeks of a proposal gathering — six weeks in which anyone can notice it
-before a penny moves.
+This is the real protection while there is one attestor. At seven days, a
+fraudulent addition has to survive a week in public, in a file people watch,
+followed by up to four weeks of a proposal gathering — five weeks in which
+anyone can notice it before a penny moves.
 
 **Age is measured from the entry's first public appearance in the repository, not
 from its `added` field.** The `added` field is written by the attestor and could
@@ -140,8 +145,8 @@ proposal this afternoon. An entry whose publication date nobody can establish
 is one nobody should be spending against, so it is not merely untrusted for
 age; it is not spendable at all.
 
-Fourteen days is a floor. A proposal may require longer and should, for a large
-purchase.
+Seven days is a floor. A Crowdlock may set longer, and a proposal may require
+longer and should, for a large purchase.
 
 ## Revocation
 
@@ -164,8 +169,8 @@ Before completing any commitment, for the destination named in its proposal:
 1. The hash chain is intact from entry 1 to the head of the list.
 2. There is an `add` entry for the destination.
 3. Its attestations meet the threshold and every one verifies.
-4. The entry first appeared publicly at least fourteen days before the proposal
-   opened.
+4. The entry first appeared publicly at least the waiting period
+   (`minimum_age_days`) before the proposal opened.
 5. There is no later `revoke` entry for that address.
 
 Any check failing means the commitment is not completed. All five are mechanical;
@@ -215,7 +220,7 @@ relied on and no commitment should be completed against it.
 ## What this does not protect against
 
 **A legitimate destination that is the wrong one.** If an address is genuinely
-attested and genuinely waited out its fourteen days, this document is satisfied
+attested and genuinely waited out its waiting period, this document is satisfied
 even if the purchase behind it is a bad idea. Nothing here judges whether a
 purchase is worth making. That is what the absence of commitments is for.
 
