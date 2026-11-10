@@ -128,6 +128,15 @@
           <input type="text" id="lockSats" inputmode="numeric" autocomplete="off">
         </div>
         <p class="note" id="ledgerBalance"></p>
+        <p class="note" id="lockFeeLine"></p>
+        <details>
+          <summary>Change the fee</summary>
+          <div class="field">
+            <label for="lockFeeRate"><b>Fee rate, in sats per vbyte</b></label>
+            <input type="text" id="lockFeeRate" inputmode="numeric" autocomplete="off">
+          </div>
+          <p class="note" id="lockFeeHelp"></p>
+        </details>
         <button class="btn" id="ledgerLock" type="button">Lock with my Ledger</button>
         <div class="verdict-live" id="ledgerLockResult" role="status" aria-live="polite" hidden></div>
       </div>
@@ -152,6 +161,15 @@
   <section id="homeLedger" hidden>
     <h2>Take a lock home with a Ledger</h2>
     <p>Locks on this Crowdlock's register that belong to your Ledger's key show here. Once a lock's date has passed on the network's own clock, you can bring its money back to your Ledger's address. Nobody else is involved; the Ledger shows you the payment and you approve it.</p>
+    <p class="note" id="homeFeeLine"></p>
+    <details>
+      <summary>Change the fee</summary>
+      <div class="field">
+        <label for="homeFeeRate"><b>Fee rate, in sats per vbyte</b></label>
+        <input type="text" id="homeFeeRate" inputmode="numeric" autocomplete="off">
+      </div>
+      <p class="note" id="homeFeeHelp"></p>
+    </details>
     <button class="btn" id="homeConnect" type="button">Connect my Ledger</button>
     <div class="verdict-live" id="homeStatus" role="status" aria-live="polite" hidden></div>
     <div id="homeLocks"></div>
@@ -380,7 +398,7 @@ el("checkChain").addEventListener("click", async () => {
 
 const L = globalThis.CrowdlockLedger;
 const same = (a, b) => String(a).toLowerCase() === String(b).toLowerCase();
-const chainFor = () => L.esploraChain(C.chain_api, undefined, undefined, { minFee: C.network === "mainnet" ? 1 : 5 });
+const chainFor = () => L.esploraChain(C.chain_api, undefined, undefined, { minFee: feeFloor() });
 const explorer = () => C.chain_api.replace(/\/api$/, "");
 function txLink(box, txid) {
   const a = document.createElement("a");
@@ -388,6 +406,39 @@ function txLink(box, txid) {
   const p = document.createElement("p"); p.append(a); box.append(p);
 }
 let ACCOUNT = null;   // the connected Ledger's account
+
+// Fee rate. Left blank, the page uses the network's current estimate (never
+// below the floor). A typed rate must sit between the floor and a ceiling so a
+// typo can't burn the money. The Ledger shows the exact fee before you approve.
+const feeFloor = () => (C.network === "mainnet" ? 1 : 5);
+const VBYTES = { lock: 153, home: 122 };   // typical sizes, for the estimate line only
+const fmt = (n) => Number(n).toLocaleString("en-GB");
+const feeCeiling = (est) => Math.max(50, est * 10);
+async function showFee(kind, line, rateInput, help) {
+  try {
+    const est = await chainFor().feeRate();
+    rateInput.placeholder = String(est);
+    help.textContent = `Blank uses the current estimate, ${fmt(est)} sat/vB. Allowed: ${feeFloor()} to ${fmt(feeCeiling(est))}. A lower rate is cheaper but can take longer to confirm.`;
+    const update = () => {
+      const r = rateInput.value.trim() ? Number(rateInput.value.trim()) : est;
+      line.textContent = Number.isFinite(r) && r > 0
+        ? `Estimated network fee: about ${fmt(Math.ceil(VBYTES[kind] * r))} sats (${fmt(r)} sat/vB). It comes out of the amount. The Ledger shows the exact fee.`
+        : "";
+    };
+    rateInput.oninput = update; update();
+  } catch { line.textContent = ""; }
+}
+// Returns the rate to use, or throws a plain message.
+async function chosenRate(rateInput, chain) {
+  const est = await chain.feeRate();
+  const raw = rateInput.value.trim();
+  if (!raw) return est;
+  if (!/^[0-9]+$/.test(raw)) throw new Error("The fee rate must be a whole number of sats per vbyte, or blank.");
+  const r = Number(raw), max = feeCeiling(est);
+  if (r < feeFloor()) throw new Error(`That fee rate is too low to confirm. The lowest allowed is ${feeFloor()} sat/vB.`);
+  if (r > max) throw new Error(`That fee rate looks like a typo. The highest allowed is ${fmt(max)} sat/vB (the estimate now is ${fmt(est)}).`);
+  return r;
+}
 
 async function connect(statusBox, btn) {
   if (!L || !L.supported()) {
@@ -423,6 +474,7 @@ el("ledgerConnect").addEventListener("click", async () => {
     el("ledgerBalance").textContent = `Confirmed bitcoin on this Ledger address: ${total.toLocaleString("en-GB")} sats. The network fee comes out of what you lock.`;
     el("lockSats").value = String(Math.max(PLAN.minimumSats, 0));
     el("ledgerLockRow").hidden = false;
+    showFee("lock", el("lockFeeLine"), el("lockFeeRate"), el("lockFeeHelp"));
   } catch (e) {
     setBox(el("ledgerStatus"), "bad", "Could not read the balance", e.message);
   }
@@ -437,12 +489,13 @@ el("ledgerLock").addEventListener("click", async () => {
   btn.disabled = true;
   try {
     const chain = chainFor();
+    const feeRate = await chosenRate(el("lockFeeRate"), chain);
     const lock = {
       address: PLAN.address, ownerPubkey: PLAN.ownerPubkey, cosignerPubkey: PLAN.cosignerPubkey,
       cosignerXpub: L.xpubForKey(C, PLAN.cosignerPubkey), locktime: PLAN.locktime,
     };
     setBox(out, "", "Check your Ledger", "It will first ask you to approve this lock's rules, then the payment. Read each on the device.");
-    const built = await L.buildLock({ account: ACCOUNT, chain, lock, feeRate: await chain.feeRate(), amount: BigInt(raw) });
+    const built = await L.buildLock({ account: ACCOUNT, chain, lock, feeRate, amount: BigInt(raw) });
     const txid = await chain.broadcast(built.hex);
     setBox(out, "ok", "Sent", `${built.sent.toLocaleString("en-GB")} sats are on their way to the lock, fee ${built.fee.toLocaleString("en-GB")} sats. Publish it below once you like; the register adds it when the bitcoin confirms.`);
     txLink(out, txid);
@@ -492,7 +545,7 @@ el("homeConnect").addEventListener("click", async () => {
           go.disabled = true;
           try {
             setBox(res, "", "Check your Ledger", "It will ask you to approve this lock's rules if it has not seen them, then the payment home.");
-            const built = await L.takeHome({ account: acc, chain, lock, feeRate: await chain.feeRate(), medianTime });
+            const built = await L.takeHome({ account: acc, chain, lock, feeRate: await chosenRate(el("homeFeeRate"), chain), medianTime });
             const txid = await chain.broadcast(built.hex);
             setBox(res, "ok", "Sent", `${built.sent.toLocaleString("en-GB")} sats are on their way home, fee ${built.fee.toLocaleString("en-GB")} sats.`);
             txLink(res, txid);
@@ -504,7 +557,7 @@ el("homeConnect").addEventListener("click", async () => {
   setBox(el("homeStatus"), "ok", "Connected", `Ledger address ${acc.address}`);
 });
 
-load();
+load().then(() => showFee("home", el("homeFeeLine"), el("homeFeeRate"), el("homeFeeHelp")));
 </script>
 
 </body>
