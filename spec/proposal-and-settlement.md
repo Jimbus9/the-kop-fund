@@ -118,6 +118,49 @@ existing ones still stand. This is the single largest advantage over the
 assurance-contract designs considered and rejected, where a price movement
 destroyed every signature gathered so far.
 
+## Publishing a proposal
+
+A Crowdlock publishes its proposals in one file, named in its Crowdlock file as
+`register.proposals` (for example `proposals.json`). The file is append-only: a
+proposal is never edited once listed, except that its `target` is restated as
+the price moves.
+
+```json
+{
+  "format": "crowdlock-proposals/1",
+  "instance": "<the declaration's SHA-256>",
+  "proposals": [
+    {
+      "title": "A short name",
+      "text": "The proposal in full: what is being bought, from whom, and why.",
+      "destination": "<an address on the destinations list>",
+      "requires": 12345,
+      "currency": "GBP",
+      "opens": "2026-12-01T00:00:00Z",
+      "closes": "2026-12-29T00:00:00Z",
+      "settles_by": "2027-01-12T00:00:00Z",
+      "hash": "<the proposal's hash>",
+      "target": { "sats": 250000, "rate": "1 BTC = 66000.00 GBP", "at": "2026-11-30T12:00:00Z" }
+    }
+  ]
+}
+```
+
+- `document`, in the canonical line, is the SHA-256 of `text` (UTF-8, after
+  NFC), so the prose cannot be changed without changing the hash.
+- `hash` is the SHA-256 of the canonical line built from these fields and
+  `instance`. A reader recomputes it and refuses a proposal whose hash does not
+  match its own fields and text.
+- Times are UTC, written as above. `closes` is at most the Crowdlock's
+  `gathering_window_max_days` after `opens`, and `settles_by` at most its
+  `settlement_window_max_days` after `closes`.
+- `target` is not hashed. It gives whole sats, the rate used, in words, and when
+  it was worked out.
+
+The reference checker is `method/js/proposals.mjs`, which also runs in a
+browser and on a phone; its hash is held byte for byte to
+`method/lock/commitment.mjs`.
+
 ## The window
 
 **Up to four weeks to gather, then up to two weeks to settle.**
@@ -295,7 +338,21 @@ page where a supporter chooses a lock length, not buried here.
 
 ## Where the pile lives
 
-In the project repository, submitted the same way as registrations.
+In the project repository, submitted the same way as registrations, at
+`commitments/<proposal hash>.json` beside the proposals file:
+
+```json
+{
+  "format": "crowdlock-commitments/1",
+  "proposal": "<the proposal's hash>",
+  "commitments": [
+    { "submitted": "2026-12-02T09:15:00Z", "record": { "proposal": "…", "lock": { … }, "tx": "…" } }
+  ]
+}
+```
+
+Each `record` is a commitment in the commitment format. `submitted` is when the
+repository first received it, which is the order oversubscription settles in.
 
 Not on a server we run. A collection held by us could have an individual
 commitment quietly dropped from it with no way for anyone to prove it happened.

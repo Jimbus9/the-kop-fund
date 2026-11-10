@@ -149,8 +149,8 @@ The list is `destinations.json` in the project repository, and it has its own
 specification: **published destinations format**. In short, it is append-only
 and hash-chained, each entry is separately signed by keys that are **never** the
 co-signing key, and an address must have been publicly visible for the
-Crowdlock's waiting period (at least seven days on real bitcoin) before a
-proposal may name it.
+Crowdlock's waiting period (its own choice; seven days is recommended on real
+bitcoin) before a proposal may name it.
 
 ## Expiry
 

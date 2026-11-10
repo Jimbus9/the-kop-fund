@@ -118,12 +118,13 @@ field so that a verifier never has to guess.
 ## The waiting period
 
 **An entry must be publicly visible for the Crowdlock's waiting period before
-a proposal naming it may open.** The waiting period is the Crowdlock's
-`destination_wait_days`, recorded in the list as `minimum_age_days`. **On real
-bitcoin it must be at least seven days.** A test Crowdlock may set it to zero,
-so a proposal can be tried in one sitting. (Until 10 November 2026 the floor
-was fourteen days, for every Crowdlock. The Kop Fund's founder judged a
-fortnight longer than needed and set seven; nobody had committed to anything.)
+a proposal naming it may open.** The waiting period is the Crowdlock's own
+choice, its `destination_wait_days`, recorded in the list as
+`minimum_age_days`. **We recommend at least seven days on real bitcoin**, which
+is The Kop Fund's. A test Crowdlock may set it to zero, so a proposal can be
+tried in one sitting. (Until 10 November 2026 this document required fourteen
+days of every Crowdlock. The Kop Fund's founder judged a fortnight longer than
+needed, and that the length is each Crowdlock's to choose, not the method's.)
 
 This is the real protection while there is one attestor. At seven days, a
 fraudulent addition has to survive a week in public, in a file people watch,
@@ -145,8 +146,10 @@ proposal this afternoon. An entry whose publication date nobody can establish
 is one nobody should be spending against, so it is not merely untrusted for
 age; it is not spendable at all.
 
-Seven days is a floor. A Crowdlock may set longer, and a proposal may require
-longer and should, for a large purchase.
+A proposal may wait longer than its Crowdlock requires, and should, for a large
+purchase. A Crowdlock that sets a short wait, or none, on real bitcoin is
+telling its members that they have less time to notice a forged destination;
+that is visible in its file to anyone who looks.
 
 ## Revocation
 
