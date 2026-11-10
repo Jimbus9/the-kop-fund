@@ -163,7 +163,14 @@ browser and on a phone; its hash is held byte for byte to
 
 ## The window
 
-**Up to four weeks to gather, then up to two weeks to settle.**
+**Each Crowdlock sets the longest a proposal may gather
+(`gathering_window_max_days`) and the longest it may then take to settle
+(`settlement_window_max_days`). Each proposal chooses its own dates within
+those limits.** The Kop Fund's are **four weeks to gather and two to settle**,
+which we recommend to others, for the reasons below. A small Crowdlock buying
+something with a short deadline may set less; what the method fixes is the
+order and the rules, not the lengths. (Until 10 November 2026 this document
+stated four and two weeks as if they were the method's own.)
 
 ### Why it is two phases and not one
 
@@ -184,15 +191,18 @@ settlement runway be squeezed to nothing by a proposal funded the day before.
 `requires` is met, gathering ends and settlement begins. A proposal funded on day
 three does not hold anybody for another twenty-five days.
 
-**Four weeks** is the outer limit because signing does not touch the blockchain,
-so nothing about the network constrains gathering. What constrains it is people:
-a global support includes supporters who look at this once a fortnight, who work
-nights, who are away. Four weeks reaches them; two does not.
+**Why four weeks to gather is recommended.** Signing does not touch the
+blockchain, so nothing about the network constrains gathering. What constrains it
+is people: a global support includes supporters who look at this once a
+fortnight, who work nights, who are away. Four weeks reaches them; two may not. A
+Crowdlock whose members are few and close at hand can use less.
 
-**Six weeks in total** is the ceiling because fee estimates drift and a commitment
-is binding for as long as the proposal is open.
+**Why about six weeks in total is recommended as the ceiling.** Fee estimates
+drift, and a commitment is binding for as long as the proposal is open. Two weeks
+to settle gives the co-signer room to pace the sending across quiet periods; a
+small Crowdlock can settle in hours.
 
-**A proposal window is weeks, never years.** The lock is the long commitment; a
+**A proposal window should be weeks, never years.** The lock is the long commitment; a
 commitment to a proposal is a short final step. Any design in which a supporter
 can be bound to a specific purchase for years is wrong.
 
@@ -236,8 +246,9 @@ There is no way to withdraw a commitment. You cannot un-sign, and while your loc
 is in date you cannot move those coins elsewhere.
 
 **This must be stated plainly wherever a supporter commits.** The bound period is
-six weeks at worst (four of gathering, two of settling) and usually far less, since gathering ends the moment the
-target is met. But it is real, and a supporter who did not understand it was
+at most the Crowdlock's gathering limit plus its settlement limit — six weeks for
+The Kop Fund — and usually far less, since gathering ends the moment the target is
+met. But it is real, and a supporter who did not understand it was
 misled.
 
 A withdrawal mechanism was designed and rejected. It would have required the

@@ -128,8 +128,8 @@ needed, and that the length is each Crowdlock's to choose, not the method's.)
 
 This is the real protection while there is one attestor. At seven days, a
 fraudulent addition has to survive a week in public, in a file people watch,
-followed by up to four weeks of a proposal gathering — five weeks in which
-anyone can notice it before a penny moves.
+followed by the proposal's gathering (up to four weeks for The Kop Fund) — up to
+five weeks in which anyone can notice it before a penny moves.
 
 **Age is measured from the entry's first public appearance in the repository, not
 from its `added` field.** The `added` field is written by the attestor and could
