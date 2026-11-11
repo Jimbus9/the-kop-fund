@@ -1,0 +1,26 @@
+{
+  "format": 1,
+  "declaration": {
+    "sha256": "3a0a0bca96ec2161d98ff9da05ae885d6b8d68e55ed412bc85dcc7fb16209b96",
+    "statement": "I agree to the Supporters' Declaration v1 (sha256:3a0a0bca96ec2161d98ff9da05ae885d6b8d68e55ed412bc85dcc7fb16209b96) and join as a member."
+  },
+  "members": [
+    {
+      "n": 1,
+      "address": "bc1qx22lej8slm4g6f5l85tte0peraha7km30lqxw7",
+      "signature": "H7yCAMd+09Ap+GnsO7chcHd9ILDdBvMBruTeHF6WPyBHTUH6e2dJlaGi3nRGuaEtYvC9258+LzM1Y9kLmJpsD5I=",
+      "signed": "2026-10-27"
+    }
+  ],
+  "locks": [
+    {
+      "address": "bc1q7pyxv4d8pgaf7rj55kfzaxa70z70hsg5g9ccuwk2v2cftfyszfks88jhnu",
+      "member": "bc1qx22lej8slm4g6f5l85tte0peraha7km30lqxw7",
+      "owner_pubkey": "02aea12a67299235d1e49f319cb8c8e3565fd29e0f8c350623c352844bd87a666a",
+      "cosigner_pubkey": "03811ead45a2cf0870ba7c2d31b3ca20d2875e02b5dc91b8f3d4e55f9c86baf68b",
+      "locktime": 1825891200,
+      "unlocks": "2027-11-11",
+      "submitted": "2026-11-10"
+    }
+  ]
+}
