@@ -330,9 +330,11 @@ Offered because it is cheaper to read than to rediscover:
 - **Put nothing in the declaration that will ever need to change.** Dates,
   numbers, names, procedures and technologies all belong elsewhere. Ours shrank
   by two thirds when that rule was applied, and it got stronger.
-- **Publish the figures you would rather not.** Lapsed locks, failed
-  registrations, proposals that died. A register that only shows good news is not
-  a register.
+- **Publish the figures you would rather not.** Failed registrations,
+  proposals that died. A register that only shows good news is not a register.
+  (Lapsed money is the exception we chose: the counted total already falls when
+  a lock lapses, so nothing is hidden, and a second figure of uncommitted money
+  reads as inflation. See the counting rule.)
 - **Separate the key that approves a destination from the key that spends to
   it.** One compromise should not be able to deliver both halves.
 - **Ask people whether they would contribute before building any of this.** We

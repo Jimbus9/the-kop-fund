@@ -158,8 +158,8 @@ Nothing happens at the locktime. Bitcoin performs no scheduled actions.
 
 The coin remains exactly where it was and simply becomes spendable by its owner
 alone. It stays there indefinitely until they sign. For how this affects the
-figures, see the counting rule — a lapsed lock is not counted and is published
-separately.
+figures, see the counting rule — a lapsed lock is not counted, and no total of
+lapsed money is published.
 
 Renewal cannot be automatic, since no coin moves without a signature. It is a
 new transaction with a new fee. A client should prompt ahead of the date and

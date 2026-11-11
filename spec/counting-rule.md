@@ -32,7 +32,7 @@ Read directly from the blockchain, never from any record we keep.
 | State | Condition | Counted |
 | --- | --- | --- |
 | **Locked** | Coins present at the lock address, locktime in the future | **Yes** |
-| **Lapsed** | Coins present, locktime reached | No — published separately |
+| **Lapsed** | Coins present, locktime reached | No — and no total of it is published |
 | **Withdrawn** | Coins no longer at the address | No |
 
 **Lapsed money is not counted**, whether or not the owner has moved it. On the
@@ -40,10 +40,14 @@ date a lock reaches, the owner can spend those coins with a single signature,
 which makes them indistinguishable from any other coins somebody happens to
 own — and counting those would return the headline figure to meaninglessness.
 
-**The lapsed figure is published on its own.** It is the renewal pipeline, and
-the gap between "members drifting away" and "members who have not got round to
-it" is the most useful health signal this movement has. Concealing it would be
-a breach of principle 10.
+**No total of lapsed money is published.** The counted total is the figure:
+only locked money, and a lock that lapses shows as a fall in it, so nothing
+that counts against the movement is hidden. A second figure of uncommitted
+money beside it would read as "plus this much more" — the inflation this rule
+exists to prevent. The owner of a lapsed lock still sees it as lapsed in their
+own client, and every lock is public on the chain, so anyone who wants the
+number can work it out; it is simply not a headline. A Crowdlock that wants to
+chase renewals can compute it for itself.
 
 ## The committed total
 
