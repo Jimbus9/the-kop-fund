@@ -103,6 +103,7 @@
       <b>Know the way home before you send</b>
       <p>Taking a lock home has been tested with a Ledger on this page and with the Crowdlock app. Sparrow, Electrum and other wallets can send to a lock, but nobody has yet shown they can sign to take it home. Use one only if you can do that yourself.</p>
     </div></div>
+    <p><strong>Locking is public. A lock that isn't published isn't counted.</strong></p>
     <p id="amountNote" class="note"></p>
     <p class="note">A sat is the smallest unit of bitcoin. 100,000,000 sats make one bitcoin.</p>
     <p><strong>Pick one way.</strong></p>
@@ -166,7 +167,9 @@
     <p>A lock address is just a string of characters. Nobody can tell it is yours, or that it counts, unless you say so. Publishing adds your lock to the register once the bitcoin has one confirmation. A confirmation means the network has written your payment into the blockchain.</p>
     <div class="warn red"><div>
       <b>Public and permanent</b>
-      <p>Publishing ties this address to your membership, so anyone can see that you have bitcoin locked and how much. The register cannot hold a lock privately. Do not publish if you would rather not.</p>
+      <p>Publishing puts your lock on the register, with your membership and the amount, for anyone to see. It can't be undone.</p>
+      <p>Not publishing doesn't make it private. Anyone can work out your lock address from your public key. It only means the fund doesn't count it, and this page can't show it to you when it's time to take it home.</p>
+      <p>If you don't want this to be public, don't lock.</p>
     </div></div>
     <div class="warn yellow"><div>
       <b>Publish before you leave this page</b>
