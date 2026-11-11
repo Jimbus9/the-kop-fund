@@ -53,8 +53,8 @@ jobs:
         working-directory: anchor
         shell: bash
         run: |
-          mkdir -p ../../anchors
-          for proof in ../../anchors/*.ots; do
+          mkdir -p ../anchors
+          for proof in ../anchors/*.ots; do
             [ -e "$proof" ] || continue
             file="${proof%.ots}"
             echo "== $file"
@@ -89,7 +89,7 @@ jobs:
           fi
           if [ "$due" = yes ]; then
             cp registrations.json "anchors/registrations-$today.json"
-            (cd anchor && node stamp.mjs "../../anchors/registrations-$today.json")
+            (cd anchor && node stamp.mjs "../anchors/registrations-$today.json")
             test -s "anchors/registrations-$today.json.ots"
           fi
 
