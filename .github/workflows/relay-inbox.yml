@@ -46,10 +46,11 @@ jobs:
           for pass in $(seq 1 24); do
             git pull --rebase -q || true
             (cd relay && node inbox.mjs) || echo "This pass failed; trying again next pass."
-            if [ -n "$(git status --porcelain -- crowdlocks registrations.json test relay/health.json relay/announced.json)" ]; then
+            if [ -n "$(git status --porcelain -- crowdlocks registrations.json commitments test relay/health.json relay/announced.json)" ]; then
               # Only the paths this Crowdlock has: a test-only one has no
               # top-level register, and git refuses a path that isn't there.
-              for f in crowdlocks registrations.json test relay/health.json relay/announced.json; do
+              # commitments/ holds each proposal's pile, once there is one.
+              for f in crowdlocks registrations.json commitments test relay/health.json relay/announced.json; do
                 if [ -e "$f" ]; then git add "$f"; fi
               done
               git commit -q -m "$(cat relay/.message 2>/dev/null || echo 'Records via relays')"

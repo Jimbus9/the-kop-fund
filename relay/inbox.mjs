@@ -8,7 +8,7 @@
 // line per record, so the job's log is a public account of what was taken
 // and what was refused, and why.
 
-import { readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -16,6 +16,7 @@ import { applyRecords, announcementTemplate, announcementDue } from "../js/inbox
 import { membershipStatement, checkCrowdlock } from "../js/crowdlock.mjs";
 import { fetchRecords, postTemplate } from "./nostr.mjs";
 import { recordPass, planSwaps, SILENT_DAYS } from "../js/relayhealth.mjs";
+import { checkProposals, phaseOf, pilePath, emptyPile, checkPileShape, applyCommitments } from "../js/proposals.mjs";
 
 // A relay connection can report an error after it has already been finished
 // with. Left alone, that would end the whole pass part-way — after one
@@ -117,6 +118,34 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
   }
   if (result.register !== register) {
     writeFileSync(regPath, JSON.stringify(result.register, null, 2) + "\n");
+  }
+
+  // Commitments to its proposals: recorded in each proposal's pile, in the
+  // order this repository first saw them. Readers check every one in full.
+  if (crowdlock.register.proposals && existsSync(join(ROOT, crowdlock.register.proposals))) {
+    const checked = checkProposals(JSON.parse(readFileSync(join(ROOT, crowdlock.register.proposals), "utf8")), crowdlock);
+    for (const x of checked.problems) console.log(`${file}: proposals: ${x}`);
+    const nowIso = new Date(now * 1000).toISOString().replace(/\.\d{3}Z$/, "Z");
+    for (const p of checked.proposals) {
+      const phase = phaseOf(p, now * 1000);
+      if (phase === "soon" || phase === "over") continue;
+      const rel = pilePath(crowdlock.register.proposals, p.hash);
+      const at = join(ROOT, rel);
+      let pile = emptyPile(p.hash);
+      if (existsSync(at)) {
+        pile = JSON.parse(readFileSync(at, "utf8"));
+        const shape = checkPileShape(pile, p.hash);
+        if (!shape.ok) { console.log(`${file}: pile for "${p.title}" left alone: ${shape.reason}`); continue; }
+      }
+      const got = applyCommitments(pile, events, { crowdlock, proposal: p, register: result.register, nowIso });
+      for (const o of got.outcome) console.log(`${file}: commitment to "${p.title}" from ${o.lock} — ${o.added ? "ADDED" : `not added: ${o.reason}`}`);
+      if (got.pile !== pile) {
+        mkdirSync(dirname(at), { recursive: true });
+        writeFileSync(at, JSON.stringify(got.pile, null, 2) + "\n");
+        const n = got.outcome.filter((o) => o.added).length;
+        messages.push(`${n} commitment${n === 1 ? "" : "s"} to "${p.title}" (via relays)`);
+      }
+    }
   }
 }
 
