@@ -19,7 +19,8 @@
 // pages, or they are read by the app and by members' tools):
 //   crowdlocks/kop-fund.json ("name"; the test copy lives in the method repository, fanfund)
 //   spec/*.md (the documents), README.md, js/crowdlock.mjs (one comment)
-//   the site's own address, which contains the name
+//   the site's own addresses, which contain the name: the GitHub address
+//   (the-kop-fund) and the domain thekopfund.org in CNAME (bought 11 November)
 // The signed declaration does not contain the name, so no signature breaks.
 
 import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
