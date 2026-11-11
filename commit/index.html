@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-t="Commit | {name}">Commit | The Kop Fund</title>
+<meta name="description" content="Commit money you have locked to a published proposal, from a Ledger, in your browser.">
+<meta property="og:title" data-t="Commit | {name}" content="Commit | The Kop Fund">
+<meta property="og:description" content="Commit money you have locked to a published proposal, from a Ledger, in your browser.">
+<meta property="og:site_name" data-t="{name}" content="The Kop Fund">
+<meta property="og:type" content="website">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to the content</a>
+
+<header class="banner"><div class="wrap">
+  <div class="row">
+    <a class="name" href="../"><!--name-->The Kop Fund<!--/name--></a>
+    <a class="menu" href="#menu">Menu</a>
+  </div>
+  <p class="indep">Run by supporters. Not affiliated with Liverpool FC.</p>
+  <nav class="topnav" aria-label="More about the fund">
+    <a href="../how/">How it works</a>
+    <a href="../why/">Why</a>
+    <a href="../risk/">Risks</a>
+    <a href="../society/">The society</a>
+    <a href="../register/">The register</a>
+    <a href="../spec/">The documents</a>
+  </nav>
+</div></header>
+
+<main id="main" class="wrap">
+
+  <h1>Commit</h1>
+  <p class="lede">When a purchase is proposed, you can commit money you have locked to it. You sign a payment to the seller from your own lock. It can't move unless the proposal reaches its target and the fund's co-signer adds the second signature. If it doesn't, your money stays locked and comes home on its date as usual.</p>
+
+  <section id="closed" hidden>
+    <div class="verdict-live bad">
+      <b>Not open for real bitcoin yet</b>
+      <p>Committing real bitcoin from this page opens after the outside review. You can try every step on the test network.</p>
+    </div>
+    <a class="go" href="../commit/?c=kop-fund-testnet4">Try it on the test network</a>
+  </section>
+
+  <p id="paramStatus" class="note">Loading…</p>
+  <p id="testnote" class="note" hidden>This is the test network: a practice copy of bitcoin whose coins are free and worth nothing.</p>
+  <p id="loadError" class="verdict-live bad" hidden></p>
+
+  <section id="list" hidden>
+    <h2>Proposals</h2>
+    <p id="none" class="note" hidden>No proposals yet. When one is published it appears here.</p>
+    <div id="proposals"></div>
+  </section>
+
+  <section id="commitBox" hidden>
+    <h2 id="commitTitle">Commit to this proposal</h2>
+    <p class="note">You need a Ledger, and Chrome, Edge or Brave on a computer. Close Ledger Live, plug the Ledger in, unlock it, and open the <span id="ledgerAppName">Bitcoin</span> app.</p>
+    <p id="nohid" class="verdict-live bad" hidden>This browser can't talk to a Ledger. Use Chrome, Edge or Brave on a computer, or commit from the Crowdlock app.</p>
+    <button type="button" id="connect" class="go">Connect my Ledger</button>
+    <p id="connected" class="note" hidden></p>
+    <div id="locks"></div>
+    <label for="amount" hidden id="amountLabel">Amount in BTC. Leave it empty to commit all of this lock.</label>
+    <input id="amount" type="text" inputmode="decimal" autocomplete="off" hidden>
+    <div class="verdict-live" id="binding" hidden>
+      <b>Before you sign</b>
+      <p>A commitment holds until the proposal closes, and can't be withdrawn. Nothing moves unless the proposal reaches its target and the co-signer completes it. If it doesn't, your money stays locked and comes home on its date. Your Ledger will show the payment to the seller: approve it only if the address matches the one above.</p>
+    </div>
+    <button type="button" id="commit" class="go" hidden>Sign the commitment</button>
+    <p id="result" class="note"></p>
+  </section>
+
+  <section>
+    <h2>How this works</h2>
+    <p>A proposal names a seller already on the fund's published list of destinations, a price, a target in bitcoin and its dates. Each commitment is a payment from one member's lock to that seller, signed by the member and missing the co-signer's signature, so on its own it is worthless. Commitments are posted to the fund's relays and kept in its repository in the order they arrived. When the target is met, the co-signer completes them in that order, up to the target and no further, and the payments go out a few at a time. If it isn't met, the co-signer signs a public notice saying so, and nothing ever moves.</p>
+    <p>Everything shown here is checked in your browser: each proposal against its own fingerprint, and each commitment against the lock it spends, before it is counted. The rules are in <a href="../spec/">the documents</a>.</p>
+  </section>
+
+</main>
+
+<footer><div class="wrap">
+  <nav id="menu" aria-label="All pages">
+    <h2>Menu</h2>
+    <div class="allpages">
+      <ul>
+        <li class="h">The six steps</li>
+        <li><a href="../">1. Understand</a></li>
+        <li><a href="../declaration/">2. Sign</a></li>
+        <li><a href="../get-bitcoin/">3. Get bitcoin</a></li>
+        <li><a href="../lock/">4. Lock</a></li>
+        <li><a href="../lock/#check-and-publish">5. Check and publish</a></li>
+        <li><a href="../lock/#take-home">6. Take it home</a></li>
+      </ul>
+      <ul>
+        <li class="h">More</li>
+        <li><a href="../how/">How it works</a></li>
+        <li><a href="../why/">Why</a></li>
+        <li><a href="../risk/">Risks</a></li>
+        <li><a href="../society/">The society</a></li>
+        <li><a href="../register/">The register</a></li>
+        <li><a href="../spec/">The documents</a></li>
+      </ul>
+    </div>
+  </nav>
+  <p><strong>This is not an investment.</strong> There is no return, no dividend and no payout, now or ever. Bitcoin rises and falls, and bitcoin you lock can fall in value while it is locked. Nothing here is legal or financial advice.</p>
+  <p>An independent initiative by supporters of Liverpool Football Club. Not affiliated with, endorsed by or connected to Liverpool Football Club, its owners, or any official supporters' organisation.</p>
+  <p><strong><!--name-->The Kop Fund<!--/name--></strong> is a Crowdlock: a published set of rules for a crowd locking bitcoin towards buying something, with nobody holding anybody else's money. <a href="https://github.com/Jimbus9/the-kop-fund">Source and documents on GitHub</a>. Questions, problems or ideas: <a href="https://github.com/Jimbus9/the-kop-fund/issues">open an issue</a>.</p>
+</div></footer>
+
+<script src="../js/vendor/nostr-tools-2.25.2.bundle.js"></script>
+<script src="../js/vendor/crowdlock-ledger-web.bundle.js"></script>
+<script type="module">
+// Commit to a proposal from a Ledger, in the browser. The signing code is the
+// Crowdlock app's own (js/vendor/crowdlock-ledger-web.bundle.js, built from
+// method/ledger-web in the method's repository): buildCommitment signs the
+// owner's half on the device, and checkCommitment checks it, as the app does.
+// This page adds no signing or transaction code.
+import { checkProposals, phaseOf, pilePath, checkPileShape, commitmentEventTemplate, commitmentFromEvent, PROPOSAL_TAG } from "../js/proposals.mjs";
+
+const OPEN_NETWORKS = new Set(["testnet4"]);
+const L = globalThis.CrowdlockLedger;
+const el = (id) => document.getElementById(id);
+let C, BASE, REGISTER, DESTINATIONS, PROPOSALS = [], ACCOUNT = null, CHOSEN = null, PICK = null, COINS = [];
+
+const btc = (sats) => `${(Number(sats) / 1e8).toFixed(8)} BTC`;
+const minorDigits = (cur) => { try { return new Intl.NumberFormat("en", { style: "currency", currency: cur }).resolvedOptions().maximumFractionDigits; } catch { return 2; } };
+const money = (minor, cur) => `${(minor / 10 ** minorDigits(cur)).toFixed(minorDigits(cur))} ${cur}`;
+const PHASE = { soon: "Not open yet", gathering: "Gathering commitments", settling: "Closed — settling", over: "Over" };
+const chainFor = () => L.esploraChain(C.chain_api, undefined, undefined, { minFee: C.network === "mainnet" ? 1 : 5 });
+
+async function relayItems(hash) {
+  const { Relay } = globalThis.NostrTools;
+  const found = new Map();
+  await Promise.all((C.relays ?? []).map(async (url) => {
+    let relay;
+    try {
+      relay = await Promise.race([Relay.connect(url), new Promise((_, no) => setTimeout(() => no(new Error("timeout")), 8000))]);
+      await Promise.race([new Promise((resolve) => {
+        const sub = relay.subscribe([{ kinds: [3713], [`#${PROPOSAL_TAG}`]: [hash], limit: 2000 }], {
+          onevent(e) { const it = commitmentFromEvent(e, C.declaration.sha256, hash); if (it) found.set(it.type === "commitment" ? it.record.tx : (it.tx ?? JSON.stringify(it.notice)), it); },
+          oneose() { sub.close(); resolve(); },
+        });
+      }), new Promise((r) => setTimeout(r, 8000))]);
+    } catch {} finally { try { relay?.close(); } catch {} }
+  }));
+  return [...found.values()];
+}
+
+/** The pile: the repository's record first, then the relays. Every commitment checked. */
+async function readPile(p) {
+  const chain = chainFor();
+  const items = [], inFile = new Set();
+  let notice = null;
+  try {
+    const r = await fetch(`${BASE}${pilePath(C.register.proposals, p.hash)}`, { cache: "no-store" });
+    if (r.ok) {
+      const f = await r.json();
+      if (checkPileShape(f, p.hash).ok) {
+        for (const x of f.commitments) { items.push({ type: "commitment", record: x.record }); inFile.add(x.record.tx); }
+        notice = f.notice ?? null;
+      }
+    }
+  } catch {}
+  for (const it of await relayItems(p.hash)) {
+    if (it.type === "commitment" && !inFile.has(it.record.tx)) items.push(it);
+    if (it.type === "notice" && !notice) notice = it.notice;
+  }
+  let waiting = 0, paid = 0, count = 0;
+  for (const it of items) {
+    if (it.type !== "commitment") continue;
+    const v = await L.checkCommitment({ record: it.record, crowdlock: C, proposal: p, destinations: DESTINATIONS, chain, network: C.network });
+    if (v.valid) { waiting += v.committedSats; count++; }
+    else if (/already been spent/.test(v.reason)) paid += await L.commitmentPaid({ record: it.record, chain });
+  }
+  return { waiting, paid, count, notice };
+}
+
+function renderList() {
+  const box = el("proposals");
+  box.textContent = "";
+  el("none").hidden = PROPOSALS.length > 0;
+  for (const p of PROPOSALS.slice().reverse()) {
+    const card = document.createElement("div");
+    card.className = "card";
+    const h = document.createElement("h3"); h.textContent = p.title; card.append(h);
+    const status = document.createElement("p"); status.className = "note";
+    status.textContent = `${PHASE[phaseOf(p)]} · needs ${money(p.requires, p.currency)} · target ${btc(p.target.sats)} · checking commitments…`;
+    card.append(status);
+    const text = document.createElement("p"); text.textContent = p.text; card.append(text);
+    const pays = document.createElement("p"); pays.className = "note"; pays.innerHTML = "Pays <code></code>"; pays.querySelector("code").textContent = p.destination; card.append(pays);
+    const dates = document.createElement("p"); dates.className = "note";
+    dates.textContent = `Gathers until ${p.closes.slice(0, 16).replace("T", " ")} UTC; settles by ${p.settles_by.slice(0, 16).replace("T", " ")} UTC.`;
+    card.append(dates);
+    box.append(card);
+    readPile(p).then((x) => {
+      const funded = x.paid >= p.target.sats;
+      if (funded) status.textContent = `Funded and paid · ${btc(x.paid)} sent to the seller · closed`;
+      else if (x.notice) status.textContent = "Declared dead by the co-signer: it didn't reach its target, and none of its commitments will be completed.";
+      else status.textContent = `${PHASE[phaseOf(p)]} · needs ${money(p.requires, p.currency)} · committed ${btc(x.waiting + x.paid)} of ${btc(p.target.sats)} (${x.count} waiting${x.paid ? `, ${btc(x.paid)} paid` : ""})`;
+      if (!funded && !x.notice && phaseOf(p) === "gathering") {
+        const b = document.createElement("button"); b.type = "button"; b.className = "go"; b.textContent = "Commit to this";
+        b.addEventListener("click", () => choose(p));
+        card.append(b);
+      }
+    }).catch(() => { status.textContent += " (couldn't check the commitments just now)"; });
+  }
+}
+
+function choose(p) {
+  CHOSEN = p;
+  el("commitBox").hidden = false;
+  el("commitTitle").textContent = `Commit to "${p.title}"`;
+  el("result").textContent = "";
+  if (ACCOUNT) showLocks();
+  el("commitBox").scrollIntoView({ behavior: "smooth" });
+}
+
+async function showLocks() {
+  const box = el("locks"); box.textContent = "Looking for your locks…";
+  const chain = chainFor();
+  const now = Math.floor(Date.now() / 1000);
+  COINS = [];
+  for (const l of (REGISTER.locks ?? []).filter((x) => x.member === ACCOUNT.address && x.locktime > now)) {
+    for (const coin of (await chain.utxos(l.address)).filter((u) => u.confirmed)) {
+      COINS.push({ lock: { address: l.address, locktime: l.locktime, cosignerPubkey: l.cosigner_pubkey, cosignerXpub: L.xpubForKey(C, l.cosigner_pubkey) }, coin });
+    }
+  }
+  box.textContent = "";
+  if (!COINS.length) { box.textContent = "You have no locked money on the register that is still before its date. Lock some first on the Lock page, publish it, then come back."; return; }
+  COINS.forEach((x, i) => {
+    const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-pressed", String(i === 0));
+    b.textContent = `${btc(x.coin.value)}, locked until ${new Date(x.lock.locktime * 1000).toISOString().slice(0, 10)}`;
+    b.addEventListener("click", () => { PICK = i; for (const o of box.children) o.setAttribute("aria-pressed", String(o === b)); });
+    box.append(b);
+  });
+  PICK = 0;
+  for (const id of ["amountLabel", "amount", "binding", "commit"]) el(id).hidden = false;
+}
+
+function parseBtc(t) {
+  t = t.trim().replace(",", ".");
+  if (!t) return "all";
+  if (!/^\d*\.?\d{0,8}$/.test(t) || t === ".") return null;
+  const [w, f = ""] = t.split(".");
+  return BigInt(w || "0") * 100000000n + BigInt((f + "00000000").slice(0, 8));
+}
+
+el("connect").addEventListener("click", async () => {
+  el("result").textContent = "";
+  try {
+    el("connect").disabled = true; el("connect").textContent = "Look at your Ledger…";
+    ACCOUNT = await L.connectLedger(C.network);
+    el("connected").hidden = false;
+    const member = (REGISTER.members ?? []).find((m) => m.address === ACCOUNT.address);
+    el("connected").textContent = member ? `Connected: member ${member.n}, ${ACCOUNT.address}` : `Connected: ${ACCOUNT.address} — this Ledger's key is not a member of this Crowdlock.`;
+    if (member && CHOSEN) await showLocks();
+  } catch (e) { el("result").textContent = String(e.message ?? e); }
+  el("connect").disabled = false; el("connect").textContent = "Connect my Ledger";
+});
+
+el("commit").addEventListener("click", async () => {
+  const amount = parseBtc(el("amount").value);
+  if (amount === null) { el("result").textContent = "Write the amount in BTC, like 0.002, or leave it empty for all of the lock."; return; }
+  const x = COINS[PICK];
+  const out = el("result");
+  try {
+    el("commit").disabled = true;
+    out.textContent = "Your Ledger will ask you to approve the payment to the seller…";
+    const chain = chainFor();
+    const feeRate = await chain.feeRate();
+    const r = await L.buildCommitment({ account: ACCOUNT, chain, lock: x.lock, coin: x.coin, proposalHash: CHOSEN.hash, destination: CHOSEN.destination, amount, feeRate, maxFee: C.max_commitment_fee });
+    const v = await L.checkCommitment({ record: r.record, crowdlock: C, proposal: CHOSEN, destinations: DESTINATIONS, chain, network: C.network });
+    if (!v.valid) throw new Error(`the commitment didn't pass its own check: ${v.reason}`);
+    out.textContent = "Signed. Posting it to the fund's relays…";
+    const { finalizeEvent, generateSecretKey, Relay } = globalThis.NostrTools;
+    const event = finalizeEvent(commitmentEventTemplate({ type: "commitment", proposal: CHOSEN.hash, record: r.record }, C.declaration.sha256, Math.floor(Date.now() / 1000)), generateSecretKey());
+    const took = (await Promise.all((C.relays ?? []).map(async (url) => {
+      let relay;
+      try { relay = await Relay.connect(url); await relay.publish(event); return true; } catch { return false; } finally { try { relay?.close(); } catch {} }
+    }))).filter(Boolean).length;
+    out.textContent = took
+      ? `Committed ${btc(r.committed)} (fee ${btc(r.fee)} if it settles). Posted to ${took} of ${C.relays.length} relays; the fund's repository records it within a few minutes.`
+      : "Signed, but no relay took it just now. Check your connection and try again.";
+    renderList();
+  } catch (e) { out.textContent = String(e.message ?? e); }
+  el("commit").disabled = false;
+});
+
+async function load() {
+  try {
+    const wanted = new URLSearchParams(location.search).get("c");
+    let name;
+    if (wanted !== null) {
+      if (!/^[a-z0-9-]+$/.test(wanted)) throw new Error("that is not a Crowdlock name");
+      name = wanted;
+    } else {
+      name = (await (await fetch("../crowdlocks/index.json")).json()).crowdlocks[0];
+    }
+    // The test Crowdlock is the method's own copy, shared with the app.
+    BASE = name === "kop-fund-testnet4" ? "https://jimbus9.github.io/fanfund/" : "../";
+    C = await (await fetch(`${BASE}crowdlocks/${name}.json`)).json();
+    el("paramStatus").textContent = `${C.name} · ${C.network}`;
+    if (C.network !== "mainnet") el("testnote").hidden = false;
+    if (!OPEN_NETWORKS.has(C.network)) { el("closed").hidden = false; return; }
+    el("ledgerAppName").textContent = C.network === "mainnet" ? "Bitcoin" : "Bitcoin Test";
+    if (!navigator.hid) el("nohid").hidden = false;
+    REGISTER = await (await fetch(`${BASE}${C.register.registrations}`, { cache: "no-store" })).json();
+    DESTINATIONS = await (await fetch(`${BASE}${C.register.destinations}`, { cache: "no-store" })).json();
+    if (C.register.proposals) {
+      const r = await fetch(`${BASE}${C.register.proposals}`, { cache: "no-store" });
+      if (r.ok) {
+        const checked = checkProposals(await r.json(), C);
+        PROPOSALS = checked.proposals;
+        if (checked.problems.length) { el("loadError").hidden = false; el("loadError").textContent = `Some proposals did not check out: ${checked.problems.join("; ")}`; }
+      }
+    }
+    el("list").hidden = false;
+    renderList();
+  } catch (e) {
+    el("loadError").hidden = false;
+    el("loadError").textContent = `Could not load this Crowdlock: ${e.message ?? e}`;
+  }
+}
+load();
+</script>
+</body>
+</html>
