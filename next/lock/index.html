@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<base href="../../lock/">
+<title data-t="Lock | {name}">Lock | The Kop Fund</title>
+<meta name="description" content="Lock bitcoin for a length you choose, check it arrived, publish it, and take it home on your date.">
+<meta property="og:title" data-t="Lock | {name}" content="Lock | The Kop Fund">
+<meta property="og:description" content="Lock bitcoin for a length you choose, check it arrived, publish it, and take it home on your date.">
+<meta property="og:site_name" data-t="{name}" content="The Kop Fund">
+<meta property="og:type" content="website">
+<link rel="icon" href="../next/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../next/assets/site.css">
+</head>
+<body>
+
+<a class="skip" href="../next/lock/#main">Skip to the content</a>
+
+<header class="banner"><div class="wrap">
+  <div class="row">
+    <a class="name" href="../next/"><!--name-->The Kop Fund<!--/name--></a>
+    <a class="menu" href="../next/lock/#menu">Menu</a>
+  </div>
+  <p class="indep">Run by supporters. Not affiliated with Liverpool FC.</p>
+  <nav class="topnav" aria-label="More about the fund">
+    <a href="../next/how/">How it works</a>
+    <a href="../next/why/">Why</a>
+    <a href="../next/risk/">Risks</a>
+    <a href="../next/society/">The society</a>
+    <a href="../next/register/">The register</a>
+    <a href="../next/spec/">The documents</a>
+  </nav>
+</div></header>
+
+<nav class="scarf-wrap wrap" aria-label="The six steps">
+  <ol class="scarf">
+    <li class="fringe" aria-hidden="true"></li>
+    <li class="done"><a href="../next/">1<span class="vh"> Understand</span></a></li>
+    <li class="done"><a href="../next/declaration/">2<span class="vh"> Sign</span></a></li>
+    <li class="done"><a href="../next/get-bitcoin/">3<span class="vh"> Get bitcoin</span></a></li>
+    <li class="now" aria-current="step"><a href="../next/lock/">4<span class="vh"> Lock</span></a></li>
+    <li class="now"><a href="../next/lock/#check-and-publish">5<span class="vh"> Check and publish</span></a></li>
+    <li class="now"><a href="../next/lock/#take-home">6<span class="vh"> Take it home</span></a></li>
+  </ol>
+  <p class="where"><b>Steps 4 to 6 are on this page:</b> lock, check and publish, take it home. Open on a test network only, for now.</p>
+</nav>
+
+<main id="main" class="wrap">
+
+  <h1>Lock</h1>
+  <p class="lede">Locking sends your bitcoin to an address that only your own key can open, on a date you choose. Until then nobody can move it, not even you. This kind of lock is called a timelock.</p>
+
+  <section id="closed" hidden>
+    <div class="verdict-live bad">
+      <b>Not open for real bitcoin yet</b>
+      <p id="closedWhy"></p>
+    </div>
+    <a class="go" href="../next/lock/?c=kop-fund-testnet4">Try it on the test network</a>
+    <p class="note">The test network is a practice copy of bitcoin. Its coins are free and worth nothing. Nothing here touches real money until the way home has been proved for the wallets people actually use, and this page says which those are.</p>
+  </section>
+
+  <section id="testnote" hidden>
+    <div class="verdict-live">
+      <b>Test network</b>
+      <p>This runs on a test version of bitcoin. Its coins are free, worthless and cannot be bought. Use it to find out how this works. Do not send real bitcoin to anything on this page.</p>
+    </div>
+  </section>
+
+  <section id="form">
+    <p class="note" id="paramStatus">Loading the details…</p>
+
+    <div class="warn yellow"><div>
+      <b>No outside review yet</b>
+      <p>Nobody outside this project has checked the code that builds a lock. A mistake could leave coins stuck. If you are thinking of a large amount, wait for that review.</p>
+    </div></div>
+
+    <h2>Who you are</h2>
+    <p>You have to be on <a href="../next/register/">the register</a> first: <a href="../next/join/">sign the declaration</a>, which is free. A lock belongs to the key you signed with, so this page can work it out from your signature. You are not asked for any key, word or password here, and this page never holds any.</p>
+    <div class="field">
+      <label for="member"><b>Your address, or your member number</b></label>
+      <input type="text" id="member" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="The address you signed with">
+    </div>
+
+    <h2>How long</h2>
+    <p>Your bitcoin comes home on the date, whatever happens, and nobody can stop it.</p>
+    <div class="warn red"><div>
+      <b>Until your date, you can't touch it</b>
+      <p>If bitcoin's price halves, you cannot sell. Only lock what you can leave alone for the whole time. A longer lock counts for longer, and leaves you exposed for longer.</p>
+    </div></div>
+    <div class="lengths" id="lengths" role="group" aria-label="Lock length"></div>
+
+    <div class="verdict-live" id="verdict" role="status" aria-live="polite">
+      <b>Waiting</b>
+      <p>Say who you are and choose a length.</p>
+    </div>
+  </section>
+
+  <section id="plan" hidden>
+    <h2>How you'll lock</h2>
+    <div class="warn yellow"><div>
+      <b>Know the way home before you send</b>
+      <p>Taking a lock home has been tested with a Ledger on this page and with the Crowdlock app. Sparrow, Electrum and other wallets can send to a lock, but nobody has yet shown they can sign to take it home. Use one only if you can do that yourself.</p>
+    </div></div>
+    <p id="amountNote" class="note"></p>
+    <p class="note">A sat is the smallest unit of bitcoin. 100,000,000 sats make one bitcoin.</p>
+    <p><strong>Pick one way.</strong></p>
+
+    <div class="folds">
+      <details name="route" id="ledgerFund">
+        <summary>With a Ledger, on this page</summary>
+        <p class="if-no-hid"><strong>This browser cannot reach a Ledger.</strong> It needs Chrome, Edge or Brave on a computer. Phones, Firefox and Safari cannot do it. Use the app or any wallet below, or come back on a computer.</p>
+        <p class="note">Chrome, Edge or Brave on a computer, with your Ledger plugged in, unlocked and the <span id="ledgerAppName">Bitcoin</span> app open. Close Ledger Live first. The Ledger shows you the payment and you approve it on the device. This page never sees a key.</p>
+        <button id="ledgerConnect" type="button">Connect my Ledger</button>
+        <div class="verdict-live" id="ledgerStatus" role="status" aria-live="polite" hidden></div>
+        <div id="ledgerLockRow" hidden>
+          <div class="field">
+            <label for="lockSats"><b>How much to lock, in sats</b></label>
+            <input type="text" id="lockSats" inputmode="numeric" autocomplete="off">
+          </div>
+          <p class="note" id="ledgerBalance"></p>
+          <p class="note" id="lockFeeLine"></p>
+          <details>
+            <summary>Change the fee</summary>
+            <div class="field">
+              <label for="lockFeeRate"><b>Fee rate, in sats per vbyte</b></label>
+              <input type="text" id="lockFeeRate" inputmode="numeric" autocomplete="off">
+            </div>
+            <p class="note">A vbyte is the unit a payment's size is measured in. A higher rate is confirmed sooner and costs more.</p>
+            <p class="note" id="lockFeeHelp"></p>
+          </details>
+          <button id="ledgerLock" type="button">Lock with my Ledger</button>
+          <div class="verdict-live" id="ledgerLockResult" role="status" aria-live="polite" hidden></div>
+        </div>
+      </details>
+
+      <details name="route">
+        <summary>With the Crowdlock app</summary>
+        <p>If you have the Crowdlock app, lock there. It is a bitcoin wallet that knows about locks, and it can take them home too. The app is in early test builds.</p>
+      </details>
+
+      <details name="route">
+        <summary>From any wallet</summary>
+        <p>Send to this address from a wallet you control.</p>
+        <div class="address" id="address"></div>
+        <button id="copyAddress" type="button">Copy the address</button>
+        <div class="warn yellow"><div>
+          <b>Send only to this address</b>
+          <p>It is for this length, made today. The date is rounded to midnight (UTC), so on another day the same choice gives a different address. That is fine, it is simply another lock, but send everything for one lock to the one address you were shown. Add a little extra for the network fee your wallet will charge.</p>
+        </div></div>
+        <details>
+          <summary>Check the address before you send</summary>
+          <p>The address can be rebuilt by anybody from the facts below, and your wallet or the lock format in <a href="../next/spec/">the documents</a> can confirm it. If it does not rebuild, do not send.</p>
+          <pre id="terms"></pre>
+          <button class="quiet" id="copyTerms" type="button">Copy these</button>
+          <p class="note">Nothing here is secret, and you do not need to keep it: the register publishes the same facts. It is the recipe for the lock. You will never type these into anything yourself.</p>
+        </details>
+      </details>
+    </div>
+  </section>
+
+  <div id="check-and-publish">
+  <section id="publish" hidden>
+    <h2>Check and publish</h2>
+    <p>A lock address is just a string of characters. Nobody can tell it is yours, or that it counts, unless you say so. Publishing adds your lock to the register once the bitcoin has one confirmation. A confirmation means the network has written your payment into the blockchain.</p>
+    <div class="warn red"><div>
+      <b>Public and permanent</b>
+      <p>Publishing ties this address to your membership, so anyone can see that you have bitcoin locked and how much. The register cannot hold a lock privately. Do not publish if you would rather not.</p>
+    </div></div>
+    <div class="warn yellow"><div>
+      <b>Publish before you leave this page</b>
+      <p>After midnight UTC this page works out a different address for the same choices, and it can no longer publish this one. You can publish before or after you send: the register keeps looking until the bitcoin has arrived.</p>
+    </div></div>
+    <button id="publishNow" type="button">Publish my lock</button>
+    <div class="verdict-live" id="publishResult" role="status" aria-live="polite" hidden></div>
+
+    <h3>Has it arrived?</h3>
+    <button class="quiet" id="checkChain" type="button">Look at the blockchain</button>
+    <div class="verdict-live" id="chainResult" role="status" aria-live="polite" hidden></div>
+    <p class="note">Once it is published and confirmed, it shows on <a href="../next/register/">the register</a>.</p>
+  </section>
+  </div>
+
+  <div id="take-home">
+  <section id="homeLedger" hidden>
+    <h2>Take a lock home with a Ledger</h2>
+    <p>Once a lock's date has passed, you can bring its bitcoin back to your Ledger's address. Nobody else is involved. The Ledger shows you the payment and you approve it.</p>
+    <div class="warn yellow"><div>
+      <b>Only locks on the register show here</b>
+      <p>A lock that was never published will not appear in this list. The date is judged by the bitcoin network's own clock, which runs about an hour behind real time on real bitcoin.</p>
+    </div></div>
+    <p class="if-no-hid"><strong>This browser cannot reach a Ledger.</strong> It needs Chrome, Edge or Brave on a computer. Use the Crowdlock app, or come back on a computer.</p>
+    <p class="note" id="homeFeeLine"></p>
+    <details class="last">
+      <summary>Change the fee</summary>
+      <div class="field">
+        <label for="homeFeeRate"><b>Fee rate, in sats per vbyte</b></label>
+        <input type="text" id="homeFeeRate" inputmode="numeric" autocomplete="off">
+      </div>
+      <p class="note" id="homeFeeHelp"></p>
+    </details>
+    <button id="homeConnect" type="button">Connect my Ledger</button>
+    <div class="verdict-live" id="homeStatus" role="status" aria-live="polite" hidden></div>
+    <div id="homeLocks"></div>
+    <p class="note">If a message here mentions an xpub: that is a public key a Ledger needs to see before it will sign. It is not secret.</p>
+  </section>
+
+  <section>
+    <h2>Taking it home</h2>
+    <p>On the date, the key you signed the declaration with can move the bitcoin to any address you choose, with nobody else involved. Until then, nobody can.</p>
+    <p><strong>What you will actually do:</strong> open a tool that knows about locks, tell it which lock, and approve one payment with your own wallet or device. You will not paste anything or work anything out.</p>
+    <p><strong>What has been proved, and what has not.</strong> Sending to a lock works from any wallet. Taking the bitcoin <em>out</em> needs your wallet to sign for an unusual kind of address, and that is where wallets differ.</p>
+    <ul>
+      <li><strong>The Crowdlock app's own wallet:</strong> proved on a test network.</li>
+      <li><strong>A Ledger:</strong> proved on a test network, in the Crowdlock app by cable and Bluetooth, and on this page. One real-bitcoin lock has been made with a Ledger in the app. Nobody has taken a real-bitcoin lock home yet, because none has reached its date.</li>
+      <li><strong>Sparrow, Electrum and others used directly:</strong> not tested. We do not know that they can sign for this kind of address, and will not say they can until it has been tried.</li>
+    </ul>
+    <p>This is why the page is closed for real bitcoin: a lock that cannot be taken home is the one mistake that cannot be undone. Everything a tool needs is public, so any future tool can do it.</p>
+  </section>
+  </div>
+
+  <section>
+    <h2>Before you lock real bitcoin</h2>
+    <p>Read <a href="../next/risk/">the risks page</a> first. It is short, specific and not reassuring. Bitcoin you lock is out of reach until its date, except through a purchase you have personally signed for.</p>
+    <p>In many countries sending, receiving or moving bitcoin has tax or reporting rules. They differ, and finding out yours is up to you.</p>
+  </section>
+
+  <script>if (!("hid" in navigator)) document.documentElement.classList.add("no-hid");</script>
+
+</main>
+
+<footer><div class="wrap">
+  <nav id="menu" aria-label="All pages">
+    <h2>Menu</h2>
+    <div class="allpages">
+      <ul>
+        <li class="h">The six steps</li>
+        <li><a href="../next/">1. Understand</a></li>
+        <li><a href="../next/declaration/">2. Sign</a></li>
+        <li><a href="../next/get-bitcoin/">3. Get bitcoin</a></li>
+        <li><a href="../next/lock/">4. Lock</a></li>
+        <li><a href="../next/lock/#check-and-publish">5. Check and publish</a></li>
+        <li><a href="../next/lock/#take-home">6. Take it home</a></li>
+      </ul>
+      <ul>
+        <li class="h">More</li>
+        <li><a href="../next/how/">How it works</a></li>
+        <li><a href="../next/why/">Why</a></li>
+        <li><a href="../next/risk/">Risks</a></li>
+        <li><a href="../next/society/">The society</a></li>
+        <li><a href="../next/register/">The register</a></li>
+        <li><a href="../next/spec/">The documents</a></li>
+      </ul>
+    </div>
+  </nav>
+  <p><strong>This is not an investment.</strong> There is no return, no dividend and no payout, now or ever. Bitcoin rises and falls, and bitcoin you lock can fall in value while it is locked. Nothing here is legal or financial advice.</p>
+  <p>An independent initiative by supporters of Liverpool Football Club. Not affiliated with, endorsed by or connected to Liverpool Football Club, its owners, or any official supporters' organisation.</p>
+  <p><strong><!--name-->The Kop Fund<!--/name--></strong> is a Crowdlock: a published set of rules for a crowd locking bitcoin towards buying something, with nobody holding anybody else's money. <a href="https://github.com/Jimbus9/the-kop-fund">Source and documents on GitHub</a>. Questions, problems or ideas: <a href="https://github.com/Jimbus9/the-kop-fund/issues">open an issue</a>.</p>
+</div></footer>
+
+<script src="../js/vendor/nostr-tools-2.25.2.bundle.js"></script>
+<script src="../js/vendor/crowdlock-ledger-web.bundle.js"></script>
+<script type="module">
+import { planLock } from "../js/lockplan.mjs";
+import { recordEventTemplate } from "../js/inbox.mjs";
+
+const el = (id) => document.getElementById(id);
+
+// Networks this page is open for. A real-money network is added here, in this
+// one line, only once a way home has been proved for the wallets people use and
+// the "Taking it home" section above says so by name. Until then it is closed.
+const OPEN_NETWORKS = new Set(["testnet4"]);
+
+let C = null;          // the Crowdlock file
+let REGISTER = null;   // its register
+let YEARS = null;      // the chosen length
+let PLAN = null;       // the current plan
+
+function setBox(box, kind, head, body) {
+  box.hidden = false;
+  box.className = "verdict-live" + (kind ? " " + kind : "");
+  box.replaceChildren();
+  const b = document.createElement("b"); b.textContent = head;
+  const p = document.createElement("p"); p.textContent = body;
+  box.append(b, p);
+}
+
+function lengthLabel(years) {
+  const days = years * 365.25;
+  if (days < 1) return `${Math.round(days * 24)} hour${Math.round(days * 24) === 1 ? "" : "s"} (test only)`;
+  if (years < 1) return `${Math.round(days)} day${Math.round(days) === 1 ? "" : "s"} (test only)`;
+  return `${years} year${years === 1 ? "" : "s"}`;
+}
+
+async function load() {
+  try {
+    const wanted = new URLSearchParams(location.search).get("c");
+    let name;
+    if (wanted !== null) {
+      // Only a plain file name from this site's own crowdlocks folder.
+      if (!/^[a-z0-9-]+$/.test(wanted)) throw new Error("that is not a Crowdlock name");
+      name = wanted;
+    } else {
+      const index = await (await fetch("../crowdlocks/index.json")).json();
+      name = index.crowdlocks[0];
+    }
+    C = await (await fetch(`../crowdlocks/${name}.json`)).json();
+    REGISTER = await (await fetch(`../${C.register.registrations}`)).json();
+
+    el("paramStatus").textContent = `${C.name} · ${C.network}`;
+    if (C.network !== "mainnet") el("testnote").hidden = false;
+
+    if (!OPEN_NETWORKS.has(C.network)) {
+      el("closed").hidden = false;
+      el("closedWhy").textContent =
+        "Locking real bitcoin from this page opens once taking a lock home has been proved for the wallets people use. "
+        + "Funding a lock is easy from any wallet; getting the money out again is what has to be certain first. "
+        + "The \"Taking it home\" section below says where that stands.";
+      el("form").hidden = true;
+      return;
+    }
+
+    el("homeLedger").hidden = false;
+    el("ledgerAppName").textContent = C.network === "mainnet" ? "Bitcoin" : "Bitcoin Test";
+    const box = el("lengths");
+    for (const y of C.lock_lengths_years) {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = lengthLabel(y); b.setAttribute("aria-pressed", "false");
+      b.addEventListener("click", () => {
+        YEARS = y;
+        for (const o of box.children) o.setAttribute("aria-pressed", String(o === b));
+        update();
+      });
+      box.append(b);
+    }
+  } catch (e) {
+    el("form").hidden = false;
+    el("paramStatus").textContent = "Could not load this Crowdlock's details. Do not send anything until it loads.";
+  }
+}
+
+function update() {
+  PLAN = null;
+  el("plan").hidden = true; el("publish").hidden = true;
+  const member = el("member").value.trim();
+  if (!C || !REGISTER) return;
+  if (!member || YEARS === null) { setBox(el("verdict"), "", "Waiting", "Say who you are and choose a length."); return; }
+
+  const r = planLock({ crowdlock: C, register: REGISTER, member, years: YEARS, now: Math.floor(Date.now() / 1000) });
+  if (!r.ok) { setBox(el("verdict"), "bad", "Not yet", r.reason); return; }
+  PLAN = r;
+
+  setBox(el("verdict"), "ok", "Ready",
+    `A lock for member ${REGISTER.members.find((m) => m.address === r.member)?.n ?? ""}, `
+    + `${lengthLabel(YEARS)}, opening on ${r.unlocks}.`);
+
+  el("address").textContent = r.address;
+  const min = r.minimumSats;
+  el("amountNote").textContent =
+    `This Crowdlock counts a lock of ${min.toLocaleString("en-GB")} sats (${(min / 1e8).toFixed(8)} BTC) or more. `
+    + "A smaller lock is valid and published, but is left out of the total. Add a little extra for the network fee your wallet will charge."
+    + (r.alreadyOnRegister ? " This exact lock is already on the register, so sending more to it simply adds to it." : "");
+  el("terms").textContent = [
+    `Crowdlock      ${C.name}`,
+    `Network        ${C.network}`,
+    `Lock address   ${r.address}`,
+    `Owner key      ${r.ownerPubkey}`,
+    `Co-signer key  ${r.cosignerPubkey}`,
+    `Opens          ${r.unlocks} (unix ${r.locktime})`,
+    `Script         <owner> CHECKSIGVERIFY IF <${r.locktime}> CHECKLOCKTIMEVERIFY ELSE <co-signer> CHECKSIG ENDIF`,
+  ].join("\n");
+  el("plan").hidden = false;
+  el("publish").hidden = false;
+}
+
+el("member").addEventListener("input", update);
+
+async function copyTo(btn, text, done) {
+  try { await navigator.clipboard.writeText(text); } catch { return; }
+  const was = btn.textContent;
+  btn.textContent = done;
+  setTimeout(() => { btn.textContent = was; }, 1600);
+}
+el("copyAddress").addEventListener("click", (e) => PLAN && copyTo(e.target, PLAN.address, "Copied"));
+el("copyTerms").addEventListener("click", (e) => copyTo(e.target, el("terms").textContent, "Copied"));
+
+// --- Telling the register -----------------------------------------------------
+
+async function postToRelays(record) {
+  const { finalizeEvent, generateSecretKey, Relay } = globalThis.NostrTools;
+  const event = finalizeEvent(recordEventTemplate(record, C.declaration.sha256, Math.floor(Date.now() / 1000)), generateSecretKey());
+  const limit = (p) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error("no answer")), 12000))]);
+  const results = await Promise.all(C.relays.map(async (url) => {
+    let relay;
+    try { relay = await limit(Relay.connect(url)); await limit(relay.publish(event)); return true; }
+    catch { return false; }
+    finally { try { relay?.close(); } catch {} }
+  }));
+  return { accepted: results.filter(Boolean).length, total: C.relays.length };
+}
+
+el("publishNow").addEventListener("click", async () => {
+  const btn = el("publishNow");
+  if (!PLAN) return;
+  if (!Array.isArray(C.relays) || !C.relays.length || !globalThis.NostrTools) {
+    setBox(el("publishResult"), "bad", "Cannot publish from here",
+      "This Crowdlock names no relays, or the relay library did not load. Your lock is still real; it can be published another way.");
+    return;
+  }
+  btn.disabled = true; btn.textContent = "Posting…";
+  const p = await postToRelays(PLAN.record);
+  if (p.accepted > 0) {
+    btn.textContent = "Posted";
+    setBox(el("publishResult"), "ok", "Posted",
+      `${p.accepted} of ${p.total} relays took it. The register collects new records every two minutes and adds the lock once the bitcoin has one confirmation.`);
+  } else {
+    btn.disabled = false; btn.textContent = "Publish my lock";
+    setBox(el("publishResult"), "bad", "No relay took it just now",
+      "Check your connection, or turn off any VPN, and try again. Nothing is lost.");
+  }
+});
+
+// --- Has the bitcoin arrived? -------------------------------------------------
+
+el("checkChain").addEventListener("click", async () => {
+  if (!PLAN) return;
+  const out = el("chainResult");
+  setBox(out, "", "Looking", "Asking the blockchain…");
+  try {
+    const res = await Promise.race([
+      fetch(`${C.chain_api}/address/${PLAN.address}`),
+      new Promise((_, no) => setTimeout(() => no(new Error("timeout")), 20000)),
+    ]);
+    const a = await res.json();
+    const confirmed = a.chain_stats.funded_txo_sum - a.chain_stats.spent_txo_sum;
+    const waiting = a.mempool_stats.funded_txo_sum - a.mempool_stats.spent_txo_sum;
+    if (confirmed > 0) {
+      setBox(out, "ok", "Arrived and confirmed", `${confirmed.toLocaleString("en-GB")} sats are locked at this address.`
+        + (confirmed < PLAN.minimumSats ? ` That is under the ${PLAN.minimumSats.toLocaleString("en-GB")} sats this Crowdlock counts.` : ""));
+    } else if (waiting > 0) {
+      setBox(out, "", "On its way", `${waiting.toLocaleString("en-GB")} sats are waiting for their first confirmation.`);
+    } else {
+      setBox(out, "", "Nothing yet", "No bitcoin has reached this address. If you have just sent it, wait a minute and look again.");
+    }
+  } catch {
+    setBox(out, "bad", "Could not look", "The blockchain service did not answer. Try again, or turn off any VPN.");
+  }
+});
+
+// --- Ledger: lock, and take home ----------------------------------------------
+// The signing code is the Crowdlock app's own, bundled (js/vendor/
+// crowdlock-ledger-web.bundle.js, built from method/ledger-web in the method's
+// repository). This page only asks the questions and shows the answers.
+
+const L = globalThis.CrowdlockLedger;
+const same = (a, b) => String(a).toLowerCase() === String(b).toLowerCase();
+const chainFor = () => L.esploraChain(C.chain_api, undefined, undefined, { minFee: feeFloor() });
+const explorer = () => C.chain_api.replace(/\/api$/, "");
+function txLink(box, txid) {
+  const a = document.createElement("a");
+  a.href = `${explorer()}/tx/${txid}`; a.textContent = "See it on the block explorer"; a.target = "_blank"; a.rel = "noopener";
+  const p = document.createElement("p"); p.append(a); box.append(p);
+}
+let ACCOUNT = null;   // the connected Ledger's account
+
+// Fee rate. Left blank, the page uses the network's current estimate (never
+// below the floor). A typed rate must sit between the floor and a ceiling so a
+// typo can't burn the money. The Ledger shows the exact fee before you approve.
+const feeFloor = () => (C.network === "mainnet" ? 1 : 5);
+const VBYTES = { lock: 153, home: 122 };   // typical sizes, for the estimate line only
+const fmt = (n) => Number(n).toLocaleString("en-GB");
+const feeCeiling = (est) => Math.max(50, est * 10);
+async function showFee(kind, line, rateInput, help) {
+  try {
+    const est = await chainFor().feeRate();
+    rateInput.placeholder = String(est);
+    help.textContent = `Blank uses the current estimate, ${fmt(est)} sat/vB. Allowed: ${feeFloor()} to ${fmt(feeCeiling(est))}. A lower rate is cheaper but can take longer to confirm.`;
+    const update = () => {
+      const r = rateInput.value.trim() ? Number(rateInput.value.trim()) : est;
+      line.textContent = Number.isFinite(r) && r > 0
+        ? `Estimated network fee: about ${fmt(Math.ceil(VBYTES[kind] * r))} sats (${fmt(r)} sat/vB). It comes out of the amount. The Ledger shows the exact fee.`
+        : "";
+    };
+    rateInput.oninput = update; update();
+  } catch { line.textContent = ""; }
+}
+// Returns the rate to use, or throws a plain message.
+async function chosenRate(rateInput, chain) {
+  const est = await chain.feeRate();
+  const raw = rateInput.value.trim();
+  if (!raw) return est;
+  if (!/^[0-9]+$/.test(raw)) throw new Error("The fee rate must be a whole number of sats per vbyte, or blank.");
+  const r = Number(raw), max = feeCeiling(est);
+  if (r < feeFloor()) throw new Error(`That fee rate is too low to confirm. The lowest allowed is ${feeFloor()} sat/vB.`);
+  if (r > max) throw new Error(`That fee rate looks like a typo. The highest allowed is ${fmt(max)} sat/vB (the estimate now is ${fmt(est)}).`);
+  return r;
+}
+
+async function connect(statusBox, btn) {
+  if (!L || !L.supported()) {
+    setBox(statusBox, "bad", "This browser can't talk to a Ledger", "Use Chrome, Edge or Brave on a computer. Phones and Firefox and Safari don't allow it.");
+    return null;
+  }
+  btn.disabled = true;
+  setBox(statusBox, "", "Connecting", "Choose your Ledger when the browser asks, then look at the Ledger.");
+  try {
+    ACCOUNT = await L.connectLedger(C.network);
+    setBox(statusBox, "ok", "Connected", `Ledger address ${ACCOUNT.address}`);
+    return ACCOUNT;
+  } catch (e) {
+    ACCOUNT = null;
+    setBox(statusBox, "bad", "Could not connect", e.message);
+    return null;
+  } finally { btn.disabled = false; }
+}
+
+el("ledgerConnect").addEventListener("click", async () => {
+  if (!PLAN) return;
+  const acc = await connect(el("ledgerStatus"), el("ledgerConnect"));
+  if (!acc) return;
+  if (!same(acc.address, PLAN.member)) {
+    ACCOUNT = null;
+    setBox(el("ledgerStatus"), "bad", "Not your member key",
+      `This Ledger's address is ${acc.address}, but the member you chose is ${PLAN.member}. A lock belongs to the key that signed the declaration. Nothing was sent.`);
+    return;
+  }
+  try {
+    const coins = (await chainFor().utxos(acc.address)).filter((c) => c.confirmed);
+    const total = coins.reduce((s, c) => s + BigInt(c.value), 0n);
+    el("ledgerBalance").textContent = `Confirmed bitcoin on this Ledger address: ${total.toLocaleString("en-GB")} sats. The network fee comes out of what you lock.`;
+    el("lockSats").value = String(Math.max(PLAN.minimumSats, 0));
+    el("ledgerLockRow").hidden = false;
+    showFee("lock", el("lockFeeLine"), el("lockFeeRate"), el("lockFeeHelp"));
+  } catch (e) {
+    setBox(el("ledgerStatus"), "bad", "Could not read the balance", e.message);
+  }
+});
+
+el("ledgerLock").addEventListener("click", async () => {
+  const out = el("ledgerLockResult");
+  if (!PLAN || !ACCOUNT) return;
+  const raw = el("lockSats").value.trim().replace(/[ ,_]/g, "");
+  if (!/^[0-9]+$/.test(raw) || BigInt(raw) <= 0n) { setBox(out, "bad", "How much?", "Type a whole number of sats."); return; }
+  const btn = el("ledgerLock");
+  btn.disabled = true;
+  try {
+    const chain = chainFor();
+    const feeRate = await chosenRate(el("lockFeeRate"), chain);
+    const lock = {
+      address: PLAN.address, ownerPubkey: PLAN.ownerPubkey, cosignerPubkey: PLAN.cosignerPubkey,
+      cosignerXpub: L.xpubForKey(C, PLAN.cosignerPubkey), locktime: PLAN.locktime,
+    };
+    setBox(out, "", "Check your Ledger", "It will first ask you to approve this lock's rules, then the payment. Read each on the device.");
+    const built = await L.buildLock({ account: ACCOUNT, chain, lock, feeRate, amount: BigInt(raw) });
+    const txid = await chain.broadcast(built.hex);
+    setBox(out, "ok", "Sent", `${built.sent.toLocaleString("en-GB")} sats are on their way to the lock, fee ${built.fee.toLocaleString("en-GB")} sats. Publish it below once you like; the register adds it when the bitcoin confirms.`);
+    txLink(out, txid);
+  } catch (e) {
+    setBox(out, "bad", "Nothing was sent", e.message);
+  } finally { btn.disabled = false; }
+});
+
+// Taking home: every lock on the register that belongs to the connected key.
+el("homeConnect").addEventListener("click", async () => {
+  const acc = await connect(el("homeStatus"), el("homeConnect"));
+  const list = el("homeLocks");
+  list.replaceChildren();
+  if (!acc) return;
+  const mine = (REGISTER.locks ?? []).filter((l) => same(l.member, acc.address));
+  if (!mine.length) {
+    setBox(el("homeStatus"), "", "No locks found", `Connected as ${acc.address}, but the register has no locks for it. A lock that was never published won't appear here.`);
+    return;
+  }
+  const chain = chainFor();
+  let medianTime;
+  try { medianTime = await chain.medianTime(); }
+  catch (e) { setBox(el("homeStatus"), "bad", "Could not read the network's clock", e.message); return; }
+  for (const rec of mine) {
+    const card = document.createElement("div"); card.className = "card";
+    const h = document.createElement("b"); h.className = "head"; h.textContent = `Opens ${rec.unlocks}`;
+    const a = document.createElement("div"); a.className = "address"; a.textContent = rec.address;
+    const msg = document.createElement("p"); msg.className = "note";
+    const res = document.createElement("div"); res.className = "verdict-live"; res.hidden = true;
+    const go = document.createElement("button"); go.className = "btn"; go.type = "button"; go.textContent = "Take it home"; go.hidden = true;
+    card.append(h, a, msg, go, res); list.append(card);
+    try {
+      const lock = {
+        address: rec.address, ownerPubkey: rec.owner_pubkey, cosignerPubkey: rec.cosigner_pubkey,
+        cosignerXpub: L.xpubForKey(C, rec.cosigner_pubkey), locktime: rec.locktime,
+      };
+      if (!lock.cosignerXpub) { msg.textContent = "This lock's co-signer has no published xpub, so a Ledger cannot take it home."; continue; }
+      const st = await L.lockState({ chain, lock, medianTime });
+      if (st.state === "locked") msg.textContent = `${st.confirmed.toLocaleString("en-GB")} sats, still locked. The network's clock has not reached the date yet (it runs about an hour behind real time on real bitcoin).`;
+      else if (st.state === "arriving") msg.textContent = "Money is on its way and has not confirmed yet.";
+      else if (st.state === "withdrawn") msg.textContent = "Already taken home. Nothing left here.";
+      else if (st.state === "empty") msg.textContent = "Nothing was ever sent to this address.";
+      else {
+        msg.textContent = `${st.confirmed.toLocaleString("en-GB")} sats, ready to come home to ${acc.address}.`;
+        go.hidden = false;
+        go.addEventListener("click", async () => {
+          go.disabled = true;
+          try {
+            setBox(res, "", "Check your Ledger", "It will ask you to approve this lock's rules if it has not seen them, then the payment home.");
+            const built = await L.takeHome({ account: acc, chain, lock, feeRate: await chosenRate(el("homeFeeRate"), chain), medianTime });
+            const txid = await chain.broadcast(built.hex);
+            setBox(res, "ok", "Sent", `${built.sent.toLocaleString("en-GB")} sats are on their way home, fee ${built.fee.toLocaleString("en-GB")} sats.`);
+            txLink(res, txid);
+          } catch (e) { setBox(res, "bad", "Nothing was sent", e.message); go.disabled = false; }
+        });
+      }
+    } catch (e) { msg.textContent = `Could not check this lock: ${e.message}`; }
+  }
+  setBox(el("homeStatus"), "ok", "Connected", `Ledger address ${acc.address}`);
+});
+
+load().then(() => showFee("home", el("homeFeeLine"), el("homeFeeRate"), el("homeFeeHelp")));
+</script>
+
+</body>
+</html>

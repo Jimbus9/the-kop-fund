@@ -1,0 +1,4 @@
+{
+  "name": "The Kop Fund",
+  "note": "The fund's name as the website shows it, held here and nowhere else in the pages. After changing it, run: node tools/stamp-name.mjs  (then see the rename checklist in tools/stamp-name.mjs for what this does not cover)."
+}

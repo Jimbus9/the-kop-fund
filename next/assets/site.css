@@ -1,0 +1,312 @@
+/* One stylesheet for every page.
+
+   The look: a homemade banner and a bar scarf. Red cloth with white block
+   letters at the top of every page; under it a six-bar scarf that marks the
+   step you are on. Everything else stays quiet so the words can be read.
+
+   Anton for banner lettering (short headings only). Atkinson Hyperlegible Next
+   for reading: it is drawn so that similar characters cannot be mistaken, which
+   matters on a site where people check addresses. Atkinson Hyperlegible Mono
+   for addresses, signatures and fingerprints only. All three are self-hosted
+   under the SIL Open Font Licence (assets/fonts/OFL-*.txt). No page loads
+   anything from another site.
+
+   Colour has one job each: red is the banner and the main action, yellow is a
+   yellow card ("know this before you go on"), a red card is "this can't be
+   undone", green is "checked and fine". */
+
+@font-face { font-family: "Anton"; font-weight: 400; font-display: swap;
+  src: url("fonts/anton-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Atkinson Next"; font-weight: 400; font-display: swap;
+  src: url("fonts/atkinson-hyperlegible-next-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Atkinson Next"; font-weight: 700; font-display: swap;
+  src: url("fonts/atkinson-hyperlegible-next-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Atkinson Mono"; font-weight: 400; font-display: swap;
+  src: url("fonts/atkinson-hyperlegible-mono-latin-400-normal.woff2") format("woff2"); }
+
+:root {
+  --red: #B00F1F;          /* terrace red: ours */
+  --page: #FFFFFF;         /* line white */
+  --concrete: #EDECE8;
+  --ink: #15171A;          /* night */
+  --soft: #55585F;
+  --rule: #D5D3CD;
+  --card-yellow: #FFD21F;
+  --card-red: #D5121F;
+  --pitch: #0A6B3B;
+  --link: #B00F1F;
+  --amber: #7A4B00;        /* "not settled" text */
+  --display: "Anton", "Haettenschweiler", "Arial Narrow Bold", "Arial Narrow", sans-serif;
+  --body: "Atkinson Next", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "Atkinson Mono", ui-monospace, Menlo, Consolas, monospace;
+  --measure: 680px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --red: #C2162A; --page: #15171A; --concrete: #22252A; --ink: #F3F1EC;
+    --soft: #A9ACB3; --rule: #3A3D44; --pitch: #5FD39B; --link: #FF8A8A; --amber: #F0B95A;
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 12px; }
+body {
+  margin: 0; background: var(--page); color: var(--ink);
+  font: 400 18px/1.55 var(--body);
+}
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+p, ul, ol { margin: 0; }
+p { max-width: 62ch; }
+a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+strong, b { font-weight: 700; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.wrap {
+  max-width: var(--measure); margin: 0 auto;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+
+.skip { position: absolute; left: -999px; top: 0; background: var(--ink); color: var(--page); padding: 12px 16px; z-index: 5; }
+.skip:focus { left: 8px; top: 8px; }
+
+/* ---- The banner ---------------------------------------------------------- */
+
+.banner { background: var(--red); color: #fff; padding: 14px 0 20px; position: relative; }
+.banner::after {                                   /* the stitched hem */
+  content: ""; position: absolute; left: 10px; right: 10px; bottom: 7px;
+  border-bottom: 2px dashed rgba(255, 255, 255, .55);
+}
+.banner .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.banner a { color: #fff; }
+.name {
+  font: 400 26px/1.1 var(--display); text-transform: uppercase; letter-spacing: .01em;
+  text-decoration: none; padding: 6px 0;
+}
+.menu {
+  font-weight: 700; font-size: 16px; line-height: 1; text-decoration: none;
+  border: 2px solid #fff; border-radius: 6px; padding: 12px 14px;
+}
+.indep { font-size: 15px; margin-top: 6px; max-width: none; }
+.topnav { display: none; }
+@media (min-width: 800px) {
+  .menu { display: none; }
+  .topnav { display: flex; flex-wrap: wrap; gap: 4px 20px; margin-top: 10px; font-size: 16px; }
+  .topnav a { padding: 6px 0; }
+  .topnav a[aria-current="page"] { font-weight: 700; text-decoration-thickness: 3px; }
+}
+
+/* ---- The scarf: where you are on the path -------------------------------- */
+
+.scarf-wrap { padding-top: 18px; }
+.scarf { display: flex; align-items: stretch; list-style: none; padding: 0; height: 40px; }
+.scarf li {
+  flex: 1; display: flex; border: 2px solid var(--red); border-left-width: 0;
+  background: var(--page); font-weight: 700; font-size: 16px;
+}
+.scarf li:nth-child(2) { border-left-width: 2px; }
+.scarf li a {
+  flex: 1; display: grid; place-items: center; color: var(--link); text-decoration: none;
+}
+.scarf li.done, .scarf li.now { background: var(--red); }
+.scarf li.done a, .scarf li.now a { color: #fff; }
+.scarf li.now { box-shadow: 0 6px 0 var(--ink); }
+.scarf li.fringe {
+  flex: none; width: 16px; border: 0;
+  background: repeating-linear-gradient(to bottom, var(--red) 0 3px, transparent 3px 7px);
+}
+.where { margin-top: 16px; font-size: 16px; color: var(--soft); max-width: none; }
+.where b { color: var(--ink); }
+
+/* ---- Type ----------------------------------------------------------------- */
+
+main { padding-bottom: 48px; }
+h1 {
+  font: 400 clamp(42px, 13vw, 72px)/.98 var(--display); text-transform: uppercase;
+  letter-spacing: .005em; margin: 24px 0 14px; text-wrap: balance;
+}
+h2 { font: 700 24px/1.25 var(--body); margin: 40px 0 10px; text-wrap: balance; }
+h3 { font: 700 19px/1.3 var(--body); margin: 24px 0 6px; }
+h2 .num {                                           /* a step number in a heading */
+  display: inline-grid; place-items: center; width: 34px; height: 34px; margin-right: 10px;
+  background: var(--ink); color: var(--page); border-radius: 50%; font-size: 17px; vertical-align: 2px;
+}
+main p + p, main p + ul, main p + ol, main ul + p, main ol + p { margin-top: 12px; }
+main ul, main ol { padding-left: 24px; }
+main li + li { margin-top: 6px; }
+.lede { font-size: 20px; line-height: 1.45; }
+.note { font-size: 16px; color: var(--soft); }
+.eyebrow { display: block; font-size: 16px; color: var(--soft); margin-top: 24px; }
+.eyebrow + h1 { margin-top: 6px; }
+header.page { display: block; }
+section { margin-top: 8px; }
+
+/* ---- Referee's cards ------------------------------------------------------ */
+
+.warn {
+  display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: start;
+  padding: 16px; margin-top: 20px; background: var(--concrete); border-radius: 8px;
+}
+.warn::before {
+  content: ""; width: 30px; height: 42px; border-radius: 4px; transform: rotate(-6deg);
+  margin-top: 2px; box-shadow: 0 1px 0 rgba(0, 0, 0, .3);
+}
+.warn.yellow::before { background: var(--card-yellow); }
+.warn.red::before { background: var(--card-red); }
+.warn > div > b:first-child, .warn > div > strong:first-child { display: block; margin-bottom: 2px; }
+.warn p { font-size: 17px; }
+.warn .kind { display: block; font-size: 15px; color: var(--soft); }
+
+/* ---- Actions -------------------------------------------------------------- */
+
+.go, a.cta, button, .btn {
+  display: block; width: 100%; min-height: 58px; margin-top: 18px; padding: 15px 18px;
+  border: 0; border-radius: 8px; background: var(--red); color: #fff;
+  font: 700 19px/1.25 var(--body); text-align: center; text-decoration: none; cursor: pointer;
+}
+.go:hover, a.cta:hover, button:hover { filter: brightness(1.1); }
+button:disabled { opacity: .6; cursor: default; filter: none; }
+.quiet, button.quiet {
+  display: block; width: 100%; min-height: 52px; margin-top: 10px; padding: 12px 18px;
+  border: 2px solid var(--ink); border-radius: 8px; background: transparent; color: var(--ink);
+  font: 700 17px/1.25 var(--body); text-align: center; text-decoration: none; cursor: pointer;
+}
+@media (min-width: 620px) {
+  .go, a.cta, button, .btn, .quiet, button.quiet { width: auto; display: inline-block; min-width: 280px; }
+  .quiet, button.quiet { margin-left: 0; }
+}
+
+/* choices: the wallet picker and the lock lengths */
+.wallets, .lengths { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.wallets button, .lengths button {
+  width: auto; min-width: 0; min-height: 48px; margin: 0; padding: 10px 16px;
+  background: var(--page); color: var(--ink); border: 2px solid var(--ink); font-size: 17px;
+}
+.wallets button[aria-pressed="true"], .lengths button[aria-pressed="true"] {
+  background: var(--ink); color: var(--page);
+}
+.howto { margin-top: 16px; }
+.howto .menu { font-family: var(--mono); font-size: .9em; background: var(--concrete); padding: 1px 5px;
+  border: 0; border-radius: 3px; font-weight: 400; line-height: inherit; }
+
+/* ---- Fold-outs: detail on request ---------------------------------------- */
+
+details { border-top: 2px solid var(--rule); }
+details:last-of-type, details.last { border-bottom: 2px solid var(--rule); }
+main > details:first-of-type, section > details:first-of-type, .folds { margin-top: 24px; }
+.folds details:first-of-type { margin-top: 0; }
+summary {
+  font-weight: 700; padding: 16px 28px 16px 0; cursor: pointer; list-style: none; position: relative;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; position: absolute; right: 4px; top: 14px; font-size: 22px; line-height: 1; }
+details[open] > summary::after { content: "\2212"; }
+details > :not(summary) { margin-bottom: 14px; }
+details > :last-child { margin-bottom: 20px; }
+details details { margin-left: 0; }
+
+/* ---- Results the pages write --------------------------------------------- */
+
+.verdict-live, .panel {
+  margin-top: 18px; padding: 16px; background: var(--concrete); border-radius: 8px;
+  border-left: 6px solid var(--soft);
+}
+.verdict-live b { display: block; font-size: 18px; }
+.verdict-live p { margin-top: 4px; font-size: 17px; overflow-wrap: anywhere; }
+.verdict-live.ok { border-left-color: var(--pitch); }
+.verdict-live.ok b { color: var(--pitch); }
+.verdict-live.bad { border-left-color: var(--card-red); }
+.panel > * + * { margin-top: 10px; }
+
+.verdict { display: flex; align-items: baseline; gap: 10px; font-weight: 700; }
+.verdict .dot { width: 12px; height: 12px; border-radius: 50%; background: currentColor; flex: none; }
+.verdict.ok { color: var(--pitch); }
+.verdict.bad { color: var(--amber); }
+
+.pill { font-weight: 700; color: var(--soft); }
+.pill.ok { color: var(--pitch); }
+.pill.warn { color: var(--amber); }
+.pill.bad { color: var(--link); }
+
+/* ---- Things a reader can check: addresses, signatures, fingerprints ------ */
+
+code, .mono { font-family: var(--mono); font-size: .88em; overflow-wrap: anywhere; }
+pre, .block, .address {
+  font: 400 15px/1.5 var(--mono); background: var(--concrete); border-left: 6px solid var(--ink);
+  border-radius: 0 8px 8px 0; padding: 14px; margin: 12px 0 0; overflow-wrap: anywhere; white-space: pre-wrap;
+}
+.address { white-space: normal; word-break: break-all; }
+
+/* ---- Forms ---------------------------------------------------------------- */
+
+label b, label.note { display: block; font-weight: 700; font-size: 17px; color: var(--ink); }
+.field { margin-top: 18px; }
+textarea, input[type="text"] {
+  display: block; width: 100%; margin-top: 6px; padding: 13px 12px; min-height: 52px;
+  font: 400 16px/1.4 var(--mono); color: var(--ink); background: var(--page);
+  border: 2px solid var(--ink); border-radius: 6px;
+}
+textarea { min-height: 104px; resize: vertical; }
+
+/* ---- Plain rows (lists of facts, one under another) ---------------------- */
+
+.stack { margin-top: 14px; }
+.card { border-top: 2px solid var(--rule); padding: 16px 0; }
+.stack .card:last-child { border-bottom: 2px solid var(--rule); }
+.card b.head, .card .q { display: block; font-weight: 700; font-size: 19px; margin-bottom: 4px; }
+.card > * + * { margin-top: 8px; }
+
+/* the six steps, listed on the home page */
+.path { list-style: none; padding: 0 !important; margin-top: 14px; counter-reset: step; }
+.path li {
+  counter-increment: step; display: grid; grid-template-columns: 40px 1fr; gap: 12px;
+  padding: 14px 0; border-top: 2px solid var(--rule); margin: 0 !important;
+}
+.path li:last-child { border-bottom: 2px solid var(--rule); }
+.path li::before {
+  content: counter(step); display: grid; place-items: center; width: 36px; height: 36px;
+  background: var(--red); color: #fff; font-weight: 700;
+}
+.path b { display: block; }
+
+/* ---- Tables --------------------------------------------------------------- */
+
+.scroller { overflow-x: auto; margin-top: 14px; }
+table { border-collapse: collapse; width: 100%; font-size: 17px; }
+th, td { text-align: left; padding: 12px 12px 12px 0; border-bottom: 2px solid var(--rule); vertical-align: top; }
+th { font-size: 16px; color: var(--soft); }
+td.num { font-variant-numeric: tabular-nums; }
+
+/* ---- The register's headline figure --------------------------------------- */
+
+.figure { margin-top: 20px; }
+.figure .big { display: block; font: 400 clamp(48px, 15vw, 84px)/1 var(--display); color: var(--link); overflow-wrap: anywhere; }
+.figure .label { display: block; font-weight: 700; margin-top: 4px; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px 32px; margin-top: 14px; padding-top: 12px; border-top: 2px solid var(--rule); }
+.facts div { display: flex; flex-direction: column; }
+.facts .v { font: 400 30px/1.1 var(--display); }
+.facts .k { font-size: 16px; color: var(--soft); }
+
+/* ---- Footer --------------------------------------------------------------- */
+
+footer { background: var(--concrete); padding: 8px 0 32px; font-size: 16px; }
+footer h2 { font-size: 20px; margin-top: 24px; }
+footer p { margin-top: 12px; }
+footer a { color: var(--ink); }
+.allpages { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+.allpages ul { list-style: none; padding: 0; }
+.allpages li a { display: block; padding: 9px 0; }
+.allpages .h { font-weight: 700; margin-top: 8px; }
+
+/* ---- Everyone ------------------------------------------------------------- */
+
+:focus-visible { outline: 3px solid var(--card-yellow); outline-offset: 2px; box-shadow: 0 0 0 6px var(--ink); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
+@media print { .banner, .scarf-wrap, footer nav, .menu { display: none; } }
+
+/* Shown only where the browser cannot reach a Ledger (phones, Firefox, Safari). */
+.if-no-hid { display: none; }
+.no-hid .if-no-hid { display: block; }

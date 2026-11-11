@@ -17,6 +17,8 @@ signed records. Anyone can check all of it with standard tools.
 | Weekly Bitcoin timestamps of the register | `anchors/` |
 | The relay inbox (checking code and its schedule) | `relay/`, `js/`, `.github/workflows/relay-inbox.yml` |
 | The anchoring job | `anchor/`, `.github/workflows/anchor-register.yml` |
+| The fund's name as the site shows it (one place) | `site.json`, stamped into the pages by `tools/stamp-name.mjs` |
+| The redesigned site, previewed before it replaces the live pages | `next/` |
 
 Whoever has write access here can change all of the above, so it is given only to
 The Kop Fund's maintainers.

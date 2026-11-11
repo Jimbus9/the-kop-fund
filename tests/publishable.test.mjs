@@ -86,7 +86,11 @@ check("No bare import specifiers in browser code", bare.length === 0, bare.join(
 // with no error anyone but the visitor can see. Found worth guarding after
 // the signature counters were deliberately removed from the register page.
 {
-  const pages = ["index.html", "register/index.html", "join/index.html"];
+  // The redesigned pages are previewed in next/ before they replace the live
+  // ones, and they run the same scripts, so they are held to the same check.
+  const pages = ["index.html", "register/index.html", "join/index.html", "lock/index.html",
+    "next/declaration/index.html", "next/join/index.html", "next/lock/index.html", "next/register/index.html",
+  ].filter((p) => existsSync(join(R, p)));
   for (const page of pages) {
     const src = readFileSync(join(R, page), "utf8");
     const ids = new Set([...src.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
@@ -123,6 +127,45 @@ check("No bare import specifiers in browser code", bare.length === 0, bare.join(
     declarationHash(readFileSync(join(R, crowdlock.declaration.file), "utf8")) === crowdlock.declaration.sha256);
   check("Canonicalisation is doing something, not passing text through",
     canonicalise("a  \r\nb\n\n\n") === "a\nb\n");
+}
+
+// The redesigned pages (any page that carries a name stamp). Three promises:
+// the fund's name is written in one place and stamped, never typed into a page;
+// no page loads anything from another site (fonts, scripts, images, trackers);
+// and the declaration page's own copy of the declaration is the published one.
+{
+  const { checkStamps } = await import("../tools/stamp-name.mjs");
+  const stamps = checkStamps(R);
+  console.log();
+  check(`The fund's name comes from site.json on ${stamps.stamped} redesigned page(s)`,
+    stamps.problems.length === 0, stamps.problems.join("; "));
+
+  const redesigned = served.filter((p) => p.endsWith(".html")
+    && /<!--name-->|data-t="/.test(readFileSync(join(R, p), "utf8")));
+  const outside = [];
+  for (const p of redesigned) {
+    const src = readFileSync(join(R, p), "utf8");
+    for (const m of src.matchAll(/<(?:link|script|img|iframe|source|video|audio|embed|object)\b[^>]*?\b(?:href|src|data)="((?:https?:)?\/\/[^"]+)"/g)) {
+      outside.push(`${p} -> ${m[1]}`);
+    }
+  }
+  for (const css of served.filter((p) => p.endsWith(".css") && p.includes("assets/"))) {
+    const src = readFileSync(join(R, css), "utf8");
+    for (const m of src.matchAll(/(?:url\(|@import)\s*["']?((?:https?:)?\/\/[^"')\s]+)/g)) outside.push(`${css} -> ${m[1]}`);
+  }
+  check("No redesigned page loads anything from another site", outside.length === 0,
+    outside.join(", ") || `${redesigned.length} page(s) and their stylesheet checked`);
+
+  const { declarationHash } = await import("../js/crowdlock.mjs");
+  const crowdlock = JSON.parse(readFileSync(join(R, "crowdlocks/kop-fund.json"), "utf8"));
+  for (const p of ["next/declaration/index.html", "declaration/index.html"].filter((p) => existsSync(join(R, p)))) {
+    const page = readFileSync(join(R, p), "utf8");
+    const embedded = page.match(/<script id="declText" type="text\/plain">([\s\S]*?)<\/script>/);
+    const published = page.match(/PUBLISHED\s*=\s*"([0-9a-f]{64})"/);
+    check(`${p}: its copy of the declaration is the published one`,
+      Boolean(embedded) && declarationHash(embedded[1]) === crowdlock.declaration.sha256
+      && published?.[1] === crowdlock.declaration.sha256, embedded ? "" : "no declText block");
+  }
 }
 
 console.log("\n" + "-".repeat(78));
