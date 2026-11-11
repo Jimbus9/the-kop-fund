@@ -102,7 +102,9 @@ line();
 // --- 2. Is it in the blockchain yet? Needs the network. ---------------------
 
 const describe = OTS.info(detached);
-const inABlock = /bitcoin|block/i.test(describe) && !/pending|calendar/i.test(describe);
+// A finished proof keeps the calendars' "pending" branches beside the ones
+// that reach a block, so the test is whether any branch reaches a block.
+const inABlock = /BitcoinBlockHeaderAttestation/.test(describe);
 
 if (inABlock) {
   rule();
