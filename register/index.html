@@ -3,116 +3,156 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>The register — The Kop Fund</title>
-<meta name="description" content="Everything committed, checked in your own browser rather than taken on trust. Locked bitcoin only — a signature is free, so signatures are not counted as support.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap">
-<link rel="stylesheet" href="../style.css">
+<title data-t="The register | {name}">The register | The Kop Fund</title>
+<meta name="description" content="Everything locked, checked in your own browser against the blockchain. Signatures are published in full and never counted.">
+<meta property="og:title" data-t="The register | {name}" content="The register | The Kop Fund">
+<meta property="og:description" content="Everything locked, checked in your own browser against the blockchain. Signatures are published in full and never counted.">
+<meta property="og:site_name" data-t="{name}" content="The Kop Fund">
+<meta property="og:type" content="website">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
 
-<div class="bleed disclaimer"><div class="inner" id="disclaimer">An independent supporters' initiative. Not affiliated with, endorsed by, or connected to Liverpool Football Club.</div></div>
-<nav class="bleed"><div class="inner">
-  <a href="../">The declaration</a>
-  <a href="../why/">Why</a>
-  <a href="../how/">How it works</a>
-  <a href="../society/">The society</a>
-  <a href="../join/">Join</a>
-  <a href="./" aria-current="page">The register</a>
-  <a href="../risk/">Risks</a>
-  <a href="../spec/">The documents</a>
-</div></nav>
+<a class="skip" href="#main">Skip to the content</a>
 
-<main class="inner">
+<header class="banner"><div class="wrap">
+  <div class="row">
+    <a class="name" href="../"><!--name-->The Kop Fund<!--/name--></a>
+    <a class="menu" href="#menu">Menu</a>
+  </div>
+  <p class="indep">Run by supporters. Not affiliated with Liverpool FC.</p>
+  <nav class="topnav" aria-label="More about the fund">
+    <a href="../how/">How it works</a>
+    <a href="../why/">Why</a>
+    <a href="../risk/">Risks</a>
+    <a href="../society/">The society</a>
+    <a href="../register/" aria-current="page">The register</a>
+    <a href="../spec/">The documents</a>
+  </nav>
+</div></header>
 
-  <header class="page">
-    <span class="eyebrow">Checked by your browser, not by us</span>
-    <h1>The register</h1>
-    <p class="lede">Everything committed, and every signature behind it. Your own browser checks each signature as this page loads — nothing here is taken on our word.</p>
-    <p class="note" id="whichCrowdlock" hidden></p>
-  </header>
+<main id="main" class="wrap">
 
-  <section>
-    <div class="figure">
-      <span class="big" id="lockedTotal">—</span>
-      <span class="label">Committed right now</span>
-    </div>
-    <div class="facts">
-      <div><span class="v" id="memberCount">—</span><span class="k">committed members</span></div>
-    </div>
-    <p class="note" id="asOf">Loading the register…</p>
-    <p class="note"><strong>What is counted.</strong> Only bitcoin that is locked, confirmed, still in date and above the minimum, and only the members who hold it. Signing the declaration is a member giving their word, and every signature is published in full below. This page does not count them, because a signature costs nothing to make, and the only figures worth putting here are ones nobody can fake.</p>
-  </section>
+  <h1>The register</h1>
+  <p class="lede">Everything locked, and every signature behind it. Your own browser checks each one as this page loads. Nothing here is taken on our word.</p>
+  <p class="note" id="disclaimer">An independent initiative by supporters of Liverpool Football Club. Not affiliated with, endorsed by or connected to Liverpool Football Club, its owners, or any official supporters' organisation.</p>
+  <p class="note" id="whichCrowdlock" hidden></p>
 
-  <section>
-    <h2>The co-signer's record</h2>
-    <div class="panel">
-      <div class="verdict" id="releaseVerdict"><span class="dot"></span><span id="releaseText">Checking…</span></div>
-      <p class="note" id="releaseDetail">Read from the blockchain in your browser.</p>
-      <div id="releaseArea"></div>
-    </div>
-    <p class="note"><strong>Why this is here.</strong> A lock opens two ways: by its owner alone once its date has passed, or by its owner and the co-signer together at any time. The second is meant only for a purchase, but Bitcoin can't enforce that — a co-signer willing to sign anything could let members take counted money back early, and the total above would mean nothing. What Bitcoin does record, for everyone to see, is which way each lock was opened. So every lock opened early with the co-signer's signature, other than to pay a listed destination, is shown here. Nobody can keep one off this list, the co-signer included.</p>
-  </section>
+  <div class="figure">
+    <span class="big" id="lockedTotal">—</span>
+    <span class="label">Locked and counted right now</span>
+  </div>
+  <div class="facts">
+    <div><span class="v" id="memberCount">—</span><span class="k">members with a counted lock</span></div>
+  </div>
+  <p class="note" id="asOf">Loading the register…</p>
+  <noscript><p class="note">This page needs scripts to count the register. The raw file is <a href="../registrations.json">registrations.json</a>.</p></noscript>
 
-  <section>
-    <h2>What your browser just checked</h2>
-    <div class="panel">
-      <div class="verdict" id="verdict"><span class="dot"></span><span id="verdictText">Checking…</span></div>
-      <p class="note" id="verdictDetail">Each member's signature is verified against the declaration's fingerprint using code running on your device. If a signature did not match, it would be shown below as failed rather than quietly dropped.</p>
-    </div>
-    <p class="note">The declaration this register is counting: <span class="mono" id="declHash">—</span></p>
-  </section>
+  <div class="folds">
+    <details>
+      <summary>What is counted, and what is not</summary>
+      <p>Only bitcoin that is locked, confirmed, still in date and above the minimum, and only the members who hold it.</p>
+      <p>Signing the declaration is a member giving their word, and every signature is published in full below. This page does not count them. A signature costs nothing to make, and the only figures worth putting here are ones nobody can fake.</p>
+    </details>
+  </div>
 
-  <section>
-    <h2>Members</h2>
-    <div id="memberArea">
-      <p class="note">Loading…</p>
-    </div>
-  </section>
+  <h2>The co-signer's record</h2>
+  <div class="panel">
+    <div class="verdict" id="releaseVerdict"><span class="dot"></span><span id="releaseText">Checking…</span></div>
+    <p class="note" id="releaseDetail">Read from the blockchain in your browser.</p>
+    <div id="releaseArea"></div>
+  </div>
+  <div class="folds">
+    <details>
+      <summary>Why this is here</summary>
+      <p>A lock opens two ways: by its owner alone once its date has passed, or by its owner and a second signer together at any time. That second signer is called the co-signer, and the second way is meant only for a purchase.</p>
+      <p>Bitcoin cannot enforce "only for a purchase". A co-signer willing to sign anything could let members take counted bitcoin back early, and the total above would mean nothing. What Bitcoin does record, for everyone to see, is which way each lock was opened. So every lock opened early with the co-signer's signature, other than to pay a listed destination, is shown here. Nobody can keep one off this list, the co-signer included.</p>
+    </details>
+  </div>
 
-  <section>
-    <h2>Check a signature yourself</h2>
-    <p>Paste an address and a signature and this page will tell you whether that address really signed the declaration. Useful if you have just signed and want to confirm it before submitting, and useful for checking anybody else's.</p>
-    <div class="panel">
-      <label for="addrIn" class="note">Address</label>
-      <input id="addrIn" type="text" inputmode="text" autocomplete="off" spellcheck="false"
-             placeholder="bc1q…" style="font-family:var(--mono);font-size:13px;padding:10px 12px;border:1px solid var(--line);background:var(--surface);color:var(--fg);width:100%">
-      <label for="sigIn" class="note">Signature</label>
-      <textarea id="sigIn" rows="3" autocomplete="off" spellcheck="false"
-                placeholder="base64 signature from your wallet"
-                style="font-family:var(--mono);font-size:13px;padding:10px 12px;border:1px solid var(--line);background:var(--surface);color:var(--fg);width:100%;resize:vertical"></textarea>
-      <button id="checkBtn" type="button">Check it</button>
-      <div class="verdict" id="checkVerdict" hidden><span class="dot"></span><span id="checkText"></span></div>
-      <p class="note" id="checkDetail" hidden></p>
-    </div>
-  </section>
+  <h2>What your browser just checked</h2>
+  <div class="panel">
+    <div class="verdict" id="verdict"><span class="dot"></span><span id="verdictText">Checking…</span></div>
+    <p class="note" id="verdictDetail">Each member's signature is checked against the declaration's fingerprint, using code running on your device. A signature that did not match would be shown below as failed, not quietly dropped.</p>
+  </div>
+  <p class="note">The declaration this register counts: <span class="mono" id="declHash">—</span></p>
 
-  <section>
-    <h2>How to get on it</h2>
-    <p>Sign the declaration with a bitcoin wallet, then submit the two lines it gives you. It costs nothing, moves no money, and takes about five minutes. <a href="../join/">The joining page</a> walks through the whole thing, including what to do if you have no wallet yet, and checks your signature in your own browser before anything is sent.</p>
-    <p><a class="cta" href="../join/">Join the register</a></p>
-    <p class="note">There are two other ways in, and they count exactly the same, because a signature cannot be forged and so needs nobody's permission to pass on: open a pull request adding your record to <code id="regFile">registrations.json</code>, or hand your two lines to anybody willing to publish them for you. Both are listed on the joining page. They matter: they are what stops the button above being a gate anyone can shut on you.</p>
-    <p class="note"><strong>Submissions are pull requests on purpose, but be clear about what that does and does not give you.</strong> Every change is timestamped in public, and anyone can keep a complete copy of the register, so an alteration is detectable by anybody holding one. It is <em>not</em> append-only: git history can be rewritten, and the person who controls the repository can do it. Until each day's register is anchored to the blockchain — which is planned and not yet built — "nobody could quietly remove you" rests on somebody having kept a copy, not on proof. Keep one.</p>
-  </section>
+  <h2>Members</h2>
+  <div id="memberArea">
+    <p class="note">Loading…</p>
+  </div>
 
-  <section>
-    <h2>Run your own copy</h2>
-    <p>This page is static. It reads one file and checks it in your browser — there is no server deciding what you see. So you can run the identical register yourself, and if your total ever disagrees with ours, ours is wrong.</p>
-    <pre>git clone https://github.com/Jimbus9/the-kop-fund
+  <h2>Check a signature yourself</h2>
+  <p>Paste an address and a signature, and this page tells you whether that address really signed the declaration. Use it on your own before you join, or on anybody else's.</p>
+  <div class="field">
+    <label for="addrIn"><b>Address</b></label>
+    <input id="addrIn" type="text" inputmode="text" autocomplete="off" spellcheck="false" placeholder="bc1q…">
+  </div>
+  <div class="field">
+    <label for="sigIn"><b>Signature</b></label>
+    <textarea id="sigIn" rows="3" autocomplete="off" spellcheck="false" placeholder="The long scramble of letters and numbers from your wallet"></textarea>
+  </div>
+  <button class="quiet" id="checkBtn" type="button">Check it</button>
+  <div class="verdict" id="checkVerdict" hidden><span class="dot"></span><span id="checkText"></span></div>
+  <p class="note" id="checkDetail" hidden></p>
+
+  <h2>How to get on it</h2>
+  <p>Sign the declaration with a bitcoin wallet, then send in the two lines it gives you. It costs nothing, moves no money, and takes about five minutes.</p>
+  <a class="go" href="../join/">Sign and join</a>
+
+  <div class="folds">
+    <details>
+      <summary>Other ways on, and why they matter</summary>
+      <p>There are two other ways on, and they count exactly the same, because a signature cannot be forged and so needs nobody's permission to pass on. You can open a pull request adding your record to <code id="regFile">registrations.json</code>, or hand your two lines to anybody willing to publish them for you. Both are on the joining page. They are what stops the button being a gate anyone can shut on you.</p>
+    </details>
+    <details>
+      <summary>How records get here, and what stops them being changed</summary>
+      <p>The joining page posts your signed record to public relays, which are open message boards on a network called Nostr. This repository's own job collects new records every two minutes and checks each signature again before writing it in.</p>
+      <p>Every change to the register is public in the repository's history, and anyone can keep a complete copy. A copy of the register is also timestamped into the Bitcoin blockchain automatically. Those snapshots are in the <span class="mono">anchors/</span> folder, and each proves that the register said what it said by that time.</p>
+      <p>Be clear about the limit. The register is <em>not</em> impossible to alter: the person who controls the repository could rewrite its history. Between snapshots, "nobody could quietly remove you" rests on somebody having kept a copy. Keep one.</p>
+    </details>
+    <details>
+      <summary>Run your own copy</summary>
+      <p>This page is static. It reads one file and checks it in your browser, and no server decides what you see. So you can run the identical register yourself, and if your total ever disagrees with ours, ours is wrong.</p>
+<pre>git clone https://github.com/Jimbus9/the-kop-fund
 cd the-kop-fund
-node method/js/verify.test.mjs     # check the verifier against another library
-node method/js/crowdlock.test.mjs  # check the Crowdlock files, needs no installs
-python3 -m http.server      # then open localhost:8000/register/</pre>
-  </section>
+node tests/publishable.test.mjs   # the pages load only files that are published
+python3 -m http.server            # then open localhost:8000/register/</pre>
+      <p class="note">The checking code's own tests are in the method's repository, <span class="mono">github.com/Jimbus9/fanfund</span>. The commands are on <a href="../spec/">the documents page</a>.</p>
+    </details>
+  </div>
 
 </main>
 
-<footer class="inner">
-  <p><strong>This is not an investment.</strong> There is no return, no dividend and no payout, now or ever. Nothing here is legal or financial advice.</p>
+<footer><div class="wrap">
+  <nav id="menu" aria-label="All pages">
+    <h2>Menu</h2>
+    <div class="allpages">
+      <ul>
+        <li class="h">The six steps</li>
+        <li><a href="../">1. Understand</a></li>
+        <li><a href="../declaration/">2. Sign</a></li>
+        <li><a href="../get-bitcoin/">3. Get bitcoin</a></li>
+        <li><a href="../lock/">4. Lock</a></li>
+        <li><a href="../lock/#check-and-publish">5. Check and publish</a></li>
+        <li><a href="../lock/#take-home">6. Take it home</a></li>
+      </ul>
+      <ul>
+        <li class="h">More</li>
+        <li><a href="../how/">How it works</a></li>
+        <li><a href="../why/">Why</a></li>
+        <li><a href="../risk/">Risks</a></li>
+        <li><a href="../society/">The society</a></li>
+        <li><a href="../register/">The register</a></li>
+        <li><a href="../spec/">The documents</a></li>
+      </ul>
+    </div>
+  </nav>
+  <p><strong>This is not an investment.</strong> There is no return, no dividend and no payout, now or ever. Bitcoin rises and falls, and bitcoin you lock can fall in value while it is locked. Nothing here is legal or financial advice.</p>
   <p id="footDisclaimer">An independent initiative by supporters of Liverpool Football Club. Not affiliated with, endorsed by or connected to Liverpool Football Club, its owners, or any official supporters' organisation.</p>
-  <p><a href="https://github.com/Jimbus9/the-kop-fund">Source and documents on GitHub</a> · <a href="https://github.com/Jimbus9/the-kop-fund/issues">Questions, problems or ideas: open an issue</a></p>
-</footer>
+  <p><strong><!--name-->The Kop Fund<!--/name--></strong> is a Crowdlock: a published set of rules for a crowd locking bitcoin towards buying something, with nobody holding anybody else's money. <a href="https://github.com/Jimbus9/the-kop-fund">Source and documents on GitHub</a>. Questions, problems or ideas: <a href="https://github.com/Jimbus9/the-kop-fund/issues">open an issue</a>.</p>
+</div></footer>
 
 <script type="module">
 import { verifyMembership } from "../js/verify.mjs";

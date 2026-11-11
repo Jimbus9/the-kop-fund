@@ -3,35 +3,44 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>The documents — The Kop Fund</title>
-<meta name="description" content="The seven documents that define The Kop Fund: the declaration, the registration format, the counting rule, the lock format, proposals and settlement, commitments, and the published destinations list.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap">
-<link rel="stylesheet" href="../style.css">
+<title data-t="The documents | {name}">The documents | The Kop Fund</title>
+<meta name="description" content="The seven documents that define the fund: the declaration, the registration format, the counting rule, the lock format, proposals and settlement, commitments, and the published destinations list.">
+<meta property="og:title" data-t="The documents | {name}" content="The documents | The Kop Fund">
+<meta property="og:description" content="The seven documents that define the fund: the declaration, the registration format, the counting rule, the lock format, proposals and settlement, commitments, and the published destinations list.">
+<meta property="og:site_name" data-t="{name}" content="The Kop Fund">
+<meta property="og:type" content="website">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
 
-<div class="bleed disclaimer"><div class="inner">An independent supporters' initiative. Not affiliated with, endorsed by, or connected to Liverpool Football Club.</div></div>
-<nav class="bleed"><div class="inner">
-  <a href="../">The declaration</a>
-  <a href="../why/">Why</a>
-  <a href="../how/">How it works</a>
-  <a href="../society/">The society</a>
-  <a href="../join/">Join</a>
-  <a href="../register/">The register</a>
-  <a href="../risk/">Risks</a>
-  <a href="./" aria-current="page">The documents</a>
-</div></nav>
+<a class="skip" href="#main">Skip to the content</a>
 
-<main class="inner">
+<header class="banner"><div class="wrap">
+  <div class="row">
+    <a class="name" href="../"><!--name-->The Kop Fund<!--/name--></a>
+    <a class="menu" href="#menu">Menu</a>
+  </div>
+  <p class="indep">Run by supporters. Not affiliated with Liverpool FC.</p>
+  <nav class="topnav" aria-label="More about the fund">
+    <a href="../how/">How it works</a>
+    <a href="../why/">Why</a>
+    <a href="../risk/">Risks</a>
+    <a href="../society/">The society</a>
+    <a href="../register/">The register</a>
+    <a href="../spec/" aria-current="page">The documents</a>
+  </nav>
+</div></header>
+
+<main id="main" class="wrap">
+
+
 
   <header class="page">
-    <span class="eyebrow">For anyone building their own</span>
     <h1>The documents</h1>
     <p class="lede">The movement is these documents, not any piece of software. Anyone holding them can build their own app, their own register, or take part with neither.</p>
     <p class="lede">Six of them are general. Only the declaration is about Liverpool — so fans of any club, or anyone buying anything their crowd means to keep, can take the rest as they stand.</p>
-    <p class="lede">Together those six are a method called <b>Crowdlock</b>. The Kop Fund is a Crowdlock: one declaration about Liverpool, run on the six general documents.</p>
+    <p class="lede">Together those six are a method called <b>Crowdlock</b>. <!--name-->The Kop Fund<!--/name--> is a Crowdlock: one declaration about Liverpool, run on the six general documents.</p>
   </header>
 
   <section>
@@ -68,7 +77,7 @@
       </div>
       <div class="card">
         <b class="head">7 · Published destinations format</b>
-        <p>The only addresses committed money may be sent to, and the whole defence against a forged proposal. Append-only, hash-chained, separately signed, and subject to a public waiting period, chosen by each Crowdlock (seven days for The Kop Fund, and recommended), before any proposal may name an address.</p>
+        <p>The only addresses committed money may be sent to, and the whole defence against a forged proposal. Append-only, hash-chained, separately signed, and subject to a public waiting period, chosen by each Crowdlock (seven days for this fund, and recommended), before any proposal may name an address.</p>
         <p class="note"><a href="destinations-format.md">destinations-format.md</a> · v1 · list: <a href="../destinations.json">destinations.json</a></p>
       </div>
     </div>
@@ -93,17 +102,8 @@
     <pre>git clone https://github.com/Jimbus9/fanfund
 cd fanfund
 
-# the verifier, checked against an independent library
-node method/js/verify.test.mjs
-
-# every Crowdlock's own file, and its declaration's fingerprint
-node method/js/crowdlock.test.mjs
-
-# the live register — every published signature, checked for real
-node method/js/register.test.mjs
-
-# the lock's construction
-cd lock &amp;&amp; npm install &amp;&amp; node selftest.mjs
+# the lock's construction (first: the other tests use its libraries)
+cd method/lock &amp;&amp; npm ci &amp;&amp; node selftest.mjs
 
 # the taproot form of the same lock, which nothing uses yet
 node taproot.test.mjs
@@ -112,7 +112,11 @@ node taproot.test.mjs
 node commitment.test.mjs
 
 # the lock's enforcement, on testnet with free coins
-node run-testnet.mjs</pre>
+node run-testnet.mjs
+
+# back at the top: the verifier, every Crowdlock's own file, and the rest
+cd ../..
+for t in method/js/*.test.mjs; do node "$t" || break; done</pre>
     <p class="note">The declaration's fingerprint can be reproduced from the published text with the canonicalisation rules in the registration format. Nothing here asks to be believed.</p>
   </section>
 
@@ -137,11 +141,34 @@ node run-testnet.mjs</pre>
 
 </main>
 
-<footer class="inner">
-  <p><strong>This is not an investment.</strong> There is no return, no dividend and no payout, now or ever. Nothing here is legal or financial advice.</p>
+<footer><div class="wrap">
+  <nav id="menu" aria-label="All pages">
+    <h2>Menu</h2>
+    <div class="allpages">
+      <ul>
+        <li class="h">The six steps</li>
+        <li><a href="../">1. Understand</a></li>
+        <li><a href="../declaration/">2. Sign</a></li>
+        <li><a href="../get-bitcoin/">3. Get bitcoin</a></li>
+        <li><a href="../lock/">4. Lock</a></li>
+        <li><a href="../lock/#check-and-publish">5. Check and publish</a></li>
+        <li><a href="../lock/#take-home">6. Take it home</a></li>
+      </ul>
+      <ul>
+        <li class="h">More</li>
+        <li><a href="../how/">How it works</a></li>
+        <li><a href="../why/">Why</a></li>
+        <li><a href="../risk/">Risks</a></li>
+        <li><a href="../society/">The society</a></li>
+        <li><a href="../register/">The register</a></li>
+        <li><a href="../spec/">The documents</a></li>
+      </ul>
+    </div>
+  </nav>
+  <p><strong>This is not an investment.</strong> There is no return, no dividend and no payout, now or ever. Bitcoin rises and falls, and bitcoin you lock can fall in value while it is locked. Nothing here is legal or financial advice.</p>
   <p>An independent initiative by supporters of Liverpool Football Club. Not affiliated with, endorsed by or connected to Liverpool Football Club, its owners, or any official supporters' organisation.</p>
-  <p><a href="https://github.com/Jimbus9/fanfund">Source and documents on GitHub</a> · <a href="https://github.com/Jimbus9/fanfund/issues">Questions, problems or ideas: open an issue</a></p>
-</footer>
+  <p><strong><!--name-->The Kop Fund<!--/name--></strong> is a Crowdlock: a published set of rules for a crowd locking bitcoin towards buying something, with nobody holding anybody else's money. <a href="https://github.com/Jimbus9/the-kop-fund">Source and documents on GitHub</a>. Questions, problems or ideas: <a href="https://github.com/Jimbus9/the-kop-fund/issues">open an issue</a>.</p>
+</div></footer>
 
 </body>
 </html>

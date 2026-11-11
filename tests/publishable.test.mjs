@@ -86,11 +86,7 @@ check("No bare import specifiers in browser code", bare.length === 0, bare.join(
 // with no error anyone but the visitor can see. Found worth guarding after
 // the signature counters were deliberately removed from the register page.
 {
-  // The redesigned pages are previewed in next/ before they replace the live
-  // ones, and they run the same scripts, so they are held to the same check.
-  const pages = ["index.html", "register/index.html", "join/index.html", "lock/index.html",
-    "next/declaration/index.html", "next/join/index.html", "next/lock/index.html", "next/register/index.html",
-  ].filter((p) => existsSync(join(R, p)));
+  const pages = ["declaration/index.html", "register/index.html", "join/index.html", "lock/index.html"];
   for (const page of pages) {
     const src = readFileSync(join(R, page), "utf8");
     const ids = new Set([...src.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
@@ -104,7 +100,7 @@ check("No bare import specifiers in browser code", bare.length === 0, bare.join(
   }
 }
 
-// The front page carries its own copy of the declaration, so a visitor can
+// The declaration page carries its own copy of the declaration, so a visitor can
 // hash what they are reading rather than trust that it matches the file. Two
 // copies can drift. If they ever do, the page tells every visitor the
 // fingerprint does not match — which is the correct behaviour and a terrible
@@ -112,13 +108,13 @@ check("No bare import specifiers in browser code", bare.length === 0, bare.join(
 {
   const { canonicalise, declarationHash } = await import("../js/crowdlock.mjs");
   const crowdlock = JSON.parse(readFileSync(join(R, "crowdlocks/kop-fund.json"), "utf8"));
-  const page = readFileSync(join(R, "index.html"), "utf8");
+  const page = readFileSync(join(R, "declaration/index.html"), "utf8");
   const embedded = page.match(/<script id="declText" type="text\/plain">([\s\S]*?)<\/script>/);
   const published = page.match(/PUBLISHED\s*=\s*"([0-9a-f]{64})"/);
 
-  check("The front page embeds the declaration text", Boolean(embedded),
+  check("The declaration page embeds the declaration text", Boolean(embedded),
     embedded ? "" : "no declText block — the in-page check cannot run");
-  check("The front page's copy of the declaration is the published one",
+  check("The declaration page's copy of the declaration is the published one",
     Boolean(embedded) && declarationHash(embedded[1]) === crowdlock.declaration.sha256,
     embedded ? declarationHash(embedded[1]) : "");
   check("The fingerprint the page checks against is the Crowdlock's",
@@ -129,15 +125,14 @@ check("No bare import specifiers in browser code", bare.length === 0, bare.join(
     canonicalise("a  \r\nb\n\n\n") === "a\nb\n");
 }
 
-// The redesigned pages (any page that carries a name stamp). Three promises:
+// The pages (any page that carries a name stamp). Two promises:
 // the fund's name is written in one place and stamped, never typed into a page;
-// no page loads anything from another site (fonts, scripts, images, trackers);
-// and the declaration page's own copy of the declaration is the published one.
+// and no page loads anything from another site (fonts, scripts, images, trackers).
 {
   const { checkStamps } = await import("../tools/stamp-name.mjs");
   const stamps = checkStamps(R);
   console.log();
-  check(`The fund's name comes from site.json on ${stamps.stamped} redesigned page(s)`,
+  check(`The fund's name comes from site.json on ${stamps.stamped} page(s)`,
     stamps.problems.length === 0, stamps.problems.join("; "));
 
   const redesigned = served.filter((p) => p.endsWith(".html")
@@ -153,19 +148,9 @@ check("No bare import specifiers in browser code", bare.length === 0, bare.join(
     const src = readFileSync(join(R, css), "utf8");
     for (const m of src.matchAll(/(?:url\(|@import)\s*["']?((?:https?:)?\/\/[^"')\s]+)/g)) outside.push(`${css} -> ${m[1]}`);
   }
-  check("No redesigned page loads anything from another site", outside.length === 0,
+  check("No page loads anything from another site", outside.length === 0,
     outside.join(", ") || `${redesigned.length} page(s) and their stylesheet checked`);
 
-  const { declarationHash } = await import("../js/crowdlock.mjs");
-  const crowdlock = JSON.parse(readFileSync(join(R, "crowdlocks/kop-fund.json"), "utf8"));
-  for (const p of ["next/declaration/index.html", "declaration/index.html"].filter((p) => existsSync(join(R, p)))) {
-    const page = readFileSync(join(R, p), "utf8");
-    const embedded = page.match(/<script id="declText" type="text\/plain">([\s\S]*?)<\/script>/);
-    const published = page.match(/PUBLISHED\s*=\s*"([0-9a-f]{64})"/);
-    check(`${p}: its copy of the declaration is the published one`,
-      Boolean(embedded) && declarationHash(embedded[1]) === crowdlock.declaration.sha256
-      && published?.[1] === crowdlock.declaration.sha256, embedded ? "" : "no declText block");
-  }
 }
 
 console.log("\n" + "-".repeat(78));

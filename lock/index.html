@@ -3,95 +3,90 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Lock — The Kop Fund</title>
-<meta name="description" content="Lock bitcoin for a length you choose, from any wallet, without the app.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap">
-<link rel="stylesheet" href="../style.css">
-<style>
-  h2 .num {
-    display: inline-grid; place-items: center;
-    width: 30px; height: 30px; margin-right: 10px;
-    background: var(--accent); color: var(--accent-ink);
-    font-size: 16px; vertical-align: 2px;
-  }
-  textarea, input[type=text] {
-    width: 100%; font-family: var(--mono); font-size: 14px;
-    background: var(--surface); color: var(--fg);
-    border: 1px solid var(--line); padding: 11px 12px; margin-top: 6px;
-  }
-  label b { font-family: var(--display); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; }
-  .field + .field { margin-top: 16px; }
-  .lengths { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
-  .lengths button {
-    font-family: var(--display); font-size: 13px; letter-spacing: .06em;
-    text-transform: uppercase; padding: 9px 14px; cursor: pointer;
-    background: var(--surface); color: var(--muted);
-    border: 1px solid var(--line); border-radius: 0;
-  }
-  .lengths button:hover { color: var(--fg); }
-  .lengths button[aria-pressed="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .verdict-live { margin-top: 18px; padding: 16px 18px; border: 1px solid var(--line); background: var(--surface); }
-  .verdict-live.ok { border-color: #1a7f45; }
-  .verdict-live.bad { border-color: var(--accent); }
-  .verdict-live b { font-family: var(--display); font-size: 15px; letter-spacing: .06em; text-transform: uppercase; }
-  .verdict-live.ok b { color: #1a7f45; }
-  .verdict-live.bad b { color: var(--accent); }
-  .verdict-live p { margin: 6px 0 0; font-size: 15px; }
-  .address { font-family: var(--mono); font-size: 15px; word-break: break-all; padding: 12px 14px; background: var(--surface-2); margin: 8px 0; }
-  [hidden] { display: none !important; }
-</style>
+<title data-t="Lock | {name}">Lock | The Kop Fund</title>
+<meta name="description" content="Lock bitcoin for a length you choose, check it arrived, publish it, and take it home on your date.">
+<meta property="og:title" data-t="Lock | {name}" content="Lock | The Kop Fund">
+<meta property="og:description" content="Lock bitcoin for a length you choose, check it arrived, publish it, and take it home on your date.">
+<meta property="og:site_name" data-t="{name}" content="The Kop Fund">
+<meta property="og:type" content="website">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
 
-<div class="bleed disclaimer"><div class="inner">An independent supporters' initiative. Not affiliated with, endorsed by, or connected to Liverpool Football Club.</div></div>
-<nav class="bleed"><div class="inner">
-  <a href="../">The declaration</a>
-  <a href="../why/">Why</a>
-  <a href="../how/">How it works</a>
-  <a href="../society/">The society</a>
-  <a href="../join/">Join</a>
-  <a href="../register/">The register</a>
-  <a href="../risk/">Risks</a>
-  <a href="../spec/">The documents</a>
-</div></nav>
+<a class="skip" href="#main">Skip to the content</a>
 
-<main class="inner">
+<header class="banner"><div class="wrap">
+  <div class="row">
+    <a class="name" href="../"><!--name-->The Kop Fund<!--/name--></a>
+    <a class="menu" href="#menu">Menu</a>
+  </div>
+  <p class="indep">Run by supporters. Not affiliated with Liverpool FC.</p>
+  <nav class="topnav" aria-label="More about the fund">
+    <a href="../how/">How it works</a>
+    <a href="../why/">Why</a>
+    <a href="../risk/">Risks</a>
+    <a href="../society/">The society</a>
+    <a href="../register/">The register</a>
+    <a href="../spec/">The documents</a>
+  </nav>
+</div></header>
 
-  <header class="page">
-    <span class="eyebrow">Real money behind your word</span>
-    <h1>Lock</h1>
-    <p class="lede">Locking sends bitcoin to an address that only you can open, on a date you choose. Nobody can move it in the meantime. This page works out that address for you; the bitcoin goes there from any wallet you already use, and no app is needed.</p>
-  </header>
+<nav class="scarf-wrap wrap" aria-label="The six steps">
+  <ol class="scarf">
+    <li class="fringe" aria-hidden="true"></li>
+    <li class="done"><a href="../">1<span class="vh"> Understand</span></a></li>
+    <li class="done"><a href="../declaration/">2<span class="vh"> Sign</span></a></li>
+    <li class="done"><a href="../get-bitcoin/">3<span class="vh"> Get bitcoin</span></a></li>
+    <li class="now" aria-current="step"><a href="../lock/">4<span class="vh"> Lock</span></a></li>
+    <li class="now"><a href="#check-and-publish">5<span class="vh"> Check and publish</span></a></li>
+    <li class="now"><a href="#take-home">6<span class="vh"> Take it home</span></a></li>
+  </ol>
+  <p class="where"><b>Steps 4 to 6 are on this page:</b> lock, check and publish, take it home. Open on a test network only, for now.</p>
+</nav>
+
+<main id="main" class="wrap">
+
+  <h1>Lock</h1>
+  <p class="lede">Locking sends your bitcoin to an address that only your own key can open, on a date you choose. Until then nobody can move it, not even you. This kind of lock is called a timelock.</p>
 
   <section id="closed" hidden>
     <div class="verdict-live bad">
       <b>Not open for real bitcoin yet</b>
       <p id="closedWhy"></p>
     </div>
-    <p class="note">This page can be tried now on the test Crowdlock, whose coins have no value: add <span class="mono">?c=kop-fund-testnet4</span> to the address in your browser. Nothing here touches real money until the way home has been proved for the wallets people actually use, and this page says which those are.</p>
+    <a class="go" href="../lock/?c=kop-fund-testnet4">Try it on the test network</a>
+    <p class="note">The test network is a practice copy of bitcoin. Its coins are free and worth nothing. Nothing here touches real money until the way home has been proved for the wallets people actually use, and this page says which those are.</p>
   </section>
 
   <section id="testnote" hidden>
     <div class="verdict-live">
       <b>Test network</b>
-      <p>This Crowdlock runs on a test version of bitcoin. Its coins are free, worthless and cannot be bought. Use it to find out how this works; do not send real bitcoin to anything on this page.</p>
+      <p>This runs on a test version of bitcoin. Its coins are free, worthless and cannot be bought. Use it to find out how this works. Do not send real bitcoin to anything on this page.</p>
     </div>
   </section>
 
   <section id="form">
-    <p class="note" id="paramStatus">Loading this Crowdlock's details…</p>
+    <p class="note" id="paramStatus">Loading the details…</p>
 
-    <h2><span class="num">1</span> Who you are</h2>
-    <p>You have to be on <a href="../register/">the register</a> first: <a href="../join/">sign the declaration</a>, which is free. A lock belongs to the key you signed with, so it can be worked out from your signature. You are not asked for any key, word or password here, and this page never holds any.</p>
+    <div class="warn yellow"><div>
+      <b>No outside review yet</b>
+      <p>Nobody outside this project has checked the code that builds a lock. A mistake could leave coins stuck. If you are thinking of a large amount, wait for that review.</p>
+    </div></div>
+
+    <h2>Who you are</h2>
+    <p>You have to be on <a href="../register/">the register</a> first: <a href="../join/">sign the declaration</a>, which is free. A lock belongs to the key you signed with, so this page can work it out from your signature. You are not asked for any key, word or password here, and this page never holds any.</p>
     <div class="field">
       <label for="member"><b>Your address, or your member number</b></label>
       <input type="text" id="member" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="The address you signed with">
     </div>
 
-    <h2 style="margin-top:28px"><span class="num">2</span> How long</h2>
-    <p>Your money comes home on the date, whatever happens, and nobody can stop it. The lengths are this Crowdlock's own.</p>
+    <h2>How long</h2>
+    <p>Your bitcoin comes home on the date, whatever happens, and nobody can stop it.</p>
+    <div class="warn red"><div>
+      <b>Until your date, you can't touch it</b>
+      <p>If bitcoin's price halves, you cannot sell. Only lock what you can leave alone for the whole time. A longer lock counts for longer, and leaves you exposed for longer.</p>
+    </div></div>
     <div class="lengths" id="lengths" role="group" aria-label="Lock length"></div>
 
     <div class="verdict-live" id="verdict" role="status" aria-live="polite">
@@ -101,68 +96,104 @@
   </section>
 
   <section id="plan" hidden>
-    <h2><span class="num">3</span> Send bitcoin here</h2>
-    <p>From any wallet you control: send to this address, and nowhere else.</p>
-    <p><strong>Know the way home before you send.</strong> The tested routes are a Ledger on this page and the Crowdlock app. Sparrow, Electrum and other wallets can fund a lock, but nobody has yet shown they can sign for this script to take it home, so use them only if you can do that yourself. See "Taking it home" below.</p>
-    <div class="address" id="address"></div>
-    <button class="btn" id="copyAddress" type="button">Copy the address</button>
+    <h2>How you'll lock</h2>
+    <div class="warn yellow"><div>
+      <b>Know the way home before you send</b>
+      <p>Taking a lock home has been tested with a Ledger on this page and with the Crowdlock app. Sparrow, Electrum and other wallets can send to a lock, but nobody has yet shown they can sign to take it home. Use one only if you can do that yourself.</p>
+    </div></div>
+    <p><strong>Locking is public. A lock that isn't published isn't counted.</strong></p>
     <p id="amountNote" class="note"></p>
-    <p><strong>This address is for this length, made today.</strong> The date is rounded to midnight (UTC), so on a different day the same choice gives a different address. That is fine — it is simply another lock — but send everything for one lock to the one address you were shown.</p>
-    <p><strong>Check it before you send.</strong> The address above can be rebuilt by anybody from the three facts below, and your wallet or the <a href="../spec/lock-format.md">lock format</a> can confirm it independently. If it does not rebuild, do not send.</p>
+    <p class="note">A sat is the smallest unit of bitcoin. 100,000,000 sats make one bitcoin.</p>
+    <p><strong>Pick one way.</strong></p>
 
-    <div class="card">
-      <b class="head">For checking — you do not do anything with these by hand</b>
-      <pre id="terms"></pre>
-      <button class="btn" id="copyTerms" type="button">Copy these</button>
-      <p class="note">Nothing here is secret, and you do not need to keep it: the register publishes the same facts. It is the recipe for the lock, so that anyone — or any wallet or tool — can rebuild the address and check it. You will never type these into anything yourself. On the date, a tool takes the money home for you; which tool depends on your wallet (see below).</p>
-    </div>
-
-    <div class="card" id="ledgerFund">
-      <b class="head">Or lock straight from a Ledger</b>
-      <p class="note">Chrome, Edge or Brave on a computer, with your Ledger plugged in, unlocked and the <span id="ledgerAppName">Bitcoin</span> app open. Close Ledger Live first. The Ledger shows you the payment and you approve it on the device; this page never sees a key.</p>
-      <button class="btn" id="ledgerConnect" type="button">Connect my Ledger</button>
-      <div class="verdict-live" id="ledgerStatus" role="status" aria-live="polite" hidden></div>
-      <div id="ledgerLockRow" hidden>
-        <div class="field">
-          <label for="lockSats"><b>How much to lock, in sats</b></label>
-          <input type="text" id="lockSats" inputmode="numeric" autocomplete="off">
-        </div>
-        <p class="note" id="ledgerBalance"></p>
-        <p class="note" id="lockFeeLine"></p>
-        <details>
-          <summary>Change the fee</summary>
+    <div class="folds">
+      <details name="route" id="ledgerFund">
+        <summary>With a Ledger, on this page</summary>
+        <p class="if-no-hid"><strong>This browser cannot reach a Ledger.</strong> It needs Chrome, Edge or Brave on a computer. Phones, Firefox and Safari cannot do it. Use the app or any wallet below, or come back on a computer.</p>
+        <p class="note">Chrome, Edge or Brave on a computer, with your Ledger plugged in, unlocked and the <span id="ledgerAppName">Bitcoin</span> app open. Close Ledger Live first. The Ledger shows you the payment and you approve it on the device. This page never sees a key.</p>
+        <button id="ledgerConnect" type="button">Connect my Ledger</button>
+        <div class="verdict-live" id="ledgerStatus" role="status" aria-live="polite" hidden></div>
+        <div id="ledgerLockRow" hidden>
           <div class="field">
-            <label for="lockFeeRate"><b>Fee rate, in sats per vbyte</b></label>
-            <input type="text" id="lockFeeRate" inputmode="numeric" autocomplete="off">
+            <label for="lockSats"><b>How much to lock, in sats</b></label>
+            <input type="text" id="lockSats" inputmode="numeric" autocomplete="off">
           </div>
-          <p class="note" id="lockFeeHelp"></p>
+          <p class="note" id="ledgerBalance"></p>
+          <p class="note" id="lockFeeLine"></p>
+          <details>
+            <summary>Change the fee</summary>
+            <div class="field">
+              <label for="lockFeeRate"><b>Fee rate, in sats per vbyte</b></label>
+              <input type="text" id="lockFeeRate" inputmode="numeric" autocomplete="off">
+            </div>
+            <p class="note">A vbyte is the unit a payment's size is measured in. A higher rate is confirmed sooner and costs more.</p>
+            <p class="note" id="lockFeeHelp"></p>
+          </details>
+          <button id="ledgerLock" type="button">Lock with my Ledger</button>
+          <div class="verdict-live" id="ledgerLockResult" role="status" aria-live="polite" hidden></div>
+        </div>
+      </details>
+
+      <details name="route">
+        <summary>With the Crowdlock app</summary>
+        <p>If you have the Crowdlock app, lock there. It is a bitcoin wallet that knows about locks, and it can take them home too. The app is in early test builds.</p>
+      </details>
+
+      <details name="route">
+        <summary>From any wallet</summary>
+        <p>Send to this address from a wallet you control.</p>
+        <div class="address" id="address"></div>
+        <button id="copyAddress" type="button">Copy the address</button>
+        <div class="warn yellow"><div>
+          <b>Send only to this address</b>
+          <p>It is for this length, made today. The date is rounded to midnight (UTC), so on another day the same choice gives a different address. That is fine, it is simply another lock, but send everything for one lock to the one address you were shown. Add a little extra for the network fee your wallet will charge.</p>
+        </div></div>
+        <details>
+          <summary>Check the address before you send</summary>
+          <p>The address can be rebuilt by anybody from the facts below, and your wallet or the lock format in <a href="../spec/">the documents</a> can confirm it. If it does not rebuild, do not send.</p>
+          <pre id="terms"></pre>
+          <button class="quiet" id="copyTerms" type="button">Copy these</button>
+          <p class="note">Nothing here is secret, and you do not need to keep it: the register publishes the same facts. It is the recipe for the lock. You will never type these into anything yourself.</p>
         </details>
-        <button class="btn" id="ledgerLock" type="button">Lock with my Ledger</button>
-        <div class="verdict-live" id="ledgerLockResult" role="status" aria-live="polite" hidden></div>
-      </div>
+      </details>
     </div>
   </section>
 
+  <div id="check-and-publish">
   <section id="publish" hidden>
-    <h2><span class="num">4</span> Tell the register</h2>
-    <p>A lock address is just a hash. Nobody can tell it is yours, or that it counts, unless you say so. Publishing it adds your lock to the register once the bitcoin has one confirmation, and it counts towards the total.</p>
-    <p><strong>This is public, and permanent.</strong> It ties this address to your membership, so anyone can see that you have money locked and how much. The register can't hold a lock privately. Don't publish if you would rather not.</p>
-    <p>You can do this before or after sending. The register keeps looking until the money has arrived and confirmed.</p>
-    <button class="btn" id="publishNow" type="button">Publish my lock</button>
+    <h2>Check and publish</h2>
+    <p>A lock address is just a string of characters. Nobody can tell it is yours, or that it counts, unless you say so. Publishing adds your lock to the register once the bitcoin has one confirmation. A confirmation means the network has written your payment into the blockchain.</p>
+    <div class="warn red"><div>
+      <b>Public and permanent</b>
+      <p>Publishing puts your lock on the register, with your membership and the amount, for anyone to see. It can't be undone.</p>
+      <p>Not publishing doesn't make it private. Anyone can work out your lock address from your public key. It only means the fund doesn't count it, and this page can't show it to you when it's time to take it home.</p>
+      <p>If you don't want this to be public, don't lock.</p>
+    </div></div>
+    <div class="warn yellow"><div>
+      <b>Publish before you leave this page</b>
+      <p>After midnight UTC this page works out a different address for the same choices, and it can no longer publish this one. You can publish before or after you send: the register keeps looking until the bitcoin has arrived.</p>
+    </div></div>
+    <button id="publishNow" type="button">Publish my lock</button>
     <div class="verdict-live" id="publishResult" role="status" aria-live="polite" hidden></div>
 
-    <div class="card" style="margin-top:20px">
-      <b class="head">Has it arrived?</b>
-      <button class="btn" id="checkChain" type="button">Look at the blockchain</button>
-      <div class="verdict-live" id="chainResult" role="status" aria-live="polite" hidden></div>
-    </div>
+    <h3>Has it arrived?</h3>
+    <button class="quiet" id="checkChain" type="button">Look at the blockchain</button>
+    <div class="verdict-live" id="chainResult" role="status" aria-live="polite" hidden></div>
+    <p class="note">Once it is published and confirmed, it shows on <a href="../register/">the register</a>.</p>
   </section>
+  </div>
 
+  <div id="take-home">
   <section id="homeLedger" hidden>
     <h2>Take a lock home with a Ledger</h2>
-    <p>Locks on this Crowdlock's register that belong to your Ledger's key show here. Once a lock's date has passed on the network's own clock, you can bring its money back to your Ledger's address. Nobody else is involved; the Ledger shows you the payment and you approve it.</p>
+    <p>Once a lock's date has passed, you can bring its bitcoin back to your Ledger's address. Nobody else is involved. The Ledger shows you the payment and you approve it.</p>
+    <div class="warn yellow"><div>
+      <b>Only locks on the register show here</b>
+      <p>A lock that was never published will not appear in this list. The date is judged by the bitcoin network's own clock, which runs about an hour behind real time on real bitcoin.</p>
+    </div></div>
+    <p class="if-no-hid"><strong>This browser cannot reach a Ledger.</strong> It needs Chrome, Edge or Brave on a computer. Use the Crowdlock app, or come back on a computer.</p>
     <p class="note" id="homeFeeLine"></p>
-    <details>
+    <details class="last">
       <summary>Change the fee</summary>
       <div class="field">
         <label for="homeFeeRate"><b>Fee rate, in sats per vbyte</b></label>
@@ -170,37 +201,64 @@
       </div>
       <p class="note" id="homeFeeHelp"></p>
     </details>
-    <button class="btn" id="homeConnect" type="button">Connect my Ledger</button>
+    <button id="homeConnect" type="button">Connect my Ledger</button>
     <div class="verdict-live" id="homeStatus" role="status" aria-live="polite" hidden></div>
     <div id="homeLocks"></div>
+    <p class="note">If a message here mentions an xpub: that is a public key a Ledger needs to see before it will sign. It is not secret.</p>
   </section>
 
   <section>
     <h2>Taking it home</h2>
-    <p>On the date, the key you signed the declaration with can move the money to any address you choose, with nobody else involved. Until then, nobody can.</p>
-    <p><strong>What you will actually do:</strong> not paste anything or work anything out. You will open a tool that knows about locks, tell it which lock, and approve one payment with your own wallet or device. That tool does the rest. The facts above are only what it reads. Which tool, for which wallet, is the part still being proved, which is why this page is closed for real bitcoin.</p>
-    <p><strong>What has been proved, and what has not.</strong> Making this address and sending to it works from any wallet, because sending to an address needs no special support. Taking the money <em>out</em> needs your wallet to sign for a custom script, and that is where wallets differ.</p>
+    <p>On the date, the key you signed the declaration with can move the bitcoin to any address you choose, with nobody else involved. Until then, nobody can.</p>
+    <p><strong>What you will actually do:</strong> open a tool that knows about locks, tell it which lock, and approve one payment with your own wallet or device. You will not paste anything or work anything out.</p>
+    <p><strong>What has been proved, and what has not.</strong> Sending to a lock works from any wallet. Taking the bitcoin <em>out</em> needs your wallet to sign for an unusual kind of address, and that is where wallets differ.</p>
     <ul>
       <li><strong>The Crowdlock app's own wallet:</strong> proved on a test network.</li>
-      <li><strong>A Ledger:</strong> proved on a test network, in the Crowdlock app over USB and Bluetooth, and built into this page for the same test network. Not yet proved on this page with a real Ledger, and not on real bitcoin.</li>
-      <li><strong>Sparrow, Electrum and others used directly:</strong> not tested. We do not know that they can sign for this script, and will not say they can until it has been tried.</li>
+      <li><strong>A Ledger:</strong> proved on a test network, in the Crowdlock app by cable and Bluetooth, and on this page. One real-bitcoin lock has been made with a Ledger in the app. Nobody has taken a real-bitcoin lock home yet, because none has reached its date.</li>
+      <li><strong>Sparrow, Electrum and others used directly:</strong> not tested. We do not know that they can sign for this kind of address, and will not say they can until it has been tried.</li>
     </ul>
-    <p>This is why the page is closed for real bitcoin: a lock that cannot be taken home is the one mistake that cannot be undone. When a way home has been proved for a wallet, this page will say so beside that wallet's name before it opens.</p>
-    <p>Every lock goes home on its date by itself in the sense that nobody can stop it. Whether <em>you</em> have a tool that can sign for it is what has to be true first. The script, the keys and the date are all public, so any future tool can do it.</p>
+    <p>This is why the page is closed for real bitcoin: a lock that cannot be taken home is the one mistake that cannot be undone. Everything a tool needs is public, so any future tool can do it.</p>
   </section>
+  </div>
 
   <section>
-    <h2>Before you put money behind it</h2>
-    <p><a href="../risk/">The risks page</a> is short, specific and not reassuring. Read it before, not after. Bitcoin you lock is out of reach until its date except through a purchase you have personally signed for. In many countries sending, receiving or moving bitcoin has tax or reporting consequences; the rules differ and finding them out is yours to do.</p>
+    <h2>Before you lock real bitcoin</h2>
+    <p>Read <a href="../risk/">the risks page</a> first. It is short, specific and not reassuring. Bitcoin you lock is out of reach until its date, except through a purchase you have personally signed for.</p>
+    <p>In many countries sending, receiving or moving bitcoin has tax or reporting rules. They differ, and finding out yours is up to you.</p>
   </section>
+
+  <script>if (!("hid" in navigator)) document.documentElement.classList.add("no-hid");</script>
 
 </main>
 
-<footer class="inner">
-  <p><strong>This is not an investment.</strong> There is no return, no dividend and no payout, now or ever. Nothing here is legal or financial advice.</p>
+<footer><div class="wrap">
+  <nav id="menu" aria-label="All pages">
+    <h2>Menu</h2>
+    <div class="allpages">
+      <ul>
+        <li class="h">The six steps</li>
+        <li><a href="../">1. Understand</a></li>
+        <li><a href="../declaration/">2. Sign</a></li>
+        <li><a href="../get-bitcoin/">3. Get bitcoin</a></li>
+        <li><a href="../lock/">4. Lock</a></li>
+        <li><a href="#check-and-publish">5. Check and publish</a></li>
+        <li><a href="#take-home">6. Take it home</a></li>
+      </ul>
+      <ul>
+        <li class="h">More</li>
+        <li><a href="../how/">How it works</a></li>
+        <li><a href="../why/">Why</a></li>
+        <li><a href="../risk/">Risks</a></li>
+        <li><a href="../society/">The society</a></li>
+        <li><a href="../register/">The register</a></li>
+        <li><a href="../spec/">The documents</a></li>
+      </ul>
+    </div>
+  </nav>
+  <p><strong>This is not an investment.</strong> There is no return, no dividend and no payout, now or ever. Bitcoin rises and falls, and bitcoin you lock can fall in value while it is locked. Nothing here is legal or financial advice.</p>
   <p>An independent initiative by supporters of Liverpool Football Club. Not affiliated with, endorsed by or connected to Liverpool Football Club, its owners, or any official supporters' organisation.</p>
-  <p><a href="https://github.com/Jimbus9/the-kop-fund/issues">Questions and corrections</a> · <a href="https://github.com/Jimbus9/the-kop-fund">Source and documents on GitHub</a></p>
-</footer>
+  <p><strong><!--name-->The Kop Fund<!--/name--></strong> is a Crowdlock: a published set of rules for a crowd locking bitcoin towards buying something, with nobody holding anybody else's money. <a href="https://github.com/Jimbus9/the-kop-fund">Source and documents on GitHub</a>. Questions, problems or ideas: <a href="https://github.com/Jimbus9/the-kop-fund/issues">open an issue</a>.</p>
+</div></footer>
 
 <script src="../js/vendor/nostr-tools-2.25.2.bundle.js"></script>
 <script src="../js/vendor/crowdlock-ledger-web.bundle.js"></script>
