@@ -2,6 +2,8 @@
 
 **Version 1 · 24 October 2026**
 
+**11 November 2026:** a lapsed lock is not counted and no total of lapsed money is published (cross-reference to the counting rule corrected). The format itself is unchanged.
+
 A lock is how a supporter commits money without anyone taking custody of it.
 It is an ordinary Bitcoin output with a script that permits exactly two ways
 out and no others.

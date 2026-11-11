@@ -2,6 +2,8 @@
 
 **Version 1 · 24 October 2026**
 
+**11 November 2026:** no total of lapsed money is published (it was to be published separately). The counted total is unchanged.
+
 How every number this movement publishes is computed. Two people applying this
 document to the same public data must reach the same answer. If they do not,
 this document is at fault and should be corrected.

@@ -2,6 +2,8 @@
 
 **Version 1 · 24 October 2026**
 
+**11 November 2026:** "Publish the figures you would rather not" no longer lists lapsed locks; no total of lapsed money is published (see the counting rule).
+
 Everything here is free to copy, for any club, any sport, or any cause that fits.
 Copying it is not tolerated, it is the intended outcome. Nobody needs permission,
 nobody needs to tell us, and nothing is owed to anybody if it works.
