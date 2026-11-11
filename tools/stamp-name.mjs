@@ -17,7 +17,7 @@
 //
 // RENAME CHECKLIST. Stamping does not reach these, on purpose (they are not
 // pages, or they are read by the app and by members' tools):
-//   crowdlocks/kop-fund.json and crowdlocks/kop-fund-testnet4.json ("name")
+//   crowdlocks/kop-fund.json ("name"; the test copy lives in the method repository, fanfund)
 //   spec/*.md (the documents), README.md, js/crowdlock.mjs (one comment)
 //   the site's own address, which contains the name
 // The signed declaration does not contain the name, so no signature breaks.

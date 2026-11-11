@@ -306,8 +306,12 @@ async function load() {
       const index = await (await fetch("../crowdlocks/index.json")).json();
       name = index.crowdlocks[0];
     }
-    C = await (await fetch(`../crowdlocks/${name}.json`)).json();
-    REGISTER = await (await fetch(`../${C.register.registrations}`)).json();
+    // The test Crowdlock is the method's own copy, the one the app uses, so a
+    // lock made here and one made in the app land on the same register (and
+    // this page can publish to its relays). Everything else is this site's.
+    const base = name === "kop-fund-testnet4" ? "https://jimbus9.github.io/fanfund/" : "../";
+    C = await (await fetch(`${base}crowdlocks/${name}.json`)).json();
+    REGISTER = await (await fetch(`${base}${C.register.registrations}`)).json();
 
     el("paramStatus").textContent = `${C.name} · ${C.network}`;
     if (C.network !== "mainnet") el("testnote").hidden = false;
