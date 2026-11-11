@@ -239,13 +239,15 @@ export const PROPOSAL_TAG = "y";
 const RECORD_KIND = 3713; // method/js/inbox.mjs
 
 /** A commitment (the owner's half) or a completed one (the co-signer's), as a Nostr event template. */
-export function commitmentEventTemplate({ type, proposal, record, tx }, fingerprint, createdAt) {
-  if (type !== "commitment" && type !== "completed") throw new Error("type must be commitment or completed");
+export function commitmentEventTemplate({ type, proposal, record, tx, notice }, fingerprint, createdAt) {
+  if (type !== "commitment" && type !== "completed" && type !== "notice") throw new Error("type must be commitment, completed or notice");
   if (!HEX64.test(proposal)) throw new Error("not a proposal's hash");
   return {
     kind: RECORD_KIND, created_at: createdAt,
     tags: [["x", fingerprint], [PROPOSAL_TAG, proposal], ["t", "crowdlock"]],
-    content: JSON.stringify(type === "commitment" ? { crowdlock: fingerprint, type, proposal, record } : { crowdlock: fingerprint, type, proposal, tx }),
+    content: JSON.stringify(type === "commitment" ? { crowdlock: fingerprint, type, proposal, record }
+      : type === "completed" ? { crowdlock: fingerprint, type, proposal, tx }
+      : { crowdlock: fingerprint, type, proposal, notice }),
   };
 }
 
@@ -259,6 +261,9 @@ export function commitmentFromEvent(event, fingerprint, proposal) {
   if (!c || c.crowdlock !== fingerprint || c.proposal !== proposal) return null;
   if (c.type === "commitment" && c.record?.proposal === proposal && typeof c.record?.tx === "string") return { type: "commitment", record: c.record, at: event.created_at };
   if (c.type === "completed" && typeof c.tx === "string" && /^[0-9a-f]+$/.test(c.tx)) return { type: "completed", tx: c.tx, at: event.created_at };
+  if (c.type === "notice" && typeof c.notice?.address === "string" && typeof c.notice?.signature === "string") {
+    return { type: "notice", notice: { address: c.notice.address, signature: c.notice.signature }, at: event.created_at };
+  }
   return null;
 }
 
@@ -329,4 +334,81 @@ export function applyCommitments(pile, events, { crowdlock, proposal, register, 
   }
   if (!added.length) return { pile, outcome };
   return { pile: { ...pile, commitments: [...pile.commitments, ...added] }, outcome };
+}
+
+// ---------------------------------------------------------------------------
+// The co-signer's failure notice (spec: "Failure"). A signed statement that a
+// proposal did not reach its target and that none of its commitments will be
+// completed. Like the other signed sentences, the English is a protocol
+// constant: it is rebuilt byte for byte to check the signature, so it must
+// never be translated.
+// ---------------------------------------------------------------------------
+
+export function noticeStatement(hash) {
+  if (!HEX64.test(hash)) throw new Error("not a proposal's hash");
+  return `I declare proposal ${hash} dead: it did not reach its target, and I will complete none of its commitments.`;
+}
+
+/**
+ * Is this a genuine notice for this proposal? It must be signed by the key
+ * of one of the Crowdlock's co-signers (its native segwit address).
+ * `addressOf(pubkey)` gives that address (memberAddressForOwnerKey in verify.mjs).
+ */
+export function noticeIsGenuine(notice, { crowdlock, hash, hrp, addressOf }) {
+  const cosigners = new Set((crowdlock.cosigner_keys ?? []).map((k) => addressOf(k, hrp)));
+  if (!cosigners.has(notice?.address)) return { ok: false, reason: "it is not signed by this Crowdlock's co-signer" };
+  const r = verifyMembership({ address: notice.address, signature: notice.signature, message: noticeStatement(hash), hrp });
+  return r.valid ? { ok: true, reason: "" } : { ok: false, reason: `its signature does not verify — ${r.reason}` };
+}
+
+/**
+ * Record what the co-signer has done, in the pile: completed transactions
+ * (published, so anyone can broadcast them) and a failure notice.
+ *
+ *   items     commitmentFromEvent results of type "completed" and "notice"
+ *   txidOf    (hex) => the transaction's id, or null if it won't parse —
+ *             injected, so this file needs no transaction library
+ *
+ * A completed transaction is recorded only if its id is the id of a
+ * commitment already in the pile (the id leaves out the signatures, so a
+ * completion and its commitment share it): nothing else can be smuggled in.
+ * A notice is recorded once, if genuine; after it, no completion is recorded.
+ */
+export function applySettlement(pile, items, { crowdlock, hash, hrp, addressOf, txidOf, nowIso }) {
+  const outcome = [];
+  let next = pile;
+  const ids = new Map();
+  for (const c of pile.commitments) { const id = txidOf(c.record.tx); if (id) ids.set(id, c); }
+  const done = new Set((pile.completed ?? []).map((c) => c.txid));
+  for (const it of [...items].sort((a, b) => a.at - b.at)) {
+    if (it.type === "notice") {
+      if (next.notice) continue;
+      const g = noticeIsGenuine(it.notice, { crowdlock, hash, hrp, addressOf });
+      if (!g.ok) { outcome.push({ added: false, kind: "notice", reason: g.reason }); continue; }
+      next = { ...next, notice: { ...it.notice, statement: noticeStatement(hash), published: nowIso } };
+      outcome.push({ added: true, kind: "notice" });
+    } else if (it.type === "completed") {
+      if (next.notice) { outcome.push({ added: false, kind: "completed", reason: "the co-signer has declared this proposal dead" }); continue; }
+      const id = txidOf(it.tx);
+      if (!id || done.has(id)) continue;
+      if (!ids.has(id)) { outcome.push({ added: false, kind: "completed", reason: "it completes no commitment in the pile" }); continue; }
+      done.add(id);
+      next = { ...next, completed: [...(next.completed ?? []), { txid: id, tx: it.tx, published: nowIso }] };
+      outcome.push({ added: true, kind: "completed", txid: id });
+    }
+  }
+  return { pile: next, outcome };
+}
+
+/**
+ * Which completed transactions to send this pass: those not yet sent, in the
+ * order their commitments were submitted, at most `limit` — so a large
+ * settlement goes out a few at a time over many passes rather than all at
+ * once (spec: "Pacing is not optional").
+ */
+export function dueToSend(pile, limit, txidOf) {
+  const order = new Map(pile.commitments.map((c, i) => [txidOf(c.record.tx), i]));
+  return (pile.completed ?? []).filter((c) => !c.sent)
+    .sort((a, b) => (order.get(a.txid) ?? 1e9) - (order.get(b.txid) ?? 1e9))
+    .slice(0, limit);
 }

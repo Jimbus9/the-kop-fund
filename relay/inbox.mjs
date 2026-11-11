@@ -16,7 +16,15 @@ import { applyRecords, announcementTemplate, announcementDue } from "../js/inbox
 import { membershipStatement, checkCrowdlock } from "../js/crowdlock.mjs";
 import { fetchRecords, postTemplate } from "./nostr.mjs";
 import { recordPass, planSwaps, SILENT_DAYS } from "../js/relayhealth.mjs";
-import { checkProposals, phaseOf, pilePath, emptyPile, checkPileShape, applyCommitments } from "../js/proposals.mjs";
+import { checkProposals, phaseOf, pilePath, emptyPile, checkPileShape, applyCommitments, applySettlement, dueToSend, commitmentFromEvent } from "../js/proposals.mjs";
+import { memberAddressForOwnerKey } from "../js/verify.mjs";
+import { Transaction } from "bitcoinjs-lib";
+
+// A large settlement is sent a few at a time, every pass, rather than all at
+// once (spec/proposal-and-settlement.md, "Pacing is not optional").
+const SEND_PER_PASS = 25;
+const hrpOf = (c) => (c.network === "mainnet" ? "bc" : c.network === "regtest" ? "bcrt" : "tb");
+const txidOf = (hex) => { try { return Transaction.fromHex(hex).getId(); } catch { return null; } };
 
 // A relay connection can report an error after it has already been finished
 // with. Left alone, that would end the whole pass part-way — after one
@@ -139,11 +147,44 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
       }
       const got = applyCommitments(pile, events, { crowdlock, proposal: p, register: result.register, nowIso });
       for (const o of got.outcome) console.log(`${file}: commitment to "${p.title}" from ${o.lock} — ${o.added ? "ADDED" : `not added: ${o.reason}`}`);
-      if (got.pile !== pile) {
+      const n = got.outcome.filter((o) => o.added).length;
+      if (n) messages.push(`${n} commitment${n === 1 ? "" : "s"} to "${p.title}" (via relays)`);
+
+      // What the co-signer has done: completed transactions, published here
+      // so anyone can broadcast them, and a failure notice.
+      const items = events.map((e) => commitmentFromEvent(e, crowdlock.declaration.sha256, p.hash)).filter((x) => x && x.type !== "commitment");
+      const settled = applySettlement(got.pile, items, { crowdlock, hash: p.hash, hrp: hrpOf(crowdlock), addressOf: memberAddressForOwnerKey, txidOf, nowIso });
+      for (const o of settled.outcome) console.log(`${file}: ${o.kind} for "${p.title}" — ${o.added ? "RECORDED" : `not recorded: ${o.reason}`}`);
+      if (settled.outcome.some((o) => o.added && o.kind === "notice")) messages.push(`"${p.title}" declared dead by the co-signer`);
+      let next = settled.pile;
+
+      // Send what is due, paced: at most SEND_PER_PASS a pass, oldest
+      // commitment first, and only while the proposal is still settling.
+      let sent = 0;
+      for (const c of dueToSend(next, SEND_PER_PASS, txidOf)) {
+        let state = null;
+        try {
+          const known = await fetch(`${crowdlock.chain_api}/tx/${c.txid}/status`);
+          if (known.ok) state = "already on the network";
+          else {
+            const r = await fetch(`${crowdlock.chain_api}/tx`, { method: "POST", body: c.tx });
+            const text = (await r.text()).trim();
+            state = r.ok ? "sent" : null;
+            if (!r.ok) console.log(`${file}: ${c.txid} for "${p.title}" — refused by the network: ${text.slice(0, 200)}`);
+          }
+        } catch (e) { console.log(`${file}: ${c.txid} — could not reach the network: ${e.message}`); }
+        if (state) {
+          next = { ...next, completed: next.completed.map((x) => x.txid === c.txid ? { ...x, sent: nowIso } : x) };
+          console.log(`${file}: ${c.txid} for "${p.title}" — ${state}`);
+          sent++;
+        }
+      }
+      if (sent) messages.push(`${sent} payment${sent === 1 ? "" : "s"} for "${p.title}" sent`);
+      else if (settled.outcome.some((o) => o.added && o.kind === "completed")) messages.push(`Completed payments for "${p.title}" published`);
+
+      if (JSON.stringify(next) !== JSON.stringify(pile)) {
         mkdirSync(dirname(at), { recursive: true });
-        writeFileSync(at, JSON.stringify(got.pile, null, 2) + "\n");
-        const n = got.outcome.filter((o) => o.added).length;
-        messages.push(`${n} commitment${n === 1 ? "" : "s"} to "${p.title}" (via relays)`);
+        writeFileSync(at, JSON.stringify(next, null, 2) + "\n");
       }
     }
   }

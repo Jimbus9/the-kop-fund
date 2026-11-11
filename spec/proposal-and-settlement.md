@@ -270,6 +270,12 @@ When `requires` is met, and not before:
    Settlement does not depend on any one party staying available.
 4. Broadcasting is **paced across days**, and preferentially into quiet periods.
 
+How the reference implementation paces: a co-signer completing a handful (25
+or fewer) sends them at once. More than that are published to the relays only;
+the repository's inbox records them in the pile and broadcasts at most 25 a
+pass, every few minutes, oldest commitment first, until each is on the
+network. (Choosing quiet periods is not yet done.)
+
 ### Pacing is not optional
 
 One transaction per supporter means a hundred thousand supporters is a hundred
@@ -322,7 +328,17 @@ commitment in the pile stays permanently inert. The default outcome is the safe
 one, which is the correct way round.
 
 The co-signer **publishes a signed notice** declaring the pile dead, and does not
-complete any commitment after `settles_by`.
+complete any commitment after `settles_by`. The notice is this sentence, signed
+by a co-signer key's native segwit address, the same way a member signs the
+declaration:
+
+```
+I declare proposal <proposal hash> dead: it did not reach its target, and I will complete none of its commitments.
+```
+
+Like the membership and attestation statements, **this English is a protocol
+constant**: a verifier rebuilds it byte for byte, so it must never be
+translated. Show a translation beside it; sign the constant.
 
 ### The residual risk, stated
 
@@ -364,6 +380,22 @@ In the project repository, submitted the same way as registrations, at
 
 Each `record` is a commitment in the commitment format. `submitted` is when the
 repository first received it, which is the order oversubscription settles in.
+
+The repository's relay inbox keeps this file. It records what arrived and when;
+it refuses a commitment whose lock is not on the register, one posted outside
+the gathering window, a malformed one, a copy, and more than five per lock. It
+does not judge signatures or coins: **every reader checks every commitment in
+full** before counting or completing it (`method/js/proposals.mjs`).
+
+Two more keys appear as the co-signer acts:
+
+- `completed`: `[{ "txid", "tx", "published", "sent" }]` — each completed
+  transaction, **published here so that anybody can broadcast it**. One is
+  recorded only if its txid is the txid of a commitment in the pile (a txid
+  leaves out the signatures, so a completion and its commitment share it).
+  `sent` is when the repository broadcast it.
+- `notice`: the co-signer's failure notice (below), once, if genuine. After it,
+  no completion is recorded.
 
 Not on a server we run. A collection held by us could have an individual
 commitment quietly dropped from it with no way for anyone to prove it happened.

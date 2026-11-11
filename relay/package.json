@@ -9,6 +9,7 @@
     "selftest": "node selftest.mjs"
   },
   "dependencies": {
+    "bitcoinjs-lib": "7.0.5",
     "nostr-tools": "2.25.2"
   }
 }
