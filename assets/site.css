@@ -125,7 +125,7 @@ strong, b { font-weight: 700; }
 
 main { padding-bottom: 48px; }
 h1 {
-  font: 400 clamp(42px, 13vw, 72px)/.98 var(--display); text-transform: uppercase;
+  font: 400 clamp(42px, 13vw, 72px)/1.14 var(--display); text-transform: uppercase;
   letter-spacing: .005em; margin: 24px 0 14px; text-wrap: balance;
 }
 h2 { font: 700 24px/1.25 var(--body); margin: 40px 0 10px; text-wrap: balance; }

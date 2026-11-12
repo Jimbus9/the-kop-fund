@@ -5,7 +5,7 @@ This repository is The Kop Fund's own: its declaration, its register of members,
 its published destinations, and the small relay inbox that collects members'
 signed records. Anyone can check all of it with standard tools.
 
-- Site: https://jimbus9.github.io/the-kop-fund/
+- Site: https://thekopfund.org/ (the old address, https://jimbus9.github.io/the-kop-fund/, forwards to it)
 - Join and lock: use the Crowdlock app, or the pages on the site.
 - The method this runs on, with its reference code and tests: https://github.com/Jimbus9/fanfund
 
