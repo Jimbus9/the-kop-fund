@@ -102,7 +102,12 @@
       <b>Know the way home before you send</b>
       <p>Taking a lock home has been tested with a Ledger on this page and with the Crowdlock app. Sparrow, Electrum and other wallets can send to a lock, but nobody has yet shown they can sign to take it home. Use one only if you can do that yourself.</p>
     </div></div>
-    <p><strong>Locking is public. A lock that isn't published isn't counted.</strong></p>
+    <div class="warn red"><div>
+      <b>Public and permanent</b>
+      <p>Publishing puts your lock on the register, with your membership and the amount, for anyone to see. It can't be undone.</p>
+      <p>Not publishing doesn't make it private. Anyone can work out your lock address from your public key. It only means the fund doesn't count it, and this page can't show it to you when it's time to take it home.</p>
+      <p>If you don't want this to be public, don't lock.</p>
+    </div></div>
     <p id="amountNote" class="note"></p>
     <p class="note">A sat is the smallest unit of bitcoin. 100,000,000 sats make one bitcoin.</p>
     <p><strong>Pick one way.</strong></p>
@@ -112,6 +117,7 @@
         <summary>With a Ledger, on this page</summary>
         <p class="if-no-hid"><strong>This browser cannot reach a Ledger.</strong> It needs Chrome, Edge or Brave on a computer. Phones, Firefox and Safari cannot do it. Use the app or any wallet below, or come back on a computer.</p>
         <p class="note">Chrome, Edge or Brave on a computer, with your Ledger plugged in, unlocked and the <span id="ledgerAppName">Bitcoin</span> app open. Close Ledger Live first. The Ledger shows you the payment and you approve it on the device. This page never sees a key.</p>
+        <p class="note">Once it is sent, this page publishes it to the register for you.</p>
         <button id="ledgerConnect" type="button">Connect my Ledger</button>
         <div class="verdict-live" id="ledgerStatus" role="status" aria-live="polite" hidden></div>
         <div id="ledgerLockRow" hidden>
@@ -164,13 +170,8 @@
   <div id="check-and-publish">
   <section id="publish" hidden>
     <h2><span class="num">4</span>Publish it, so it counts</h2>
-    <p>A lock address is just a string of characters. Nobody can tell it is yours, or that it counts, unless you say so. Publishing adds your lock to the register once the bitcoin has one confirmation. A confirmation means the network has written your payment into the blockchain.</p>
-    <div class="warn red"><div>
-      <b>Public and permanent</b>
-      <p>Publishing puts your lock on the register, with your membership and the amount, for anyone to see. It can't be undone.</p>
-      <p>Not publishing doesn't make it private. Anyone can work out your lock address from your public key. It only means the fund doesn't count it, and this page can't show it to you when it's time to take it home.</p>
-      <p>If you don't want this to be public, don't lock.</p>
-    </div></div>
+    <p><strong>Locked with your Ledger on this page? It is already published. Go to part 5.</strong></p>
+    <p>Sent from another wallet? A lock address is just a string of characters. Nobody can tell it is yours, or that it counts, unless you say so. Publishing adds your lock to the register once the bitcoin has one confirmation. A confirmation means the network has written your payment into the blockchain.</p>
     <div class="warn yellow"><div>
       <b>Publish before you leave this page</b>
       <p>After midnight UTC this page works out a different address for the same choices, and it can no longer publish this one. You can publish before or after you send: the register keeps looking until the bitcoin has arrived.</p>
@@ -394,13 +395,14 @@ async function postToRelays(record) {
   return { accepted: results.filter(Boolean).length, total: C.relays.length };
 }
 
-el("publishNow").addEventListener("click", async () => {
+// Returns the relays' answer, or null if this page cannot publish at all.
+async function publishPlan() {
   const btn = el("publishNow");
-  if (!PLAN) return;
+  if (!PLAN) return null;
   if (!Array.isArray(C.relays) || !C.relays.length || !globalThis.NostrTools) {
     setBox(el("publishResult"), "bad", "Cannot publish from here",
       "This Crowdlock names no relays, or the relay library did not load. Your lock is still real; it can be published another way.");
-    return;
+    return null;
   }
   btn.disabled = true; btn.textContent = "Posting…";
   const p = await postToRelays(PLAN.record);
@@ -413,7 +415,9 @@ el("publishNow").addEventListener("click", async () => {
     setBox(el("publishResult"), "bad", "No relay took it just now",
       "Check your connection, or turn off any VPN, and try again. Nothing is lost.");
   }
-});
+  return p;
+}
+el("publishNow").addEventListener("click", publishPlan);
 
 // --- Has the bitcoin arrived? -------------------------------------------------
 
@@ -548,7 +552,13 @@ el("ledgerLock").addEventListener("click", async () => {
     setBox(out, "", "Check your Ledger", "It will first ask you to approve this lock's rules, then the payment. Read each on the device.");
     const built = await L.buildLock({ account: ACCOUNT, chain, lock, feeRate, amount: BigInt(raw) });
     const txid = await chain.broadcast(built.hex);
-    setBox(out, "ok", "Sent", `${built.sent.toLocaleString("en-GB")} sats are on their way to the lock, fee ${built.fee.toLocaleString("en-GB")} sats. Publish it below once you like; the register adds it when the bitcoin confirms.`);
+    const sentLine = `${built.sent.toLocaleString("en-GB")} sats are on their way to the lock, fee ${built.fee.toLocaleString("en-GB")} sats.`;
+    setBox(out, "ok", "Sent", `${sentLine} Publishing it to the register now…`);
+    txLink(out, txid);
+    // Publish straight away, so a lock sent from this page is never left uncounted.
+    const p = await publishPlan();
+    if (p && p.accepted > 0) setBox(out, "ok", "Sent and published", `${sentLine} The register adds it once the bitcoin has one confirmation. Then you are in.`);
+    else setBox(out, "bad", "Sent, but not published yet", `${sentLine} Your bitcoin is safe in the lock. Tap "Publish my lock" in part 4 to try again before you leave this page.`);
     txLink(out, txid);
   } catch (e) {
     setBox(out, "bad", "Nothing was sent", e.message);

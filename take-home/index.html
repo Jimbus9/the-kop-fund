@@ -310,13 +310,14 @@ async function postToRelays(record) {
   return { accepted: results.filter(Boolean).length, total: C.relays.length };
 }
 
-el("publishNow").addEventListener("click", async () => {
+// Returns the relays' answer, or null if this page cannot publish at all.
+async function publishPlan() {
   const btn = el("publishNow");
-  if (!PLAN) return;
+  if (!PLAN) return null;
   if (!Array.isArray(C.relays) || !C.relays.length || !globalThis.NostrTools) {
     setBox(el("publishResult"), "bad", "Cannot publish from here",
       "This Crowdlock names no relays, or the relay library did not load. Your lock is still real; it can be published another way.");
-    return;
+    return null;
   }
   btn.disabled = true; btn.textContent = "Posting…";
   const p = await postToRelays(PLAN.record);
@@ -329,7 +330,9 @@ el("publishNow").addEventListener("click", async () => {
     setBox(el("publishResult"), "bad", "No relay took it just now",
       "Check your connection, or turn off any VPN, and try again. Nothing is lost.");
   }
-});
+  return p;
+}
+el("publishNow").addEventListener("click", publishPlan);
 
 // --- Has the bitcoin arrived? -------------------------------------------------
 
@@ -464,7 +467,13 @@ el("ledgerLock").addEventListener("click", async () => {
     setBox(out, "", "Check your Ledger", "It will first ask you to approve this lock's rules, then the payment. Read each on the device.");
     const built = await L.buildLock({ account: ACCOUNT, chain, lock, feeRate, amount: BigInt(raw) });
     const txid = await chain.broadcast(built.hex);
-    setBox(out, "ok", "Sent", `${built.sent.toLocaleString("en-GB")} sats are on their way to the lock, fee ${built.fee.toLocaleString("en-GB")} sats. Publish it below once you like; the register adds it when the bitcoin confirms.`);
+    const sentLine = `${built.sent.toLocaleString("en-GB")} sats are on their way to the lock, fee ${built.fee.toLocaleString("en-GB")} sats.`;
+    setBox(out, "ok", "Sent", `${sentLine} Publishing it to the register now…`);
+    txLink(out, txid);
+    // Publish straight away, so a lock sent from this page is never left uncounted.
+    const p = await publishPlan();
+    if (p && p.accepted > 0) setBox(out, "ok", "Sent and published", `${sentLine} The register adds it once the bitcoin has one confirmation. Then you are in.`);
+    else setBox(out, "bad", "Sent, but not published yet", `${sentLine} Your bitcoin is safe in the lock. Tap "Publish my lock" in part 4 to try again before you leave this page.`);
     txLink(out, txid);
   } catch (e) {
     setBox(out, "bad", "Nothing was sent", e.message);
