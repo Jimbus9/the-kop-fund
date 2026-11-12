@@ -11,6 +11,13 @@
 # still not in a block FAILS the run, so a broken anchor shows up as a red
 # cross and an email rather than as silence.
 #
+# GitHub sometimes never starts a scheduled run (it skipped the one on
+# 12 November), and a run that never starts cannot fail, so it shows no red
+# cross. So this runs four times a day (every pass is harmless when there is
+# nothing to do), and each run checks how long ago the previous one was. If
+# the gap is over 30 hours, a day was skipped, and this run goes red at the
+# end, after doing its work, so the email says so.
+#
 # Uses no secrets: only the permission GitHub gives every repository's own jobs.
 # Run it by hand from the Actions tab ("Run workflow").
 
@@ -18,8 +25,8 @@ name: Anchor the register
 
 on:
   schedule:
-    # Daily, at an odd minute away from the top of the hour.
-    - cron: "41 5 * * *"
+    # Four times a day, at an odd minute away from the top of the hour.
+    - cron: "41 5,11,17,23 * * *"
   workflow_dispatch:
     inputs:
       force:
@@ -29,6 +36,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 # Both this and the relay inbox push to main; a run waits for its turn.
 concurrency:
@@ -40,6 +48,24 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
+      - name: Was an earlier run skipped?
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          prev=$(gh api "repos/${{ github.repository }}/actions/workflows/anchor-register.yml/runs?per_page=10" \
+            --jq "[.workflow_runs[] | select(.id != ${{ github.run_id }})][0].created_at")
+          if [ -z "$prev" ] || [ "$prev" = "null" ]; then
+            echo "no earlier run to compare with"
+            exit 0
+          fi
+          gap=$(( ( $(date -u +%s) - $(date -u -d "$prev" +%s) ) / 3600 ))
+          echo "the previous run started $gap hour(s) ago ($prev)"
+          if [ "$gap" -gt 30 ]; then
+            echo "::error::No anchoring run started for $gap hours (the previous was $prev). GitHub skipped at least one scheduled run. This run is doing the work now."
+            touch /tmp/skipped
+          fi
+
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -109,3 +135,11 @@ jobs:
           done
           echo "::error::could not push the anchor"
           exit 1
+
+      - name: Say so if a day was skipped
+        if: always()
+        run: |
+          if [ -f /tmp/skipped ]; then
+            echo "A scheduled run was skipped before this one. The work above is done; this is only the flag."
+            exit 1
+          fi
