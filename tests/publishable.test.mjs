@@ -86,7 +86,8 @@ check("No bare import specifiers in browser code", bare.length === 0, bare.join(
 // with no error anyone but the visitor can see. Found worth guarding after
 // the signature counters were deliberately removed from the register page.
 {
-  const pages = ["declaration/index.html", "register/index.html", "join/index.html", "lock/index.html"];
+  const pages = ["declaration/index.html", "register/index.html", "join/index.html", "lock/index.html",
+    "take-home/index.html", "commit/index.html"];
   for (const page of pages) {
     const src = readFileSync(join(R, page), "utf8");
     const ids = new Set([...src.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
@@ -98,6 +99,19 @@ check("No bare import specifiers in browser code", bare.length === 0, bare.join(
     check(`${page}: every element its script reaches for exists`, missing.length === 0,
       missing.length ? `missing: ${missing.join(", ")}` : `${wanted.size} checked`);
   }
+}
+
+// Steps 4 and 6 are two pages over one script: Lock shows the locking parts and
+// Take it home shows the rest. The script must be the same in both, byte for
+// byte, or a fix made to one silently misses the other.
+{
+  const scriptOf = (page) => {
+    const src = readFileSync(join(R, page), "utf8");
+    return src.slice(src.indexOf("</footer>"));
+  };
+  check("take-home/index.html runs the Lock page's script, byte for byte",
+    scriptOf("lock/index.html") === scriptOf("take-home/index.html"),
+    "edit the script in lock/index.html, then copy everything after </footer> into take-home/index.html");
 }
 
 // The declaration page carries its own copy of the declaration, so a visitor can

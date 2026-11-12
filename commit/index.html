@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title data-t="Commit | {name}">Commit | The Kop Fund</title>
+<title data-t="Commit to a purchase | {name}">Commit to a purchase | The Kop Fund</title>
 <meta name="description" content="Commit money you have locked to a published proposal, from a Ledger, in your browser.">
-<meta property="og:title" data-t="Commit | {name}" content="Commit | The Kop Fund">
+<meta property="og:title" data-t="Commit to a purchase | {name}" content="Commit to a purchase | The Kop Fund">
 <meta property="og:description" content="Commit money you have locked to a published proposal, from a Ledger, in your browser.">
 <meta property="og:site_name" data-t="{name}" content="The Kop Fund">
 <meta property="og:type" content="website">
@@ -32,10 +32,25 @@
   </nav>
 </div></header>
 
+<nav class="scarf-wrap wrap" aria-label="The six steps">
+  <ol class="scarf">
+    <li class="fringe" aria-hidden="true"></li>
+    <li class="done"><a href="../">1<span class="vh"> Understand</span></a></li>
+    <li class="done"><a href="../declaration/">2<span class="vh"> Sign</span></a></li>
+    <li class="done"><a href="../get-bitcoin/">3<span class="vh"> Get bitcoin</span></a></li>
+    <li class="done"><a href="../lock/">4<span class="vh"> Lock</span></a></li>
+    <li class="now" aria-current="step"><a href="../commit/">5<span class="vh"> Commit to a purchase</span></a></li>
+    <li><a href="../take-home/">6<span class="vh"> Take it home</span></a></li>
+  </ol>
+  <p class="where"><b>Step 5 of 6: Commit to a purchase.</b> Only when one is proposed, and only if you choose.</p>
+</nav>
+
 <main id="main" class="wrap">
 
-  <h1>Commit</h1>
+  <h1>Commit to a purchase</h1>
   <p class="lede">When a purchase is proposed, you can commit money you have locked to it. You sign a payment to the seller from your own lock. It can't move unless the proposal reaches its target and the fund's co-signer adds the second signature. If it doesn't, your money stays locked and comes home on its date as usual.</p>
+
+  <p class="note">This step is optional. There is nothing to do here until a purchase is proposed. If you never commit, your lock simply comes home on its date.</p>
 
   <section id="closed" hidden>
     <div class="verdict-live bad">
@@ -51,7 +66,7 @@
 
   <section id="list" hidden>
     <h2>Proposals</h2>
-    <p id="none" class="note" hidden>No proposals yet. When one is published it appears here.</p>
+    <p id="none" class="note" hidden>No purchase has been proposed yet. When one is published it appears here.</p>
     <div id="proposals"></div>
   </section>
 
@@ -78,6 +93,9 @@
     <p>Everything shown here is checked in your browser: each proposal against its own fingerprint, and each commitment against the lock it spends, before it is counted. The rules are in <a href="../spec/">the documents</a>.</p>
   </section>
 
+  <a class="quiet" href="../take-home/">Next: take it home</a>
+<script src="../assets/keep-crowdlock.js" defer></script>
+
 </main>
 
 <footer><div class="wrap">
@@ -90,9 +108,8 @@
         <li><a href="../declaration/">2. Sign</a></li>
         <li><a href="../get-bitcoin/">3. Get bitcoin</a></li>
         <li><a href="../lock/">4. Lock</a></li>
-        <li><a href="../lock/#check-and-publish">5. Check and publish</a></li>
-        <li><a href="../commit/">While it's locked: commit to a purchase, if you choose</a></li>
-        <li><a href="../lock/#take-home">6. Take it home</a></li>
+        <li><a href="../commit/">5. Commit to a purchase</a></li>
+        <li><a href="../take-home/">6. Take it home</a></li>
       </ul>
       <ul>
         <li class="h">More</li>

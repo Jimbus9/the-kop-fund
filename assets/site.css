@@ -271,6 +271,7 @@ textarea { min-height: 104px; resize: vertical; }
   background: var(--red); color: #fff; font-weight: 700;
 }
 .path b { display: block; }
+.path.from5 { counter-reset: step 4; }      /* the two later steps, numbered 5 and 6 */
 
 /* ---- Tables --------------------------------------------------------------- */
 

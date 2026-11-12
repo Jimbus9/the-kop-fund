@@ -39,16 +39,17 @@
     <li class="done"><a href="../declaration/">2<span class="vh"> Sign</span></a></li>
     <li class="done"><a href="../get-bitcoin/">3<span class="vh"> Get bitcoin</span></a></li>
     <li class="now" aria-current="step"><a href="../lock/">4<span class="vh"> Lock</span></a></li>
-    <li class="now"><a href="#check-and-publish">5<span class="vh"> Check and publish</span></a></li>
-    <li class="now"><a href="#take-home">6<span class="vh"> Take it home</span></a></li>
+    <li><a href="../commit/">5<span class="vh"> Commit to a purchase</span></a></li>
+    <li><a href="../take-home/">6<span class="vh"> Take it home</span></a></li>
   </ol>
-  <p class="where"><b>Steps 4 to 6 are on this page:</b> lock, check and publish, take it home. Open on a test network only, for now.</p>
+  <p class="where"><b>Step 4 of 6: Lock.</b> After this you are in. Steps 5 and 6 come later.</p>
 </nav>
 
 <main id="main" class="wrap">
 
   <h1>Lock</h1>
   <p class="lede">Locking sends your bitcoin to an address that only your own key can open, on a date you choose. Until then nobody can move it, not even you. This kind of lock is called a timelock.</p>
+  <p class="note">Five short parts, on this one page: who you are, how long, send it, publish it, check it arrived.</p>
 
   <section id="closed" hidden>
     <div class="verdict-live bad">
@@ -71,17 +72,17 @@
 
     <div class="warn yellow"><div>
       <b>No outside review yet</b>
-      <p>Nobody outside this project has checked the code that builds a lock. A mistake could leave coins stuck. If you are thinking of a large amount, wait for that review.</p>
+      <p>Nobody outside this project has checked the code that builds a lock. A mistake could leave coins stuck. If you are thinking of a large amount, wait for that review. Read <a href="../risk/">the risks page</a> before you lock real bitcoin. It is short, specific and not reassuring.</p>
     </div></div>
 
-    <h2>Who you are</h2>
+    <h2><span class="num">1</span>Who you are</h2>
     <p>You have to be on <a href="../register/">the register</a> first: <a href="../join/">sign the declaration</a>, which is free. A lock belongs to the key you signed with, so this page can work it out from your signature. You are not asked for any key, word or password here, and this page never holds any.</p>
     <div class="field">
       <label for="member"><b>Your address, or your member number</b></label>
       <input type="text" id="member" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="The address you signed with">
     </div>
 
-    <h2>How long</h2>
+    <h2><span class="num">2</span>How long</h2>
     <p>Your bitcoin comes home on the date, whatever happens, and nobody can stop it.</p>
     <div class="warn red"><div>
       <b>Until your date, you can't touch it</b>
@@ -96,7 +97,7 @@
   </section>
 
   <section id="plan" hidden>
-    <h2>How you'll lock</h2>
+    <h2><span class="num">3</span>Send it</h2>
     <div class="warn yellow"><div>
       <b>Know the way home before you send</b>
       <p>Taking a lock home has been tested with a Ledger on this page and with the Crowdlock app. Sparrow, Electrum and other wallets can send to a lock, but nobody has yet shown they can sign to take it home. Use one only if you can do that yourself.</p>
@@ -157,11 +158,12 @@
         </details>
       </details>
     </div>
+    <p class="note">In many countries sending, receiving or moving bitcoin has tax or reporting rules. They differ, and finding out yours is up to you.</p>
   </section>
 
   <div id="check-and-publish">
   <section id="publish" hidden>
-    <h2>Check and publish</h2>
+    <h2><span class="num">4</span>Publish it, so it counts</h2>
     <p>A lock address is just a string of characters. Nobody can tell it is yours, or that it counts, unless you say so. Publishing adds your lock to the register once the bitcoin has one confirmation. A confirmation means the network has written your payment into the blockchain.</p>
     <div class="warn red"><div>
       <b>Public and permanent</b>
@@ -176,45 +178,27 @@
     <button id="publishNow" type="button">Publish my lock</button>
     <div class="verdict-live" id="publishResult" role="status" aria-live="polite" hidden></div>
 
-    <h3>Has it arrived?</h3>
+    <h2><span class="num">5</span>Check it arrived</h2>
     <button class="quiet" id="checkChain" type="button">Look at the blockchain</button>
     <div class="verdict-live" id="chainResult" role="status" aria-live="polite" hidden></div>
-    <p class="note">Once it is published and confirmed, it shows on <a href="../register/">the register</a>.</p>
+    <p>Once it is published and confirmed, it shows on the register and counts towards the total. Then you are in, and there is nothing else to do now.</p>
+    <a class="quiet" href="../register/">See the register</a>
   </section>
   </div>
 
-  <div id="take-home">
-  <section id="homeLedger" hidden>
-    <h2>Take a lock home with a Ledger</h2>
-    <p>Once a lock's date has passed, you can bring its bitcoin back to your Ledger's address. Nobody else is involved. The Ledger shows you the payment and you approve it.</p>
-    <div class="warn yellow"><div>
-      <b>Only locks on the register show here</b>
-      <p>A lock that was never published will not appear in this list. The date is judged by the bitcoin network's own clock, which runs about an hour behind real time on real bitcoin.</p>
-    </div></div>
-    <p class="if-no-hid"><strong>This browser cannot reach a Ledger.</strong> It needs Chrome, Edge or Brave on a computer. Use the Crowdlock app, or come back on a computer.</p>
-    <p class="note" id="homeFeeLine"></p>
-    <details class="last">
-      <summary>Change the fee</summary>
-      <div class="field">
-        <label for="homeFeeRate"><b>Fee rate, in sats per vbyte</b></label>
-        <input type="text" id="homeFeeRate" inputmode="numeric" autocomplete="off">
-      </div>
-      <p class="note" id="homeFeeHelp"></p>
-    </details>
-    <button id="homeConnect" type="button">Connect my Ledger</button>
-    <div class="verdict-live" id="homeStatus" role="status" aria-live="polite" hidden></div>
-    <div id="homeLocks"></div>
-    <p class="note">If a message here mentions an xpub: that is a public key a Ledger needs to see before it will sign. It is not secret.</p>
+  <section>
+    <h2>After you have locked</h2>
+    <p>Your bitcoin is out of reach until its date. Two things come later, and both are yours to choose.</p>
+    <ol class="path from5">
+      <li><div><b><a href="../commit/">Commit to a purchase</a></b>When a purchase is proposed, you can put some or all of a lock towards it. If it does not go through, nothing moves.</div></li>
+      <li><div><b><a href="../take-home/">Take it home</a></b>On your date, whatever has not gone into a purchase is yours again.</div></li>
+    </ol>
   </section>
 
-  <section>
-    <h2>While it's locked</h2>
-    <p>Until your date there is one other way out, and only you can choose it: committing the lock to a purchase someone has proposed. If the purchase doesn't happen, your bitcoin stays locked and comes home on its date as usual. <a href="../commit/">Commit to a purchase</a>.</p>
-
+  <section id="take-home">
     <h2>Taking it home</h2>
-    <p>On the date, the key you signed the declaration with can move the bitcoin to any address you choose, with nobody else involved. Until then, nobody can, except through a purchase you have committed it to yourself.</p>
-    <p><strong>What you will actually do:</strong> open a tool that knows about locks, tell it which lock, and approve one payment with your own wallet or device. You will not paste anything or work anything out.</p>
-    <p><strong>What has been proved, and what has not.</strong> Sending to a lock works from any wallet. Taking the bitcoin <em>out</em> needs your wallet to sign for an unusual kind of address, and that is where wallets differ.</p>
+    <p>On the date, the key you signed the declaration with can move the bitcoin to any address you choose, with nobody else involved. You do it at <a href="../take-home/">step 6</a>. Know before you lock which ways home have been proved.</p>
+    <p>Sending to a lock works from any wallet. Taking the bitcoin <em>out</em> needs your wallet to sign for an unusual kind of address, and that is where wallets differ.</p>
     <ul>
       <li><strong>The Crowdlock app's own wallet:</strong> proved on a test network.</li>
       <li><strong>A Ledger:</strong> proved on a test network, in the Crowdlock app by cable and Bluetooth, and on this page. One real-bitcoin lock has been made with a Ledger in the app. Nobody has taken a real-bitcoin lock home yet, because none has reached its date.</li>
@@ -222,15 +206,17 @@
     </ul>
     <p>This is why the page is closed for real bitcoin: a lock that cannot be taken home is the one mistake that cannot be undone. Everything a tool needs is public, so any future tool can do it.</p>
   </section>
+
+  <div hidden>
+    <section id="homeLedger" hidden>
+      <p id="homeFeeLine"></p><input type="text" id="homeFeeRate"><p id="homeFeeHelp"></p>
+      <button id="homeConnect" type="button"></button><div id="homeStatus" hidden></div><div id="homeLocks"></div>
+    </section>
   </div>
 
-  <section>
-    <h2>Before you lock real bitcoin</h2>
-    <p>Read <a href="../risk/">the risks page</a> first. It is short, specific and not reassuring. Bitcoin you lock is out of reach until its date, except through a purchase you have personally signed for.</p>
-    <p>In many countries sending, receiving or moving bitcoin has tax or reporting rules. They differ, and finding out yours is up to you.</p>
-  </section>
-
   <script>if (!("hid" in navigator)) document.documentElement.classList.add("no-hid");</script>
+
+<script src="../assets/keep-crowdlock.js" defer></script>
 
 </main>
 
@@ -244,9 +230,8 @@
         <li><a href="../declaration/">2. Sign</a></li>
         <li><a href="../get-bitcoin/">3. Get bitcoin</a></li>
         <li><a href="../lock/">4. Lock</a></li>
-        <li><a href="#check-and-publish">5. Check and publish</a></li>
-        <li><a href="../commit/">While it's locked: commit to a purchase, if you choose</a></li>
-        <li><a href="#take-home">6. Take it home</a></li>
+        <li><a href="../commit/">5. Commit to a purchase</a></li>
+        <li><a href="../take-home/">6. Take it home</a></li>
       </ul>
       <ul>
         <li class="h">More</li>
