@@ -67092,7 +67092,7 @@ ${ge(n19)}`;
   }
   var REMEMBER_MS = 2e4;
   var RETRIES = 2;
-  var BUSY = "the block explorer is busy \u2014 wait a minute and tap Refresh";
+  var BUSY = "the block explorer is busy \u2014 wait a minute and try again";
   var memories = /* @__PURE__ */ new WeakMap();
   var busy = (status) => status === 429 || status === 503;
   var pause = (ms) => new Promise((r11) => setTimeout(r11, ms));
