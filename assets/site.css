@@ -85,7 +85,9 @@ strong, b { font-weight: 700; }
 .name {
   font: 400 26px/1.1 var(--display); text-transform: uppercase; letter-spacing: .01em;
   text-decoration: none; padding: 6px 0;
+  display: inline-flex; align-items: center; gap: 10px;
 }
+.mark { display: block; flex: none; width: auto; height: 30px; }   /* the lock; white, bars cut out */
 .menu {
   font-weight: 700; font-size: 16px; line-height: 1; text-decoration: none;
   border: 2px solid #fff; border-radius: 6px; padding: 12px 14px;

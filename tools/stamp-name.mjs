@@ -19,6 +19,8 @@
 // pages, or they are read by the app and by members' tools):
 //   crowdlocks/kop-fund.json ("name"; the test copy lives in the method repository, fanfund)
 //   spec/*.md (the documents), README.md, js/crowdlock.mjs (one comment)
+//   assets/og-image.png, the link-preview picture, which has the name drawn in
+//   it (the lock in assets/mark.svg and the favicons has no name and can stay)
 //   the site's own addresses, which contain the name: the GitHub address
 //   (the-kop-fund) and the domain thekopfund.org in CNAME (bought 11 November)
 // The signed declaration does not contain the name, so no signature breaks.
