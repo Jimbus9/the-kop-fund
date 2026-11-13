@@ -155,6 +155,8 @@ check("No bare import specifiers in browser code", bare.length === 0, bare.join(
   for (const p of redesigned) {
     const src = readFileSync(join(R, p), "utf8");
     for (const m of src.matchAll(/<(?:link|script|img|iframe|source|video|audio|embed|object)\b[^>]*?\b(?:href|src|data)="((?:https?:)?\/\/[^"]+)"/g)) {
+      // <link rel="me"> only names an account elsewhere; the browser fetches nothing.
+      if (/^<link\b/.test(m[0]) && /\brel="me"/.test(m[0].concat(src.slice(m.index + m[0].length).split(">")[0]))) continue;
       outside.push(`${p} -> ${m[1]}`);
     }
   }
