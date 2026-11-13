@@ -323,7 +323,7 @@ async function load() {
       name = (await (await fetch("../crowdlocks/index.json")).json()).crowdlocks[0];
     }
     // The test Crowdlock is the method's own copy, shared with the app.
-    BASE = name === "kop-fund-testnet4" ? "https://jimbus9.github.io/fanfund/" : "../";
+    BASE = name === "kop-fund-testnet4" ? "https://jimbus9.github.io/crowdlock/" : "../";
     C = await (await fetch(`${BASE}crowdlocks/${name}.json`)).json();
     el("paramStatus").textContent = `${C.name} · ${C.network}`;
     if (C.network !== "mainnet") el("testnote").hidden = false;
