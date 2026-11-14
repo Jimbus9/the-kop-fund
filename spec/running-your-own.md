@@ -4,6 +4,8 @@
 
 **11 November 2026:** "Publish the figures you would rather not" no longer lists lapsed locks; no total of lapsed money is published (see the counting rule).
 
+**14 November 2026:** "What every Crowdlock shares" (formerly "The one condition that is not negotiable") was reworded. The rule is unchanged: a Crowdlock pays no financial return. The wording now also says what contributors do get.
+
 Everything here is free to copy, for any club, any sport, or any cause that fits.
 Copying it is not tolerated, it is the intended outcome. Nobody needs permission,
 nobody needs to tell us, and nothing is owed to anybody if it works.
@@ -44,19 +46,23 @@ from, without a custodian.**
 A football club is one example. A pub, a piece of woodland, a local newspaper, a
 building, a windfarm, a shuttered factory — all the same shape. What matters is
 that there is a thing, a seller, a price, and a large number of people who would
-each put in a small share and want nothing back.
+each put in a small share and want the thing itself, not a profit.
 
-### The one condition that is not negotiable
+### What every Crowdlock shares
 
-**Contributors must receive nothing financial, ever.** No dividend, no interest,
-no profit share, no buyback, no appreciation they can realise.
+**A Crowdlock is not a financial investment, and it pays no financial return.**
+No dividend, no interest, no profit share, no buyback, no appreciation anyone
+can cash in.
 
-If you intend to pay anybody a return, **this is the wrong specification**. What
-you would be building is a collective investment scheme, which in most countries
-is heavily regulated, and the design here offers none of the protections such a
-scheme is required to have. Take proper advice instead of copying this.
+What contributors do get is real: the thing they set out to fund, and a say in
+it. Each person's money only ever goes to a purchase they sign themselves.
 
-The whole design leans on that condition. It is why nobody needs to be trusted
+If you want to pay people a return, you need a different, regulated setup. In
+most countries that is a collective investment scheme, and the design here has
+none of the protections such a scheme is required to have. Take proper advice
+rather than copying this.
+
+The whole design leans on this. It is why nobody needs to be trusted
 with a pot of money, why there is no custodian, and why the thing cannot quietly
 become somebody's business.
 
@@ -91,9 +97,9 @@ members it would do. Repeat purchases are a normal shape. So is running several
 Crowdlocks side by side, each with its own declaration and its own register,
 which is what the instance files are for.
 
-What does not bend is the condition above: **contributors receive nothing
-financial, ever.** A donation is not a return, and neither is watching the thing
-you paid for get built.
+What stays the same is the part every Crowdlock shares: **no financial
+return.** A donation is not a return, and neither is watching the thing you paid
+for get built.
 
 One warning for anyone funding something they only partly own. If supporters
 hold two per cent of a club and then pay for a stand, ninety-eight per cent of
@@ -347,7 +353,7 @@ Offered because it is cheaper to read than to rediscover:
 ## Licence and warranty
 
 Take it. There is no warranty of any kind. Nobody outside this project has
-reviewed the code or the documents, and at the time of writing none of it has
-held real money.
+reviewed the code or the documents, and the only real money any of it has held
+is one lock, the founder's own (10 November 2026).
 
 If you find something wrong, saying so publicly helps every instance at once.
