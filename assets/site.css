@@ -313,3 +313,12 @@ footer a { color: var(--ink); }
 /* Shown only where the browser cannot reach a Ledger (phones, Firefox, Safari). */
 .if-no-hid { display: none; }
 .no-hid .if-no-hid { display: block; }
+
+/* A new version of the declaration: what changed, paragraph by paragraph.
+   Words carry the meaning ("Taken out", "Added"); the edge colour only repeats it. */
+.change { border-left: 4px solid var(--rule); padding: 4px 0 4px 14px; margin: 12px 0; }
+.change b { display: block; font-size: .85em; text-transform: none; color: var(--soft); }
+.change p { margin: 4px 0 0; }
+.change.gone { border-left-color: var(--soft); }
+.change.gone p { text-decoration: line-through; color: var(--soft); }
+.change.new { border-left-color: var(--pitch); }

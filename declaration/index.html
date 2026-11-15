@@ -56,6 +56,20 @@
   <h1>The Supporters' Declaration</h1>
   <p class="lede">This is the whole thing, and signing it is what makes you a member. It is short on purpose.</p>
 
+  <section id="newVersion" hidden>
+    <div class="panel">
+      <p><b id="nvHead"></b></p>
+      <p id="nvWhy"></p>
+      <p class="note" id="nvWho"></p>
+    </div>
+    <div class="folds">
+      <details>
+        <summary id="nvSummary">What changed</summary>
+        <div id="nvChanges"></div>
+      </details>
+    </div>
+  </section>
+
   <div class="warn yellow"><div>
     <b>Check this is the real text before you sign</b>
     <p>Your browser has just worked out this page's fingerprint: a short code made from the exact words below. Change one word and the code changes completely. If it does not match, do not sign.</p>
@@ -66,7 +80,7 @@
   </div>
   <noscript><p class="note">With scripts off, this page cannot check itself. The published fingerprint is <span class="mono">sha256:3a0a0bca96ec2161d98ff9da05ae885d6b8d68e55ed412bc85dcc7fb16209b96</span>, and the exact text is in <a href="../spec/">the documents</a>.</p></noscript>
 
-  <div class="declaration">
+  <div class="declaration" id="declBody">
       
       <p>Liverpool Football Club belongs to its supporters in every way except ownership. This is an attempt to fix a piece of that: to buy a real stake in the club with money put up by fans, held by nobody, and directed by the people who put it in.</p>
 
@@ -192,40 +206,6 @@ Signatures are made over the exact text of this version. If it ever has to chang
 
 <script>
 (function () {
-  var PUBLISHED = "3a0a0bca96ec2161d98ff9da05ae885d6b8d68e55ed412bc85dcc7fb16209b96";
-
-  function canonicalise(raw) {
-    return raw.normalize("NFC").replace(/\r\n?/g, "\n").split("\n")
-      .map(function (l) { return l.replace(/[ \t]+$/, ""); })
-      .join("\n").replace(/\n+$/, "") + "\n";
-  }
-
-  var verdict = document.getElementById("verdict");
-  var verdictText = document.getElementById("verdictText");
-  var computed = document.getElementById("computed");
-
-  function unavailable() {
-    verdict.className = "verdict";
-    verdictText.textContent = "Could not check in this browser";
-    computed.textContent = PUBLISHED + "  (the published fingerprint)";
-  }
-
-  try {
-    var bytes = new TextEncoder().encode(canonicalise(document.getElementById("declText").textContent));
-    if (!window.crypto || !window.crypto.subtle) { unavailable(); }
-    else {
-      window.crypto.subtle.digest("SHA-256", bytes).then(function (buf) {
-        var hex = Array.prototype.map.call(new Uint8Array(buf), function (b) {
-          return b.toString(16).padStart(2, "0");
-        }).join("");
-        var ok = hex === PUBLISHED;
-        computed.textContent = hex;
-        verdict.className = "verdict " + (ok ? "ok" : "bad");
-        verdictText.textContent = ok ? "Fingerprint matches" : "Fingerprint does not match";
-      }).catch(unavailable);
-    }
-  } catch (e) { unavailable(); }
-
   var btn = document.getElementById("copyBtn");
   var copied = document.getElementById("copied");
   var stmt = document.getElementById("statement");
@@ -246,6 +226,66 @@ Signatures are made over the exact text of this version. If it ever has to chang
   });
 })();
 </script>
+
+<script type="module">
+// The fingerprint check, and a newer version if there is one.
+//
+// With one version (today), this checks the words on this page against the
+// fingerprint, as it always has. If the Crowdlock file lists a later version,
+// the page shows that one instead: its text is loaded from the file the
+// Crowdlock lists, refused unless it hashes to the fingerprint given for it,
+// and shown with the reason and what changed. Nothing here is ever read as HTML.
+import { declarationHash, membershipStatement } from "../js/crowdlock.mjs";
+import { loadCrowdlock, hasLaterVersions, currentVersion, previousVersion, versionText, drawText, drawChanges, longDate } from "../assets/declaration-versions.mjs";
+
+const PUBLISHED = "3a0a0bca96ec2161d98ff9da05ae885d6b8d68e55ed412bc85dcc7fb16209b96";
+const el = (id) => document.getElementById(id);
+
+function verdict(hex, expected) {
+  el("computed").textContent = hex;
+  const ok = hex === expected;
+  el("verdict").className = "verdict " + (ok ? "ok" : "bad");
+  el("verdictText").textContent = ok ? "Fingerprint matches" : "Fingerprint does not match";
+}
+
+function checkThisPage(expected) {
+  try { verdict(declarationHash(el("declText").textContent), expected); }
+  catch { el("verdict").className = "verdict"; el("verdictText").textContent = "Could not check in this browser"; el("computed").textContent = expected + "  (the published fingerprint)"; }
+}
+
+try {
+  const { c, base } = await loadCrowdlock();
+  if (!hasLaterVersions(c) && c.declaration.sha256 === PUBLISHED) {
+    checkThisPage(PUBLISHED);
+  } else {
+    // A later version, or another Crowdlock's declaration (the test copy):
+    // show the current version's own words, checked against its fingerprint.
+    const d = currentVersion(c);
+    const now = await versionText(base, d);
+    drawText(el("declBody"), now);
+    verdict(declarationHash(now), d.sha256);
+    el("statement").textContent = membershipStatement(c);
+    if (d.sha256 !== PUBLISHED) document.querySelector("h1").textContent = d.title.startsWith("The ") ? d.title : `The ${d.title}`;
+    const before = previousVersion(c);
+    if (before) {
+      const then = await versionText(base, before);
+      el("nvHead").textContent = `This is version ${d.version}${longDate(d.published) ? `, published ${longDate(d.published)}` : ""}.`;
+      el("nvWhy").textContent = `Why it changed: ${d.reason}`;
+      const who = el("nvWho"), link = (href, text) => { const x = document.createElement("a"); x.href = href; x.textContent = text; return x; };
+      who.append("New members sign this version. Members who signed an earlier one stay members, and can sign this one too on ",
+        link(`../join/${location.search}`, "the joining page"), ". Every version stays on the record: ",
+        link(`${base}${before.file}`, `version ${before.version}`), ".");
+      el("nvSummary").textContent = `What changed since version ${before.version}`;
+      drawChanges(el("nvChanges"), then, now);
+      el("newVersion").hidden = false;
+    }
+  }
+} catch (e) {
+  // The Crowdlock file didn't load: check the words on this page against the founding fingerprint.
+  checkThisPage(PUBLISHED);
+}
+</script>
+<script src="../assets/keep-crowdlock.js" defer></script>
 
 </body>
 </html>

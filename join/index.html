@@ -55,6 +55,19 @@
 
   <h1>Sign to join</h1>
   <p class="lede">You join by signing one line of text with a bitcoin wallet. It is free, it moves no money, and you never have to pay anything.</p>
+  <section id="newVersion" hidden>
+    <div class="panel">
+      <p><b id="nvHead"></b></p>
+      <p id="nvWhy"></p>
+      <p class="note">Already a member? Sign the line below with the same address you joined with. Your member number and your locks stay exactly as they are; this only adds your name to the new version. There is no deadline, and nothing you have done is undone if you don't.</p>
+    </div>
+    <div class="folds">
+      <details>
+        <summary id="nvSummary">What changed</summary>
+        <div id="nvChanges"></div>
+      </details>
+    </div>
+  </section>
   <p class="note" id="openInApp" hidden>Have the Crowdlock app? <a id="openInAppLink" href="#">Open this fund in it</a> and sign there in one tap.</p>
 
   <div class="warn yellow"><div>
@@ -198,7 +211,8 @@
 <script src="../js/vendor/nostr-tools-2.25.2.bundle.js"></script>
 <script type="module">
 import { verifyMembership } from "../js/verify.mjs";
-import { membershipStatement, currentVersion } from "../js/crowdlock.mjs";
+import { membershipStatement, currentVersion, hasSigned, joinedVersion } from "../js/crowdlock.mjs";
+import { loadCrowdlock as loadThisCrowdlock, previousVersion, versionText, drawChanges, longDate } from "../assets/declaration-versions.mjs";
 import { recordEventTemplate } from "../js/inbox.mjs";
 
 const el = (id) => document.getElementById(id);
@@ -292,18 +306,19 @@ let STATEMENT = null;
 let ENDPOINT = null;   // this Crowdlock's join endpoint, from its own file; may be absent
 let RELAYS = null;     // this Crowdlock's Nostr relays, from its own file; preferred when present
 let FINGERPRINT = null;
+let C = null;          // the Crowdlock file
+let MEMBERS = null;    // the register's members, to tell a member signing again from a newcomer
 
 async function loadCrowdlock() {
   try {
-    const index = await (await fetch("../crowdlocks/index.json")).json();
-    const name = index.crowdlocks[0];
-    const c = await (await fetch(`../crowdlocks/${name}.json`)).json();
+    const { c, base, name } = await loadThisCrowdlock();
+    C = c;
     STATEMENT = membershipStatement(c);
     ENDPOINT = typeof c.join_endpoint === "string" && /^https:\/\//.test(c.join_endpoint) ? c.join_endpoint : null;
     RELAYS = Array.isArray(c.relays) && c.relays.length ? c.relays : null;
     FINGERPRINT = c.declaration.sha256;
     // The app opens straight onto this Crowdlock from a crowdlock:// link.
-    const fileUrl = new URL(`../crowdlocks/${name}.json`, location.href).href;
+    const fileUrl = new URL(`${base}crowdlocks/${name}.json`, location.href).href;
     el("openInAppLink").href = `crowdlock://add?url=${encodeURIComponent(fileUrl)}`;
     el("openInApp").hidden = false;
     el("statement").textContent = STATEMENT;
@@ -313,7 +328,22 @@ async function loadCrowdlock() {
     el("paramStatus").innerHTML =
       `Signing <strong>${d.title} v${d.version}</strong> ` +
       `· fingerprint <span class="mono">sha256:${d.sha256.slice(0, 8)}…${d.sha256.slice(-7)}</span> ` +
-      `· <a href="../${d.file}">read the exact text</a>`;
+      `· <a href="${base}${d.file}">read the exact text</a>`;
+    // The register, so a member signing a new version is told so. If it
+    // doesn't load, the page still works: the register decides either way.
+    fetch(`${base}${c.register.registrations}`, { cache: "no-store" })
+      .then((r) => r.json()).then((reg) => { MEMBERS = reg.members ?? []; check(); }).catch(() => {});
+    // A later version: say when and why, and what changed.
+    const before = previousVersion(c);
+    if (before) {
+      el("nvHead").textContent = `The declaration has a new version: version ${d.version}${longDate(d.published) ? `, published ${longDate(d.published)}` : ""}.`;
+      el("nvWhy").textContent = `Why it changed: ${d.reason}`;
+      el("nvSummary").textContent = `What changed since version ${before.version}`;
+      el("newVersion").hidden = false;
+      Promise.all([versionText(base, before), versionText(base, d)])
+        .then(([then, now]) => drawChanges(el("nvChanges"), then, now))
+        .catch((e) => { el("nvChanges").textContent = `${e.message}. Read both versions on the declaration page before you sign.`; });
+    }
   } catch (e) {
     el("paramStatus").textContent =
       "Could not load this Crowdlock's details. Do not sign anything from this page until it loads — the statement must carry the right fingerprint.";
@@ -331,6 +361,8 @@ function setVerdict(kind, head, body) {
   v.innerHTML = `<b>${head}</b><p>${body}</p>`;
 }
 
+const memberFor = (address) => MEMBERS?.find((m) => String(m.address).toLowerCase() === address.toLowerCase());
+
 function check() {
   const address = el("addr").value.trim();
   const signature = el("sig").value.trim();
@@ -344,7 +376,17 @@ function check() {
   catch (e) { setVerdict("bad", "Not valid", "That did not parse as a signature. Check you copied all of it."); return; }
 
   if (r.valid) {
-    setVerdict("ok", "Valid", "That address really did sign this exact declaration. You can submit it below.");
+    const member = memberFor(address);
+    const d = currentVersion(C);
+    if (member && hasSigned(C, member, d.version)) {
+      setVerdict("ok", "Already signed", `That address is member ${member.n}, and has already signed version ${d.version}. There is nothing more to do.`);
+      return;
+    }
+    if (member) {
+      setVerdict("ok", "Valid", `That address is member ${member.n}, who joined with version ${joinedVersion(C, member)}. Sending this adds your signature to version ${d.version}. Your member number and your locks stay as they are.`);
+    } else {
+      setVerdict("ok", "Valid", "That address really did sign this exact declaration. You can submit it below.");
+    }
     el("record").textContent = JSON.stringify({ address, signature }, null, 2);
     el("submitSection").hidden = false;
     return;
@@ -412,6 +454,13 @@ el("joinNow").addEventListener("click", async () => {
     const p = await postToRelays({ type: "join", address, signature });
     if (p.accepted > 0) {
       btn.textContent = "Posted";
+      const member = memberFor(address);
+      if (member) {
+        joinOutcome("ok", `Posted — member ${member.n}'s signature on version ${currentVersion(C).version} is on its way`,
+          `${p.accepted} of ${p.total} relays took it. The register collects signatures every two minutes; `
+          + `in a few minutes it will show that you have signed this version too.`);
+        return;
+      }
       joinOutcome("ok", "Posted — you'll be on the register in a few minutes",
         `${p.accepted} of ${p.total} relays took it. The register collects new registrations every two minutes; `
         + `open <a href="../register/">the register</a> in a few minutes and you'll be there, with your signature `
@@ -481,5 +530,6 @@ el("wallets").querySelector("button").click(); // open on the first wallet
 loadCrowdlock();
 </script>
 
+<script src="../assets/keep-crowdlock.js" defer></script>
 </body>
 </html>

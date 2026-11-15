@@ -141,12 +141,26 @@
 // method/ledger-web in the method's repository): buildCommitment signs the
 // owner's half on the device, and checkCommitment checks it, as the app does.
 // This page adds no signing or transaction code.
-import { checkProposals, phaseOf, pilePath, checkPileShape, commitmentEventTemplate, commitmentFromEvent, PROPOSAL_TAG } from "../js/proposals.mjs";
+import { checkProposals, phaseOf, pilePath, checkPileShape, commitmentEventTemplate, commitmentFromEvent, PROPOSAL_TAG, proposalVersion } from "../js/proposals.mjs";
+import { hasSigned, signedVersions, versionsOf } from "../js/crowdlock.mjs";
 
 const OPEN_NETWORKS = new Set(["testnet4"]);
 const L = globalThis.CrowdlockLedger;
 const el = (id) => document.getElementById(id);
-let C, BASE, REGISTER, DESTINATIONS, PROPOSALS = [], ACCOUNT = null, CHOSEN = null, PICK = null, COINS = [];
+let C, BASE, REGISTER, DESTINATIONS, PROPOSALS = [], ACCOUNT = null, MEMBER = null, CHOSEN = null, PICK = null, COINS = [];
+
+// A proposal published under a later version of the declaration can only be
+// committed to by a member who has signed that version: the relay inbox and
+// the app refuse anything else. Say so here, before the Ledger is asked to
+// sign, instead of letting a commitment be posted and quietly refused.
+function notSignedFor(p) {
+  if (!MEMBER || !p) return null;
+  const v = proposalVersion(p, C);
+  if (hasSigned(C, MEMBER, v)) return null;
+  const mine = signedVersions(C, MEMBER);
+  return `This purchase was proposed under version ${v} of the declaration, and only members who have signed version ${v} can commit to it. `
+    + `You have signed version${mine.length > 1 ? "s" : ""} ${mine.join(" and ")}. Sign version ${v} first on the joining page, with the same address, then come back.`;
+}
 
 const btc = (sats) => `${(Number(sats) / 1e8).toFixed(8)} BTC`;
 const minorDigits = (cur) => { try { return new Intl.NumberFormat("en", { style: "currency", currency: cur }).resolvedOptions().maximumFractionDigits; } catch { return 2; } };
@@ -214,6 +228,11 @@ function renderList() {
     card.append(status);
     const text = document.createElement("p"); text.textContent = p.text; card.append(text);
     const pays = document.createElement("p"); pays.className = "note"; pays.innerHTML = "Pays <code></code>"; pays.querySelector("code").textContent = p.destination; card.append(pays);
+    if (versionsOf(C).length > 1) {
+      const ver = document.createElement("p"); ver.className = "note";
+      ver.textContent = `Proposed under version ${proposalVersion(p, C)} of the declaration. Only members who have signed that version can commit to it.`;
+      card.append(ver);
+    }
     const dates = document.createElement("p"); dates.className = "note";
     dates.textContent = `Gathers until ${p.closes.slice(0, 16).replace("T", " ")} UTC; settles by ${p.settles_by.slice(0, 16).replace("T", " ")} UTC.`;
     card.append(dates);
@@ -242,7 +261,16 @@ function choose(p) {
 }
 
 async function showLocks() {
-  const box = el("locks"); box.textContent = "Looking for your locks…";
+  const box = el("locks");
+  const blocked = notSignedFor(CHOSEN);
+  if (blocked) {
+    for (const id of ["amountLabel", "amount", "binding", "commit"]) el(id).hidden = true;
+    box.textContent = blocked + " ";
+    const a = document.createElement("a"); a.href = `../join/${location.search}`; a.textContent = "Go to the joining page";
+    box.append(a);
+    return;
+  }
+  box.textContent = "Looking for your locks…";
   const chain = chainFor();
   const now = Math.floor(Date.now() / 1000);
   COINS = [];
@@ -278,6 +306,7 @@ el("connect").addEventListener("click", async () => {
     ACCOUNT = await L.connectLedger(C.network);
     el("connected").hidden = false;
     const member = (REGISTER.members ?? []).find((m) => m.address === ACCOUNT.address);
+    MEMBER = member ?? null;
     el("connected").textContent = member ? `Connected: member ${member.n}, ${ACCOUNT.address}` : `Connected: ${ACCOUNT.address} — this Ledger's key is not a member of this Crowdlock.`;
     if (member && CHOSEN) await showLocks();
   } catch (e) { el("result").textContent = String(e.message ?? e); }
@@ -285,6 +314,8 @@ el("connect").addEventListener("click", async () => {
 });
 
 el("commit").addEventListener("click", async () => {
+  const blocked = notSignedFor(CHOSEN);
+  if (blocked) { el("result").textContent = blocked; return; }
   const amount = parseBtc(el("amount").value);
   if (amount === null) { el("result").textContent = "Write the amount in BTC, like 0.002, or leave it empty for all of the lock."; return; }
   const x = COINS[PICK];
