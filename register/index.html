@@ -164,6 +164,7 @@ python3 -m http.server            # then open localhost:8000/register/</pre>
 import { verifyMembership } from "../js/verify.mjs";
 import { checkCrowdlock, checkRegisterFiles, membershipStatement, joinedVersion, versionsOf } from "../js/crowdlock.mjs";
 import { earlyReleases } from "../js/release.mjs";
+import { hrpFor } from "../js/lockrecord.mjs";
 
 const el = (id) => document.getElementById(id);
 const fmtBtc = (sats) => (sats / 1e8).toFixed(8).replace(/0+$/, "").replace(/\.$/, "") || "0";
@@ -200,26 +201,39 @@ try {
   refuse("Could not load the list of Crowdlocks", String(e.message));
 }
 const asked = new URLSearchParams(location.search).get("c");
-// Only names on the published list are ever loaded.
-const slug = index.crowdlocks.includes(asked) ? asked : index.crowdlocks[0];
+// Only names on the published list are ever loaded, plus the method's shared
+// test copy at crowdlock.org, as on the Lock, Commit and Take it home pages.
+// A name that is neither is refused, never quietly swapped for the real
+// register: a test link must not show real members as if they were the test.
+const TEST = "kop-fund-testnet4";
+if (asked !== null && asked !== TEST && !index.crowdlocks.includes(asked)) {
+  refuse("There is no Crowdlock by that name here", `"${asked}" is not one of this site's Crowdlocks.`);
+}
+const slug = asked ?? index.crowdlocks[0];
+const base = slug === TEST ? "https://crowdlock.org/" : "../";
 
 try {
-  crowdlock = await getJson(`../crowdlocks/${slug}.json`);
+  crowdlock = await getJson(`${base}crowdlocks/${slug}.json`);
 } catch (e) {
   refuse("Could not load this Crowdlock's file", String(e.message));
 }
 
 let declarationText;
 try {
-  const res = await fetch(`../${crowdlock.declaration.file}`, { cache: "no-store" });
+  const res = await fetch(`${base}${crowdlock.declaration.file}`, { cache: "no-store" });
   declarationText = await res.text();
 } catch { declarationText = undefined; }
+// Later versions' texts are checked against their fingerprints too.
+const versionTexts = {};
+for (const v of crowdlock.declaration_versions ?? []) {
+  try { versionTexts[v.version] = await (await fetch(`${base}${v.file}`, { cache: "no-store" })).text(); } catch {}
+}
 
-const fileCheck = checkCrowdlock(crowdlock, { declarationText });
+const fileCheck = checkCrowdlock(crowdlock, { declarationText, versionTexts });
 if (!fileCheck.ok) refuse(`${crowdlock.name ?? slug}'s file does not check out`, fileCheck.problems.join(" "));
 
 try {
-  data = await getJson(`../${crowdlock.register.registrations}`);
+  data = await getJson(`${base}${crowdlock.register.registrations}`);
 } catch (e) {
   refuse("Could not load the register file", String(e.message));
 }
@@ -231,6 +245,7 @@ if (!agree.ok) refuse("The register does not match this Crowdlock", agree.proble
 // register — so a register cannot swap in different words to sign. Each
 // signature is checked against the version of the declaration it names.
 const statementFor = (v) => { try { return membershipStatement(crowdlock, v); } catch { return ""; } };
+const HRP = hrpFor(crowdlock.network) ?? "bc";
 const manyVersions = versionsOf(crowdlock).length > 1;
 const CHAIN_API = crowdlock.chain_api;
 
@@ -257,9 +272,9 @@ const members = data.members || [];
 const locks = data.locks || [];
 
 const checked = members.map((m) => {
-  const first = verifyMembership({ address: m.address, signature: m.signature, message: statementFor(joinedVersion(crowdlock, m)) });
+  const first = verifyMembership({ address: m.address, signature: m.signature, message: statementFor(joinedVersion(crowdlock, m)), hrp: HRP });
   // A later version a member signed must verify too, or the row fails.
-  const later = (m.also_signed ?? []).map((x) => verifyMembership({ address: m.address, signature: x.signature, message: statementFor(x.version) }));
+  const later = (m.also_signed ?? []).map((x) => verifyMembership({ address: m.address, signature: x.signature, message: statementFor(x.version), hrp: HRP }));
   const bad = [first, ...later].find((x) => !x.valid);
   const versions = [joinedVersion(crowdlock, m), ...(m.also_signed ?? []).map((x) => x.version)].sort((a, b) => a - b);
   return { ...m, versions, result: bad ?? first };
@@ -354,7 +369,7 @@ if (locks.length === 0) {
   const found = [];
   let unread = 0;
   let destinations = null;
-  try { destinations = await getJson(`../${crowdlock.register.destinations}`); } catch {}
+  try { destinations = await getJson(`${base}${crowdlock.register.destinations}`); } catch {}
   for (const lock of locks) {
     const address = String(lock.address).toLowerCase();
     if (seenRel.has(address)) continue;
