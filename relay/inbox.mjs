@@ -74,6 +74,11 @@ try { listed = JSON.parse(readFileSync(join(ROOT, "crowdlocks", "index.json"), "
 const [owner, repo] = String(process.env.GITHUB_REPOSITORY ?? "").split("/");
 const siteBase = owner && repo ? `https://${owner.toLowerCase()}.github.io/${repo}/` : null;
 
+// Crowdlocks skipped because their file doesn't check out. The pass carries
+// on for the others; the workflow fails the run at the end, so the skip is
+// seen (a red run, and an email to whoever started it) rather than only logged.
+const broken = [];
+
 for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWith(".json") && f !== "index.json")) {
   const crowdlock = JSON.parse(readFileSync(join(ROOT, "crowdlocks", file), "utf8"));
   if (!Array.isArray(crowdlock.relays)) continue;
@@ -84,7 +89,11 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
     try { versionTexts[v.version] = readFileSync(join(ROOT, v.file), "utf8"); } catch { versionTexts[v.version] = ""; }
   }
   const ok = checkCrowdlock(crowdlock, { declarationText, versionTexts });
-  if (!ok.ok) { console.log(`${file}: skipped, its file does not check out: ${ok.problems.join("; ")}`); continue; }
+  if (!ok.ok) {
+    console.log(`${file}: skipped, its file does not check out: ${ok.problems.join("; ")}`);
+    broken.push(`${file}: ${ok.problems.join("; ")}`);
+    continue;
+  }
 
   const regPath = join(ROOT, crowdlock.register.registrations);
   const register = JSON.parse(readFileSync(regPath, "utf8"));
@@ -208,3 +217,5 @@ if (JSON.stringify(allHealth) !== healthBefore) {
 
 // The workflow uses this as the commit message, if anything changed.
 if (messages.length) writeFileSync(join(HERE, ".message"), messages.join(", "));
+// And this to fail the run once its passes are done (see `broken` above).
+if (broken.length) writeFileSync(join(HERE, ".broken"), broken.join("\n") + "\n");

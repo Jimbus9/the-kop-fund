@@ -323,8 +323,12 @@ or with git:
 Then check it, straight away. Run the script again on the file as committed:
 it must print the fingerprint your entry gives. **A mismatch is not harmless.**
 The relay inbox skips a Crowdlock whose file doesn't check out, so nobody's
-signature reaches the register until it is fixed, and its run log is the
-only place that says so; the app refuses the file outright. If your
+signature reaches the register until it is fixed. Your repository's checks
+(`relay/check.mjs`, run on every push that touches a Crowdlock file or a
+declaration, in repositories on the app's template from 2026-11-15b on) turn
+red when that happens and GitHub emails whoever pushed, and
+the inbox's own run fails rather than carrying on in silence; the app refuses
+the file outright. If your
 repository anchors its files, the new text is anchored the first time the job
 sees it; anchor it yourself otherwise, so it can't be backdated.
 

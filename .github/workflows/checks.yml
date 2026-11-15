@@ -24,3 +24,6 @@ jobs:
         with:
           node-version: 22
       - run: node tests/publishable.test.mjs
+      # Every Crowdlock file, and every version of its declaration, against
+      # its fingerprint: what the relay inbox checks before collecting.
+      - run: node relay/check.mjs

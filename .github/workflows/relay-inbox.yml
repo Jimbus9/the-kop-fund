@@ -54,6 +54,7 @@ jobs:
             commit=$(git commit-tree "$tree" -m "Inbox alive") &&
             git push -qf origin "$commit:refs/heads/inbox-alive"
           }
+          broken=""
           for pass in $(seq 1 24); do
             git pull --rebase -q || true
             if (cd relay && node inbox.mjs); then
@@ -80,8 +81,16 @@ jobs:
               fi
             fi
             rm -f relay/.message
+            if [ -f relay/.broken ]; then broken="$(cat relay/.broken)"; rm -f relay/.broken; fi
             if [ "$pass" -lt 24 ]; then sleep 110; fi
           done
+          # A Crowdlock whose file doesn't check out was skipped on every pass. Fail
+          # the run so it shows red (the next run still starts), instead of only
+          # saying so in this log. Fix: run relay/check.mjs and correct the file.
+          if [ -n "$broken" ]; then
+            while IFS= read -r line; do [ -n "$line" ] && echo "::error::Nothing was collected for $line"; done <<< "$broken"
+            exit 1
+          fi
 
       - name: Start the next run
         if: always()
