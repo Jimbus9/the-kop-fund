@@ -43,9 +43,25 @@ jobs:
         run: |
           git config user.name "Crowdlock relay inbox"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # A sign of life anyone can read without GitHub's API: one small file,
+          # alive.json, alone on its own branch (inbox-alive), replaced about
+          # every ten minutes. It never touches main's history, starts no other
+          # job, and if writing it fails the pass carries on regardless.
+          last_ok=$(git fetch -q --depth 1 origin inbox-alive 2>/dev/null && git show FETCH_HEAD:alive.json 2>/dev/null | sed -n 's/.*"last_ok":"\([^"]*\)".*/\1/p') || last_ok=""
+          heartbeat() {
+            blob=$(printf '{"last_pass":"%s","last_ok":"%s","run":"%s"}\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$last_ok" "$GITHUB_RUN_ID" | git hash-object -w --stdin) &&
+            tree=$(printf '100644 blob %s\talive.json\n' "$blob" | git mktree) &&
+            commit=$(git commit-tree "$tree" -m "Inbox alive") &&
+            git push -qf origin "$commit:refs/heads/inbox-alive"
+          }
           for pass in $(seq 1 24); do
             git pull --rebase -q || true
-            (cd relay && node inbox.mjs) || echo "This pass failed; trying again next pass."
+            if (cd relay && node inbox.mjs); then
+              last_ok=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+            else
+              echo "This pass failed; trying again next pass."
+            fi
+            if [ $((pass % 5)) -eq 1 ]; then heartbeat || echo "Could not write the sign of life."; fi
             if [ -n "$(git status --porcelain -- crowdlocks registrations.json commitments test relay/health.json relay/announced.json)" ]; then
               # Only the paths this Crowdlock has: a test-only one has no
               # top-level register, and git refuses a path that isn't there.
