@@ -117,8 +117,9 @@
   <section>
     <h2>Risks in the software</h2>
     <p>The code holding the locks has been written and tested, including against a real Bitcoin network, and tested code is not the same as safe code.</p>
-    <p>At the time of writing, nobody outside this project has reviewed it. A mistake in how a lock is built could in principle make coins unspendable — not stolen, but stuck. Before this movement asks anyone to commit a meaningful sum, that code needs eyes that are not ours, and anyone considering a large commitment should wait for that.</p>
+    <p>At the time of writing, nobody outside this project has reviewed it. Tools for finding flaws in code, including AI, are improving fast, for attackers as well as reviewers. A mistake in how a lock is built could in principle make coins unspendable — not stolen, but stuck. Before this movement asks anyone to commit a meaningful sum, that code needs eyes that are not ours, and anyone considering a large commitment should wait for that.</p>
     <p>Everything is published so that it can be checked rather than believed. That is not the same as it having been checked.</p>
+    <p>Publishing everything has one cost. Every lock's keys are on the register, so anyone can check the locks without trusting us. Most ordinary bitcoin addresses keep their key hidden until the coins are spent. Ours don't, so they lose a layer of protection that would matter if someone built a computer powerful enough to work out a private key from a public one. Quantum computers may one day do that. Nobody knows when, and Bitcoin will need a safer kind of address before then. Every lock here ends after five years at most, so locks can move to that safer kind when they are renewed. Until then, ours would be exposed sooner than most.</p>
   </section>
 
   <section>
