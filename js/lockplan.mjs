@@ -18,7 +18,7 @@
 
 import * as secp from "./vendor/noble-secp256k1.js";
 import { verifyMembership, messageHash, memberAddressForOwnerKey } from "./verify.mjs";
-import { membershipStatement } from "./crowdlock.mjs";
+import { membershipStatement, joinedVersion } from "./crowdlock.mjs";
 import { prepareLock, hrpFor } from "./lockrecord.mjs";
 
 const DAY = 86400;
@@ -91,8 +91,9 @@ export function planLock({ crowdlock, register, member, years, now }) {
   if (cosigners.length === 0) return no("this Crowdlock has not published a co-signer key, so nobody can lock yet");
   const cosignerPubkey = cosigners[0];
 
-  // The key behind a member is in their own signature.
-  const statement = membershipStatement(crowdlock);
+  // The key behind a member is in their own signature, over the version of
+  // the declaration they joined with.
+  const statement = membershipStatement(crowdlock, joinedVersion(crowdlock, m));
   const v = verifyMembership({ address: m.address, signature: m.signature, message: statement, hrp });
   const ownerPubkey = v.valid ? recoverKey(m.signature, statement) : null;
   // The recovered key must hash to the member's own address, or it is not theirs.

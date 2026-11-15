@@ -78,7 +78,12 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
   const crowdlock = JSON.parse(readFileSync(join(ROOT, "crowdlocks", file), "utf8"));
   if (!Array.isArray(crowdlock.relays)) continue;
   const declarationText = readFileSync(join(ROOT, crowdlock.declaration.file), "utf8");
-  const ok = checkCrowdlock(crowdlock, { declarationText });
+  // Later versions of the declaration are checked against their own texts too.
+  const versionTexts = {};
+  for (const v of crowdlock.declaration_versions ?? []) {
+    try { versionTexts[v.version] = readFileSync(join(ROOT, v.file), "utf8"); } catch { versionTexts[v.version] = ""; }
+  }
+  const ok = checkCrowdlock(crowdlock, { declarationText, versionTexts });
   if (!ok.ok) { console.log(`${file}: skipped, its file does not check out: ${ok.problems.join("; ")}`); continue; }
 
   const regPath = join(ROOT, crowdlock.register.registrations);
@@ -122,7 +127,9 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
   });
   for (const o of result.outcome) {
     console.log(`${file}: ${o.type} ${o.address} — ${o.added ? `ADDED${o.n ? ` (member ${o.n})` : ""}` : `not added: ${o.reason}`}`);
-    if (o.added) messages.push(o.type === "join" ? `Member ${o.n} (via relays)` : `Lock for member ${o.n} (via relays)`);
+    if (o.added) messages.push(o.type === "join"
+      ? (o.resigned ? `Member ${o.n} signs version ${o.version} (via relays)` : `Member ${o.n} (via relays)`)
+      : `Lock for member ${o.n} (via relays)`);
   }
   if (result.register !== register) {
     writeFileSync(regPath, JSON.stringify(result.register, null, 2) + "\n");

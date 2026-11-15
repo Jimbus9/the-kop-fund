@@ -20,7 +20,7 @@
 //
 // This file is pure: no network, no clock. The job around it does the fetching.
 
-import { addRegistration } from "./append.mjs";
+import { addSignature } from "./append.mjs";
 import { prepareLock, addLock, hrpFor } from "./lockrecord.mjs";
 
 /** The Nostr event kind a Crowdlock record is posted as (a "regular" kind relays store). */
@@ -71,7 +71,8 @@ export function recordFromEvent(event, fingerprint) {
  *
  *   events          Nostr events from the relays (any order, duplicates fine)
  *   crowdlock       the parsed Crowdlock file
- *   statement       its membership statement
+ *   statement       no longer used: each version's statement is rebuilt from
+ *                   the Crowdlock file (kept so older callers still work)
  *   now, today      unix seconds and "YYYY-MM-DD", passed in
  *   confirmedSats   async (address) => confirmed sats at that address
  *
@@ -97,8 +98,11 @@ export async function applyRecords(register, events, { crowdlock, statement, now
   const outcome = [];
   for (const r of [...records.filter((x) => x.type === "join"), ...records.filter((x) => x.type === "lock")]) {
     if (r.type === "join") {
-      const res = addRegistration(reg, r, { statement, today, hrp });
-      if (res.ok) { reg = res.register; outcome.push({ added: true, type: "join", n: res.n, address: r.address }); }
+      // A join record carries a signature over one version of the
+      // declaration: a newcomer's over the current one, or an existing
+      // member's over a version they have not signed yet.
+      const res = addSignature(reg, r, { crowdlock, today, hrp });
+      if (res.ok) { reg = res.register; outcome.push({ added: true, type: "join", n: res.n, address: r.address, version: res.version, resigned: res.resigned }); }
       else outcome.push({ added: false, type: "join", address: r.address, reason: res.reason });
     } else {
       const prepared = prepareLock(r, { crowdlock, register: reg, now });

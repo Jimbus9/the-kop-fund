@@ -6,6 +6,10 @@
 # (anchor/stamp.mjs) and commits copy and proof. Every proof therefore
 # covers one exact set of bytes that stays in the repository forever.
 #
+# A new version of the declaration (spec/declaration-v2.txt and on) is stamped
+# the first time this sees it without a proof, so it cannot be backdated, as
+# version 1 was by hand on 28 October.
+#
 # Every day it also asks the calendar servers to finish any proof that is still
 # waiting (anchor/verify.mjs). A proof older than three days that is
 # still not in a block FAILS the run, so a broken anchor shows up as a red
@@ -95,6 +99,23 @@ jobs:
               fi
             fi
           done
+          # Declaration versions: finished like the rest; the age alarm above
+          # is for the register's dated snapshots only.
+          for proof in ../spec/declaration-v*.txt.ots; do
+            [ -e "$proof" ] || continue
+            case "$proof" in *declaration-v1.txt.ots) continue ;; esac   # finished for good on 28 October
+            node verify.mjs "${proof%.ots}" || true
+          done
+
+      - name: Anchor any new version of the declaration
+        run: |
+          for f in spec/declaration-v*.txt; do
+            [ -e "$f" ] || continue
+            [ -e "$f.ots" ] && continue
+            echo "== stamping $f"
+            (cd anchor && node stamp.mjs "../$f")
+            test -s "$f.ots"
+          done
 
       - name: Take a new snapshot if one is due
         env:
@@ -123,8 +144,8 @@ jobs:
         run: |
           git config user.name "Crowdlock anchor"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add anchors
-          if [ -z "$(git status --porcelain -- anchors)" ]; then
+          git add anchors spec
+          if [ -z "$(git status --porcelain -- anchors spec)" ]; then
             echo "nothing to commit"
             exit 0
           fi

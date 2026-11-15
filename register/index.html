@@ -162,7 +162,7 @@ python3 -m http.server            # then open localhost:8000/register/</pre>
 
 <script type="module">
 import { verifyMembership } from "../js/verify.mjs";
-import { checkCrowdlock, checkRegisterFiles, membershipStatement } from "../js/crowdlock.mjs";
+import { checkCrowdlock, checkRegisterFiles, membershipStatement, joinedVersion, versionsOf } from "../js/crowdlock.mjs";
 import { earlyReleases } from "../js/release.mjs";
 
 const el = (id) => document.getElementById(id);
@@ -228,8 +228,10 @@ const agree = checkRegisterFiles(crowdlock, { registrations: data });
 if (!agree.ok) refuse("The register does not match this Crowdlock", agree.problems.join(" "));
 
 // The statement is rebuilt from the Crowdlock's own file, never read from the
-// register — so a register cannot swap in different words to sign.
-const statement = membershipStatement(crowdlock);
+// register — so a register cannot swap in different words to sign. Each
+// signature is checked against the version of the declaration it names.
+const statementFor = (v) => { try { return membershipStatement(crowdlock, v); } catch { return ""; } };
+const manyVersions = versionsOf(crowdlock).length > 1;
 const CHAIN_API = crowdlock.chain_api;
 
 el("declHash").textContent = "sha256:" + crowdlock.declaration.sha256;
@@ -254,10 +256,14 @@ if (index.crowdlocks.length > 1) {
 const members = data.members || [];
 const locks = data.locks || [];
 
-const checked = members.map((m) => ({
-  ...m,
-  result: verifyMembership({ address: m.address, signature: m.signature, message: statement }),
-}));
+const checked = members.map((m) => {
+  const first = verifyMembership({ address: m.address, signature: m.signature, message: statementFor(joinedVersion(crowdlock, m)) });
+  // A later version a member signed must verify too, or the row fails.
+  const later = (m.also_signed ?? []).map((x) => verifyMembership({ address: m.address, signature: x.signature, message: statementFor(x.version) }));
+  const bad = [first, ...later].find((x) => !x.valid);
+  const versions = [joinedVersion(crowdlock, m), ...(m.also_signed ?? []).map((x) => x.version)].sort((a, b) => a - b);
+  return { ...m, versions, result: bad ?? first };
+});
 const verified = checked.filter((m) => m.result.valid);
 const failed = checked.filter((m) => !m.result.valid);
 
@@ -292,7 +298,7 @@ if (members.length === 0) {
     <tr>
       <td class="num">${m.n ?? ""}</td>
       <td class="mono">${m.address}</td>
-      <td>${m.signed ?? ""}</td>
+      <td>${m.signed ?? ""}${manyVersions ? ` · version ${m.versions.join(", ")}` : ""}</td>
       <td><span class="pill ${m.result.valid ? "ok" : "bad"}">${m.result.valid ? "verified" : "failed"}</span></td>
     </tr>`).join("");
   el("memberArea").innerHTML = `

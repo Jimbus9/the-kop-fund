@@ -11,6 +11,7 @@
 
 import { sha256 } from "./vendor/noble-hashes/sha256.js";
 import { verifyMembership } from "./verify.mjs";
+import { versionOf, hasSigned } from "./crowdlock.mjs";
 
 export const PROPOSALS_FORMAT = "crowdlock-proposals/1";
 export const PILE_FORMAT = "crowdlock-commitments/1";
@@ -32,7 +33,7 @@ export function documentHash(text) {
 }
 
 /** The canonical line, exactly as method/lock/commitment.mjs builds it. */
-export function proposalLine({ instance, destination, requiresMinor, currency, document, opens, closes, settlesBy }) {
+export function proposalLine({ instance, destination, requiresMinor, currency, document, opens, closes, settlesBy, declarationVersion }) {
   if (!HEX64.test(instance ?? "")) throw new Error("instance must be a 64-character hex declaration hash");
   if (!HEX64.test(document ?? "")) throw new Error("document must be the 64-character hex hash of the proposal's prose");
   if (!Number.isInteger(requiresMinor) || requiresMinor <= 0) {
@@ -47,7 +48,14 @@ export function proposalLine({ instance, destination, requiresMinor, currency, d
   }
   if (!(Date.parse(opens) < Date.parse(closes))) throw new Error("closes must be after opens");
   if (!(Date.parse(closes) <= Date.parse(settlesBy))) throw new Error("settlesBy must be at or after closes");
-  return `${instance}|proposal|${destination}|${requiresMinor}|${currency}|${document}|${opens}|${closes}|${settlesBy}`;
+  // The version of the declaration the proposal is published under, if it is
+  // a later one. A version-1 proposal's line has nothing added, so every
+  // line written before versions existed keeps its hash.
+  if (declarationVersion !== undefined && !(Number.isInteger(declarationVersion) && declarationVersion >= 1)) {
+    throw new Error("declarationVersion, if given, must be a whole number from 1");
+  }
+  const tail = declarationVersion > 1 ? `|v${declarationVersion}` : "";
+  return `${instance}|proposal|${destination}|${requiresMinor}|${currency}|${document}|${opens}|${closes}|${settlesBy}${tail}`;
 }
 
 /** The hash a commitment names, and the only thing that identifies a proposal. */
@@ -60,7 +68,13 @@ export function fieldsOf(p, instance) {
   return {
     instance, destination: p.destination, requiresMinor: p.requires, currency: p.currency,
     document: documentHash(p.text ?? ""), opens: p.opens, closes: p.closes, settlesBy: p.settles_by,
+    declarationVersion: p.declaration_version,
   };
+}
+
+/** The version of the declaration a proposal is published under: the founding one unless it names another. */
+export function proposalVersion(p, crowdlock) {
+  return Number.isInteger(p?.declaration_version) ? p.declaration_version : crowdlock.declaration.version;
 }
 
 const isoZ = (v) => typeof v === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(v) && !Number.isNaN(Date.parse(v));
@@ -88,6 +102,9 @@ export function checkProposals(file, crowdlock) {
     if (typeof p.text !== "string" || !p.text.trim()) return bad("it has no text");
     for (const k of ["opens", "closes", "settles_by"]) {
       if (!isoZ(p[k])) return bad(`${k} must be a UTC time like 2026-12-01T00:00:00Z`);
+    }
+    if (p.declaration_version !== undefined) {
+      if (!versionOf(crowdlock, p.declaration_version)) return bad(`it names version ${p.declaration_version} of the declaration, which this Crowdlock does not publish`);
     }
     let hash;
     try { hash = proposalHash(fieldsOf(p, instance)); } catch (e) { return bad(e.message); }
@@ -323,6 +340,14 @@ export function applyCommitments(pile, events, { crowdlock, proposal, register, 
     const onRegister = locks.get(lockAddress);
     if (!onRegister || onRegister.owner_pubkey !== r.lock.owner_pubkey || onRegister.cosigner_pubkey !== r.lock.cosigner_pubkey || onRegister.locktime !== r.lock.locktime) {
       refuse("its lock is not on this Crowdlock's register"); continue;
+    }
+    // Committing needs the version the proposal was published under. A lock
+    // still counts in the total whatever its owner has signed; only backing
+    // this purchase needs their agreement to the text it was proposed under.
+    const owner = (register?.members ?? []).find((m) => String(m.address).toLowerCase() === String(onRegister.member).toLowerCase());
+    const needs = proposalVersion(proposal, crowdlock);
+    if (!owner || !hasSigned(crowdlock, owner, needs)) {
+      refuse(`its owner has not signed version ${needs} of the declaration, which this proposal was published under`); continue;
     }
     if ((perLock.get(lockAddress) ?? 0) >= PER_LOCK_LIMIT) { refuse(`that lock already has ${PER_LOCK_LIMIT} commitments in the pile`); continue; }
     perLock.set(lockAddress, (perLock.get(lockAddress) ?? 0) + 1);

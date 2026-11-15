@@ -198,7 +198,7 @@
 <script src="../js/vendor/nostr-tools-2.25.2.bundle.js"></script>
 <script type="module">
 import { verifyMembership } from "../js/verify.mjs";
-import { membershipStatement } from "../js/crowdlock.mjs";
+import { membershipStatement, currentVersion } from "../js/crowdlock.mjs";
 import { recordEventTemplate } from "../js/inbox.mjs";
 
 const el = (id) => document.getElementById(id);
@@ -307,10 +307,13 @@ async function loadCrowdlock() {
     el("openInAppLink").href = `crowdlock://add?url=${encodeURIComponent(fileUrl)}`;
     el("openInApp").hidden = false;
     el("statement").textContent = STATEMENT;
+    // The current version of the declaration: the one a new member signs.
+    // (FINGERPRINT above stays the founding one: it is the Crowdlock's identity.)
+    const d = currentVersion(c);
     el("paramStatus").innerHTML =
-      `Signing <strong>${c.declaration.title} v${c.declaration.version}</strong> ` +
-      `· fingerprint <span class="mono">sha256:${c.declaration.sha256.slice(0, 8)}…${c.declaration.sha256.slice(-7)}</span> ` +
-      `· <a href="../${c.declaration.file}">read the exact text</a>`;
+      `Signing <strong>${d.title} v${d.version}</strong> ` +
+      `· fingerprint <span class="mono">sha256:${d.sha256.slice(0, 8)}…${d.sha256.slice(-7)}</span> ` +
+      `· <a href="../${d.file}">read the exact text</a>`;
   } catch (e) {
     el("paramStatus").textContent =
       "Could not load this Crowdlock's details. Do not sign anything from this page until it loads — the statement must carry the right fingerprint.";

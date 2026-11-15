@@ -33,18 +33,70 @@ export function declarationHash(text) {
   return hex(sha256(new TextEncoder().encode(canonicalise(text))));
 }
 
-/** The one line a member signs to join. Same shape for every Crowdlock; only the title, version and hash differ. */
-export function membershipStatement(c) {
-  const d = c.declaration;
+// ---------------------------------------------------------------------------
+// Versions of the declaration (spec/registration-format.md, "Versioning")
+//
+// `declaration` is the founding version, and its fingerprint is the
+// Crowdlock's identity for good: the destinations list begins with it and
+// every relay record is tagged with it, so neither restarts when a new
+// version is published. Later versions are listed, oldest first, in
+// `declaration_versions`; the last one listed is current. A member's
+// signature is bound to the version it names and is never read as agreeing
+// to any other.
+// ---------------------------------------------------------------------------
+
+/** Every version of the declaration, oldest first: [{ version, title, file, sha256, published?, reason? }]. */
+export function versionsOf(c) {
+  const first = c?.declaration ?? {};
+  const later = Array.isArray(c?.declaration_versions) ? c.declaration_versions : [];
+  return [first, ...later].map((d) => ({ ...d, title: d.title ?? first.title }));
+}
+
+/** The version new members sign: the newest listed. */
+export function currentVersion(c) {
+  const all = versionsOf(c);
+  return all[all.length - 1];
+}
+
+/** One version by its number, or undefined. */
+export function versionOf(c, version) {
+  return versionsOf(c).find((d) => d.version === version);
+}
+
+/**
+ * The one line a member signs. Same shape for every Crowdlock and every
+ * version; only the title, version and hash differ. With no version given,
+ * the current one: the line a new member signs to join.
+ */
+export function membershipStatement(c, version) {
+  const d = version === undefined ? currentVersion(c) : versionOf(c, version);
+  if (!d) throw new Error(`this Crowdlock has no version ${version} of its declaration`);
   return `I agree to the ${d.title} v${d.version} (sha256:${d.sha256}) and join as a member.`;
+}
+
+/** The version a member joined with: the founding one unless their record says otherwise. */
+export function joinedVersion(c, member) {
+  return Number.isInteger(member?.version) ? member.version : c.declaration.version;
+}
+
+/** Every version a member has signed, in the order of the versions. */
+export function signedVersions(c, member) {
+  const set = new Set([joinedVersion(c, member), ...(Array.isArray(member?.also_signed) ? member.also_signed.map((x) => x.version) : [])]);
+  return versionsOf(c).map((d) => d.version).filter((v) => set.has(v));
+}
+
+/** Has this member signed this version? */
+export function hasSigned(c, member, version) {
+  return signedVersions(c, member).includes(version);
 }
 
 /**
  * Check a Crowdlock file is complete and coherent.
- * Pass `declarationText` to also check the declaration really hashes to what the file says.
+ * Pass `declarationText` to also check the declaration really hashes to what the file says,
+ * and `versionTexts` ({ 2: text, … }) to check later versions' texts the same way.
  * Returns { ok, problems }.
  */
-export function checkCrowdlock(c, { declarationText } = {}) {
+export function checkCrowdlock(c, { declarationText, versionTexts } = {}) {
   const problems = [];
   const need = (cond, msg) => { if (!cond) problems.push(msg); };
   const posInt = (v) => Number.isInteger(v) && v > 0;
@@ -64,6 +116,38 @@ export function checkCrowdlock(c, { declarationText } = {}) {
   if (declarationText !== undefined && HASH.test(d.sha256 ?? "")) {
     const got = declarationHash(declarationText);
     need(got === d.sha256, `the declaration hashes to ${got.slice(0, 12)}…, but the file says ${d.sha256.slice(0, 12)}…`);
+  }
+
+  // Later versions, if any. Each must follow the one before, name its own
+  // text, and say when and why it was published: members are asked to sign
+  // it, and the reason is what they are shown first.
+  if (c.declaration_versions !== undefined) {
+    const later = c.declaration_versions;
+    need(Array.isArray(later), "declaration_versions, if given, must be a list");
+    if (Array.isArray(later)) {
+      const seen = new Set([d.sha256]);
+      let prev = d.version;
+      later.forEach((v, i) => {
+        const at = `declaration_versions[${i}]`;
+        if (!v || typeof v !== "object") { need(false, `${at} is not an object`); return; }
+        need(Number.isInteger(prev) && v.version === prev + 1, `${at}.version must be ${Number.isInteger(prev) ? prev + 1 : "the next number"}`);
+        prev = v.version;
+        if (v.title !== undefined) {
+          need(typeof v.title === "string" && v.title.trim() !== "" && !/[()\n]/.test(v.title), `${at}.title, if given, must be a title with no brackets or newline`);
+        }
+        need(typeof v.file === "string" && v.file !== "", `${at}.file is missing`);
+        need(HASH.test(v.sha256 ?? ""), `${at}.sha256 must be 64 lowercase hex characters`);
+        need(!seen.has(v.sha256), `${at} has the same text as an earlier version`);
+        seen.add(v.sha256);
+        need(typeof v.published === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v.published), `${at}.published must be a date like 2027-01-31`);
+        need(typeof v.reason === "string" && v.reason.trim() !== "" && v.reason.length <= 300 && !/\n/.test(v.reason),
+          `${at}.reason must say in one line, up to 300 characters, why this version exists`);
+        if (versionTexts?.[v.version] !== undefined && HASH.test(v.sha256 ?? "")) {
+          const got = declarationHash(versionTexts[v.version]);
+          need(got === v.sha256, `version ${v.version} of the declaration hashes to ${got.slice(0, 12)}…, but the file says ${v.sha256.slice(0, 12)}…`);
+        }
+      });
+    }
   }
 
   need(NETWORKS.includes(c.network), `network must be one of ${NETWORKS.join(", ")}`);
@@ -188,9 +272,19 @@ export function checkRegisterFiles(c, { registrations, destinations }) {
   if (registrations) {
     need(registrations.declaration?.sha256 === c.declaration.sha256,
       "the registrations file names a different declaration from this Crowdlock");
+    // The registrations file names the founding declaration: its identity.
     if (registrations.declaration?.statement !== undefined) {
-      need(registrations.declaration.statement === membershipStatement(c),
+      need(registrations.declaration.statement === membershipStatement(c, c.declaration.version),
         "the registrations file's signing statement is not this Crowdlock's");
+    }
+    // Every version a member is recorded as signing must be one this
+    // Crowdlock publishes.
+    const known = new Set(versionsOf(c).map((v) => v.version));
+    for (const m of Array.isArray(registrations.members) ? registrations.members : []) {
+      if (m.version !== undefined) need(known.has(m.version), `member ${m.n} is recorded as joining with version ${m.version}, which this Crowdlock does not publish`);
+      for (const x of Array.isArray(m.also_signed) ? m.also_signed : []) {
+        need(known.has(x?.version), `member ${m.n} is recorded as signing version ${x?.version}, which this Crowdlock does not publish`);
+      }
     }
   }
   if (destinations) {

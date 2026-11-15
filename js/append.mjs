@@ -11,6 +11,7 @@
 // a valid one, refuse an invalid one, or refuse a duplicate.
 
 import { verifyMembership } from "./verify.mjs";
+import { versionsOf, membershipStatement, hasSigned, joinedVersion } from "./crowdlock.mjs";
 
 /** Addresses are compared in canonical lower case; bech32 is case-insensitive. */
 function normalise(address) {
@@ -78,5 +79,74 @@ export function addRegistration(register, submission, { statement, today, hrp = 
       ...register,
       members: [...register.members, { n, address, signature, signed: today }],
     },
+  };
+}
+
+/**
+ * A signature posted for this Crowdlock, whichever version of its declaration
+ * it signs. Two things it can be:
+ *
+ *   * a new member joining: they must sign the current version, and join
+ *     with it (recorded as `version` when it is not the founding one);
+ *   * an existing member signing a version they have not signed yet: added
+ *     to their `also_signed`. Their number, their earlier signature and their
+ *     locks are untouched; a signature is never read as agreeing to any
+ *     version but the one it names.
+ *
+ * crowdlock  the parsed Crowdlock file (its versions are read from it)
+ * Other arguments as addRegistration. Returns as addRegistration, plus
+ * `version` (the version signed) and `resigned` (true for an existing member).
+ */
+export function addSignature(register, submission, { crowdlock, today, hrp = "bc" }) {
+  const no = (status, reason) => ({ ok: false, status, reason });
+  if (!register || typeof register !== "object" || !Array.isArray(register.members)) {
+    return no(500, "the register file is not in the expected shape");
+  }
+  const address = normalise(submission?.address);
+  const signature = String(submission?.signature ?? "").trim();
+  if (!address || !signature) return no(400, "send both an address and a signature");
+  if (address.length > 120) return no(400, "that is not an address");
+  if (signature.length > 200) return no(400, "that is not a signature");
+
+  // Which version does it sign? Newest first, so a join is matched against
+  // the current version before any other. As in addRegistration, nothing
+  // about the register is looked at until a signature verifies.
+  const versions = versionsOf(crowdlock).slice().reverse();
+  const current = versions[0];
+  let signed = null, firstRefusal = null;
+  for (const v of versions) {
+    const result = verifyMembership({ address, signature, message: membershipStatement(crowdlock, v.version), hrp });
+    if (result.valid) { signed = v; break; }
+    if (!firstRefusal) firstRefusal = result;
+  }
+  if (!signed) {
+    return no(400, firstRefusal.derived
+      ? `${firstRefusal.reason} — this signature belongs to ${firstRefusal.derived}`
+      : firstRefusal.reason);
+  }
+
+  const member = register.members.find((m) => normalise(m.address) === address);
+  if (!member) {
+    if (signed.version !== current.version) {
+      return no(400, `that signs version ${signed.version} of the declaration; to join, sign the current one, version ${current.version}`);
+    }
+    const highest = register.members.reduce((max, m) => Math.max(max, Number(m.n) || 0), 0);
+    const n = highest + 1;
+    const record = { n, address, signature, signed: today };
+    if (signed.version !== crowdlock.declaration.version) record.version = signed.version;
+    return { ok: true, status: 200, n, version: signed.version, resigned: false,
+      register: { ...register, members: [...register.members, record] } };
+  }
+
+  if (hasSigned(crowdlock, member, signed.version)) {
+    return no(409, signed.version === joinedVersion(crowdlock, member)
+      ? "that address is already on the register"
+      : `that member has already signed version ${signed.version}`);
+  }
+  const also = [...(Array.isArray(member.also_signed) ? member.also_signed : []), { version: signed.version, signature, signed: today }]
+    .sort((a, b) => a.version - b.version);
+  return {
+    ok: true, status: 200, n: member.n, version: signed.version, resigned: true,
+    register: { ...register, members: register.members.map((m) => (m === member ? { ...m, also_signed: also } : m)) },
   };
 }
