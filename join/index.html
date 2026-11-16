@@ -128,7 +128,13 @@
 
   <h2><span class="num">3</span>Sign it in your wallet</h2>
   <p>Signing a message is not a payment. It never touches the blockchain, costs no fee, and works on a wallet that has never held a penny. All it proves is that you hold the key.</p>
-  <p><strong>Which wallet are you using?</strong> Pick yours and the exact taps appear.</p>
+  <div class="ledger-here">
+    <p><strong>Using a Ledger on a computer?</strong> You can sign right here. Close Ledger Live, plug the Ledger in, unlock it and open its <span id="ledgerApp">Bitcoin</span> app, then press the button. The Ledger shows you the line before you approve it, and this page fills in step 4 for you.</p>
+    <p class="if-no-hid"><strong>This browser can't reach a Ledger.</strong> It needs Chrome, Edge or Brave on a computer. Use your wallet's own steps below instead.</p>
+    <button type="button" id="ledgerSign" class="if-hid">Sign with my Ledger</button>
+    <p class="note" id="ledgerMsg" role="status" aria-live="polite"></p>
+  </div>
+  <p><strong>Or with any wallet:</strong> pick yours and the exact taps appear.</p>
   <div class="wallets" id="wallets"></div>
   <div class="howto" id="howto"></div>
   <p class="note">Your wallet gives you back two things: <b>the address</b> you signed with, and <b>the signature</b>, a long scramble of letters and numbers that usually ends in <code>=</code>. You need both for the next step.</p>
@@ -214,6 +220,7 @@
      ready-built browser file: it signs the message that carries a registration
      to the relays, so this page writes none of that itself. -->
 <script src="../js/vendor/nostr-tools-2.25.2.bundle.js"></script>
+<script>if (!("hid" in navigator)) document.documentElement.classList.add("no-hid");</script>
 <script type="module">
 import { verifyMembership } from "../js/verify.mjs";
 import { membershipStatement, currentVersion, hasSigned, joinedVersion } from "../js/crowdlock.mjs";
@@ -319,6 +326,7 @@ async function loadCrowdlock() {
     const { c, base, name } = await loadThisCrowdlock();
     C = c;
     STATEMENT = membershipStatement(c);
+    el("ledgerApp").textContent = c.network === "mainnet" ? "Bitcoin" : "Bitcoin Test";
     ENDPOINT = typeof c.join_endpoint === "string" && /^https:\/\//.test(c.join_endpoint) ? c.join_endpoint : null;
     RELAYS = Array.isArray(c.relays) && c.relays.length ? c.relays : null;
     FINGERPRINT = c.declaration.sha256;
@@ -527,6 +535,50 @@ async function copyTo(btn, text, done) {
   btn.textContent = done;
   setTimeout(() => { btn.textContent = was; }, 1600);
 }
+// ---------------------------------------------------------------------------
+// Signing with a Ledger, here on the page. The signing is the Crowdlock app's
+// own (signStatementWith in js/vendor/crowdlock-ledger-web.bundle.js, built
+// from method/ledger-web): the same standard Bitcoin Signed Message Sparrow
+// makes. This page only fills step 4 with the result; the check below and the
+// button in step 5 are unchanged, so nothing is sent until the person sends it.
+// The bundle is large, so it is loaded only when the button is pressed.
+// ---------------------------------------------------------------------------
+
+let LEDGER = null;
+function ledgerBundle() {
+  if (globalThis.CrowdlockLedger) return Promise.resolve(globalThis.CrowdlockLedger);
+  LEDGER ??= new Promise((resolve, reject) => {
+    const sc = document.createElement("script");
+    sc.src = "../js/vendor/crowdlock-ledger-web.bundle.js";
+    sc.onload = () => (globalThis.CrowdlockLedger ? resolve(globalThis.CrowdlockLedger) : reject(new Error("the Ledger code didn't load")));
+    sc.onerror = () => { LEDGER = null; reject(new Error("the Ledger code couldn't be loaded; check your connection and try again")); };
+    document.head.appendChild(sc);
+  });
+  return LEDGER;
+}
+
+el("ledgerSign").addEventListener("click", async () => {
+  const btn = el("ledgerSign"), msg = el("ledgerMsg");
+  if (!STATEMENT || !C) { msg.textContent = "The page hasn't loaded this Crowdlock's details yet. Wait a moment and try again."; return; }
+  btn.disabled = true;
+  try {
+    msg.textContent = "Choose your Ledger when the browser asks…";
+    const L = await ledgerBundle();
+    // connectLedger must start from this click: the browser insists.
+    const account = await L.connectLedger(C.network);
+    msg.textContent = `Connected: ${account.address}. Check the line on your Ledger's screen, then approve it.`;
+    const signature = await L.signStatementWith(account, STATEMENT);
+    el("addr").value = account.address;
+    el("sig").value = signature;
+    check();
+    msg.textContent = "Signed. Step 4 is filled in below; check it says the signature is valid.";
+    el("verdict").scrollIntoView({ behavior: "smooth", block: "center" });
+  } catch (e) {
+    // The Ledger code already words its errors for people; show them as they come.
+    msg.textContent = String(e?.message ?? e);
+  } finally { btn.disabled = false; }
+});
+
 el("copyBtn").addEventListener("click", (e) => STATEMENT && copyTo(e.target, STATEMENT, "Copied"));
 el("copyRecord").addEventListener("click", (e) => copyTo(e.target, el("record").textContent, "Copied"));
 

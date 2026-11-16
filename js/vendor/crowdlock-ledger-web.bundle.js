@@ -46693,6 +46693,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     lockFor: () => lockFor,
     lockState: () => lockState,
     plain: () => plain,
+    signStatementWith: () => signStatementWith,
     supported: () => supported,
     takeHome: () => takeHome,
     xpubForKey: () => xpubForKey
@@ -66589,6 +66590,15 @@ ${ge(n19)}`;
 
   // ../js/proposals.mjs
   init_shim();
+
+  // ../js/crowdlock.mjs
+  init_shim();
+  function isCosignerOf(c25, cosignerPubkeyHex) {
+    const x8 = String(cosignerPubkeyHex).toLowerCase().slice(2);
+    return (c25.cosigner_keys ?? []).some((k8) => k8.slice(2) === x8);
+  }
+
+  // ../js/proposals.mjs
   var HEX64 = /^[0-9a-f]{64}$/;
   var DAY2 = 86400 * 1e3;
   function hex(bytes2) {
@@ -66659,13 +66669,6 @@ ${ge(n19)}`;
     return { permitted: true, reason: "" };
   }
 
-  // ../js/crowdlock.mjs
-  init_shim();
-  function isCosignerOf(c25, cosignerPubkeyHex) {
-    const x8 = String(cosignerPubkeyHex).toLowerCase().slice(2);
-    return (c25.cosigner_keys ?? []).some((k8) => k8.slice(2) === x8);
-  }
-
   // ../../app/src/wallet/core.mjs
   var NETWORKS = {
     mainnet: { network: import_descriptors.networks.bitcoin, coin: 0 },
@@ -66700,6 +66703,20 @@ ${ge(n19)}`;
   function xpubForKey(c25, key) {
     const k8 = String(key ?? "").toLowerCase();
     return (c25?.cosigner_xpubs ?? []).find((x8) => keyFromXpub(x8) === k8) ?? null;
+  }
+  async function coinSource(chain, coin) {
+    const txHex = await chain.txHex(coin.txid);
+    let source;
+    try {
+      source = Transaction.fromHex(String(txHex).trim());
+    } catch {
+      throw new Error("the block explorer's record of a coin can't be read \u2014 refusing, nothing was signed");
+    }
+    const output2 = source.outs[coin.vout];
+    if (source.getId() !== coin.txid || !output2 || BigInt(output2.value) !== BigInt(coin.value)) {
+      throw new Error("the block explorer's figures for a coin don't agree with the coin itself \u2014 refusing, nothing was signed");
+    }
+    return txHex;
   }
   async function buildSend({ account, chain, to, amount, feeRate, policies = [] }) {
     const net = account.network;
@@ -66740,7 +66757,7 @@ ${ge(n19)}`;
     const psbt = new import_descriptors.Psbt({ network: net });
     const finalizers = [];
     for (const c25 of coins) {
-      const txHex = await chain.txHex(c25.txid);
+      const txHex = await coinSource(chain, c25);
       finalizers.push(account.output.updatePsbtAsInput({ psbt, txHex, vout: c25.vout }));
     }
     dest.updatePsbtAsOutput({ psbt, value: sent });
@@ -66792,14 +66809,20 @@ ${ge(n19)}`;
     const policies = account.kind === "ledger" ? [{ descriptor: lockDescriptor(account, check15.cosignerPubkey, lock.locktime, lock.cosignerXpub), name: lockPolicyName(lock.locktime) }] : [];
     return buildSend({ account, chain, to: lock.address, amount, feeRate, policies });
   }
-  async function lockState({ chain, lock, medianTime }) {
-    const coins = await chain.utxos(lock.address);
+  async function lockState({ chain, lock, medianTime, quick = false, finished = null }) {
+    const over = lock.locktime <= medianTime;
+    const noted = over ? finished?.get(lock.address) : void 0;
+    if (noted && (noted !== "unasked" || quick)) return { state: noted === "empty" ? "empty" : "withdrawn", confirmed: 0n, arriving: 0n };
+    const coins = noted ? [] : await chain.utxos(lock.address);
     const confirmed = coins.filter((c25) => c25.confirmed).reduce((s23, c25) => s23 + BigInt(c25.value), 0n);
     const arriving = coins.filter((c25) => !c25.confirmed).reduce((s23, c25) => s23 + BigInt(c25.value), 0n);
     let state;
-    if (confirmed > 0n) state = lock.locktime > medianTime ? "locked" : "lapsed";
+    if (confirmed > 0n) state = over ? "lapsed" : "locked";
     else if (arriving > 0n) state = "arriving";
-    else state = await chain.everFunded(lock.address) ? "withdrawn" : "empty";
+    else {
+      state = quick || await chain.everFunded(lock.address) ? "withdrawn" : "empty";
+      if (over) finished?.set(lock.address, quick ? "unasked" : state);
+    }
     return { state, confirmed, arriving };
   }
   async function takeHome({ account, chain, lock, feeRate, medianTime, to, ignoreDate = false }) {
@@ -66831,7 +66854,7 @@ ${ge(n19)}`;
     const psbt = new import_descriptors.Psbt({ network: net });
     const finalizers = [];
     for (const c25 of coins) {
-      finalizers.push(out.updatePsbtAsInput({ psbt, txHex: await chain.txHex(c25.txid), vout: c25.vout }));
+      finalizers.push(out.updatePsbtAsInput({ psbt, txHex: await coinSource(chain, c25), vout: c25.vout }));
     }
     dest.updatePsbtAsOutput({ psbt, value: sent });
     await signWith(account, psbt, [{ descriptor, name: lockPolicyName(lock.locktime) }]);
@@ -66887,7 +66910,7 @@ ${ge(n19)}`;
       throw new Error(`the fee (${fee} sats at ${feeRate} sat/vB) would be more than ${maxFee * 100}% of what is committed. At this fee rate the smallest commitment is about ${btc(smallest)} BTC \u2014 commit at least that, or choose a slower fee`);
     }
     const psbt = new import_descriptors.Psbt({ network: net });
-    out.updatePsbtAsInput({ psbt, txHex: await chain.txHex(coin.txid), vout: coin.vout });
+    out.updatePsbtAsInput({ psbt, txHex: await coinSource(chain, coin), vout: coin.vout });
     dest.updatePsbtAsOutput({ psbt, value: committed });
     if (remainder > 0n) back.updatePsbtAsOutput({ psbt, value: remainder });
     psbt.setLocktime(0);
@@ -67013,6 +67036,19 @@ ${ge(n19)}`;
     }
     return Number(tx.outs[0].value);
   }
+  async function signStatementWith(account, statement) {
+    if (account.kind !== "ledger") return signStatement(account, statement);
+    const sig = await account.useLedger((session) => ledgerApi.signMessage({ descriptor: `wpkh(${account.keyExpression})`, session, message: statement }));
+    return typeof sig === "string" ? sig : toBase647(sig);
+  }
+  function signStatement(account, statement) {
+    const node = account.signer().derivePath(account.path);
+    const { signature: signature2, recoveryId } = ecc.signRecoverable(messageHash(statement), node.privateKey);
+    const out = new Uint8Array(65);
+    out[0] = 31 + recoveryId;
+    out.set(signature2, 1);
+    return toBase647(out);
+  }
   function toBase647(bytes2) {
     let bin = "";
     for (const b8 of bytes2) bin += String.fromCharCode(b8);
@@ -67074,6 +67110,11 @@ ${ge(n19)}`;
   // ../../app/src/wallet/esplora.mjs
   init_shim();
   var TIMEOUT_MS = 2e4;
+  var FIRST_TRY = 0.4;
+  var PAUSE = 0.075;
+  var DOWN_MS = 2e3;
+  var UNANSWERED = (ms) => `the block explorer didn't answer within ${Math.round(ms / 1e3) || ms / 1e3} seconds \u2014 check your connection, or turn off any VPN, and try again`;
+  var UNREACHABLE = "couldn't reach the block explorer \u2014 check your connection, or turn off any VPN, and try again";
   function withTimeout(fetchImpl, ms) {
     return async (url, init = {}) => {
       const ctrl = new AbortController();
@@ -67081,14 +67122,64 @@ ${ge(n19)}`;
       try {
         return await fetchImpl(url, { ...init, signal: ctrl.signal });
       } catch (e29) {
-        if (ctrl.signal.aborted) {
-          throw new Error(`the block explorer didn't answer within ${ms / 1e3} seconds \u2014 check your connection, or turn off any VPN, and try again`);
-        }
-        throw new Error("couldn't reach the block explorer \u2014 check your connection, or turn off any VPN, and try again");
+        const err2 = new Error(ctrl.signal.aborted ? UNANSWERED(ms) : UNREACHABLE);
+        err2.unanswered = true;
+        throw err2;
       } finally {
         clearTimeout(timer2);
       }
     };
+  }
+  function askTwice(rawFetch, urls, total, passOver = () => null) {
+    return new Promise((resolve, reject) => {
+      const ctrls = [];
+      let settled = false, started = 0, ended = 0, last2 = null, next = null;
+      const settle = (fn, value2, keep = -1) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(next);
+        clearTimeout(end);
+        ctrls.forEach((c25, n19) => {
+          if (n19 !== keep) c25.abort();
+        });
+        fn(value2);
+      };
+      const failed = (err2) => {
+        last2 = err2;
+        ended++;
+        if (settled) return;
+        if (started < 2) {
+          const same = urls[started % urls.length] === urls[(started - 1) % urls.length];
+          clearTimeout(next);
+          next = setTimeout(start, err2.unanswered && same ? total * PAUSE : 0);
+        } else if (ended === 2) settle(reject, last2);
+      };
+      function start() {
+        if (settled || started >= 2) return;
+        const n19 = started++;
+        const ctrl = new AbortController();
+        ctrls.push(ctrl);
+        Promise.resolve().then(() => rawFetch(urls[n19 % urls.length], { signal: ctrl.signal })).then(
+          (res) => {
+            const no = passOver(res);
+            if (no) failed(no);
+            else settle(resolve, { res, n: n19 }, n19);
+          },
+          () => {
+            const e29 = new Error(UNREACHABLE);
+            e29.unanswered = true;
+            failed(e29);
+          }
+        );
+      }
+      const end = setTimeout(() => {
+        const e29 = new Error(UNANSWERED(total));
+        e29.unanswered = true;
+        settle(reject, e29);
+      }, total);
+      next = setTimeout(start, total * FIRST_TRY);
+      start();
+    });
   }
   var REMEMBER_MS = 2e4;
   var RETRIES = 2;
@@ -67096,26 +67187,68 @@ ${ge(n19)}`;
   var memories = /* @__PURE__ */ new WeakMap();
   var busy = (status) => status === 429 || status === 503;
   var pause = (ms) => new Promise((r11) => setTimeout(r11, ms));
-  function esploraChain(baseUrl, rawFetch = globalThis.fetch, timeoutMs = TIMEOUT_MS, { rememberMs = REMEMBER_MS, retries = RETRIES, wait = pause, minFee = 1 } = {}) {
+  function esploraChain(baseUrl, rawFetch = globalThis.fetch, timeoutMs = TIMEOUT_MS, { rememberMs = REMEMBER_MS, retries = RETRIES, wait = pause, minFee = 1, downMs = DOWN_MS, backup = "", preferMs = PREFER_MS } = {}) {
     const fetchImpl = withTimeout(rawFetch, timeoutMs);
     if (!memories.has(rawFetch)) memories.set(rawFetch, /* @__PURE__ */ new Map());
     const memory = memories.get(rawFetch);
-    const ask = async (url, as) => {
-      for (let attempt = 0; ; attempt++) {
-        const res = await fetchImpl(url);
-        if (res.ok) return as === "json" ? res.json() : res.text();
+    const downKey = `down ${baseUrl}`;
+    const preferKey = `prefer ${baseUrl}`;
+    const sources = backup ? [baseUrl, backup] : [baseUrl];
+    const backupFirst = () => {
+      const p36 = memory.get(preferKey);
+      return !!p36 && Date.now() - p36.at < preferMs;
+    };
+    const order = () => sources.length === 2 && backupFirst() ? [1, 0] : sources.map((_9, i20) => i20);
+    const answered = (i20) => {
+      memory.delete(downKey);
+      if (i20 === 1) memory.set(preferKey, { at: Date.now() });
+      else memory.delete(preferKey);
+    };
+    const read = (res, as) => as === "json" ? res.json() : res.text();
+    const askOne = async (path, as) => {
+      const url = `${baseUrl}${path}`;
+      for (let attempt = 0; ; ) {
+        let res;
+        try {
+          ({ res } = await askTwice(rawFetch, [url], timeoutMs));
+        } catch (e29) {
+          if (e29.unanswered) memory.set(downKey, { at: Date.now(), why: e29.message });
+          throw e29;
+        }
+        memory.delete(downKey);
+        if (res.ok) return read(res, as);
         if (!busy(res.status)) throw new Error(`the block explorer answered ${res.status}`);
         if (attempt >= retries) throw new Error(BUSY);
         const said = Number(res.headers?.get?.("retry-after"));
         await wait(Number.isFinite(said) && said > 0 ? Math.min(said, 10) * 1e3 : 2e3 * (attempt + 1));
+        attempt++;
       }
     };
-    const get = (path, as = "json") => {
+    const passOver = (res) => busy(res.status) ? new Error(BUSY) : res.status >= 500 ? new Error(`the block explorer answered ${res.status}`) : null;
+    const askEither = async (path, as, only) => {
+      const turn = only === void 0 ? order() : [only];
+      let got;
+      try {
+        got = await askTwice(rawFetch, turn.map((i20) => `${sources[i20]}${path}`), timeoutMs, passOver);
+      } catch (e29) {
+        if (e29.unanswered && only === void 0) memory.set(downKey, { at: Date.now(), why: e29.message });
+        throw e29;
+      }
+      if (!got.res.ok) throw new Error(`the block explorer answered ${got.res.status}`);
+      answered(turn[got.n % turn.length]);
+      return read(got.res, as);
+    };
+    const ask = async (path, as, only) => {
+      const down = memory.get(downKey);
+      if (down && Date.now() - down.at < downMs) throw new Error(down.why);
+      return sources.length === 2 ? askEither(path, as, only) : askOne(path, as);
+    };
+    const get = (path, as = "json", forGood = false, only = void 0) => {
       const url = `${baseUrl}${path}`;
-      const key = `${as} ${url}`;
+      const key = `${forGood ? "kept " : ""}${as} ${url}`;
       const held = memory.get(key);
-      if (held && Date.now() - held.at < rememberMs) return held.answer;
-      const answer = ask(url, as);
+      if (held && (forGood || Date.now() - held.at < rememberMs)) return held.answer;
+      const answer = ask(path, as, only);
       memory.set(key, { at: Date.now(), answer });
       answer.catch(() => {
         if (memory.get(key)?.answer === answer) memory.delete(key);
@@ -67123,7 +67256,7 @@ ${ge(n19)}`;
       return answer;
     };
     const forget = () => {
-      for (const k8 of [...memory.keys()]) if (k8.includes(baseUrl)) memory.delete(k8);
+      for (const k8 of [...memory.keys()]) if (k8.includes(baseUrl) && !k8.startsWith("kept ")) memory.delete(k8);
     };
     return {
       async utxos(address) {
@@ -67131,6 +67264,8 @@ ${ge(n19)}`;
         return list.map((u13) => ({ txid: u13.txid, vout: u13.vout, value: u13.value, confirmed: !!u13.status?.confirmed }));
       },
       txHex: (txid) => get(`/tx/${txid}/hex`, "text"),
+      /** Ask everything afresh: what "check again" means when the fan asks for it. */
+      forget,
       /** The address's transactions, newest first, with each input's witness. */
       txs: (address) => get(`/address/${address}/txs`),
       /** Has anything ever been sent to this address, confirmed or not? */
@@ -67145,7 +67280,7 @@ ${ge(n19)}`;
        */
       async medianTime() {
         const hash = await get("/blocks/tip/hash", "text");
-        return (await get(`/block/${hash.trim()}`)).mediantime;
+        return (await get(`/block/${hash.trim()}`, "json", true)).mediantime;
       },
       /**
        * The explorer's three recommended rates, sats/vbyte, never below `minFee`
@@ -67154,10 +67289,18 @@ ${ge(n19)}`;
        * fall out of order.
        */
       async feeRates() {
+        const named = () => get("/v1/fees/recommended", "json", false, backup ? 0 : void 0);
+        const byBlocks = async () => {
+          const e29 = await get("/fee-estimates", "json", false, 1);
+          return { fastestFee: rateWithin(e29, 1), halfHourFee: rateWithin(e29, 3), hourFee: rateWithin(e29, 6) };
+        };
         let f14 = null;
-        try {
-          f14 = await get("/v1/fees/recommended");
-        } catch {
+        for (const way of !backup ? [named] : backupFirst() ? [byBlocks, named] : [named, byBlocks]) {
+          try {
+            f14 = await way();
+            break;
+          } catch {
+          }
         }
         const at2 = (v21, fallback) => Math.max(minFee, Math.ceil(Number(v21) > 0 ? Number(v21) : fallback));
         const slow = at2(f14?.hourFee, 1);
@@ -67170,16 +67313,55 @@ ${ge(n19)}`;
         const r11 = await this.feeRates();
         return r11[speed] ?? r11.normal;
       },
+      /**
+       * Send a payment. With one explorer it is sent once. With a backup, a
+       * payment the first explorer didn't take (silent, busy or broken) is
+       * offered to the other: it is the same signed payment, so it can only ever
+       * be paid once, whichever of them passes it on, or both.
+       */
       async broadcast(hex2) {
-        const res = await fetchImpl(`${baseUrl}/tx`, { method: "POST", body: hex2 });
-        forget();
-        const text = await res.text();
-        if (busy(res.status)) throw new Error(`${BUSY} \u2014 nothing was sent`);
-        if (!res.ok) throw new Error(`the network refused it: ${text.slice(0, 160)}`);
-        return text.trim();
+        let last2 = null;
+        const turn = order();
+        for (const [n19, i20] of turn.entries()) {
+          let res;
+          try {
+            res = await fetchImpl(`${sources[i20]}/tx`, { method: "POST", body: hex2 });
+          } catch (e29) {
+            forget();
+            if (!e29.unanswered || n19 === turn.length - 1) throw e29;
+            last2 = e29;
+            continue;
+          }
+          forget();
+          const text = await res.text();
+          if (res.ok) {
+            answered(i20);
+            return text.trim();
+          }
+          if (last2 && ALREADY_SENT.test(text)) return "";
+          const more = n19 < turn.length - 1;
+          if (busy(res.status)) {
+            last2 = new Error(`${BUSY} \u2014 nothing was sent`);
+            if (more) continue;
+            throw last2;
+          }
+          if (res.status >= 500 && more) {
+            last2 = new Error(`the block explorer answered ${res.status}`);
+            continue;
+          }
+          throw new Error(`the network refused it: ${text.slice(0, 160)}`);
+        }
+        throw last2;
       }
     };
   }
+  function rateWithin(estimates, blocks) {
+    const waits = Object.keys(estimates ?? {}).map(Number).filter((n19) => Number.isFinite(n19) && Number.isFinite(estimates[n19])).sort((a29, b8) => a29 - b8);
+    if (!waits.length) return void 0;
+    return estimates[waits.find((n19) => n19 >= blocks) ?? waits[waits.length - 1]];
+  }
+  var ALREADY_SENT = /already in (the )?(block ?chain|mempool|utxo set)|txn-already-(known|in-mempool)/i;
+  var PREFER_MS = 6e5;
 
   // ../../app/src/ledgerLink.mjs
   init_shim();
@@ -67265,7 +67447,7 @@ ${ge(n19)}`;
     if (/Open the .* app|0x6e01|0x6d02|0x6511|0x6e00|CLA_NOT_SUPPORTED|app.*not open/i.test(m15)) return `Open the ${app} app on your Ledger and try again.`;
     if (/upgrade/i.test(m15)) return `Update the ${app} app on your Ledger (in Ledger Live), then try again.`;
     if (/locked|0x5515|0x6b0c|DeviceLocked/i.test(m15)) return "Unlock your Ledger with its PIN and try again.";
-    if (/NotAllowed|SecurityError|No device selected|no device|cancel/i.test(m15)) return "No Ledger was chosen. Plug it in, unlock it, open the Bitcoin app, and choose it when the browser asks.";
+    if (/NotAllowed|SecurityError|No device selected|no device|NoAccessibleDevice|cancel/i.test(m15)) return "No Ledger was chosen. Plug it in, unlock it, open the Bitcoin app, and choose it when the browser asks.";
     if (/busy|already|in use|claimInterface|Access denied/i.test(m15)) return "Another program is using the Ledger. Close Ledger Live and any other wallet that is open, then try again.";
     if (/timeout|timed out|disconnected|not found/i.test(m15)) return "Couldn't reach the Ledger. Keep it unlocked and plugged in, then try again.";
     return m15;

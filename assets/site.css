@@ -314,6 +314,7 @@ footer a { color: var(--ink); }
 /* Shown only where the browser cannot reach a Ledger (phones, Firefox, Safari). */
 .if-no-hid { display: none; }
 .no-hid .if-no-hid { display: block; }
+.no-hid .if-hid { display: none; }
 
 /* A new version of the declaration: what changed, paragraph by paragraph.
    Words carry the meaning ("Taken out", "Added"); the edge colour only repeats it. */
