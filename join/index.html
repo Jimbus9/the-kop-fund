@@ -211,8 +211,7 @@ import { membershipStatement, currentVersion, hasSigned, joinedVersion } from ".
 import { loadCrowdlock as loadThisCrowdlock, previousVersion, versionText, drawChanges, longDate } from "../assets/declaration-versions.mjs";
 import { recordEventTemplate } from "../js/inbox.mjs";
 import { hrpFor } from "../js/lockrecord.mjs";
-
-const el = (id) => document.getElementById(id);
+import { el, postToRelays, copyTo } from "../assets/shared.mjs";
 
 // ---------------------------------------------------------------------------
 // Wallet-specific instructions.
@@ -303,8 +302,7 @@ function drawWallets() {
 
 let STATEMENT = null;
 let PREFIX = "bc1q";   // the address start on this Crowdlock's network
-let ENDPOINT = null;   // this Crowdlock's join endpoint, from its own file; may be absent
-let RELAYS = null;     // this Crowdlock's Nostr relays, from its own file; preferred when present
+let RELAYS = null;     // this Crowdlock's Nostr relays, from its own file
 let FINGERPRINT = null;
 let C = null;          // the Crowdlock file
 let MEMBERS = null;    // the register's members, to tell a member signing again from a newcomer
@@ -319,7 +317,6 @@ async function loadCrowdlock() {
     el("addr").placeholder = `${PREFIX}…`;
     for (const x of document.querySelectorAll(".prefix")) x.textContent = PREFIX;
     el("wallets").querySelector("button[aria-pressed=true]")?.click();
-    ENDPOINT = typeof c.join_endpoint === "string" && /^https:\/\//.test(c.join_endpoint) ? c.join_endpoint : null;
     RELAYS = Array.isArray(c.relays) && c.relays.length ? c.relays : null;
     FINGERPRINT = c.declaration.sha256;
     // The app opens straight onto this Crowdlock from a crowdlock:// link.
@@ -415,37 +412,18 @@ el("sig").addEventListener("input", check);
 
 // --- Sending it to the register -------------------------------------------
 //
-// The endpoint checks the signature again before writing anything, so this
-// button is a convenience and not a trust decision: it can fail, refuse, or
-// be switched off without costing anybody their membership, because the two
-// routes below it do not involve us at all. Every failure here says so.
-
-// The endpoint's address comes from this Crowdlock's file (join_endpoint), so
-// it changes in one place and an app reads the same field. A Crowdlock with no
-// endpoint simply has no button; the two routes below still work.
+// The signed record is posted publicly to the Crowdlock's Nostr relays, and the
+// Crowdlock's own repository collects it and checks the signature again before
+// writing anything. No account or key of ours is in the path, and anybody can
+// see the post was made. So this button is a convenience and not a trust
+// decision: it can fail without costing anybody their membership, because the
+// two routes below it do not involve us at all. Every failure here says so.
 
 function joinOutcome(kind, head, body) {
   const box = el("joinResult");
   box.hidden = false;
   box.className = "verdict-live" + (kind ? " " + kind : "");
   box.innerHTML = `<b>${head}</b><p>${body}</p>`;
-}
-
-// A Crowdlock that names Nostr relays takes registrations from there: the
-// signed record is posted publicly, and the Crowdlock's own repository collects
-// and checks it every two minutes. No endpoint, account or key is in the path,
-// and anybody can see the post was made.
-async function postToRelays(record) {
-  const { finalizeEvent, generateSecretKey, Relay } = globalThis.NostrTools;
-  const event = finalizeEvent(recordEventTemplate(record, FINGERPRINT, Math.floor(Date.now() / 1000)), generateSecretKey());
-  const limit = (p) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error("no answer")), 12000))]);
-  const results = await Promise.all(RELAYS.map(async (url) => {
-    let relay;
-    try { relay = await limit(Relay.connect(url)); await limit(relay.publish(event)); return true; }
-    catch { return false; }
-    finally { try { relay?.close(); } catch {} }
-  }));
-  return { accepted: results.filter(Boolean).length, total: RELAYS.length };
 }
 
 el("joinNow").addEventListener("click", async () => {
@@ -457,7 +435,7 @@ el("joinNow").addEventListener("click", async () => {
     btn.disabled = true;
     btn.textContent = "Posting…";
     joinOutcome("", "Posting", "Sending your signed registration to the relays…");
-    const p = await postToRelays({ type: "join", address, signature });
+    const p = await postToRelays(RELAYS, recordEventTemplate({ type: "join", address, signature }, FINGERPRINT, Math.floor(Date.now() / 1000)));
     if (p.accepted > 0) {
       btn.textContent = "Posted";
       const member = memberFor(address);
@@ -480,54 +458,11 @@ el("joinNow").addEventListener("click", async () => {
     return;
   }
 
-  if (!ENDPOINT) {
-    joinOutcome("bad", "No register button for this Crowdlock",
-      "This Crowdlock has not published a join endpoint. Copy your registration above and use either of the routes below; they count exactly the same.");
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = "Sending…";
-  joinOutcome("", "Sending", "Checking your signature at the register…");
-
-  try {
-    const res = await fetch(ENDPOINT, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ address, signature }),
-    });
-    const body = await res.json();
-
-    if (res.ok && body.ok) {
-      btn.textContent = `You are member ${body.n}`;
-      joinOutcome("ok", `You are member ${body.n}`,
-        `The <a href="../register/">register</a> will show you within a minute, where your `
-        + `browser and everybody else's will check your signature for themselves.`);
-      return;
-    }
-
-    btn.disabled = false;
-    btn.textContent = "Add me to the register";
-    joinOutcome("bad", "Not added", `${body.error ?? "The register refused it."}`
-      + (body.alternative ? ` You can still ${body.alternative} — nothing about that is second best.` : ""));
-  } catch {
-    // The endpoint is unreachable. This is exactly the case the two routes
-    // below exist for, so say so plainly rather than asking them to wait.
-    btn.disabled = false;
-    btn.textContent = "Add me to the register";
-    joinOutcome("bad", "Could not reach the register",
-      "Your signature is fine — this is our end, not yours. Copy your registration above "
-      + "and use either of the routes below; they count exactly the same.");
-  }
+  // No relays named, or the relay library did not load: the page cannot post.
+  joinOutcome("bad", "This page can't send it just now",
+    "Your signature is fine. Copy your registration above and use either of the routes below; they count exactly the same.");
 });
 
-async function copyTo(btn, text, done) {
-  try { await navigator.clipboard.writeText(text); }
-  catch { return; }
-  const was = btn.textContent;
-  btn.textContent = done;
-  setTimeout(() => { btn.textContent = was; }, 1600);
-}
 // ---------------------------------------------------------------------------
 // Signing with a Ledger, here on the page. The signing is the Crowdlock app's
 // own (signStatementWith in js/vendor/crowdlock-ledger-web.bundle.js, built
