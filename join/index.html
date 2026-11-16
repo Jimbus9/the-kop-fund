@@ -226,6 +226,7 @@ import { verifyMembership } from "../js/verify.mjs";
 import { membershipStatement, currentVersion, hasSigned, joinedVersion } from "../js/crowdlock.mjs";
 import { loadCrowdlock as loadThisCrowdlock, previousVersion, versionText, drawChanges, longDate } from "../assets/declaration-versions.mjs";
 import { recordEventTemplate } from "../js/inbox.mjs";
+import { hrpFor } from "../js/lockrecord.mjs";
 
 const el = (id) => document.getElementById(id);
 
@@ -385,7 +386,8 @@ function check() {
   if (!address || !signature) { setVerdict("", "Waiting", "Fill both boxes and this will tell you straight away."); return; }
 
   let r;
-  try { r = verifyMembership({ address, signature, message: STATEMENT }); }
+  // Checked on this Crowdlock's own network: a test signature belongs to a tb1q address.
+  try { r = verifyMembership({ address, signature, message: STATEMENT, hrp: hrpFor(C?.network) ?? "bc" }); }
   catch (e) { setVerdict("bad", "Not valid", "That did not parse as a signature. Check you copied all of it."); return; }
 
   if (r.valid) {
