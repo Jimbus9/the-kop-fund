@@ -141,8 +141,6 @@ main ul, main ol { padding-left: 24px; }
 main li + li { margin-top: 6px; }
 .lede { font-size: 20px; line-height: 1.45; }
 .note { font-size: 16px; color: var(--soft); }
-.eyebrow { display: block; font-size: 16px; color: var(--soft); margin-top: 24px; }
-.eyebrow + h1 { margin-top: 6px; }
 header.page { display: block; }
 section { margin-top: 8px; }
 
@@ -164,12 +162,12 @@ section { margin-top: 8px; }
 
 /* ---- Actions -------------------------------------------------------------- */
 
-.go, a.cta, button, .btn {
+.go, button, .btn {
   display: block; width: 100%; min-height: 58px; margin-top: 18px; padding: 15px 18px;
   border: 0; border-radius: 8px; background: var(--red); color: #fff;
   font: 700 19px/1.25 var(--body); text-align: center; text-decoration: none; cursor: pointer;
 }
-.go:hover, a.cta:hover, button:hover { filter: brightness(1.1); }
+.go:hover, button:hover { filter: brightness(1.1); }
 button:disabled { opacity: .6; cursor: default; filter: none; }
 .quiet, button.quiet {
   display: block; width: 100%; min-height: 52px; margin-top: 10px; padding: 12px 18px;
@@ -177,7 +175,7 @@ button:disabled { opacity: .6; cursor: default; filter: none; }
   font: 700 17px/1.25 var(--body); text-align: center; text-decoration: none; cursor: pointer;
 }
 @media (min-width: 620px) {
-  .go, a.cta, button, .btn, .quiet, button.quiet { width: auto; display: inline-block; min-width: 280px; }
+  .go, button, .btn, .quiet, button.quiet { width: auto; display: inline-block; min-width: 280px; }
   .quiet, button.quiet { margin-left: 0; }
 }
 
@@ -230,8 +228,7 @@ details details { margin-left: 0; }
 
 .pill { font-weight: 700; color: var(--soft); }
 .pill.ok { color: var(--pitch); }
-.pill.warn { color: var(--amber); display: inline; padding: 0; margin: 0; background: none; border-radius: 0; }
-.pill.warn::before { content: none; }   /* a status word, not a referee's-card warning box */
+.pill.wait { color: var(--amber); }   /* not "warn": that name is the referee's-card warning box */
 .pill.bad { color: var(--link); }
 
 /* ---- Things a reader can check: addresses, signatures, fingerprints ------ */
@@ -259,7 +256,7 @@ textarea { min-height: 104px; resize: vertical; }
 .stack { margin-top: 14px; }
 .card { border-top: 2px solid var(--rule); padding: 16px 0; }
 .stack .card:last-child { border-bottom: 2px solid var(--rule); }
-.card b.head, .card .q { display: block; font-weight: 700; font-size: 19px; margin-bottom: 4px; }
+.card b.head { display: block; font-weight: 700; font-size: 19px; margin-bottom: 4px; }
 .card > * + * { margin-top: 8px; }
 
 /* the six steps, listed on the home page */
