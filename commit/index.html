@@ -160,7 +160,7 @@ function notSignedFor(p) {
   if (hasSigned(C, MEMBER, v)) return null;
   const mine = signedVersions(C, MEMBER);
   return `This purchase was proposed under version ${v} of the declaration, and only members who have signed version ${v} can commit to it. `
-    + `You have signed version${mine.length > 1 ? "s" : ""} ${mine.join(" and ")}. Sign version ${v} first on the joining page, with the same address, then come back.`;
+    + `You have signed version${mine.length > 1 ? "s" : ""} ${mine.length > 1 ? `${mine.slice(0, -1).join(", ")} and ${mine[mine.length - 1]}` : mine[0]}. Sign version ${v} first on the joining page, with the same address, then come back.`;
 }
 
 const btc = (sats) => `${(Number(sats) / 1e8).toFixed(8)} BTC`;
