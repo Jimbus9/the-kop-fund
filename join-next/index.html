@@ -94,8 +94,12 @@
     <details name="route" id="routeLedger">
       <summary>With a Ledger, on this computer</summary>
       <p class="if-no-hid"><strong>This browser can't reach a Ledger.</strong> It needs Chrome, Edge or Brave on a computer. Choose "any other wallet" instead.</p>
-      <p class="if-hid">Close Ledger Live, plug the Ledger in, unlock it and open its <span id="ledgerApp">Bitcoin</span> app, then press the button. The Ledger shows you the line before you approve it, and the boxes below fill themselves in.</p>
-      <button type="button" id="ledgerSign" class="if-hid">Sign with my Ledger</button>
+      <p class="if-hid">Close Ledger Live, plug the Ledger in, unlock it and open its <span id="ledgerApp">Bitcoin</span> app, then press the button. The Ledger shows you the line before you approve it. Once you approve, this page checks the signature and puts you on the register; there is no second button.</p>
+      <div class="warn red if-hid"><div>
+        <b>This is public, and it can't be taken back</b>
+        <p>Approving on the Ledger sends your address and your signature to a public register for anyone to see. Once they are published, you cannot unpublish them.</p>
+      </div></div>
+      <button type="button" id="ledgerSign" class="if-hid">Sign with my Ledger and join</button>
       <p class="note" id="ledgerMsg" role="status" aria-live="polite"></p>
     </details>
     <details name="route" id="routeWallet">
@@ -529,8 +533,10 @@ async function copyTo(btn, text, done) {
 // Signing with a Ledger, here on the page. The signing is the Crowdlock app's
 // own (signStatementWith in js/vendor/crowdlock-ledger-web.bundle.js, built
 // from method/ledger-web): the same standard Bitcoin Signed Message Sparrow
-// makes. This page only fills the boxes in step 3; the check below and the
-// button in step 4 are unchanged, so nothing is sent until the person sends it.
+// makes. The page fills the boxes in step 3, runs the same check, and if the
+// signature is valid presses step 4's button itself: approving on the Ledger,
+// with the public-and-permanent warning shown beside its button, is the
+// decision. A pasted signature still waits for the person to press it.
 // The bundle is large, so it is loaded only when the button is pressed.
 // ---------------------------------------------------------------------------
 
@@ -561,8 +567,17 @@ el("ledgerSign").addEventListener("click", async () => {
     el("addr").value = account.address;
     el("sig").value = signature;
     check();
-    msg.textContent = "Signed. The boxes in step 3 are filled in; check it says Valid.";
-    el("verdict").scrollIntoView({ behavior: "smooth", block: "center" });
+    // Approving on the Ledger was the decision, so a valid signature is sent
+    // straight away, by the same button a pasted one uses. Anything else
+    // (already signed, or a check that fails) stops here and says why.
+    if (!el("submitSection").hidden) {
+      msg.textContent = "Signed and checked. Sending it to the register: the result is in step 4 below.";
+      el("joinNow").click();
+      el("joinResult").scrollIntoView({ behavior: "smooth", block: "center" });
+    } else {
+      msg.textContent = "Signed. See the check in step 3 below.";
+      el("verdict").scrollIntoView({ behavior: "smooth", block: "center" });
+    }
   } catch (e) {
     // The Ledger code already words its errors for people; show them as they come.
     msg.textContent = String(e?.message ?? e);
