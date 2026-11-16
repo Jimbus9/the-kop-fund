@@ -144,10 +144,10 @@
 // This page adds no signing or transaction code.
 import { checkProposals, phaseOf, pilePath, checkPileShape, commitmentEventTemplate, commitmentFromEvent, PROPOSAL_TAG, proposalVersion } from "../js/proposals.mjs";
 import { hasSigned, signedVersions, versionsOf } from "../js/crowdlock.mjs";
+import { el, loadCrowdlock, postToRelays } from "../assets/shared.mjs";
 
 const OPEN_NETWORKS = new Set(["testnet4"]);
 const L = globalThis.CrowdlockLedger;
-const el = (id) => document.getElementById(id);
 let C, BASE, REGISTER, DESTINATIONS, PROPOSALS = [], ACCOUNT = null, MEMBER = null, CHOSEN = null, PICK = null, COINS = [];
 
 // A proposal published under a later version of the declaration can only be
@@ -330,12 +330,8 @@ el("commit").addEventListener("click", async () => {
     const v = await L.checkCommitment({ record: r.record, crowdlock: C, proposal: CHOSEN, destinations: DESTINATIONS, chain, network: C.network });
     if (!v.valid) throw new Error(`the commitment didn't pass its own check: ${v.reason}`);
     out.textContent = "Signed. Posting it to the fund's relays…";
-    const { finalizeEvent, generateSecretKey, Relay } = globalThis.NostrTools;
-    const event = finalizeEvent(commitmentEventTemplate({ type: "commitment", proposal: CHOSEN.hash, record: r.record }, C.declaration.sha256, Math.floor(Date.now() / 1000)), generateSecretKey());
-    const took = (await Promise.all((C.relays ?? []).map(async (url) => {
-      let relay;
-      try { relay = await Relay.connect(url); await relay.publish(event); return true; } catch { return false; } finally { try { relay?.close(); } catch {} }
-    }))).filter(Boolean).length;
+    const record = { type: "commitment", proposal: CHOSEN.hash, record: r.record };
+    const took = (await postToRelays(C.relays ?? [], commitmentEventTemplate(record, C.declaration.sha256, Math.floor(Date.now() / 1000)))).accepted;
     out.textContent = took
       ? `Committed ${btc(r.committed)} (fee ${btc(r.fee)} if it settles). Posted to ${took} of ${C.relays.length} relays; the fund's repository records it within a few minutes.`
       : "Signed, but no relay took it just now. Check your connection and try again.";
@@ -346,17 +342,7 @@ el("commit").addEventListener("click", async () => {
 
 async function load() {
   try {
-    const wanted = new URLSearchParams(location.search).get("c");
-    let name;
-    if (wanted !== null) {
-      if (!/^[a-z0-9-]+$/.test(wanted)) throw new Error("that is not a Crowdlock name");
-      name = wanted;
-    } else {
-      name = (await (await fetch("../crowdlocks/index.json")).json()).crowdlocks[0];
-    }
-    // The test Crowdlock is the method's own copy, shared with the app.
-    BASE = name === "kop-fund-testnet4" ? "https://crowdlock.org/" : "../";
-    C = await (await fetch(`${BASE}crowdlocks/${name}.json`)).json();
+    ({ c: C, base: BASE } = await loadCrowdlock());
     el("paramStatus").textContent = `${C.name} · ${C.network}`;
     if (C.network !== "mainnet") el("testnote").hidden = false;
     if (!OPEN_NETWORKS.has(C.network)) { el("closed").hidden = false; return; }

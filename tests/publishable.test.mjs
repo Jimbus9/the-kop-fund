@@ -49,7 +49,8 @@ check(`${underscored.length} underscored path(s) — safe only because .nojekyll
 
 // Follow the import graph from each browser entry point and prove every hop
 // resolves to a file that exists.
-const ENTRIES = ["js/verify.mjs", "js/crowdlock.mjs"];
+const ENTRIES = ["js/verify.mjs", "js/crowdlock.mjs",
+  "assets/lock.mjs", "assets/take-home.mjs", "assets/declaration-versions.mjs", "assets/shared.mjs"];
 const missing = [];
 const seen = new Set();
 function follow(file) {
@@ -73,7 +74,8 @@ check("Every import from the browser entry points resolves", missing.length === 
 const bare = [];
 for (const f of seen) {
   const src = readFileSync(join(R, f), "utf8");
-  for (const m of src.matchAll(/from\s+["']([^."'][^"']*)["']/g)) bare.push(`${f} -> ${m[1]}`);
+  // Only real import and export lines: the word "from" also turns up in comments and messages.
+  for (const m of src.matchAll(/^\s*(?:import|export)\b[^;\n]*?\bfrom\s+["']([^."'][^"']*)["']/gm)) bare.push(`${f} -> ${m[1]}`);
 }
 check("No bare import specifiers in browser code", bare.length === 0, bare.join(", ") || "all relative");
 
@@ -86,11 +88,16 @@ check("No bare import specifiers in browser code", bare.length === 0, bare.join(
 // with no error anyone but the visitor can see. Found worth guarding after
 // the signature counters were deliberately removed from the register page.
 {
-  const pages = ["declaration/index.html", "register/index.html", "join/index.html", "lock/index.html",
-    "take-home/index.html", "commit/index.html"];
-  for (const page of pages) {
-    const src = readFileSync(join(R, page), "utf8");
-    const ids = new Set([...src.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+  // Each page, and the files of its own that its script lives in, if any.
+  const pages = {
+    "declaration/index.html": [], "register/index.html": [], "join/index.html": [], "commit/index.html": [],
+    "lock/index.html": ["assets/lock.mjs", "assets/lock-common.mjs"],
+    "take-home/index.html": ["assets/take-home.mjs", "assets/lock-common.mjs"],
+  };
+  for (const [page, modules] of Object.entries(pages)) {
+    const markup = readFileSync(join(R, page), "utf8");
+    const src = [markup, ...modules.map((m) => readFileSync(join(R, m), "utf8"))].join("\n");
+    const ids = new Set([...markup.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
     const wanted = new Set([
       ...[...src.matchAll(/\bel\(\s*["']([^"']+)["']\s*\)/g)].map((m) => m[1]),
       ...[...src.matchAll(/getElementById\(\s*["']([^"']+)["']\s*\)/g)].map((m) => m[1]),
@@ -101,17 +108,19 @@ check("No bare import specifiers in browser code", bare.length === 0, bare.join(
   }
 }
 
-// Steps 4 and 6 are two pages over one script: Lock shows the locking parts and
-// Take it home shows the rest. The script must be the same in both, byte for
-// byte, or a fix made to one silently misses the other.
+// Steps 4 and 6 each run their own short file, and both run the shared one
+// (assets/lock-common.mjs), so a fix to what they share reaches both. Neither
+// page carries any of that code itself: a copy in a page is a copy that drifts.
 {
-  const scriptOf = (page) => {
+  for (const [page, module] of [["lock/index.html", "lock.mjs"], ["take-home/index.html", "take-home.mjs"]]) {
     const src = readFileSync(join(R, page), "utf8");
-    return src.slice(src.indexOf("</footer>"));
-  };
-  check("take-home/index.html runs the Lock page's script, byte for byte",
-    scriptOf("lock/index.html") === scriptOf("take-home/index.html"),
-    "edit the script in lock/index.html, then copy everything after </footer> into take-home/index.html");
+    const modules = [...src.matchAll(/<script type="module"([^>]*)>([\s\S]*?)<\/script>/g)];
+    check(`${page} runs assets/${module} and carries no code of its own`,
+      modules.length === 1 && modules[0][1].trim() === `src="../assets/${module}"` && modules[0][2].trim() === "",
+      `expected exactly one <script type="module" src="../assets/${module}"></script>`);
+    check(`assets/${module} uses the shared lock code`,
+      /from "\.\/lock-common\.mjs"/.test(readFileSync(join(R, "assets", module), "utf8")));
+  }
 }
 
 // The declaration page carries its own copy of the declaration, so a visitor can

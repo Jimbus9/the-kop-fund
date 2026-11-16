@@ -6,25 +6,7 @@
 // fingerprint the Crowdlock file gives for it before it is shown.
 
 import { versionsOf, currentVersion, declarationHash, canonicalise } from "../js/crowdlock.mjs";
-
-/**
- * Which Crowdlock this page is about, and where its files live.
- * `?c=kop-fund-testnet4` is the method's shared test copy at crowdlock.org,
- * as on the Lock, Commit and Take it home pages; anything else is this site's own.
- */
-export async function loadCrowdlock() {
-  const wanted = new URLSearchParams(location.search).get("c");
-  let name;
-  if (wanted !== null) {
-    if (!/^[a-z0-9-]+$/.test(wanted)) throw new Error("that is not a Crowdlock name");
-    name = wanted;
-  } else {
-    name = (await (await fetch("../crowdlocks/index.json")).json()).crowdlocks[0];
-  }
-  const base = name === "kop-fund-testnet4" ? "https://crowdlock.org/" : "../";
-  const c = await (await fetch(`${base}crowdlocks/${name}.json`, { cache: "no-store" })).json();
-  return { c, base, name };
-}
+export { loadCrowdlock } from "./shared.mjs";
 
 /** Is there more than the founding version? */
 export const hasLaterVersions = (c) => versionsOf(c).length > 1;
