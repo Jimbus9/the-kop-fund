@@ -54,11 +54,8 @@
 <main id="main" class="wrap">
 
   <h1>Sign to join</h1>
-  <p class="lede">You join by signing one line of text with a bitcoin wallet. It is free, it moves no money, and you never have to pay anything.</p>
-  <div class="warn yellow"><div>
-    <b>Check the address</b>
-    <p>The only real site is <b>thekopfund.org</b>. The fund will never message you first, and nobody from it will ever ask for your recovery words. You only ever send bitcoin to your own lock, never to the fund or to a person.</p>
-  </div></div>
+  <p class="lede">You join by signing one line of text with a bitcoin wallet. It is free and it is not a payment: nothing moves, and nothing leaves your device until you press the button at the end. If you get stuck, close the page; nothing is lost.</p>
+
   <section id="newVersion" hidden>
     <div class="panel">
       <p><b id="nvHead"></b></p>
@@ -72,75 +69,62 @@
       </details>
     </div>
   </section>
-  <p class="note" id="openInApp" hidden>Have the Crowdlock app? <a id="openInAppLink" href="#">Open this fund in it</a> and sign there in one tap.</p>
 
+  <div class="warn yellow"><div>
+    <b>Check the address</b>
+    <p>The only real site is <b>thekopfund.org</b>. The fund will never message you first, and nobody from it will ever ask for your recovery words. You only ever send bitcoin to your own lock, never to the fund or to a person.</p>
+  </div></div>
   <div class="warn yellow"><div>
     <b>Sign with a wallet you will keep</b>
     <p>The key you sign with is the key that will own your locks, if you ever lock bitcoin. Use a wallet you mean to keep, with its recovery words written down. Recovery words are the 12 or 24 words a wallet gives you when you set it up. They are its only backup.</p>
   </div></div>
 
-  <h2>What you are putting your name to</h2>
-  <p>You are signing the <a href="../declaration/">Supporters' Declaration</a>. Read it first if you have not. In short: supporters buying a stake in Liverpool Football Club, with nobody ever holding anybody else's money, and nothing ever paid out to any member.</p>
+  <h2><span class="num">1</span>What you are signing</h2>
+  <p>The <a href="../declaration/">Supporters' Declaration</a>. Read it first if you have not. In short: supporters buying a stake in Liverpool Football Club, with nobody ever holding anybody else's money, and nothing ever paid out to any member. This is the line you sign. It carries the declaration's fingerprint, so your signature only matches this exact text:</p>
+  <div class="block" id="statement">…</div>
   <p class="note" id="paramStatus">Loading the details…</p>
 
-  <h2>What is about to happen</h2>
-  <p>Five steps, about five minutes. Nothing leaves your device until the last one.</p>
-  <ol>
-    <li><b>Get a bitcoin wallet.</b> Skip this if you have one.</li>
-    <li><b>Copy one line of text</b> from this page.</li>
-    <li><b>Sign that line in your wallet.</b> Wallets call this "sign message". It is not a payment.</li>
-    <li><b>Paste the result back here.</b> Your own browser checks it and tells you straight away.</li>
-    <li><b>Press the button</b> to go on the register.</li>
-  </ol>
-  <p class="note">If you get stuck at any step, nothing is lost and nothing has been sent. Close the page and come back.</p>
-
-  <h2><span class="num">1</span>Get a wallet, if you have none</h2>
-  <p>A bitcoin wallet is an app that holds your keys. A key is the secret that lets you, and only you, sign for your bitcoin. The wallet can be empty: a brand new one signs just as well as a full one.</p>
-  <div class="warn yellow"><div>
-    <b>An exchange account will not work</b>
-    <p>The exchange holds the keys, not you, and most cannot sign a message at all. You need a wallet you control yourself.</p>
-  </div></div>
-  <div class="folds">
-    <details>
-      <summary>On a computer: Sparrow</summary>
-      <p>Free, open source, and the one these instructions know best. Download it from <span class="mono">sparrowwallet.com</span>. When it asks what kind of wallet, choose <b>Native Segwit</b>, the standard modern kind. That gives you an address starting <code>bc1q</code>, which is the kind the register accepts.</p>
+  <h2><span class="num">2</span>How will you sign?</h2>
+  <div class="folds routes">
+    <details name="route" id="routeApp">
+      <summary>With the Crowdlock app</summary>
+      <p id="openInApp" hidden><a id="openInAppLink" href="#">Open this fund in the app</a> and sign there in one tap. The app posts it for you, so you can skip the rest of this page.</p>
     </details>
-    <details>
-      <summary>On a phone: BlueWallet</summary>
-      <p>From your app store. Make a new wallet and it will be the right kind by default.</p>
+    <details name="route" id="routeLedger">
+      <summary>With a Ledger, on this computer</summary>
+      <p class="if-no-hid"><strong>This browser can't reach a Ledger.</strong> It needs Chrome, Edge or Brave on a computer. Choose "any other wallet" instead.</p>
+      <p class="if-hid">Close Ledger Live, plug the Ledger in, unlock it and open its <span id="ledgerApp">Bitcoin</span> app, then press the button. The Ledger shows you the line before you approve it. Once you approve, this page checks the signature and puts you on the register; there is no second button.</p>
+      <div class="warn red if-hid"><div>
+        <b>This is public, and it can't be taken back</b>
+        <p>Approving on the Ledger sends your address and your signature to a public register for anyone to see. Once they are published, you cannot unpublish them.</p>
+      </div></div>
+      <button type="button" id="ledgerSign" class="if-hid">Sign with my Ledger and join</button>
+      <p class="note" id="ledgerMsg" role="status" aria-live="polite"></p>
     </details>
-    <details>
-      <summary>If you may lock bitcoin later: a hardware wallet</summary>
-      <p>A small device, such as a Ledger or a Trezor, that keeps the key off your computer. It usually costs around £50 to £80, or the same in your own money. It is the right place for a key that will one day own locked bitcoin, and it signs this line just as well as anything else.</p>
-      <p>You do not need one to join, and buying one is not a condition of anything.</p>
-    </details>
-    <details>
-      <summary>Can I change wallets later?</summary>
-      <p>You can register a second address later, but you would be a second member, not the one you started as. Nobody loses anything by that. It is just tidier to start where you mean to stay.</p>
+    <details name="route" id="routeWallet">
+      <summary>With any other wallet</summary>
+      <p>A bitcoin wallet is an app that holds your keys. It can be empty: a brand new one signs just as well as a full one. If you have none, Sparrow (on a computer, from <span class="mono">sparrowwallet.com</span>) or BlueWallet (on a phone, from your app store) are free; choose the <b>Native Segwit</b> kind, with addresses starting <span class="prefix">bc1q</span>.</p>
+      <div class="warn yellow"><div>
+        <b>An exchange account will not work</b>
+        <p>The exchange holds the keys, not you, and most cannot sign a message at all. You need a wallet you control yourself.</p>
+      </div></div>
+      <button id="copyBtn" type="button">Copy the line</button>
+      <p class="note">Use the button. Do not retype it. One wrong character and the signature will not match.</p>
+      <p><strong>Which wallet?</strong> Pick yours and the exact taps appear.</p>
+      <div class="wallets" id="wallets"></div>
+      <div class="howto" id="howto"></div>
+      <p class="note">Your wallet gives you back <b>the address</b> you signed with and <b>the signature</b>, a long scramble that usually ends in <code>=</code>. Paste both below.</p>
+      <div class="folds">
+        <details>
+          <summary>Can I change wallets later?</summary>
+          <p>You can register a second address later, but you would be a second member, not the one you started as. Nobody loses anything by that. It is just tidier to start where you mean to stay.</p>
+        </details>
+      </div>
     </details>
   </div>
 
-  <h2><span class="num">2</span>Copy the line</h2>
-  <p>This is the line you will sign. It carries the declaration's fingerprint, so your signature only matches this exact document.</p>
-  <div class="block" id="statement">…</div>
-  <button id="copyBtn" type="button">Copy the line</button>
-  <p class="note">Use the button. Do not retype it. One wrong character and the signature will not match.</p>
-
-  <h2><span class="num">3</span>Sign it in your wallet</h2>
-  <p>Signing a message is not a payment. It never touches the blockchain, costs no fee, and works on a wallet that has never held a penny. All it proves is that you hold the key.</p>
-  <div class="ledger-here">
-    <p><strong>Using a Ledger on a computer?</strong> You can sign right here. Close Ledger Live, plug the Ledger in, unlock it and open its <span id="ledgerApp">Bitcoin</span> app, then press the button. The Ledger shows you the line before you approve it, and this page fills in step 4 for you.</p>
-    <p class="if-no-hid"><strong>This browser can't reach a Ledger.</strong> It needs Chrome, Edge or Brave on a computer. Use your wallet's own steps below instead.</p>
-    <button type="button" id="ledgerSign" class="if-hid">Sign with my Ledger</button>
-    <p class="note" id="ledgerMsg" role="status" aria-live="polite"></p>
-  </div>
-  <p><strong>Or with any wallet:</strong> pick yours and the exact taps appear.</p>
-  <div class="wallets" id="wallets"></div>
-  <div class="howto" id="howto"></div>
-  <p class="note">Your wallet gives you back two things: <b>the address</b> you signed with, and <b>the signature</b>, a long scramble of letters and numbers that usually ends in <code>=</code>. You need both for the next step.</p>
-
-  <h2><span class="num">4</span>Paste it back here</h2>
-  <p>This page checks the signature on your own device. Nothing is sent anywhere until you press the button in step 5.</p>
+  <h2><span class="num">3</span>Check it</h2>
+  <p>Checked here, on your own device.</p>
   <div class="field">
     <label for="addr"><b>Your address</b></label>
     <input type="text" id="addr" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="bc1q…">
@@ -155,7 +139,7 @@
   </div>
 
   <section id="submitSection" hidden>
-    <h2><span class="num">5</span>Join the register</h2>
+    <h2><span class="num">4</span>Join the register</h2>
     <p>This is your whole membership record. No name, no email, no account. These two fields are all of it.</p>
     <pre id="record"></pre>
     <button class="quiet" id="copyRecord" type="button">Copy my registration</button>
@@ -182,7 +166,7 @@
     <a class="quiet" href="../get-bitcoin/">Next: get bitcoin</a>
   </section>
 
-  <p class="note">Already a member? Go to <a href="../get-bitcoin/">step 3, get bitcoin</a>.</p>
+  <p class="note">Already a member, with nothing new to sign? Go on to <a href="../get-bitcoin/">get bitcoin</a>.</p>
 
 </main>
 
@@ -249,7 +233,7 @@ const WALLETS = [
     ],
   },
   {
-    id: "ledger", name: "Ledger",
+    id: "ledger", name: "Ledger, through Sparrow",
     note: "Ledger Live cannot sign messages at all, so you drive the device through Sparrow. Confirmed on a Nano X — this is how the first signature on the register was made. If Sparrow ever refuses, Electrum is the documented fallback.",
     steps: [
       "Install Sparrow, plug the Ledger in and unlock it with the Bitcoin app open.",
@@ -305,9 +289,11 @@ function drawWallets() {
       other.setAttribute("aria-pressed", String(other === b));
     }
     const w = WALLETS.find((x) => x.id === b.dataset.id);
+    // Addresses start bc1q on real bitcoin and tb1q on the test network.
+    const net = (t) => t.replaceAll("bc1q", PREFIX);
     el("howto").innerHTML =
-      (w.note ? `<p class="note">${w.note}</p>` : "") +
-      "<ol>" + w.steps.map((s) => `<li>${s}</li>`).join("") + "</ol>";
+      (w.note ? `<p class="note">${net(w.note)}</p>` : "") +
+      "<ol>" + w.steps.map((s) => `<li>${net(s)}</li>`).join("") + "</ol>";
   });
 }
 
@@ -316,6 +302,7 @@ function drawWallets() {
 // ---------------------------------------------------------------------------
 
 let STATEMENT = null;
+let PREFIX = "bc1q";   // the address start on this Crowdlock's network
 let ENDPOINT = null;   // this Crowdlock's join endpoint, from its own file; may be absent
 let RELAYS = null;     // this Crowdlock's Nostr relays, from its own file; preferred when present
 let FINGERPRINT = null;
@@ -328,6 +315,10 @@ async function loadCrowdlock() {
     C = c;
     STATEMENT = membershipStatement(c);
     el("ledgerApp").textContent = c.network === "mainnet" ? "Bitcoin" : "Bitcoin Test";
+    PREFIX = c.network === "mainnet" ? "bc1q" : c.network === "regtest" ? "bcrt1q" : "tb1q";
+    el("addr").placeholder = `${PREFIX}…`;
+    for (const x of document.querySelectorAll(".prefix")) x.textContent = PREFIX;
+    el("wallets").querySelector("button[aria-pressed=true]")?.click();
     ENDPOINT = typeof c.join_endpoint === "string" && /^https:\/\//.test(c.join_endpoint) ? c.join_endpoint : null;
     RELAYS = Array.isArray(c.relays) && c.relays.length ? c.relays : null;
     FINGERPRINT = c.declaration.sha256;
@@ -541,8 +532,10 @@ async function copyTo(btn, text, done) {
 // Signing with a Ledger, here on the page. The signing is the Crowdlock app's
 // own (signStatementWith in js/vendor/crowdlock-ledger-web.bundle.js, built
 // from method/ledger-web): the same standard Bitcoin Signed Message Sparrow
-// makes. This page only fills step 4 with the result; the check below and the
-// button in step 5 are unchanged, so nothing is sent until the person sends it.
+// makes. The page fills the boxes in step 3, runs the same check, and if the
+// signature is valid presses step 4's button itself: approving on the Ledger,
+// with the public-and-permanent warning shown beside its button, is the
+// decision. A pasted signature still waits for the person to press it.
 // The bundle is large, so it is loaded only when the button is pressed.
 // ---------------------------------------------------------------------------
 
@@ -573,8 +566,17 @@ el("ledgerSign").addEventListener("click", async () => {
     el("addr").value = account.address;
     el("sig").value = signature;
     check();
-    msg.textContent = "Signed. Step 4 is filled in below; check it says the signature is valid.";
-    el("verdict").scrollIntoView({ behavior: "smooth", block: "center" });
+    // Approving on the Ledger was the decision, so a valid signature is sent
+    // straight away, by the same button a pasted one uses. Anything else
+    // (already signed, or a check that fails) stops here and says why.
+    if (!el("submitSection").hidden) {
+      msg.textContent = "Signed and checked. Sending it to the register: the result is in step 4 below.";
+      el("joinNow").click();
+      el("joinResult").scrollIntoView({ behavior: "smooth", block: "center" });
+    } else {
+      msg.textContent = "Signed. See the check in step 3 below.";
+      el("verdict").scrollIntoView({ behavior: "smooth", block: "center" });
+    }
   } catch (e) {
     // The Ledger code already words its errors for people; show them as they come.
     msg.textContent = String(e?.message ?? e);
