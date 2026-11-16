@@ -69,6 +69,52 @@ export async function postRecord(relays, record, fingerprint) {
   }));
 }
 
+// How far one pass reads back on one relay: a batch at a time, newest first.
+const PAGE = 1000;         // records asked for at a time (a relay may give fewer)
+const MAX_PAGES = 60;      // batches from one relay in one pass
+const READ_BUDGET = 90000; // milliseconds on one relay in one pass
+
+/**
+ * Read a relay's records from the newest back to `since`, a batch at a time.
+ *
+ * One batch is not enough. A relay answers with its newest few hundred
+ * records, so somebody posting junk under a Crowdlock's fingerprint could keep
+ * real registrations and locks out of sight. This keeps asking for older
+ * records until the relay has none left in the window.
+ *
+ * `ask({ since, until, limit })` resolves to one batch of events. `until`
+ * includes its own second, so that second is asked for again in case the batch
+ * was cut off inside it, and stepped past once it brings nothing new. (More
+ * records in one second than a relay gives in a batch cannot all be read.)
+ *
+ * Returns { events, complete }. `complete` is false when it stopped early: at
+ * a limit above, because a later batch failed, or because the relay ignored
+ * `until`. Only a failure of the first batch is thrown.
+ */
+export async function readBack(ask, since, { limit = PAGE, maxPages = MAX_PAGES, budget = READ_BUDGET } = {}) {
+  const byId = new Map();
+  const done = (complete) => ({ events: [...byId.values()], complete });
+  const started = Date.now();
+  let until, stale = 0;
+  for (let page = 0; page < maxPages; page++) {
+    if (Date.now() - started > budget) return done(false);
+    let batch;
+    try { batch = await ask({ since, ...(until === undefined ? {} : { until }), limit }); }
+    catch (e) { if (page === 0) throw e; return done(false); }
+    if (batch.length === 0) return done(true);
+    let fresh = 0, oldest = Infinity;
+    for (const e of batch) {
+      if (!byId.has(e.id)) { byId.set(e.id, e); fresh++; }
+      if (e.created_at < oldest) oldest = e.created_at;
+    }
+    stale = fresh === 0 ? stale + 1 : 0;
+    if (stale === 2) return done(false);   // the same records twice running: this relay is not honouring `until`
+    until = fresh === 0 ? oldest - 1 : oldest;
+    if (until < since) return done(true);
+  }
+  return done(false);
+}
+
 /** Every record event for this fingerprint since `since`, from all relays, deduplicated by id. */
 export async function fetchRecords(relays, fingerprint, since) {
   const byId = new Map();
@@ -76,14 +122,16 @@ export async function fetchRecords(relays, fingerprint, since) {
     try {
       const relay = await connectRelay(url);
       try {
-        let count = 0;
-        await withTimeout(new Promise((resolve) => {
-          const sub = relay.subscribe([{ kinds: [RECORD_KIND], [`#${FINGERPRINT_TAG}`]: [fingerprint], since, limit: 1000 }], {
-            onevent(e) { count++; byId.set(e.id, e); },
-            oneose() { sub.close(); resolve(); },
+        const ask = (range) => withTimeout(new Promise((resolve) => {
+          const got = [];
+          const sub = relay.subscribe([{ kinds: [RECORD_KIND], [`#${FINGERPRINT_TAG}`]: [fingerprint], ...range }], {
+            onevent(e) { got.push(e); },
+            oneose() { sub.close(); resolve(got); },
           });
         }), TIMEOUT, "reading");
-        return { relay: url, ok: true, count };
+        const { events, complete } = await readBack(ask, since);
+        for (const e of events) byId.set(e.id, e);
+        return { relay: url, ok: true, count: events.length, complete };
       } finally { relay.close(); }
     } catch (e) { return { relay: url, ok: false, reason: String(e.message ?? e) }; }
   }));

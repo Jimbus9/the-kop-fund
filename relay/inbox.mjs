@@ -98,7 +98,7 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
   const regPath = join(ROOT, crowdlock.register.registrations);
   const register = JSON.parse(readFileSync(regPath, "utf8"));
   const { events, report } = await fetchRecords(crowdlock.relays, crowdlock.declaration.sha256, now - WINDOW);
-  for (const r of report) console.log(`${file}: ${r.relay} ${r.ok ? `answered, ${r.count} record(s)` : `did not answer (${r.reason})`}`);
+  for (const r of report) console.log(`${file}: ${r.relay} ${r.ok ? `answered, ${r.count} record(s)${r.complete ? "" : " (stopped early: more than one pass reads; the rest waits for the next)"}` : `did not answer (${r.reason})`}`);
   if (!report.some((r) => r.ok)) { console.log(`${file}: no relay answered — nothing changed`); continue; }
 
   // Relay health, and a swap for any relay silent for SILENT_DAYS.
