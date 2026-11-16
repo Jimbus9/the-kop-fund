@@ -59,7 +59,7 @@
   <section id="closed" hidden>
     <div class="verdict-live bad">
       <b>Not open for real bitcoin yet</b>
-      <p>This page works on the test network only, for now. A real-bitcoin lock made in the Crowdlock app is taken home in the app.</p>
+      <p>This page works on the test network only, until an outside review of the code. A real-bitcoin lock made in the Crowdlock app is taken home in the app.</p>
       <p id="closedWhy" hidden></p>
     </div>
     <a class="go" href="../take-home/?c=kop-fund-testnet4">Try it on the test network</a>
@@ -158,6 +158,7 @@
       <ul>
         <li class="h">More</li>
         <li><a href="../how/">How it works</a></li>
+        <li><a href="../progress/">Where it stands</a></li>
         <li><a href="../why/">Why</a></li>
         <li><a href="../risk/">Risks</a></li>
         <li><a href="../society/">The society</a></li>
@@ -180,8 +181,8 @@ import { recordEventTemplate } from "../js/inbox.mjs";
 const el = (id) => document.getElementById(id);
 
 // Networks this page is open for. A real-money network is added here, in this
-// one line, only once a way home has been proved for the wallets people use and
-// the "Taking it home" section above says so by name. Until then it is closed.
+// one line, only after the outside review of the code, and on the founder's
+// say-so. Until then it is closed.
 const OPEN_NETWORKS = new Set(["testnet4"]);
 
 let C = null;          // the Crowdlock file
@@ -230,9 +231,8 @@ async function load() {
     if (!OPEN_NETWORKS.has(C.network)) {
       el("closed").hidden = false;
       el("closedWhy").textContent =
-        "Locking real bitcoin from this page opens once taking a lock home has been proved for the wallets people use. "
-        + "Funding a lock is easy from any wallet; getting the money out again is what has to be certain first. "
-        + "The \"Taking it home\" section below says where that stands.";
+        "Locking real bitcoin from this page opens after an outside review of the code. "
+        + "Nobody outside the project has checked it yet.";
       el("form").hidden = true;
       return;
     }

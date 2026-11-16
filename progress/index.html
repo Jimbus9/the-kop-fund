@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-t="Where this stands | {name}">Where this stands | The Kop Fund</title>
+<meta name="description" content="What is built, what is still open, and what we got wrong and changed. One list, checkable against the public record.">
+<meta property="og:title" data-t="Where this stands | {name}" content="Where this stands | The Kop Fund">
+<meta property="og:description" content="What is built, what is still open, and what we got wrong and changed. One list, checkable against the public record.">
+<meta property="og:site_name" data-t="{name}" content="The Kop Fund">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://thekopfund.org/assets/og-image.png?v=3">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" data-t="{name}: a red padlock with two white bars" content="The Kop Fund: a red padlock with two white bars">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to the content</a>
+
+<header class="banner"><div class="wrap">
+  <div class="row">
+    <a class="name" href="../"><img class="mark" src="../assets/mark.svg" alt="" width="25" height="30"><!--name-->The Kop Fund<!--/name--></a>
+    <a class="menu" href="#menu">Menu</a>
+  </div>
+  <p class="indep">Run by supporters. Not affiliated with Liverpool FC.</p>
+  <nav class="topnav" aria-label="More about the fund">
+    <a href="../how/">How it works</a>
+    <a href="../why/">Why</a>
+    <a href="../risk/">Risks</a>
+    <a href="../society/">The society</a>
+    <a href="../register/">The register</a>
+    <a href="../spec/">The documents</a>
+  </nav>
+</div></header>
+
+<main id="main" class="wrap">
+
+  <header class="page">
+    <h1>Where this stands</h1>
+    <p class="lede">One list, kept in one place. Everything on it can be checked against the public record.</p>
+  </header>
+
+  <section>
+    <div class="scroller"><table>
+      <tbody>
+        <tr><td>The declaration, written and fingerprinted</td><td><span class="pill ok">Done</span></td></tr>
+        <tr><td>Signing, and joining the register without asking anyone</td><td><span class="pill ok">Live</span></td></tr>
+        <tr><td>Locks that Bitcoin itself enforces</td><td><span class="pill ok">Working. Tested on a test network, and in use with real bitcoin</span></td></tr>
+        <tr><td>The register timestamped into the Bitcoin blockchain</td><td><span class="pill ok">Automatic</span></td></tr>
+        <tr><td>Locking, committing and taking it home from this website</td><td><span class="pill warn">Test network only, until the outside review</span></td></tr>
+        <tr><td>A phone app</td><td><span class="pill warn">Working builds, for testing. Not yet reviewed from outside</span></td></tr>
+        <tr><td>Backing a purchase, and settling it</td><td><span class="pill warn">Built. Proven on a test network, both when a purchase goes through and when it fails</span></td></tr>
+        <tr><td>The list of approved destinations</td><td><span class="pill warn">Specified. A first design, not a settled one</span></td></tr>
+        <tr><td>Who holds the second signature</td><td><span class="pill warn">One supporter, becoming two of three as others take it on</span></td></tr>
+        <tr><td>How those holders get chosen, once it is more than one person</td><td><span class="pill warn">Open</span></td></tr>
+        <tr><td>Outside review of any of the code</td><td><span class="pill">None</span></td></tr>
+        <tr><td>A solicitor's reading of all of this</td><td><span class="pill">Not yet</span></td></tr>
+        <tr><td>Whether a supporters' society can legally be bound to vote the club's shares as its members decide</td><td><span class="pill warn">Needs a solicitor</span></td></tr>
+        <tr><td>The supporters' society that would hold a stake</td><td><span class="pill">Planned, not formed. <a href="../society/">The plan</a></span></td></tr>
+        <tr><td>Whether an owner would ever sell a stake to a body like this</td><td><span class="pill warn">Unknown</span></td></tr>
+        <tr><td>Whether settling a hundred thousand commitments is physically practical on the blockchain</td><td><span class="pill warn">Hard</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="note"><strong>How much is locked, and by how many, is not written here on purpose.</strong> Those numbers are on <a href="../register/">the register</a>, where they are counted from the blockchain in your own browser. A figure typed onto this page would be a claim. A figure counted there is a fact. Expect the real one to be small.</p>
+    <p class="note">None of the open items affects the safety of bitcoin that has been locked. All of them affect whether this ever achieves anything. This is a very early thing: some documents, some working code that nobody outside the project has reviewed, and a handful of people at most.</p>
+  </section>
+
+  <section>
+    <h2>Things we got wrong and changed</h2>
+    <p>Published because a design that has never been corrected has usually never been checked.</p>
+    <div class="stack">
+      <div class="card">
+        <b class="head">We were going to pool the money</b>
+        <p>The first version had one shared treasury, with elaborate rules to stop anyone draining it. Testing found seven ways to break it, and two of them lost everything. The rules were not the problem. Pooling was. Removing it removed every one of those attacks at once.</p>
+      </div>
+      <div class="card">
+        <b class="head">We then removed locks entirely</b>
+        <p>For a while the plan was to count supporters' live balances, because a lock seemed like needless friction. That was wrong: a balance proves somebody owns bitcoin, not that they have committed any. Locks came back as the thing that counts, not as a barrier to joining.</p>
+      </div>
+      <div class="card">
+        <b class="head">We nearly promised never to change the declaration</b>
+        <p>Dropped, because the first solicitor to read it may say something must be worded differently, and a document that calls itself permanent and then changes looks worse than one that never claimed it. Each version is dated and fingerprinted, and a signature belongs to the version it was made over.</p>
+      </div>
+    </div>
+    <p class="note">Every change is in the public record of changes, and the specifications are published in full. <a href="../spec/">The documents are here</a>.</p>
+  </section>
+
+  <a class="go" href="../how/">How it works, in ten questions</a>
+
+</main>
+
+<footer><div class="wrap">
+  <nav id="menu" aria-label="All pages">
+    <h2>Menu</h2>
+    <div class="allpages">
+      <ul>
+        <li class="h">The six steps</li>
+        <li><a href="../">1. Understand</a></li>
+        <li><a href="../declaration/">2. Sign</a></li>
+        <li><a href="../get-bitcoin/">3. Get bitcoin</a></li>
+        <li><a href="../lock/">4. Lock</a></li>
+        <li><a href="../commit/">5. Commit to a purchase</a></li>
+        <li><a href="../take-home/">6. Take it home</a></li>
+      </ul>
+      <ul>
+        <li class="h">More</li>
+        <li><a href="../how/">How it works</a></li>
+        <li><a href="../progress/">Where it stands</a></li>
+        <li><a href="../why/">Why</a></li>
+        <li><a href="../risk/">Risks</a></li>
+        <li><a href="../society/">The society</a></li>
+        <li><a href="../register/">The register</a></li>
+        <li><a href="../spec/">The documents</a></li>
+      </ul>
+    </div>
+  </nav>
+  <p><strong>This is not an investment.</strong> There is no return, no dividend and no payout, now or ever. Bitcoin rises and falls, and bitcoin you lock can fall in value while it is locked. Nothing here is legal or financial advice.</p>
+  <p>An independent initiative by supporters of Liverpool Football Club. Not affiliated with, endorsed by or connected to Liverpool Football Club, its owners, or any official supporters' organisation.</p>
+  <p><strong><!--name-->The Kop Fund<!--/name--></strong> is a Crowdlock: a published set of rules for a crowd locking bitcoin towards buying something, with nobody holding anybody else's money. <a href="https://github.com/Jimbus9/the-kop-fund">Source and documents on GitHub</a>. Questions, problems or ideas: email <a href="mailto:hello@thekopfund.org">hello@thekopfund.org</a> or <a href="https://github.com/Jimbus9/the-kop-fund/issues">open an issue</a>.</p>
+</div></footer>
+
+</body>
+</html>

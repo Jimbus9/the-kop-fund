@@ -63,7 +63,7 @@
       <p id="closedWhy"></p>
     </div>
     <a class="go" href="../lock/?c=kop-fund-testnet4">Try it on the test network</a>
-    <p class="note">The test network is a practice copy of bitcoin. Its coins are free and worth nothing. Nothing here touches real money until the way home has been proved for the wallets people actually use, and this page says which those are.</p>
+    <p class="note">The test network is a practice copy of bitcoin. Its coins are free and worth nothing. Locking real bitcoin from this page opens after an outside review of the code.</p>
   </section>
 
   <section id="testnote" hidden>
@@ -211,7 +211,7 @@
       <li><strong>A Ledger:</strong> proved on a test network, in the Crowdlock app by cable and Bluetooth, and on this page. One real-bitcoin lock has been made with a Ledger in the app. Nobody has taken a real-bitcoin lock home yet, because none has reached its date.</li>
       <li><strong>Sparrow, Electrum and others used directly:</strong> not tested. We do not know that they can sign for this kind of address, and will not say they can until it has been tried.</li>
     </ul>
-    <p>This is why the page is closed for real bitcoin: a lock that cannot be taken home is the one mistake that cannot be undone. Everything a tool needs is public, so any future tool can do it.</p>
+    <p>A lock that cannot be taken home is the one mistake that cannot be undone, so use a way home that has been proved. Everything a tool needs is public, so any future tool can do it.</p>
   </section>
 
   <div hidden>
@@ -243,6 +243,7 @@
       <ul>
         <li class="h">More</li>
         <li><a href="../how/">How it works</a></li>
+        <li><a href="../progress/">Where it stands</a></li>
         <li><a href="../why/">Why</a></li>
         <li><a href="../risk/">Risks</a></li>
         <li><a href="../society/">The society</a></li>
@@ -265,8 +266,8 @@ import { recordEventTemplate } from "../js/inbox.mjs";
 const el = (id) => document.getElementById(id);
 
 // Networks this page is open for. A real-money network is added here, in this
-// one line, only once a way home has been proved for the wallets people use and
-// the "Taking it home" section above says so by name. Until then it is closed.
+// one line, only after the outside review of the code, and on the founder's
+// say-so. Until then it is closed.
 const OPEN_NETWORKS = new Set(["testnet4"]);
 
 let C = null;          // the Crowdlock file
@@ -315,9 +316,8 @@ async function load() {
     if (!OPEN_NETWORKS.has(C.network)) {
       el("closed").hidden = false;
       el("closedWhy").textContent =
-        "Locking real bitcoin from this page opens once taking a lock home has been proved for the wallets people use. "
-        + "Funding a lock is easy from any wallet; getting the money out again is what has to be certain first. "
-        + "The \"Taking it home\" section below says where that stands.";
+        "Locking real bitcoin from this page opens after an outside review of the code. "
+        + "Nobody outside the project has checked it yet.";
       el("form").hidden = true;
       return;
     }

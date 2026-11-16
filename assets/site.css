@@ -230,7 +230,8 @@ details details { margin-left: 0; }
 
 .pill { font-weight: 700; color: var(--soft); }
 .pill.ok { color: var(--pitch); }
-.pill.warn { color: var(--amber); }
+.pill.warn { color: var(--amber); display: inline; padding: 0; margin: 0; background: none; border-radius: 0; }
+.pill.warn::before { content: none; }   /* a status word, not a referee's-card warning box */
 .pill.bad { color: var(--link); }
 
 /* ---- Things a reader can check: addresses, signatures, fingerprints ------ */
