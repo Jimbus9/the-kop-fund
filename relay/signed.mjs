@@ -163,7 +163,7 @@ export function readTx(txHex) {
   try {
     const tx = Transaction.fromHex(txHex);
     if (tx.ins.length !== 1) return null;
-    return { txid: tx.getId(), coin: `${hex(Buffer.from(tx.ins[0].hash).reverse())}:${tx.ins[0].index}`, hex: tx.toHex() };
+    return { txid: tx.getId(), coin: `${hex(Buffer.from(tx.ins[0].hash).reverse())}:${tx.ins[0].index}`, hex: tx.toHex(), outputs: tx.outs.map((o) => hex(o.script)) };
   } catch { return null; }
 }
 

@@ -164,7 +164,7 @@ python3 -m http.server            # then open localhost:8000/register/</pre>
 <script type="module">
 import { verifyMembership } from "../js/verify.mjs";
 import { checkCrowdlock, checkRegisterFiles, membershipStatement, joinedVersion, versionsOf } from "../js/crowdlock.mjs";
-import { earlyReleases, readHistory, clocksFor } from "../js/release.mjs";
+import { earlyReleases, readHistory, clocksFor, locksToWatch, locksSeen } from "../js/release.mjs";
 import { stampsFor } from "../js/proposals.mjs";
 import { hrpFor, lockIsGenuine } from "../js/lockrecord.mjs";
 
@@ -389,11 +389,22 @@ if (locks.length === 0) {
     stamps = await stampsFor(entries, [...new Set(entries.filter((e) => e.op === "add").map((e) => e.address))],
       async (txid) => { const r = await fetch(`${CHAIN_API}/tx/${txid}`); if (!r.ok) throw new Error(String(r.status)); return r.json(); });
   } catch {}
-  for (const lock of locks) {
+  // Which locks the record covers must not depend on the register staying as
+  // it was: the register is a file its founder can write, and the founder is
+  // the co-signer. So this browser keeps the terms of every lock it has seen
+  // here, goes on checking them, and says when one has gone. (Until
+  // 17 November 2026 a lock taken off the register, or with one digit of its
+  // date changed, took its early release off this record with it.)
+  const MEMORY = `crowdlock.seenlocks.v1:${crowdlock.declaration.sha256}`;
+  let remembered = [];
+  try { remembered = JSON.parse(localStorage.getItem(MEMORY) ?? "[]"); } catch {}
+  const watched = locksToWatch({ crowdlock, register: data, remembered });
+  try { localStorage.setItem(MEMORY, JSON.stringify(locksSeen({ crowdlock, register: data, remembered }))); } catch {}
+  const gone = watched.gone.length;
+  for (const lock of watched.locks) {
     const address = String(lock.address).toLowerCase();
     if (seenRel.has(address)) continue;
     seenRel.add(address);
-    if (!lockIsGenuine(lock, { crowdlock, register: data }).ok) continue; // not a lock of this Crowdlock: nothing of the co-signer's to record
     try {
       // The whole history, so a release can't be pushed out of sight by
       // small payments to the lock's address after it.
@@ -418,18 +429,20 @@ if (locks.length === 0) {
   // The explorer's own page for the transaction, so anyone can see it for themselves.
   const txLink = (txid) => `${String(CHAIN_API).replace(/\/api$/, "")}/tx/${txid}`;
   const esc = (x) => String(x ?? "").replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`);
+  const goneNote = gone === 0 ? "" : ` ${gone === 1 ? "A lock this browser saw on the register is" : `${gone} locks this browser saw on the register are`} no longer on it as ${gone === 1 ? "it was" : "they were"}. Nothing is ever meant to be taken off the register or changed. ${gone === 1 ? "It is" : "They are"} still checked here.`;
   if (found.length === 0) {
-    setVerdict(el("releaseVerdict"), el("releaseText"), unread === 0,
-      locks.length === 0 ? "No locks yet, so nothing to release" : unread === 0 ? "No early releases" : "Could not check every lock");
-    el("releaseDetail").textContent = locks.length === 0
+    const none = watched.locks.length === 0;
+    setVerdict(el("releaseVerdict"), el("releaseText"), unread === 0 && gone === 0,
+      none ? "No locks yet, so nothing to release" : unread > 0 ? "Could not check every lock" : gone > 0 ? "No early releases, but the register has changed" : "No early releases");
+    el("releaseDetail").textContent = (none
       ? "When members lock money, any lock the co-signer opens early will show here."
       : unread === 0
-      ? "Every lock on the register has either stayed shut, opened on its date, or paid a listed destination with the rest kept locked."
-      : `${unread} lock${unread === 1 ? "" : "s"} could not be read from the chain in full just now. Reload to try again.`;
+      ? "Every lock this browser has seen on the register has either stayed shut, opened on its date, or paid a listed destination with the rest kept locked."
+      : `${unread} lock${unread === 1 ? "" : "s"} could not be read from the chain in full just now. Reload to try again.`) + goneNote;
   } else {
     setVerdict(el("releaseVerdict"), el("releaseText"), false,
       `${found.length} lock${found.length === 1 ? "" : "s"} released early by the co-signer`);
-    el("releaseDetail").textContent = "Each of these opened before its date with the co-signer's signature, and sent money somewhere other than a listed destination or back into a lock.";
+    el("releaseDetail").textContent = "Each of these opened before its date with the co-signer's signature, and sent money somewhere other than a listed destination or back into a lock." + goneNote;
     el("releaseArea").innerHTML = `<div class="scroller"><table>
       <thead><tr><th>When</th><th>Amount</th><th>Co-signer</th><th>Transaction</th></tr></thead>
       <tbody>${found.map((r) => `<tr>

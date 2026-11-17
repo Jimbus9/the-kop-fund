@@ -61,12 +61,20 @@ function scriptNumber(n) {
  * Keys as 66-character hex. Returns bytes.
  */
 export function lockScript({ ownerPubkey, cosignerPubkey, locktime }) {
+  // A locktime is a whole number that fits Bitcoin's 32-bit field. Anything
+  // else is refused, as method/lock/lock.mjs refuses it: until 17 November
+  // 2026 nought, a fraction or a number too large still made "a script", and
+  // not the one the proven code makes.
+  if (!Number.isInteger(locktime) || locktime < 1 || locktime > 0xffffffff) throw new Error("a lock's date must be a whole number from 1 to 4294967295");
   const owner = hexToBytes(ownerPubkey);
   const cosigner = hexToBytes(cosignerPubkey);
+  // 1 to 16 have opcodes of their own (OP_1 … OP_16), which is how Bitcoin's
+  // tools write them; everything larger is pushed as a minimal number.
   const t = scriptNumber(locktime);
+  const pushed = locktime <= 16 ? [0x50 + locktime] : [t.length, ...t];
   return Uint8Array.from([
     33, ...owner, OP.CHECKSIGVERIFY,
-    OP.IF, t.length, ...t, OP.CHECKLOCKTIMEVERIFY,
+    OP.IF, ...pushed, OP.CHECKLOCKTIMEVERIFY,
     OP.ELSE, 33, ...cosigner, OP.CHECKSIG,
     OP.ENDIF,
   ]);
@@ -134,6 +142,11 @@ export function lockIsGenuine(lock, { crowdlock, register, hrp = hrpFor(crowdloc
   if (!KEY.test(String(lock.owner_pubkey ?? "")) || !KEY.test(String(lock.cosigner_pubkey ?? ""))) return no("its keys are not public keys");
   if (!Number.isInteger(lock.locktime) || lock.locktime <= 0) return no("its date is not a date");
   if (lock.owner_pubkey.slice(2) === lock.cosigner_pubkey.slice(2)) return no("its owner and co-signer are the same key");
+  // Dates, not heights, on every real network (spec/lock-format.md), as the
+  // inbox already requires before it adds a lock. A reader must ask too: a
+  // register is a file, and a "lock" dated by a block height long passed is
+  // money its owner can take home alone (security loop, 17 November 2026).
+  if (lock.locktime < LOCKTIME_THRESHOLD && hrp !== "bcrt") return no("its date is a block height, which only a private test chain uses");
   let derived;
   try { derived = lockAddress({ ownerPubkey: lock.owner_pubkey, cosignerPubkey: lock.cosigner_pubkey, locktime: lock.locktime }, hrp); } catch { return no("its terms do not make a lock"); }
   if (derived !== String(lock.address ?? "").toLowerCase()) return no("its address is not the lock its terms make");
@@ -200,8 +213,8 @@ export function prepareLock(submission, { crowdlock, register, now }) {
     if (locktime > now + years * YEAR + SLACK) {
       return no(400, `that lock runs longer than this Crowdlock offers (at most ${years} years)`);
     }
-  } else if (locktime <= 0) {
-    return no(400, "locktime must be positive");
+  } else if (locktime <= 0 || locktime > 0xffffffff) {
+    return no(400, "locktime must be positive, and no larger than a locktime can hold");
   }
 
   const address = lockAddress({ ownerPubkey: owner, cosignerPubkey: cosigner, locktime }, hrp);

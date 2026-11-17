@@ -12,7 +12,7 @@ import { readFileSync, writeFileSync, readdirSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { applyRecords, announcementTemplate, announcementDue } from "../js/inbox.mjs";
+import { applyRecords, announcementTemplate, announcementDue, oneLine } from "../js/inbox.mjs";
 import { membershipStatement, checkCrowdlock } from "../js/crowdlock.mjs";
 import { fetchRecords, postTemplate } from "./nostr.mjs";
 import { recordPass, planSwaps, SILENT_DAYS } from "../js/relayhealth.mjs";
@@ -34,6 +34,12 @@ const canonical = (hex) => { try { return Transaction.fromHex(hex).toHex(); } ca
 // Crowdlock's register was saved but before the next was read or the commit
 // message written. Log it and carry on; anything missed is judged again on
 // the next pass in any case.
+// This log is the public account of what was taken and what was refused, and
+// much of what it prints was posted by strangers. Each thing said is one
+// line, so nothing posted can start a line of its own (see oneLine).
+const say = console.log.bind(console);
+console.log = (...parts) => say(oneLine(parts.join(" ")));
+
 process.on("unhandledRejection", (e) => console.log(`A relay connection failed after we were done with it: ${e?.message ?? e}`));
 process.on("uncaughtException", (e) => console.log(`A relay connection failed after we were done with it: ${e?.message ?? e}`));
 

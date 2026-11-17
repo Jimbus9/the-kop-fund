@@ -66586,16 +66586,17 @@ ${ge(n19)}`;
     return out;
   }
   function lockScript({ ownerPubkey, cosignerPubkey, locktime }) {
+    if (!Number.isInteger(locktime) || locktime < 1 || locktime > 4294967295) throw new Error("a lock's date must be a whole number from 1 to 4294967295");
     const owner = hexToBytes3(ownerPubkey);
     const cosigner = hexToBytes3(cosignerPubkey);
     const t29 = scriptNumber(locktime);
+    const pushed = locktime <= 16 ? [80 + locktime] : [t29.length, ...t29];
     return Uint8Array.from([
       33,
       ...owner,
       OP.CHECKSIGVERIFY,
       OP.IF,
-      t29.length,
-      ...t29,
+      ...pushed,
       OP.CHECKLOCKTIMEVERIFY,
       OP.ELSE,
       33,
@@ -67028,7 +67029,9 @@ ${ge(n19)}`;
     }
     if (derived !== L3.address) return fail("lock address does not re-derive from the stated keys and locktime");
     if (!isCosignerOf(crowdlock, L3.cosigner_pubkey)) return fail(`the lock's co-signer is not ${crowdlock.name}'s \u2014 this commitment belongs to a different Crowdlock, or to none`);
-    if (L3.locktime >= 5e8) {
+    if (L3.locktime < 5e8) {
+      if (hrp !== "bcrt") return fail("the lock is dated by block height, which only a private test chain uses \u2014 on a real network it may already be open, so its money isn't committed");
+    } else {
       const settles = Date.parse(proposal.settles_by ?? proposal.settlesBy ?? "");
       if (Number.isNaN(settles)) return fail("the proposal's settling date can't be read, so whether the lock outlasts it can't be checked");
       if (!(L3.locktime > settles / 1e3)) return fail("the lock opens before the proposal's settling ends, so its owner could take the money home first");

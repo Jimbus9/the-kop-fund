@@ -45,6 +45,16 @@ export function recordEventTemplate(record, fingerprint, createdAt) {
 }
 
 /**
+ * Text for a log, on one line. Records come from anybody, and a log is read
+ * line by line (GitHub's reads a line starting "::" as a command to itself),
+ * so nothing posted may start a line of its own: every control character,
+ * line breaks included, becomes a space (security loop, 17 November 2026).
+ */
+export function oneLine(text) {
+  return String(text).replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]+/g, " ");
+}
+
+/**
  * Read a record back out of an event, or null if it is not a well-formed
  * record for this Crowdlock. Says nothing yet about whether it is VALID.
  */

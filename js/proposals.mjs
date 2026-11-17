@@ -12,6 +12,7 @@
 import { sha256 } from "./vendor/noble-hashes/sha256.js";
 import { verifyMembership, memberAddressForOwnerKey, canonicalAddress } from "./verify.mjs";
 import { versionOf, hasSigned } from "./crowdlock.mjs";
+import { lockScript, lockIsGenuine, hrpFor } from "./lockrecord.mjs";
 
 export const PROPOSALS_FORMAT = "crowdlock-proposals/1";
 export const PILE_FORMAT = "crowdlock-commitments/1";
@@ -398,6 +399,95 @@ export function stillTakingCommitments(proposal, nowSeconds) {
 }
 const MAX_TX_HEX = 4000;
 
+const KEY66 = /^0[23][0-9a-f]{64}$/;
+
+/**
+ * A posted commitment record, reduced to the parts a commitment has and
+ * nothing else, or null if it has not got them. Anybody can post a record,
+ * and the owner's signature covers only the payment: everything beside it
+ * (the lock's terms, the remainder lock, anything else a poster adds) is the
+ * poster's own. So what is judged, told apart from copies, and kept is this
+ * and only this (security loop, 17 November 2026).
+ */
+export function cleanRecord(r) {
+  const L = r?.lock;
+  if (!r || typeof r.proposal !== "string" || typeof r.tx !== "string" || !L || typeof L !== "object") return null;
+  if (typeof L.address !== "string" || typeof L.owner_pubkey !== "string" || typeof L.cosigner_pubkey !== "string" || !Number.isInteger(L.locktime)) return null;
+  const out = { proposal: r.proposal, lock: { address: L.address, owner_pubkey: L.owner_pubkey, cosigner_pubkey: L.cosigner_pubkey, locktime: L.locktime }, tx: r.tx };
+  const R = r.remainder;
+  if (R && typeof R === "object" && typeof R.owner_pubkey === "string" && typeof R.cosigner_pubkey === "string" && Number.isInteger(R.locktime)) {
+    out.remainder = { owner_pubkey: R.owner_pubkey, cosigner_pubkey: R.cosigner_pubkey, locktime: R.locktime };
+  }
+  return out;
+}
+
+/**
+ * Does the remainder lock a record declares make the output its payment
+ * sends the remainder to? `script` is that output's script, as hex. The
+ * owner's signature covers the output but not the declaration beside it,
+ * and every reader needs the declaration to check the output, so a copy
+ * declaring another lock is a different, useless record.
+ */
+function remainderProblem(remainder, script, lock, crowdlock) {
+  if (!remainder) return "its payment returns a remainder, but the record names no remainder lock to check it against";
+  if (!KEY66.test(remainder.owner_pubkey) || !KEY66.test(remainder.cosigner_pubkey) || !(remainder.locktime > 0)) return "its remainder lock's terms do not make a lock";
+  if (remainder.owner_pubkey !== lock.owner_pubkey) return "its remainder lock has a different owner";
+  if (remainder.locktime < lock.locktime) return "its remainder lock opens earlier than the lock it spends";
+  if (!(crowdlock.cosigner_keys ?? []).some((k) => String(k).slice(2) === remainder.cosigner_pubkey.slice(2))) return "its remainder lock is not co-signed by this Crowdlock";
+  let made;
+  try {
+    made = "0020" + Array.from(sha256(lockScript({ ownerPubkey: remainder.owner_pubkey, cosignerPubkey: remainder.cosigner_pubkey, locktime: remainder.locktime })), (b) => b.toString(16).padStart(2, "0")).join("");
+  } catch { return "its remainder lock's terms do not make a lock"; }
+  return made === script ? null : "its payment does not return the remainder to the remainder lock the record names";
+}
+
+// ---------------------------------------------------------------------------
+// Commitments that are only on the relays (security loop, 17 November 2026).
+//
+// Anybody can post to the relays. The repository's inbox takes a commitment
+// only from a lock on the register; a reader counted any that passed its
+// checks, and asked the block explorer about every one first. A stranger
+// could post hundreds naming made-up locks, and the explorer turned the
+// reader away before it reached a real one. So a reader looks only at those
+// the inbox could take: from a real lock on this register, a few per lock.
+// ---------------------------------------------------------------------------
+
+export const RELAY_ONLY_PER_LOCK = 20;
+
+/**
+ * Of what was found on the relays for a proposal, what a reader goes on to
+ * check. Completions and notices pass through. A commitment passes only if
+ * it is not already in the repository's pile (`inPile`, by its payment's
+ * text), its lock is a genuine lock on the register with the same terms, and
+ * that lock has not already had RELAY_ONLY_PER_LOCK looked at. Each is
+ * reduced to the parts a commitment has (cleanRecord) and marked `relayOnly`.
+ */
+export function relayOnlyCommitments(found, { crowdlock, register, inPile = new Set(), hrp = hrpFor(crowdlock?.network) }) {
+  const locks = new Map();
+  for (const lock of register?.locks ?? []) {
+    if (lockIsGenuine(lock, { crowdlock, register, hrp }).ok) locks.set(String(lock.address).toLowerCase(), lock);
+  }
+  const perLock = new Map();
+  const seen = new Set();
+  const out = [];
+  for (const it of found ?? []) {
+    if (it?.type !== "commitment") { out.push(it); continue; }
+    const r = cleanRecord(it.record);
+    if (!r || inPile.has(r.tx)) continue;
+    const address = r.lock.address.toLowerCase();
+    const on = locks.get(address);
+    if (!on || on.owner_pubkey !== r.lock.owner_pubkey || on.cosigner_pubkey !== r.lock.cosigner_pubkey || on.locktime !== r.lock.locktime) continue;
+    const key = JSON.stringify(r);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const n = perLock.get(address) ?? 0;
+    if (n >= RELAY_ONLY_PER_LOCK) continue;
+    perLock.set(address, n + 1);
+    out.push({ ...it, record: r, relayOnly: true });
+  }
+  return out;
+}
+
 /** A new, empty pile for a proposal. */
 export function emptyPile(hash) {
   return { format: PILE_FORMAT, proposal: hash, commitments: [] };
@@ -439,7 +529,14 @@ export async function applyCommitments(pile, events, { crowdlock, proposal, regi
   // only rules out a record once one with that id has been taken.
   const keyOf = (tx) => (readTx ? readTx(tx)?.txid ?? tx : tx);
   const taken = new Set(pile.commitments.map((c) => keyOf(c.record.tx)));
-  const known = new Set([...pile.commitments.map((c) => c.record.tx), ...taken]);
+  // What has been judged already this pass: the whole record, not its
+  // payment alone. A record is refused for what it says beside the payment
+  // as often as for the payment, and anyone can post a member's payment with
+  // those parts changed. Until 17 November 2026 a refusal was remembered by
+  // the payment's text, so such a copy, dated a second earlier, was refused
+  // and then hid the member's real record behind it on every pass (security
+  // loop, round 1).
+  const known = new Set();
   const coins = new Set(readTx ? pile.commitments.map((c) => readTx(c.record.tx)?.coin).filter(Boolean) : []);
   const perLock = new Map();
   for (const c of pile.commitments) perLock.set(c.record.lock?.address, (perLock.get(c.record.lock?.address) ?? 0) + 1);
@@ -455,24 +552,37 @@ export async function applyCommitments(pile, events, { crowdlock, proposal, regi
   for (const e of sorted) {
     const item = commitmentFromEvent(e, fingerprint, proposal.hash);
     if (!item || item.type !== "commitment") continue;
-    const r = item.record;
-    if (typeof r.tx !== "string") continue;
-    const key = r.tx;
-    if (known.has(key) || taken.has(keyOf(r.tx))) continue; // already in the pile, or posted to two relays
-    const lockAddress = r.lock?.address;
+    if (typeof item.record?.tx !== "string") continue;
+    if (taken.has(keyOf(item.record.tx))) continue; // already in the pile
+    // Only the parts a commitment has are judged and kept.
+    const r = cleanRecord(item.record);
+    const lockAddress = typeof item.record.lock?.address === "string" ? item.record.lock.address : undefined;
+    const key = r ? JSON.stringify(r) : `?${JSON.stringify(item.record).slice(0, 9000)}`;
+    if (known.has(key)) continue; // posted to two relays
     const here = at++;
     const refuse = (reason) => { outcome.push({ at: here, added: false, lock: lockAddress, reason }); known.add(key); };
+    if (!r) { refuse("it is not a commitment record: its lock's terms are missing or malformed"); continue; }
     if (r.tx.length > MAX_TX_HEX || !/^[0-9a-f]+$/.test(r.tx) || r.tx.length % 2) { refuse("its transaction is not hex of a sensible size"); continue; }
     const read = readTx ? readTx(r.tx) : null;
     if (readTx && !read) { refuse("its transaction cannot be read, or does not spend exactly one coin"); continue; }
-    if (!(item.at >= opens && item.at < closes)) { refuse("it was posted outside the proposal's gathering window"); continue; }
+    // The time on a post is its poster's, not the record's: this refusal is
+    // of the post, and the same record posted again inside the window is
+    // looked at afresh. (Remembering it by the record let a stranger's copy
+    // of a member's commitment, dated before the proposal opened, hide the
+    // member's own post on every pass.)
+    if (!(item.at >= opens && item.at < closes)) { outcome.push({ at: here, added: false, lock: lockAddress, reason: "it was posted outside the proposal's gathering window" }); continue; }
     if (!stillTakingCommitments(proposal, Date.parse(nowIso) / 1000)) { refuse("the repository first saw it more than an hour after the proposal closed, whatever time it gives itself"); continue; }
     const onRegister = locks.get(lockAddress);
     if (!onRegister || onRegister.owner_pubkey !== r.lock.owner_pubkey || onRegister.cosigner_pubkey !== r.lock.cosigner_pubkey || onRegister.locktime !== r.lock.locktime) {
       refuse("its lock is not on this Crowdlock's register"); continue;
     }
     // Its lock must stay shut until settling ends, or its owner could take
-    // the money home first. (Heights are for private test chains only.)
+    // the money home first. A lock dated by block height is for a private
+    // test chain only: anywhere else it is refused, because it may already
+    // be open (security loop, 17 November 2026).
+    if (onRegister.locktime < 500000000 && crowdlock.network !== "regtest") {
+      refuse("its lock is dated by block height, which only a private test chain uses, so its money isn't committed"); continue;
+    }
     if (onRegister.locktime >= 500000000 && !(onRegister.locktime > settles)) {
       refuse("its lock opens before this proposal's settling ends, so its money isn't committed"); continue;
     }
@@ -485,6 +595,15 @@ export async function applyCommitments(pile, events, { crowdlock, proposal, regi
       refuse(`its owner has not signed version ${needs} of the declaration, which this proposal was published under`); continue;
     }
     if ((perLock.get(lockAddress) ?? 0) >= PER_LOCK_LIMIT) { refuse(`that lock already has ${PER_LOCK_LIMIT} commitments in the pile`); continue; }
+    // The remainder lock, which the owner's signature does not cover: it must
+    // be the lock the payment's own remainder output pays, or every reader
+    // would refuse the record and the real one could never take its place.
+    if (read && Array.isArray(read.outputs)) {
+      if (read.outputs.length === 3) {
+        const problem = remainderProblem(r.remainder, read.outputs[1], onRegister, crowdlock);
+        if (problem) { refuse(problem); continue; }
+      } else delete r.remainder; // nothing is returned, so there is nothing for it to describe
+    }
     known.add(key);
     waiting.push({ r: read ? { ...r, tx: read.hex } : r, id: read?.txid ?? r.tx, coin: read?.coin ?? null, lockAddress, member: onRegister.member, here });
   }
@@ -503,9 +622,7 @@ export async function applyCommitments(pile, events, { crowdlock, proposal, regi
     if (coin) coins.add(coin);
     if ((perLock.get(lockAddress) ?? 0) >= PER_LOCK_LIMIT) { outcome.push({ at: here, added: false, lock: lockAddress, reason: `that lock already has ${PER_LOCK_LIMIT} commitments in the pile` }); return; }
     perLock.set(lockAddress, (perLock.get(lockAddress) ?? 0) + 1);
-    const entry = { submitted: nowIso, record: r };
-    if (r.remainder === undefined) delete entry.record.remainder;
-    added.push(entry);
+    added.push({ submitted: nowIso, record: r });
     outcome.push({ at: here, added: true, lock: lockAddress, member });
   });
   outcome.sort((a, b) => a.at - b.at);

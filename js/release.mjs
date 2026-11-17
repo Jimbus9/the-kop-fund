@@ -17,7 +17,7 @@
 // Works on the transaction JSON an Esplora-style explorer returns for
 // /address/<lock>/txs, so the register page and the app read it the same way.
 
-import { lockIsGenuine, hrpFor } from "./lockrecord.mjs";
+import { lockIsGenuine, hrpFor, lockAddress } from "./lockrecord.mjs";
 import { chainIsIntact, attestationsAreValid, stampedAt, attestorsOf } from "./proposals.mjs";
 import { canonicalAddress } from "./verify.mjs";
 
@@ -233,4 +233,59 @@ export async function readHistory(first, after, { mostPages = MOST_PAGES } = {})
     for (const t of confirmed) { seen.add(t.txid); txs.push(t); }
   }
   return { txs, complete };
+}
+
+// ---------------------------------------------------------------------------
+// Locks a reader has seen on a register (security loop, 17 November 2026).
+//
+// The record above is read from the chain, but WHICH locks it is read for
+// came from the register, which is a file its founder can write, and today
+// the founder is the co-signer. Taking a lock's record off the register, or
+// bending one digit of its date so it no longer reads as a lock, took its
+// early release off the record too: "no early releases", for a lock that was
+// released early. So a reader (the app on a phone, the register page in a
+// browser) keeps the terms of every lock it has seen there, keeps checking
+// them, and says when one has gone.
+// ---------------------------------------------------------------------------
+
+const TERMS_KEY = /^0[23][0-9a-f]{64}$/;
+
+/**
+ * The locks to read the co-signer's record for: every genuine lock on the
+ * register now, and every lock this reader saw there before that is no
+ * longer on it as it was (`gone`). A remembered lock is believed only for
+ * what its terms make: its address is worked out here, never stored.
+ *
+ *   remembered  [{ owner_pubkey, cosigner_pubkey, locktime }], from locksSeen
+ * Returns { locks, gone }; each lock in `gone` carries `removed: true`.
+ */
+export function locksToWatch({ crowdlock, register, remembered = [], hrp = hrpFor(crowdlock?.network) }) {
+  const now = new Map();
+  for (const lock of register?.locks ?? []) {
+    const address = String(lock?.address ?? "").toLowerCase();
+    if (now.has(address) || !lockIsGenuine(lock, { crowdlock, register, hrp }).ok) continue;
+    now.set(address, lock);
+  }
+  const gone = new Map();
+  for (const r of Array.isArray(remembered) ? remembered : []) {
+    if (!r || typeof r !== "object" || !TERMS_KEY.test(String(r.owner_pubkey)) || !TERMS_KEY.test(String(r.cosigner_pubkey)) || !Number.isInteger(r.locktime)) continue;
+    let address;
+    try { address = lockAddress({ ownerPubkey: r.owner_pubkey, cosignerPubkey: r.cosigner_pubkey, locktime: r.locktime }, hrp); } catch { continue; }
+    if (now.has(address) || gone.has(address)) continue;
+    gone.set(address, { address, owner_pubkey: r.owner_pubkey, cosigner_pubkey: r.cosigner_pubkey, locktime: r.locktime, removed: true });
+  }
+  return { locks: [...now.values(), ...gone.values()], gone: [...gone.values()] };
+}
+
+// How many locks' terms a reader keeps for one Crowdlock. Those already gone
+// from the register are kept first: they are the ones that matter.
+export const LOCKS_REMEMBERED = 500;
+
+/** What to remember now: the terms of every lock watched, at most LOCKS_REMEMBERED. */
+export function locksSeen(ctx) {
+  const w = locksToWatch(ctx);
+  const terms = (l) => ({ owner_pubkey: l.owner_pubkey, cosigner_pubkey: l.cosigner_pubkey, locktime: l.locktime });
+  const current = w.locks.filter((l) => !l.removed);
+  const room = Math.max(0, LOCKS_REMEMBERED - w.gone.length);
+  return [...w.gone.slice(0, LOCKS_REMEMBERED).map(terms), ...current.slice(Math.max(0, current.length - room)).map(terms)];
 }

@@ -4,6 +4,8 @@
 
 **11 November 2026:** a lapsed lock is not counted and no total of lapsed money is published (cross-reference to the counting rule corrected). The format itself is unchanged.
 
+**17 November 2026, security loop:** a lock dated by block height is a lock only on a private test chain. The register's inbox always refused one on a real network; readers and commitment checkers now refuse it too. The format itself is unchanged.
+
 A lock is how a supporter commits money without anyone taking custody of it.
 It is an ordinary Bitcoin output with a script that permits exactly two ways
 out and no others.
@@ -72,10 +74,18 @@ median-time-past, so a lock becomes spendable at approximately rather than
 exactly that moment — typically within an hour. Immaterial for a lock measured
 in years.
 
-A block height may be used instead and behaves identically. Heights are used
-in testing because they are exact. An instance uses one or the other for every
-lock, never both: a single transaction cannot spend a date lock and a height
-lock together.
+A block height may be used instead and behaves identically, **on a private
+test chain (regtest) only**, where heights are exact and quick. On every other
+network a lock is dated by a date, and a record dated by a height is not a
+lock: it is not added to a register, not counted by a reader, and not taken as
+a commitment. A height below the chain's present height is a "lock" its owner
+can open alone today, and nothing about a height says which it is without
+asking the chain.
+
+A locktime is a whole number from 1 to 4,294,967,295, the most a transaction's
+own locktime can hold. In the script it is pushed as a minimal number; 1 to 16
+are written with their own opcodes (`OP_1` to `OP_16`), as Bitcoin's tools
+write them. (Only a test chain's heights are ever that small.)
 
 ### Rounding, and why it is UTC
 
@@ -229,8 +239,9 @@ Before a lock is published, the register checks that:
    rebuilds from the terms;
 2. its co-signer key is this Crowdlock's, because a lock is counted by the
    Crowdlock whose co-signer it names;
-3. its locktime is a date, not already past, and no longer than the longest
-   offered length plus a month;
+3. its locktime is a date (never a block height, except on a private test
+   chain), not already past, and no longer than the longest offered length
+   plus a month;
 4. its owner is a member — the owner key hashes to an address on the register;
 5. it is not already on the register;
 6. confirmed coins are at the address. Until a coin has confirmed there is
