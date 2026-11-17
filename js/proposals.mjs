@@ -10,7 +10,7 @@
 // The file format is spec/proposal-and-settlement.md, "Publishing a proposal".
 
 import { sha256 } from "./vendor/noble-hashes/sha256.js";
-import { verifyMembership, memberAddressForOwnerKey } from "./verify.mjs";
+import { verifyMembership, memberAddressForOwnerKey, canonicalAddress } from "./verify.mjs";
 import { versionOf, hasSigned } from "./crowdlock.mjs";
 
 export const PROPOSALS_FORMAT = "crowdlock-proposals/1";
@@ -225,7 +225,7 @@ export function stampedAt(entry, tx) {
 export async function stampsFor(entries, addresses, getTx) {
   const out = {};
   for (const address of addresses) {
-    const added = (entries ?? []).filter((e) => e.address === address && e.op === "add").pop();
+    const added = (entries ?? []).filter((e) => canonicalAddress(e.address) === canonicalAddress(address) && e.op === "add").pop();
     const txid = added?.stamp;
     if (!HEX64.test(String(txid ?? "")) || txid in out) continue;
     try { out[txid] = await getTx(txid); } catch { out[txid] = null; }
@@ -288,7 +288,7 @@ export function destinationIsPermitted({ address, entries, opensAt, minimumAgeDa
   if (!Array.isArray(attestors) || !Number.isInteger(threshold)) return { permitted: false, reason: "no attestor set was supplied, so the list cannot be checked for attestation" };
   const chain = chainIsIntact(entries, instance);
   if (!chain.ok) return { permitted: false, reason: `the list itself is broken: ${chain.reason}` };
-  const mine = entries.filter((e) => e.address === address);
+  const mine = entries.filter((e) => canonicalAddress(e.address) === canonicalAddress(address));
   const added = mine.filter((e) => e.op === "add").pop();
   if (!added) return { permitted: false, reason: "not on the published destinations list" };
   const revoked = mine.filter((e) => e.op === "revoke" && e.index > added.index).pop();
@@ -320,7 +320,7 @@ export function nextDestination(file, { address, text, now = new Date() }) {
   const entries = file?.entries ?? [];
   const at = new Date(Math.floor(now.getTime() / 1000) * 1000).toISOString().replace(".000Z", "Z");
   const entry = {
-    instance: file.instance, index: entries.length + 1, op: "add", address: String(address).trim(), text: String(text).trim(),
+    instance: file.instance, index: entries.length + 1, op: "add", address: canonicalAddress(address), text: String(text).trim(),
     added: at, prev: entries.length ? destinationHash(entries[entries.length - 1]) : ZERO_PREV,
   };
   destinationLine(entry); // refuses a | or a newline

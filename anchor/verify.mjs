@@ -126,34 +126,51 @@ const describe = OTS.info(detached);
 const EXPLORERS = (process.env.ANCHOR_EXPLORERS ?? "https://blockstream.info/api,https://mempool.space/api")
   .split(",").map((s) => s.trim().replace(/\/$/, "")).filter(Boolean);
 
-/** What Bitcoin's block at that height really holds: { root, time, from }, { missing: true } if there is no such block, or null if nobody could be asked. */
+/** What one explorer says Bitcoin's block at that height holds: { root, time, from }, "missing", or null if it couldn't be asked. */
+async function askOne(base, height) {
+  try {
+    const h = await fetch(`${base}/block-height/${height}`, { signal: AbortSignal.timeout(15000) });
+    if (h.status === 404) return "missing";
+    if (!h.ok) return null;
+    const hash = (await h.text()).trim();
+    if (!/^[0-9a-f]{64}$/.test(hash)) return null;
+    const b = await fetch(`${base}/block/${hash}`, { signal: AbortSignal.timeout(15000) });
+    if (!b.ok) return null;
+    const block = await b.json();
+    return /^[0-9a-f]{64}$/.test(block.merkle_root ?? "") ? { root: block.merkle_root, time: block.timestamp, from: new URL(base).host } : null;
+  } catch { return null; }
+}
+
+/**
+ * What Bitcoin's block at that height holds, by EVERY explorer asked, and
+ * believed only when at least two answer and all that answer agree.
+ * Returns { root, time, from } (agreed), { missing: true } (all that answered
+ * have no such block), { disagree: [...] }, { alone: answer } (only one
+ * answered), or null (none did). Until 17 November 2026 the first explorer to
+ * answer was believed and the second asked only if it failed, so one lying
+ * explorer could call a made-up proof finished (OpenAI review, fix 6).
+ */
 async function blockAt(height) {
-  let missing = false;
-  for (const base of EXPLORERS) {
-    try {
-      const h = await fetch(`${base}/block-height/${height}`, { signal: AbortSignal.timeout(15000) });
-      if (h.status === 404) { missing = true; continue; }
-      if (!h.ok) continue;
-      const hash = (await h.text()).trim();
-      if (!/^[0-9a-f]{64}$/.test(hash)) continue;
-      const b = await fetch(`${base}/block/${hash}`, { signal: AbortSignal.timeout(15000) });
-      if (!b.ok) continue;
-      const block = await b.json();
-      if (/^[0-9a-f]{64}$/.test(block.merkle_root ?? "")) return { root: block.merkle_root, time: block.timestamp, from: new URL(base).host };
-    } catch {}
-  }
-  return missing ? { missing: true } : null;
+  const answers = (await Promise.all(EXPLORERS.map((b) => askOne(b, height)))).filter((a) => a !== null);
+  if (answers.length === 0) return null;
+  if (answers.every((a) => a === "missing")) return answers.length >= 2 ? { missing: true } : { alone: { missing: true } };
+  const roots = answers.filter((a) => a !== "missing");
+  if (roots.length !== answers.length || new Set(roots.map((a) => a.root)).size > 1) return { disagree: answers.map((a) => (a === "missing" ? "no such block" : `${a.root} (${a.from})`)) };
+  if (roots.length < 2) return { alone: roots[0] };
+  return { ...roots[0], from: roots.map((a) => a.from).join(" and ") };
 }
 
 if (claims.length > 0) {
   const results = [];
   for (const c of claims) results.push({ ...c, block: await blockAt(c.height) });
   const good = results.filter((r) => r.block?.root === r.root);
-  const bad = results.filter((r) => r.block && r.block.root !== r.root);
-  const unknown = results.filter((r) => !r.block);
+  const bad = results.filter((r) => r.block && (r.block.missing || (r.block.root && r.block.root !== r.root)));
+  const unknown = results.filter((r) => !r.block || r.block.alone || r.block.disagree);
   const say = (r) => r.block?.root === r.root
     ? `  Block ${r.height}: this file's fingerprint is in it (mined ${new Date(r.block.time * 1000).toISOString().slice(0, 16).replace("T", " ")} UTC; asked ${r.block.from}).`
     : r.block?.missing ? `  Block ${r.height}: Bitcoin has no such block.`
+    : r.block?.disagree ? `  Block ${r.height}: could not be checked. The block explorers disagree: ${r.block.disagree.join("; ")}.`
+    : r.block?.alone ? `  Block ${r.height}: could not be checked. Only one block explorer answered, and one is not enough.`
     : r.block ? `  Block ${r.height}: NOT in it. The proof works out ${r.root}, and that block holds ${r.block.root} (asked ${r.block.from}).`
     : `  Block ${r.height}: could not be checked. No block explorer answered.`;
 

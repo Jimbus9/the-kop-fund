@@ -19,6 +19,7 @@
 
 import { lockIsGenuine, hrpFor } from "./lockrecord.mjs";
 import { chainIsIntact, attestationsAreValid, stampedAt, attestorsOf } from "./proposals.mjs";
+import { canonicalAddress } from "./verify.mjs";
 
 /**
  * Was this input opened with the co-signer's signature, in the standard shape?
@@ -53,7 +54,7 @@ export function isListedDestination(address, destinations, { crowdlock = null, s
   const rules = attestorsOf(crowdlock, hrp ?? undefined);
   if (!/^[0-9a-f]{64}$/.test(String(rules.instance ?? "")) || !Number.isInteger(rules.threshold)) return false;
   if (!chainIsIntact(entries, rules.instance).ok) return false;
-  const mine = entries.filter((e) => e.address === address);
+  const mine = entries.filter((e) => canonicalAddress(e.address) === canonicalAddress(address));
   const added = mine.filter((e) => e.op === "add").pop();
   if (!added) return false;
   if (mine.some((e) => e.op === "revoke" && e.index > added.index)) return false;

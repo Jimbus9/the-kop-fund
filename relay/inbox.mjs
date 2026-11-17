@@ -19,7 +19,7 @@ import { recordPass, planSwaps, SILENT_DAYS } from "../js/relayhealth.mjs";
 import { checkProposals, phaseOf, pilePath, emptyPile, checkPileShape, applyCommitments, applySettlement, dueToSend, commitmentFromEvent } from "../js/proposals.mjs";
 import { memberAddressForOwnerKey } from "../js/verify.mjs";
 import { Transaction } from "bitcoinjs-lib";
-import { ownersSigned, completedByBoth, coinsAt, coinValue, sendCompleted, readTx } from "./signed.mjs";
+import { ownersSigned, completedByBoth, coinsAt, coinValue, sendCompleted, readTx, explorerBudget } from "./signed.mjs";
 
 // A large settlement is sent a few at a time, every pass, rather than all at
 // once (spec/proposal-and-settlement.md, "Pacing is not optional").
@@ -175,8 +175,10 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
         const shape = checkPileShape(pile, p.hash);
         if (!shape.ok) { console.log(`${file}: pile for "${p.title}" left alone: ${shape.reason}`); continue; }
       }
+      // One budget of explorer questions for this proposal this pass, for both checks.
+      const budget = explorerBudget();
       const got = await applyCommitments(pile, events, { crowdlock, proposal: p, register: result.register, nowIso, readTx,
-        signed: (records) => ownersSigned(records, { coinsFor, seed: `${now}|${p.hash}` }) });
+        signed: (records) => ownersSigned(records, { coinsFor, seed: `${now}|${p.hash}`, budget }) });
       for (const o of got.outcome) console.log(`${file}: commitment to "${p.title}" from ${o.lock} — ${o.added ? "ADDED" : `not added: ${o.reason}`}`);
       const n = got.outcome.filter((o) => o.added).length;
       if (n) messages.push(`${n} commitment${n === 1 ? "" : "s"} to "${p.title}" (via relays)`);
@@ -185,7 +187,7 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
       // so anyone can broadcast them, and a failure notice.
       const items = events.map((e) => commitmentFromEvent(e, crowdlock.declaration.sha256, p.hash)).filter((x) => x && x.type !== "commitment");
       const settled = await applySettlement(got.pile, items, { crowdlock, hash: p.hash, hrp: hrpOf(crowdlock), addressOf: memberAddressForOwnerKey, txidOf, nowIso, canonical, closes: p.closes,
-        completedBy: (candidates) => completedByBoth(candidates, { valueFor, seed: `${now}|${p.hash}` }) });
+        completedBy: (candidates) => completedByBoth(candidates, { valueFor, seed: `${now}|${p.hash}`, budget }) });
       for (const o of settled.outcome) console.log(`${file}: ${o.kind} for "${p.title}" — ${o.added ? "RECORDED" : `not recorded: ${o.reason}`}`);
       if (settled.outcome.some((o) => o.added && o.kind === "notice")) messages.push(`"${p.title}" declared dead by the co-signer`);
       let next = settled.pile;

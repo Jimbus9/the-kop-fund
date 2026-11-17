@@ -46687,6 +46687,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     checkCommitment: () => checkCommitment,
     checkLedgerKey: () => checkLedgerKey,
     commitmentPaid: () => commitmentPaid,
+    commitmentTxid: () => commitmentTxid,
     connectLedger: () => connectLedger,
     esploraChain: () => esploraChain,
     ledgerAppFor: () => ledgerAppFor,
@@ -66508,6 +66509,11 @@ ${ge(n19)}`;
     if (bytes2.length !== 33) throw new Error("owner key must be 33 bytes (compressed)");
     return encodeP2WPKH(hash1602(bytes2), hrp);
   }
+  function canonicalAddress(address) {
+    const a29 = String(address ?? "").trim();
+    if (/^(bc|tb|bcrt)1/i.test(a29) && (a29 === a29.toUpperCase() || a29 === a29.toLowerCase())) return a29.toLowerCase();
+    return a29;
+  }
   function verifyMembership({ address, signature: signature2, message, hrp = "bc" }) {
     let sig;
     try {
@@ -66648,7 +66654,7 @@ ${ge(n19)}`;
   async function stampsFor(entries, addresses, getTx) {
     const out = {};
     for (const address of addresses) {
-      const added = (entries ?? []).filter((e29) => e29.address === address && e29.op === "add").pop();
+      const added = (entries ?? []).filter((e29) => canonicalAddress(e29.address) === canonicalAddress(address) && e29.op === "add").pop();
       const txid = added?.stamp;
       if (!HEX64.test(String(txid ?? "")) || txid in out) continue;
       try {
@@ -66700,7 +66706,7 @@ ${ge(n19)}`;
     if (!Array.isArray(attestors) || !Number.isInteger(threshold)) return { permitted: false, reason: "no attestor set was supplied, so the list cannot be checked for attestation" };
     const chain = chainIsIntact(entries, instance2);
     if (!chain.ok) return { permitted: false, reason: `the list itself is broken: ${chain.reason}` };
-    const mine = entries.filter((e29) => e29.address === address);
+    const mine = entries.filter((e29) => canonicalAddress(e29.address) === canonicalAddress(address));
     const added = mine.filter((e29) => e29.op === "add").pop();
     if (!added) return { permitted: false, reason: "not on the published destinations list" };
     const revoked = mine.filter((e29) => e29.op === "revoke" && e29.index > added.index).pop();
@@ -67041,11 +67047,20 @@ ${ge(n19)}`;
     if (toHex7(w8[3]) !== toHex7(script)) return fail("witness script is not the lock's script");
     const txid = toHex7(Uint8Array.from(tx.ins[0].hash).reverse());
     const coin = (await chain.utxos(L3.address)).find((u13) => u13.txid === txid && u13.vout === tx.ins[0].index);
-    if (coin) {
+    let value2 = coin ? BigInt(coin.value) : null;
+    if (value2 === null) {
+      try {
+        const src = Transaction.fromHex(String(await chain.txHex(txid)).trim());
+        if (src.getId() === txid && src.outs[tx.ins[0].index]) value2 = BigInt(src.outs[tx.ins[0].index].value);
+      } catch {
+      }
+      if (value2 === null) return fail("the coin it spends can't be read from the chain just now, so its signature can't be checked");
+    }
+    {
       let sigOk = false;
       try {
         const decoded = script_exports.signature.decode(w8[2]);
-        const sighash = tx.hashForWitnessV0(0, script, BigInt(coin.value), Transaction.SIGHASH_ALL);
+        const sighash = tx.hashForWitnessV0(0, script, value2, Transaction.SIGHASH_ALL);
         sigOk = decoded.hashType === Transaction.SIGHASH_ALL && ecc.verify(sighash, fromHex7(L3.owner_pubkey), decoded.signature, true);
       } catch {
         sigOk = false;
@@ -67066,7 +67081,7 @@ ${ge(n19)}`;
     } catch {
       return fail("output 0 is not a recognisable address");
     }
-    if (out0 !== proposal.destination) return fail(`output 0 pays ${out0}, but the proposal names ${proposal.destination}`);
+    if (canonicalAddress(out0) !== canonicalAddress(proposal.destination)) return fail(`output 0 pays ${out0}, but the proposal names ${proposal.destination}`);
     const rules = attestorsOf(crowdlock, hrp);
     const entries = destinations?.entries ?? [];
     const stamps = await stampsFor(entries, [out0], (id2) => chain.tx(id2));
@@ -67114,6 +67129,13 @@ ${ge(n19)}`;
     const least = completedVsize(tx);
     if (fee < least) return fail(`fee of ${fee} sats is below the ${least} the network needs to pass this payment on`);
     return { valid: true, reason: "", committedSats, fee, ownerPubkey: L3.owner_pubkey, coin: `${txid}:${tx.ins[0].index}` };
+  }
+  function commitmentTxid(record) {
+    try {
+      return Transaction.fromHex(record.tx).getId();
+    } catch {
+      return null;
+    }
   }
   async function commitmentPaid({ record, chain }) {
     let tx;

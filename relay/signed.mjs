@@ -105,11 +105,21 @@ export function completedBy(txHex, record, value) {
 export const ASKED_PER_PASS = 200;
 
 /**
+ * One budget of explorer questions for one proposal in one pass, shared by
+ * the commitment check and the completion check. Until 17 November 2026 each
+ * had its own 200, so a proposal could cost 400 (OpenAI review, M-01).
+ */
+export function explorerBudget(n = ASKED_PER_PASS) {
+  return { left: n };
+}
+
+/**
  * Which of these to ask about this pass, when there are more than a pass
  * asks about: a different selection each pass, so that junk posted for many
  * locks cannot keep the same real one waiting for ever.
  */
 function thisPass(keys, limit, seed) {
+  if (limit <= 0) return new Set();
   if (keys.length <= limit) return new Set(keys);
   const order = (k) => createHash("sha256").update(`${seed}|${k}`).digest("hex");
   return new Set([...keys].sort((a, b) => order(a).localeCompare(order(b))).slice(0, limit));
@@ -121,8 +131,9 @@ const NEXT_PASS = "more was posted than one pass asks the block explorer about; 
  *   coinsFor: (address) => coins at that address, or null (see coinsAt)
  *   seed:     anything that differs from pass to pass
  */
-export async function ownersSigned(records, { coinsFor, limit = ASKED_PER_PASS, seed = "" }) {
-  const pick = thisPass([...new Set(records.map((r) => r.lock.address))], limit, seed);
+export async function ownersSigned(records, { coinsFor, limit = ASKED_PER_PASS, seed = "", budget = null }) {
+  const pick = thisPass([...new Set(records.map((r) => r.lock.address))], budget ? Math.min(limit, budget.left) : limit, seed);
+  if (budget) budget.left -= pick.size;
   const coins = new Map();
   for (const address of pick) coins.set(address, await coinsFor(address));
   return records.map((r) => pick.has(r.lock.address) ? ownerSigned(r, coins.get(r.lock.address)) : { ok: false, reason: NEXT_PASS });
@@ -132,9 +143,10 @@ export async function ownersSigned(records, { coinsFor, limit = ASKED_PER_PASS, 
  * completedBy for a batch, in the shape applySettlement asks for.
  *   valueFor: ("txid:vout") => sats, or null (see coinValue)
  */
-export async function completedByBoth(candidates, { valueFor, limit = ASKED_PER_PASS, seed = "" }) {
+export async function completedByBoth(candidates, { valueFor, limit = ASKED_PER_PASS, seed = "", budget = null }) {
   const coin = candidates.map((c) => coinOf(c.record.tx));
-  const pick = thisPass([...new Set(coin.filter(Boolean))], limit, seed);
+  const pick = thisPass([...new Set(coin.filter(Boolean))], budget ? Math.min(limit, budget.left) : limit, seed);
+  if (budget) budget.left -= pick.size;
   const values = new Map();
   for (const c of pick) values.set(c, await valueFor(c));
   return candidates.map((c, i) => !coin[i] ? { ok: false, reason: "its commitment cannot be read" }

@@ -222,12 +222,20 @@ async function readPile(p) {
   // One coin counts once: of two commitments spending the same coin only one
   // can ever be paid, so the earlier stands and the later is left out.
   const counted = new Set();
+  // One payment counts once, however many copies of its commitment were posted (OpenAI review, H-05).
+  const paidIds = new Set();
   for (const it of items) {
     if (it.type !== "commitment") continue;
     const v = await L.checkCommitment({ record: it.record, crowdlock: C, proposal: p, destinations: DESTINATIONS, chain, network: C.network });
     if (v.valid && v.coin && counted.has(v.coin)) continue;
     if (v.valid) { if (v.coin) counted.add(v.coin); waiting += v.committedSats; count++; }
-    else if (/already been spent/.test(v.reason)) paid += await L.commitmentPaid({ record: it.record, chain });
+    else if (/already been spent/.test(v.reason)) {
+      const id = L.commitmentTxid(it.record);
+      if (id && paidIds.has(id)) continue;
+      const sats = await L.commitmentPaid({ record: it.record, chain });
+      if (sats > 0 && id) paidIds.add(id);
+      paid += sats;
+    }
   }
   // A proposal can't have failed while it is still gathering, so a notice then
   // is ignored; one against a pile that reaches its target is contradicted.
