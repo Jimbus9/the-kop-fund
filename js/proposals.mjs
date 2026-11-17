@@ -565,6 +565,7 @@ export async function applyCommitments(pile, events, { crowdlock, proposal, regi
     if (r.tx.length > MAX_TX_HEX || !/^[0-9a-f]+$/.test(r.tx) || r.tx.length % 2) { refuse("its transaction is not hex of a sensible size"); continue; }
     const read = readTx ? readTx(r.tx) : null;
     if (readTx && !read) { refuse("its transaction cannot be read, or does not spend exactly one coin"); continue; }
+    if (read?.inputScript) { refuse("its input carries a script, which a spend of a lock never does — the network would not take it"); continue; }
     // The time on a post is its poster's, not the record's: this refusal is
     // of the post, and the same record posted again inside the window is
     // looked at afresh. (Remembering it by the record let a stranger's copy

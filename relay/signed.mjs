@@ -47,6 +47,11 @@ function parse(txHex, lock) {
   let tx;
   try { tx = Transaction.fromHex(txHex); } catch { return { reason: "its transaction cannot be read" }; }
   if (tx.ins.length !== 1) return { reason: "it does not spend exactly one coin" };
+  // The owner's signature does not cover the input's own script, so anyone
+  // can add one: the copy has another id, is still "signed", and the network
+  // never takes it. Posted first it took the coin's place in the pile
+  // (security loop, 17 November 2026).
+  if (tx.ins[0].script.length !== 0) return { reason: "its input carries a script, which a spend of a lock never does — the network would not take it" };
   const w = tx.ins[0].witness;
   let script;
   try { script = lockScript({ ownerPubkey: lock.owner_pubkey, cosignerPubkey: lock.cosigner_pubkey, locktime: lock.locktime }); } catch { return { reason: "its lock's terms do not make a lock" }; }
@@ -163,7 +168,7 @@ export function readTx(txHex) {
   try {
     const tx = Transaction.fromHex(txHex);
     if (tx.ins.length !== 1) return null;
-    return { txid: tx.getId(), coin: `${hex(Buffer.from(tx.ins[0].hash).reverse())}:${tx.ins[0].index}`, hex: tx.toHex(), outputs: tx.outs.map((o) => hex(o.script)) };
+    return { txid: tx.getId(), coin: `${hex(Buffer.from(tx.ins[0].hash).reverse())}:${tx.ins[0].index}`, hex: tx.toHex(), outputs: tx.outs.map((o) => hex(o.script)), inputScript: hex(tx.ins[0].script) };
   } catch { return null; }
 }
 
