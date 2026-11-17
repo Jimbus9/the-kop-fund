@@ -2,6 +2,10 @@
 
 **Version 1 · 24 October 2026**
 
+**15 November 2026:** a proposal published under a later version of the declaration names it, and only members who signed that version may commit to it. Version-1 proposals are unchanged.
+
+**17 November 2026:** the relay inbox now checks the owner's signature before it takes a commitment into the pile, and both signatures before it records a completed payment. Nothing about a commitment or a proposal changes.
+
 How money committed to this fund is actually spent.
 
 **There is no vote.** A proposal is funded or it is not. Nobody counts anything,
@@ -61,6 +65,20 @@ so a proposal cannot be replayed into another Crowdlock:
 
 SHA-256 of that line, UTF-8, NFC normalised, no trailing newline. Built by
 `proposalLine` and `proposalHash` in `method/lock/commitment.mjs`.
+
+**A proposal published under a later version of the declaration** names it, as
+`declaration_version` in the proposals file, and its line ends `|v<version>`:
+
+```
+<instance>|proposal|…|<settles_by>|v2
+```
+
+A version-1 proposal's line has nothing added, so every line written before
+versions existed keeps its hash. That is still one line per proposal, not an
+optional field: the version decides which it is. The version belongs in the
+line because, like the price, it is fixed the moment the proposal is written.
+**Only a member who has signed that version may commit to it** (registration
+format, "Versioning"); a commitment from anyone else is refused.
 
 **The fields are fixed in number and order, and "at a minimum" cannot survive
 here.** An optional field is a second possible document, and a second possible
@@ -383,17 +401,22 @@ repository first received it, which is the order oversubscription settles in.
 
 The repository's relay inbox keeps this file. It records what arrived and when;
 it refuses a commitment whose lock is not on the register, one posted outside
-the gathering window, a malformed one, a copy, and more than five per lock. It
-does not judge signatures or coins: **every reader checks every commitment in
-full** before counting or completing it (`method/js/proposals.mjs`).
+the gathering window, a malformed one, a copy, more than five per lock, and one
+the lock's owner has not signed. It records a completed payment only if the
+owner and the co-signer have both signed it. (Anybody can post to the relays:
+without those two checks a stranger could use up a member's five places with
+junk, or post a fake completion ahead of the real one.) It judges nothing else
+about a commitment: **every reader checks every commitment in full** before
+counting or completing it (`method/js/proposals.mjs`).
 
 Two more keys appear as the co-signer acts:
 
 - `completed`: `[{ "txid", "tx", "published", "sent" }]` — each completed
   transaction, **published here so that anybody can broadcast it**. One is
   recorded only if its txid is the txid of a commitment in the pile (a txid
-  leaves out the signatures, so a completion and its commitment share it).
-  `sent` is when the repository broadcast it.
+  leaves out the signatures, so a completion and its commitment share it) and
+  it carries the owner's signature and the co-signer's. `sent` is when the
+  repository broadcast it, or first found it already on the network.
 - `notice`: the co-signer's failure notice (below), once, if genuine. After it,
   no completion is recorded.
 

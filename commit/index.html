@@ -142,7 +142,9 @@
 // method/ledger-web in the method's repository): buildCommitment signs the
 // owner's half on the device, and checkCommitment checks it, as the app does.
 // This page adds no signing or transaction code.
-import { checkProposals, phaseOf, pilePath, checkPileShape, commitmentEventTemplate, commitmentFromEvent, PROPOSAL_TAG, proposalVersion } from "../js/proposals.mjs";
+import { checkProposals, phaseOf, pilePath, checkPileShape, commitmentEventTemplate, commitmentFromEvent, PROPOSAL_TAG, proposalVersion, noticeIsGenuine } from "../js/proposals.mjs";
+import { memberAddressForOwnerKey } from "../js/verify.mjs";
+import { hrpFor } from "../js/lockrecord.mjs";
 import { hasSigned, signedVersions, versionsOf } from "../js/crowdlock.mjs";
 import { el, loadCrowdlock, postToRelays } from "../assets/shared.mjs";
 
@@ -187,6 +189,13 @@ async function relayItems(hash) {
   return [...found.values()];
 }
 
+// Anybody can post a "declared dead" notice to the relays. Only one signed by
+// this Crowdlock's co-signer key counts; until 17 November 2026 this page
+// believed any, and took the commit button away.
+const genuine = (notice, p) => {
+  try { return noticeIsGenuine(notice, { crowdlock: C, hash: p.hash, hrp: hrpFor(C.network) ?? "bc", addressOf: memberAddressForOwnerKey }).ok === true; } catch { return false; }
+};
+
 /** The pile: the repository's record first, then the relays. Every commitment checked. */
 async function readPile(p) {
   const chain = chainFor();
@@ -198,13 +207,13 @@ async function readPile(p) {
       const f = await r.json();
       if (checkPileShape(f, p.hash).ok) {
         for (const x of f.commitments) { items.push({ type: "commitment", record: x.record }); inFile.add(x.record.tx); }
-        notice = f.notice ?? null;
+        if (f.notice && genuine(f.notice, p)) notice = f.notice;
       }
     }
   } catch {}
   for (const it of await relayItems(p.hash)) {
     if (it.type === "commitment" && !inFile.has(it.record.tx)) items.push(it);
-    if (it.type === "notice" && !notice) notice = it.notice;
+    if (it.type === "notice" && !notice && genuine(it.notice, p)) notice = it.notice;
   }
   let waiting = 0, paid = 0, count = 0;
   for (const it of items) {

@@ -421,9 +421,16 @@ el("checkBtn").addEventListener("click", () => {
     detail.hidden = true;
     return;
   }
-  const r = verifyMembership({ address, signature, message: statement });
+  // A signature may be over any published version of the declaration: try
+  // each, newest first. (This button named a variable that no longer existed
+  // from 15 to 17 November 2026, and showed nothing when pressed.)
+  let r = { valid: false, reason: "The signature does not match" }, version = null;
+  for (const v of versionsOf(crowdlock).map((d) => d.version ?? 1).reverse()) {
+    r = verifyMembership({ address, signature, message: statementFor(v), hrp: HRP });
+    if (r.valid) { version = v; break; }
+  }
   setVerdict(el("checkVerdict"), el("checkText"), r.valid,
-    r.valid ? "Valid — that address signed the declaration" : "Not valid");
+    r.valid ? `Valid — that address signed the declaration${manyVersions ? ` (version ${version})` : ""}` : "Not valid");
   detail.hidden = false;
   detail.textContent = r.valid
     ? "You can submit these two lines to the register."

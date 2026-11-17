@@ -87,11 +87,15 @@ jobs:
           for proof in ../anchors/*.ots; do
             [ -e "$proof" ] || continue
             file="${proof%.ots}"
+            day=$(basename "$file" .json | sed 's/^registrations-//')
+            age=$(( ( $(date -u +%s) - $(date -u -d "$day" +%s) ) / 86400 ))
+            # A proof is finished, or reported, within a few days. verify.mjs
+            # asks a block explorer about every block a proof names, so older
+            # ones are not asked about again on every run.
+            if [ "$age" -gt 14 ]; then continue; fi
             echo "== $file"
             node verify.mjs "$file" | tee /tmp/verify.out
             if grep -q "have not got it into a block" /tmp/verify.out; then
-              day=$(basename "$file" .json | sed 's/^registrations-//')
-              age=$(( ( $(date -u +%s) - $(date -u -d "$day" +%s) ) / 86400 ))
               echo "waiting, $age day(s) old"
               if [ "$age" -gt 3 ]; then
                 echo "::error::$file is $age days old and still not in a Bitcoin block"

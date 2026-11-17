@@ -2,6 +2,8 @@
 
 **Version 1 · 24 October 2026**
 
+**15 November 2026:** one check added after the eight: the lock's owner must have signed the version of the declaration the proposal was published under.
+
 A commitment is how a supporter backs one specific purchase with their own
 locked money. What a proposal is and how it settles is in the **proposal and
 settlement format**; this document is the record itself.
@@ -101,6 +103,11 @@ needs any public block explorer.
    `owner_pubkey` with a locktime no earlier than `lock.locktime`.
 8. **The coin is still unspent.** A supporter whose lock has lapsed may have
    taken it home, which voids their commitment permanently.
+
+One more check needs the register rather than the transaction: **the lock's
+owner has signed the version of the declaration the proposal was published
+under** (registration format, "Versioning"). For a proposal under version 1,
+every member has.
 
 A commitment that fails verification is **published and marked failed**, not
 removed, exactly as with a registration. What was submitted is part of what makes

@@ -10,7 +10,9 @@
 //      file sitting here or the proof is for something else.
 //
 //   2. Is it in the blockchain yet?  This needs to look at Bitcoin. A fresh
-//      proof points at the calendar servers; a finished one points at a block.
+//      proof points at the calendar servers; a finished one points at a block,
+//      and a block explorer is asked whether that block really holds it.
+//      (ANCHOR_EXPLORERS, a comma-separated list, names other explorers.)
 //      If it is still waiting, this asks the calendars whether they are ready
 //      and writes the completed proof back. (OpenTimestamps calls this step
 //      "upgrading", which sounds like installing a newer version of
@@ -101,20 +103,97 @@ line();
 
 // --- 2. Is it in the blockchain yet? Needs the network. ---------------------
 
-const describe = OTS.info(detached);
 // A finished proof keeps the calendars' "pending" branches beside the ones
 // that reach a block, so the test is whether any branch reaches a block.
-const inABlock = /BitcoinBlockHeaderAttestation/.test(describe);
+//
+// "Reaches a block" is a claim the proof makes: this block, at this height,
+// has my fingerprint in it. Anybody can write that claim into a proof file, so
+// it is checked: the proof works out a value that must be the block's own
+// summary of its transactions (its merkle root), and a block explorer is asked
+// what that block's really is. Until 17 November 2026 this script believed the
+// claim, and called a made-up proof finished.
+const claims = [];
+for (const [msg, a] of detached.timestamp.allAttestations()) {
+  if (!(a instanceof OTS.Notary.BitcoinBlockHeaderAttestation)) continue;
+  // A copy, reversed: explorers show a merkle root the other way round.
+  const root = Buffer.from([...msg]).reverse().toString("hex");
+  if (!claims.some((c) => c.height === a.height && c.root === root)) claims.push({ height: a.height, root });
+}
+// Read after the claims are taken: the library's description reverses some of
+// the proof's values in place as it prints them.
+const describe = OTS.info(detached);
 
-if (inABlock) {
+const EXPLORERS = (process.env.ANCHOR_EXPLORERS ?? "https://blockstream.info/api,https://mempool.space/api")
+  .split(",").map((s) => s.trim().replace(/\/$/, "")).filter(Boolean);
+
+/** What Bitcoin's block at that height really holds: { root, time, from }, { missing: true } if there is no such block, or null if nobody could be asked. */
+async function blockAt(height) {
+  let missing = false;
+  for (const base of EXPLORERS) {
+    try {
+      const h = await fetch(`${base}/block-height/${height}`, { signal: AbortSignal.timeout(15000) });
+      if (h.status === 404) { missing = true; continue; }
+      if (!h.ok) continue;
+      const hash = (await h.text()).trim();
+      if (!/^[0-9a-f]{64}$/.test(hash)) continue;
+      const b = await fetch(`${base}/block/${hash}`, { signal: AbortSignal.timeout(15000) });
+      if (!b.ok) continue;
+      const block = await b.json();
+      if (/^[0-9a-f]{64}$/.test(block.merkle_root ?? "")) return { root: block.merkle_root, time: block.timestamp, from: new URL(base).host };
+    } catch {}
+  }
+  return missing ? { missing: true } : null;
+}
+
+if (claims.length > 0) {
+  const results = [];
+  for (const c of claims) results.push({ ...c, block: await blockAt(c.height) });
+  const good = results.filter((r) => r.block?.root === r.root);
+  const bad = results.filter((r) => r.block && r.block.root !== r.root);
+  const unknown = results.filter((r) => !r.block);
+  const say = (r) => r.block?.root === r.root
+    ? `  Block ${r.height}: this file's fingerprint is in it (mined ${new Date(r.block.time * 1000).toISOString().slice(0, 16).replace("T", " ")} UTC; asked ${r.block.from}).`
+    : r.block?.missing ? `  Block ${r.height}: Bitcoin has no such block.`
+    : r.block ? `  Block ${r.height}: NOT in it. The proof works out ${r.root}, and that block holds ${r.block.root} (asked ${r.block.from}).`
+    : `  Block ${r.height}: could not be checked. No block explorer answered.`;
+
+  if (good.length > 0) {
+    rule();
+    line("FINISHED. This anchor stands on its own.");
+    rule();
+    line();
+    for (const r of results) line(say(r));
+    line();
+    line(describe.trim().split("\n").map((l) => "  " + l).join("\n"));
+    line();
+    line("Anybody can check this for themselves, now or in twenty years, with");
+    line("nothing but this file, this proof and a view of the blockchain.");
+    line();
+    process.exit(0);
+  }
+  if (bad.length > 0) {
+    rule();
+    line("THIS PROOF IS NOT IN THE BLOCK IT CLAIMS.");
+    rule();
+    line();
+    for (const r of results) line(say(r));
+    line();
+    line("A proof file can say anything about itself. This one names a Bitcoin");
+    line("block, and that block does not hold it. It proves nothing. Do not");
+    line("publish it as though it did.");
+    line();
+    process.exit(1);
+  }
   rule();
-  line("FINISHED. This anchor stands on its own.");
+  line("CLAIMS A BLOCK, NOT CHECKED.");
   rule();
   line();
-  line(describe.trim().split("\n").map((l) => "  " + l).join("\n"));
+  for (const r of unknown) line(say(r));
   line();
-  line("Anybody can check this for themselves, now or in twenty years, with");
-  line("nothing but this file, this proof and a view of the blockchain.");
+  line("The proof says it is in the blockchain, and that could not be checked");
+  line("from here. Until it is, this is a claim and not a proof. Run this again");
+  line("with a connection, or check the block's merkle root against the one");
+  line("above with any block explorer or node.");
   line();
   process.exit(0);
 }

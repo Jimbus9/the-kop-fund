@@ -19,6 +19,7 @@ import { recordPass, planSwaps, SILENT_DAYS } from "../js/relayhealth.mjs";
 import { checkProposals, phaseOf, pilePath, emptyPile, checkPileShape, applyCommitments, applySettlement, dueToSend, commitmentFromEvent } from "../js/proposals.mjs";
 import { memberAddressForOwnerKey } from "../js/verify.mjs";
 import { Transaction } from "bitcoinjs-lib";
+import { ownersSigned, completedByBoth, coinsAt, coinValue, sendCompleted } from "./signed.mjs";
 
 // A large settlement is sent a few at a time, every pass, rather than all at
 // once (spec/proposal-and-settlement.md, "Pacing is not optional").
@@ -126,7 +127,7 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
   }
 
   const confirmedSats = async (address) => {
-    const res = await fetch(`${crowdlock.chain_api}/address/${address}`);
+    const res = await fetch(`${crowdlock.chain_api}/address/${address}`, { signal: AbortSignal.timeout(20000) });
     if (!res.ok) throw new Error(String(res.status));
     const s = (await res.json()).chain_stats;
     return s.funded_txo_sum - s.spent_txo_sum;
@@ -150,6 +151,10 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
     const checked = checkProposals(JSON.parse(readFileSync(join(ROOT, crowdlock.register.proposals), "utf8")), crowdlock);
     for (const x of checked.problems) console.log(`${file}: proposals: ${x}`);
     const nowIso = new Date(now * 1000).toISOString().replace(/\.\d{3}Z$/, "Z");
+    // The signatures on what was posted are checked against the coins they
+    // spend, so the explorer is asked: once per lock, once per coin, a pass.
+    const coinsFor = coinsAt(crowdlock.chain_api);
+    const valueFor = coinValue(crowdlock.chain_api);
     for (const p of checked.proposals) {
       const phase = phaseOf(p, now * 1000);
       if (phase === "soon" || phase === "over") continue;
@@ -161,7 +166,8 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
         const shape = checkPileShape(pile, p.hash);
         if (!shape.ok) { console.log(`${file}: pile for "${p.title}" left alone: ${shape.reason}`); continue; }
       }
-      const got = applyCommitments(pile, events, { crowdlock, proposal: p, register: result.register, nowIso });
+      const got = await applyCommitments(pile, events, { crowdlock, proposal: p, register: result.register, nowIso,
+        signed: (records) => ownersSigned(records, { coinsFor, seed: `${now}|${p.hash}` }) });
       for (const o of got.outcome) console.log(`${file}: commitment to "${p.title}" from ${o.lock} — ${o.added ? "ADDED" : `not added: ${o.reason}`}`);
       const n = got.outcome.filter((o) => o.added).length;
       if (n) messages.push(`${n} commitment${n === 1 ? "" : "s"} to "${p.title}" (via relays)`);
@@ -169,7 +175,8 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
       // What the co-signer has done: completed transactions, published here
       // so anyone can broadcast them, and a failure notice.
       const items = events.map((e) => commitmentFromEvent(e, crowdlock.declaration.sha256, p.hash)).filter((x) => x && x.type !== "commitment");
-      const settled = applySettlement(got.pile, items, { crowdlock, hash: p.hash, hrp: hrpOf(crowdlock), addressOf: memberAddressForOwnerKey, txidOf, nowIso });
+      const settled = await applySettlement(got.pile, items, { crowdlock, hash: p.hash, hrp: hrpOf(crowdlock), addressOf: memberAddressForOwnerKey, txidOf, nowIso,
+        completedBy: (candidates) => completedByBoth(candidates, { valueFor, seed: `${now}|${p.hash}` }) });
       for (const o of settled.outcome) console.log(`${file}: ${o.kind} for "${p.title}" — ${o.added ? "RECORDED" : `not recorded: ${o.reason}`}`);
       if (settled.outcome.some((o) => o.added && o.kind === "notice")) messages.push(`"${p.title}" declared dead by the co-signer`);
       let next = settled.pile;
@@ -178,17 +185,9 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
       // commitment first, and only while the proposal is still settling.
       let sent = 0;
       for (const c of dueToSend(next, SEND_PER_PASS, txidOf)) {
-        let state = null;
-        try {
-          const known = await fetch(`${crowdlock.chain_api}/tx/${c.txid}/status`);
-          if (known.ok) state = "already on the network";
-          else {
-            const r = await fetch(`${crowdlock.chain_api}/tx`, { method: "POST", body: c.tx });
-            const text = (await r.text()).trim();
-            state = r.ok ? "sent" : null;
-            if (!r.ok) console.log(`${file}: ${c.txid} for "${p.title}" — refused by the network: ${text.slice(0, 200)}`);
-          }
-        } catch (e) { console.log(`${file}: ${c.txid} — could not reach the network: ${e.message}`); }
+        const { state, refused, unreachable } = await sendCompleted(crowdlock.chain_api, c);
+        if (refused) console.log(`${file}: ${c.txid} for "${p.title}" — refused by the network: ${refused}`);
+        if (unreachable) console.log(`${file}: ${c.txid} — could not reach the network: ${unreachable}`);
         if (state) {
           next = { ...next, completed: next.completed.map((x) => x.txid === c.txid ? { ...x, sent: nowIso } : x) };
           console.log(`${file}: ${c.txid} for "${p.title}" — ${state}`);

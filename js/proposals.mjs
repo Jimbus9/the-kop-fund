@@ -287,13 +287,17 @@ export function commitmentFromEvent(event, fingerprint, proposal) {
 // ---------------------------------------------------------------------------
 // The pile, kept in the repository by the relay inbox (spec/proposal-and-
 // settlement.md, "Where the pile lives"). The inbox records what arrived and
-// when; it does not judge signatures or coins, which change and need the
-// chain. Every reader — the app, the co-signer, the register page — checks
+// when. Every reader — the app, the co-signer, the register page — checks
 // every commitment in full before counting or completing it. What the inbox
 // does refuse keeps the file honest and small: a commitment for a lock that
 // is not on the register, one posted outside the proposal's gathering window,
-// a malformed one, a copy of one already there, and more than a handful per
-// lock.
+// a malformed one, a copy of one already there, more than a handful per lock,
+// and one the lock's owner has not signed.
+//
+// That last check is the caller's (`signed`, below), because a signature
+// covers the amount of the coin it spends and so needs the chain. It is here
+// because anybody can post to the relays: without it, five unsigned records
+// naming somebody else's lock used up that lock's five places.
 // ---------------------------------------------------------------------------
 
 export const PER_LOCK_LIMIT = 5;
@@ -318,7 +322,17 @@ export function emptyPile(hash) {
  *
  * Returns { pile, outcome }; the pile is the same object if nothing was added.
  */
-export function applyCommitments(pile, events, { crowdlock, proposal, register, nowIso }) {
+/**
+ * Take the commitments posted for one proposal into its pile.
+ *
+ *   signed: async (records) => [{ ok: true } | { ok: false, reason }], one
+ *           answer per record in the same order: did the lock's owner sign
+ *           it? It is only asked about records that passed every check
+ *           above it, so strangers' junk costs the caller as little as
+ *           possible. Required: a caller that leaves it out is refused.
+ */
+export async function applyCommitments(pile, events, { crowdlock, proposal, register, nowIso, signed }) {
+  if (typeof signed !== "function") throw new Error("applyCommitments needs a check that each commitment is signed by its lock's owner");
   const fingerprint = crowdlock.declaration.sha256;
   const opens = Date.parse(proposal.opens) / 1000, closes = Date.parse(proposal.closes) / 1000;
   const known = new Set(pile.commitments.map((c) => c.record.tx));
@@ -328,13 +342,19 @@ export function applyCommitments(pile, events, { crowdlock, proposal, register, 
   const outcome = [];
   const added = [];
   const sorted = [...events].sort((a, b) => a.created_at - b.created_at || String(a.id).localeCompare(String(b.id)));
+
+  // First, everything that can be judged without the chain. (`at` keeps the
+  // outcome in the order the records were posted, whichever step judged them.)
+  const waiting = [];
+  let at = 0;
   for (const e of sorted) {
     const item = commitmentFromEvent(e, fingerprint, proposal.hash);
     if (!item || item.type !== "commitment") continue;
     const r = item.record;
     if (known.has(r.tx)) continue; // already in the pile, or posted to two relays
     const lockAddress = r.lock?.address;
-    const refuse = (reason) => { outcome.push({ added: false, lock: lockAddress, reason }); known.add(r.tx); };
+    const here = at++;
+    const refuse = (reason) => { outcome.push({ at: here, added: false, lock: lockAddress, reason }); known.add(r.tx); };
     if (typeof r.tx !== "string" || r.tx.length > MAX_TX_HEX || !/^[0-9a-f]+$/.test(r.tx) || r.tx.length % 2) { refuse("its transaction is not hex of a sensible size"); continue; }
     if (!(item.at >= opens && item.at < closes)) { refuse("it was posted outside the proposal's gathering window"); continue; }
     const onRegister = locks.get(lockAddress);
@@ -350,13 +370,26 @@ export function applyCommitments(pile, events, { crowdlock, proposal, register, 
       refuse(`its owner has not signed version ${needs} of the declaration, which this proposal was published under`); continue;
     }
     if ((perLock.get(lockAddress) ?? 0) >= PER_LOCK_LIMIT) { refuse(`that lock already has ${PER_LOCK_LIMIT} commitments in the pile`); continue; }
-    perLock.set(lockAddress, (perLock.get(lockAddress) ?? 0) + 1);
     known.add(r.tx);
+    waiting.push({ r, lockAddress, member: onRegister.member, here });
+  }
+
+  // Then the owner's signature, for those still standing. Only a signed
+  // commitment takes one of a lock's places, so nobody but the owner can use
+  // them up.
+  const verdicts = waiting.length ? await signed(waiting.map((w) => w.r)) : [];
+  waiting.forEach(({ r, lockAddress, member, here }, i) => {
+    const v = verdicts[i];
+    if (!v || v.ok !== true) { outcome.push({ at: here, added: false, lock: lockAddress, reason: v?.reason ?? "it could not be checked" }); return; }
+    if ((perLock.get(lockAddress) ?? 0) >= PER_LOCK_LIMIT) { outcome.push({ at: here, added: false, lock: lockAddress, reason: `that lock already has ${PER_LOCK_LIMIT} commitments in the pile` }); return; }
+    perLock.set(lockAddress, (perLock.get(lockAddress) ?? 0) + 1);
     const entry = { submitted: nowIso, record: r };
     if (r.remainder === undefined) delete entry.record.remainder;
     added.push(entry);
-    outcome.push({ added: true, lock: lockAddress, member: onRegister.member });
-  }
+    outcome.push({ at: here, added: true, lock: lockAddress, member });
+  });
+  outcome.sort((a, b) => a.at - b.at);
+  for (const o of outcome) delete o.at;
   if (!added.length) return { pile, outcome };
   return { pile: { ...pile, commitments: [...pile.commitments, ...added] }, outcome };
 }
@@ -394,18 +427,45 @@ export function noticeIsGenuine(notice, { crowdlock, hash, hrp, addressOf }) {
  *   txidOf    (hex) => the transaction's id, or null if it won't parse —
  *             injected, so this file needs no transaction library
  *
+ *   completedBy  async ([{ tx, record }]) => [{ ok: true } | { ok: false, reason }]:
+ *             is each of these the commitment `record`, signed by its
+ *             lock's owner and by the co-signer? Required; the caller
+ *             asks the chain (method/relay/signed.mjs).
+ *
  * A completed transaction is recorded only if its id is the id of a
  * commitment already in the pile (the id leaves out the signatures, so a
- * completion and its commitment share it): nothing else can be smuggled in.
+ * completion and its commitment share it) and both signatures are on it:
+ * nothing else can be smuggled in, and a fake cannot take the real one's place.
  * A notice is recorded once, if genuine; after it, no completion is recorded.
  */
-export function applySettlement(pile, items, { crowdlock, hash, hrp, addressOf, txidOf, nowIso }) {
+export async function applySettlement(pile, items, { crowdlock, hash, hrp, addressOf, txidOf, nowIso, completedBy }) {
+  if (typeof completedBy !== "function") throw new Error("applySettlement needs a check that each completed payment is signed by the owner and the co-signer");
   const outcome = [];
   let next = pile;
   const ids = new Map();
   for (const c of pile.commitments) { const id = txidOf(c.record.tx); if (id) ids.set(id, c); }
   const done = new Set((pile.completed ?? []).map((c) => c.txid));
-  for (const it of [...items].sort((a, b) => a.at - b.at)) {
+  const sorted = [...items].sort((a, b) => a.at - b.at);
+
+  // A payment's id does not cover its signatures, so a copy of a commitment
+  // with a made-up co-signer signature has the id of the real completion.
+  // Each candidate is therefore checked: completedBy is asked, once, about
+  // every "completed" record that matches a commitment not yet completed.
+  //   completedBy: async ([{ tx, record }]) => [{ ok: true } | { ok: false, reason }]
+  const candidates = [];
+  const asked = new Set();
+  for (const it of sorted) {
+    if (it.type !== "completed" || asked.has(it.tx)) continue;
+    const id = txidOf(it.tx);
+    if (!id || done.has(id) || !ids.has(id)) continue;
+    asked.add(it.tx);
+    candidates.push({ tx: it.tx, record: ids.get(id).record });
+  }
+  const answers = candidates.length ? await completedBy(candidates) : [];
+  const verdict = new Map(candidates.map((c, i) => [c.tx, answers[i]]));
+
+  const judged = new Set();
+  for (const it of sorted) {
     if (it.type === "notice") {
       if (next.notice) continue;
       const g = noticeIsGenuine(it.notice, { crowdlock, hash, hrp, addressOf });
@@ -417,6 +477,11 @@ export function applySettlement(pile, items, { crowdlock, hash, hrp, addressOf, 
       const id = txidOf(it.tx);
       if (!id || done.has(id)) continue;
       if (!ids.has(id)) { outcome.push({ added: false, kind: "completed", reason: "it completes no commitment in the pile" }); continue; }
+      if (judged.has(it.tx)) continue; // the same record, from a second relay
+      judged.add(it.tx);
+      const v = verdict.get(it.tx);
+      // Not recorded, and its commitment stays open for the real completion.
+      if (!v || v.ok !== true) { outcome.push({ added: false, kind: "completed", txid: id, reason: v?.reason ?? "it could not be checked" }); continue; }
       done.add(id);
       next = { ...next, completed: [...(next.completed ?? []), { txid: id, tx: it.tx, published: nowIso }] };
       outcome.push({ added: true, kind: "completed", txid: id });

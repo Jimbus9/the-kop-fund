@@ -2,6 +2,10 @@
 
 **Version 1 · 24 October 2026**
 
+**15 November 2026:** "Versioning" now says how a later version of a
+declaration is published and signed. Nothing about a version-1 registration
+changes.
+
 A registration is the whole of membership. It is two fields.
 
 ```json
@@ -179,3 +183,62 @@ signed. If a later version is published, existing registrations remain valid
 for the version they signed, and members are asked whether they wish to sign
 the new one. No signature is ever reinterpreted as applying to text its signer
 did not read.
+
+**A new version does not make a new Crowdlock.** The founding version's
+fingerprint stays the Crowdlock's identity for good: the destinations list
+begins with it and every record posted to the relays is tagged with it, so
+neither restarts. Member numbers do not change, and no lock is touched.
+
+**How a version is published.** The Crowdlock file keeps its founding
+`declaration` as it was and lists each later version, oldest first, in
+`declaration_versions`:
+
+```json
+"declaration_versions": [
+  { "version": 2, "file": "spec/declaration-v2.txt", "sha256": "…",
+    "published": "2027-01-31", "reason": "One line saying why." }
+]
+```
+
+Each must be the next number, name its own text, give the date it was
+published and say in one line, up to 300 characters, why it exists. A
+`title` may be given if the title changed; otherwise the founding title is
+used. **The newest listed is current.** Its text should be anchored, as the
+founding one was, so it cannot be backdated.
+
+**What is signed.** The same sentence, for the version being signed:
+
+```
+I agree to the <title> v<version> (sha256:<that version's fingerprint>) and join as a member.
+```
+
+Like every signed sentence, its English is a protocol constant and must never
+be translated.
+
+**Joining and signing again.** A newcomer joins by signing the current version.
+A member who has already joined may sign any version they have not signed yet.
+Both travel as the same `join` record. The register keeps the member's first
+signature as it was; a member who joined with a later version has a `version`
+field, and each further version signed is added to `also_signed`:
+
+```json
+{ "n": 1, "address": "bc1q…", "signature": "…", "signed": "2026-10-27",
+  "also_signed": [ { "version": 2, "signature": "…", "signed": "2027-02-03" } ] }
+```
+
+A record with no `version` joined with the founding version, which is how
+every registration made before versions existed reads unchanged.
+
+**What depends on it, and what doesn't.**
+
+- **Locks count whatever their owner has signed.** A lock is a fact on the
+  chain, and nobody is dropped from the total for not having signed again.
+- **Committing needs the version the proposal was published under** (see the
+  proposal format). A member who has not signed that version cannot commit to
+  that proposal.
+- **There is no deadline.** Old signatures stay valid for what they signed.
+- **No count of who has signed which version is shown anywhere**, for the same
+  reason no count of signatures is.
+- **Who may publish one** is whoever may change the Crowdlock's file: its
+  founder and maintainers. The file's public history, and the reason every
+  member is shown before signing, are the check.
