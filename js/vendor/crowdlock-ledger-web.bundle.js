@@ -66626,6 +66626,39 @@ ${ge(n19)}`;
   function attestationStatement(entry) {
     return `I attest destination entry ${entry.index} (sha256:${destinationHash(entry)}).`;
   }
+  function stampLine(entry) {
+    return [destinationHash(entry), ...(entry.attestations ?? []).map((a29) => `${a29.address}:${a29.signature}`)].join("|");
+  }
+  function stampHash(entry) {
+    return hex(sha2566(utf8(stampLine(entry))));
+  }
+  function stampScript(entry) {
+    return `6a20${stampHash(entry)}`;
+  }
+  function stampedAt(entry, tx) {
+    if (!HEX64.test(String(entry?.stamp ?? ""))) return { ok: false, at: null, reason: `entry ${entry?.index} has no stamp on the chain, so when it was published cannot be established` };
+    if (!tx || tx.txid !== entry.stamp) return { ok: false, at: null, reason: `entry ${entry.index}'s stamp could not be read from the chain` };
+    const want = stampScript(entry);
+    if (!(tx.vout ?? []).some((o19) => o19?.scriptpubkey === want && Number(o19?.value) === 0)) {
+      return { ok: false, at: null, reason: `entry ${entry.index}'s stamp is a payment that does not carry this entry and its attestations` };
+    }
+    if (!tx.status?.confirmed || !Number.isInteger(tx.status.block_time)) return { ok: false, at: null, reason: `entry ${entry.index}'s stamp is not in a block yet` };
+    return { ok: true, at: tx.status.block_time, reason: "" };
+  }
+  async function stampsFor(entries, addresses, getTx) {
+    const out = {};
+    for (const address of addresses) {
+      const added = (entries ?? []).filter((e29) => e29.address === address && e29.op === "add").pop();
+      const txid = added?.stamp;
+      if (!HEX64.test(String(txid ?? "")) || txid in out) continue;
+      try {
+        out[txid] = await getTx(txid);
+      } catch {
+        out[txid] = null;
+      }
+    }
+    return out;
+  }
   function attestationsAreValid(entry, { attestors = [], threshold = 1, hrp = "bc" } = {}) {
     if (!Number.isInteger(threshold) || threshold < 1) return { ok: false, reason: "the threshold must be a positive whole number", signers: [] };
     if (attestors.length < threshold) return { ok: false, reason: `the list names ${attestors.length} attestor(s) but requires ${threshold}`, signers: [] };
@@ -66662,7 +66695,7 @@ ${ge(n19)}`;
       hrp
     };
   }
-  function destinationIsPermitted({ address, entries, opensAt, minimumAgeDays = 7, attestors = null, threshold = null, hrp = "bc", instance: instance2 = null }) {
+  function destinationIsPermitted({ address, entries, opensAt, minimumAgeDays = 7, attestors = null, threshold = null, hrp = "bc", instance: instance2 = null, stamps = {} }) {
     if (!HEX64.test(String(instance2 ?? ""))) return { permitted: false, reason: "no Crowdlock fingerprint was supplied, so the list cannot be tied to this Crowdlock" };
     if (!Array.isArray(attestors) || !Number.isInteger(threshold)) return { permitted: false, reason: "no attestor set was supplied, so the list cannot be checked for attestation" };
     const chain = chainIsIntact(entries, instance2);
@@ -66674,10 +66707,11 @@ ${ge(n19)}`;
     if (revoked) return { permitted: false, reason: `revoked by entry ${revoked.index}` };
     const att = attestationsAreValid(added, { attestors, threshold, hrp });
     if (!att.ok) return { permitted: false, reason: att.reason };
-    if (!added.firstSeen) return { permitted: false, reason: `entry ${added.index} has no recorded first public appearance, so its age cannot be established` };
-    const seen = Date.parse(added.firstSeen), opens = Date.parse(opensAt);
-    if (Number.isNaN(seen) || Number.isNaN(opens)) return { permitted: false, reason: "the entry's first appearance or the proposal's opening is not a readable date" };
-    const ageDays = (opens - seen) / 864e5;
+    const stamped = stampedAt(added, stamps?.[added.stamp] ?? null);
+    if (!stamped.ok) return { permitted: false, reason: stamped.reason };
+    const opens = Date.parse(opensAt);
+    if (Number.isNaN(opens)) return { permitted: false, reason: "the proposal's opening is not a readable date" };
+    const ageDays = (opens - stamped.at * 1e3) / 864e5;
     if (!(ageDays >= minimumAgeDays)) return { permitted: false, reason: `only ${ageDays.toFixed(1)} days old at the proposal's opening, needs ${minimumAgeDays}` };
     return { permitted: true, reason: "" };
   }
@@ -67029,15 +67063,18 @@ ${ge(n19)}`;
     }
     if (out0 !== proposal.destination) return fail(`output 0 pays ${out0}, but the proposal names ${proposal.destination}`);
     const rules = attestorsOf(crowdlock, hrp);
+    const entries = destinations?.entries ?? [];
+    const stamps = await stampsFor(entries, [out0], (id2) => chain.tx(id2));
     const permitted = destinationIsPermitted({
       address: out0,
-      entries: destinations?.entries ?? [],
+      entries,
       opensAt: proposal.opens,
       minimumAgeDays: crowdlock.destination_wait_days,
       attestors: rules.attestors,
       threshold: rules.threshold,
       instance: rules.instance,
-      hrp
+      hrp,
+      stamps
     });
     if (!permitted.permitted) return fail(`destination not permitted: ${permitted.reason}`);
     const committedSats = Number(tx.outs[0].value);
@@ -67318,6 +67355,10 @@ ${ge(n19)}`;
       forget,
       /** The address's transactions, newest first, with each input's witness. */
       txs: (address) => get(`/address/${address}/txs`),
+      /** The next page of the address's confirmed history, after this transaction. */
+      txsAfter: (address, txid) => get(`/address/${address}/txs/chain/${txid}`),
+      /** One transaction, as the explorer describes it: its outputs, and its block if it is in one. */
+      tx: (txid) => get(`/tx/${txid}`),
       /** Has anything ever been sent to this address, confirmed or not? */
       async everFunded(address) {
         const a29 = await get(`/address/${address}`);

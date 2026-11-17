@@ -182,6 +182,57 @@ export function attestationStatement(entry) {
   return `I attest destination entry ${entry.index} (sha256:${destinationHash(entry)}).`;
 }
 
+/**
+ * A destination's stamp on the chain: what a payment's OP_RETURN output
+ * carries to prove an entry, with its attestations, existed by the time of
+ * the block it is in. spec/destinations-format.md, "The waiting period".
+ * It covers the attestations as well as the entry, so nobody without an
+ * attestor's key can stamp an entry ahead of time.
+ */
+export function stampLine(entry) {
+  return [destinationHash(entry), ...(entry.attestations ?? []).map((a) => `${a.address}:${a.signature}`)].join("|");
+}
+
+export function stampHash(entry) {
+  return hex(sha256(utf8(stampLine(entry))));
+}
+
+/** The stamp's output script, as hex: OP_RETURN, 32 bytes, the stamp hash. */
+export function stampScript(entry) {
+  return `6a20${stampHash(entry)}`;
+}
+
+/**
+ * When an entry was stamped: the block time of its stamp payment, `tx` being
+ * the explorer's description of it (/tx/<txid>). Returns { ok, at, reason }.
+ */
+export function stampedAt(entry, tx) {
+  if (!HEX64.test(String(entry?.stamp ?? ""))) return { ok: false, at: null, reason: `entry ${entry?.index} has no stamp on the chain, so when it was published cannot be established` };
+  if (!tx || tx.txid !== entry.stamp) return { ok: false, at: null, reason: `entry ${entry.index}'s stamp could not be read from the chain` };
+  const want = stampScript(entry);
+  if (!(tx.vout ?? []).some((o) => o?.scriptpubkey === want && Number(o?.value) === 0)) {
+    return { ok: false, at: null, reason: `entry ${entry.index}'s stamp is a payment that does not carry this entry and its attestations` };
+  }
+  if (!tx.status?.confirmed || !Number.isInteger(tx.status.block_time)) return { ok: false, at: null, reason: `entry ${entry.index}'s stamp is not in a block yet` };
+  return { ok: true, at: tx.status.block_time, reason: "" };
+}
+
+/**
+ * The stamp payments a check of these addresses needs, read through
+ * `getTx(txid)` (the explorer's /tx/<txid>), as { txid: tx }. One that can't
+ * be read is null, and the check then refuses that destination.
+ */
+export async function stampsFor(entries, addresses, getTx) {
+  const out = {};
+  for (const address of addresses) {
+    const added = (entries ?? []).filter((e) => e.address === address && e.op === "add").pop();
+    const txid = added?.stamp;
+    if (!HEX64.test(String(txid ?? "")) || txid in out) continue;
+    try { out[txid] = await getTx(txid); } catch { out[txid] = null; }
+  }
+  return out;
+}
+
 export function attestationsAreValid(entry, { attestors = [], threshold = 1, hrp = "bc" } = {}) {
   if (!Number.isInteger(threshold) || threshold < 1) return { ok: false, reason: "the threshold must be a positive whole number", signers: [] };
   if (attestors.length < threshold) return { ok: false, reason: `the list names ${attestors.length} attestor(s) but requires ${threshold}`, signers: [] };
@@ -230,7 +281,7 @@ export function attestorsOf(crowdlock, hrp = { mainnet: "bc", regtest: "bcrt" }[
   };
 }
 
-export function destinationIsPermitted({ address, entries, opensAt, minimumAgeDays = 7, attestors = null, threshold = null, hrp = "bc", instance = null }) {
+export function destinationIsPermitted({ address, entries, opensAt, minimumAgeDays = 7, attestors = null, threshold = null, hrp = "bc", instance = null, stamps = {} }) {
   // The list must be this Crowdlock's own, and it must be checked for
   // attestation. Both used to be the caller's to remember (17 November 2026).
   if (!HEX64.test(String(instance ?? ""))) return { permitted: false, reason: "no Crowdlock fingerprint was supplied, so the list cannot be tied to this Crowdlock" };
@@ -244,17 +295,22 @@ export function destinationIsPermitted({ address, entries, opensAt, minimumAgeDa
   if (revoked) return { permitted: false, reason: `revoked by entry ${revoked.index}` };
   const att = attestationsAreValid(added, { attestors, threshold, hrp });
   if (!att.ok) return { permitted: false, reason: att.reason };
-  if (!added.firstSeen) return { permitted: false, reason: `entry ${added.index} has no recorded first public appearance, so its age cannot be established` };
-  const seen = Date.parse(added.firstSeen), opens = Date.parse(opensAt);
-  if (Number.isNaN(seen) || Number.isNaN(opens)) return { permitted: false, reason: "the entry's first appearance or the proposal's opening is not a readable date" };
-  const ageDays = (opens - seen) / 86_400_000;
+  // Its age is counted from its stamp's block, which nobody can backdate.
+  // Until 17 November 2026 it was counted from `firstSeen`, a date written
+  // into the file by whoever added the entry.
+  const stamped = stampedAt(added, stamps?.[added.stamp] ?? null);
+  if (!stamped.ok) return { permitted: false, reason: stamped.reason };
+  const opens = Date.parse(opensAt);
+  if (Number.isNaN(opens)) return { permitted: false, reason: "the proposal's opening is not a readable date" };
+  const ageDays = (opens - stamped.at * 1000) / 86_400_000;
   if (!(ageDays >= minimumAgeDays)) return { permitted: false, reason: `only ${ageDays.toFixed(1)} days old at the proposal's opening, needs ${minimumAgeDays}` };
   return { permitted: true, reason: "" };
 }
 
 /**
  * The next entry to add to a destinations list, unsigned. Its attestations
- * are added by the attestors; `firstSeen` is when it is first published.
+ * are added by the attestors, then it is stamped on the chain (`stamp`, the
+ * stamp payment's txid). `at` is the time written as `added`.
  */
 export function nextDestination(file, { address, text, now = new Date() }) {
   const entries = file?.entries ?? [];
@@ -264,7 +320,7 @@ export function nextDestination(file, { address, text, now = new Date() }) {
     added: at, prev: entries.length ? destinationHash(entries[entries.length - 1]) : ZERO_PREV,
   };
   destinationLine(entry); // refuses a | or a newline
-  return { entry, firstSeen: at };
+  return { entry, at };
 }
 
 // ---------------------------------------------------------------------------

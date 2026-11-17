@@ -164,7 +164,7 @@ python3 -m http.server            # then open localhost:8000/register/</pre>
 <script type="module">
 import { verifyMembership } from "../js/verify.mjs";
 import { checkCrowdlock, checkRegisterFiles, membershipStatement, joinedVersion, versionsOf } from "../js/crowdlock.mjs";
-import { earlyReleases } from "../js/release.mjs";
+import { earlyReleases, readHistory } from "../js/release.mjs";
 import { hrpFor, lockIsGenuine } from "../js/lockrecord.mjs";
 
 const el = (id) => document.getElementById(id);
@@ -386,9 +386,16 @@ if (locks.length === 0) {
     seenRel.add(address);
     if (!lockIsGenuine(lock, { crowdlock, register: data }).ok) continue; // not a lock of this Crowdlock: nothing of the co-signer's to record
     try {
-      const res = await fetch(`${CHAIN_API}/address/${lock.address}/txs`);
-      if (!res.ok) throw new Error(String(res.status));
-      for (const r of earlyReleases(lock, await res.json(), destinations)) found.push({ ...r, address: lock.address });
+      // The whole history, so a release can't be pushed out of sight by
+      // small payments to the lock's address after it.
+      const page = async (path) => {
+        const res = await fetch(`${CHAIN_API}/address/${lock.address}/${path}`);
+        if (!res.ok) throw new Error(String(res.status));
+        return res.json();
+      };
+      const h = await readHistory(() => page("txs"), (last) => page(`txs/chain/${last}`));
+      if (!h.complete) unread++;
+      for (const r of earlyReleases(lock, h.txs, { destinations, crowdlock, register: data })) found.push({ ...r, address: lock.address });
     } catch { unread++; }
   }
   const short = (x) => (x ? `${String(x).slice(0, 8)}…${String(x).slice(-6)}` : "");
@@ -401,12 +408,12 @@ if (locks.length === 0) {
     el("releaseDetail").textContent = locks.length === 0
       ? "When members lock money, any lock the co-signer opens early will show here."
       : unread === 0
-      ? "Every lock on the register has either stayed shut, opened on its date, or paid a listed destination."
-      : `${unread} lock${unread === 1 ? "" : "s"} could not be read from the chain just now. Reload to try again.`;
+      ? "Every lock on the register has either stayed shut, opened on its date, or paid a listed destination with the rest kept locked."
+      : `${unread} lock${unread === 1 ? "" : "s"} could not be read from the chain in full just now. Reload to try again.`;
   } else {
     setVerdict(el("releaseVerdict"), el("releaseText"), false,
       `${found.length} lock${found.length === 1 ? "" : "s"} released early by the co-signer`);
-    el("releaseDetail").textContent = "Each of these opened before its date with the co-signer's signature, and did not pay a listed destination.";
+    el("releaseDetail").textContent = "Each of these opened before its date with the co-signer's signature, and sent money somewhere other than a listed destination or back into a lock.";
     el("releaseArea").innerHTML = `<div class="scroller"><table>
       <thead><tr><th>When</th><th>Amount</th><th>Co-signer</th><th>Transaction</th></tr></thead>
       <tbody>${found.map((r) => `<tr>

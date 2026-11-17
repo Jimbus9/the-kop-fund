@@ -4,6 +4,8 @@
 
 **17 November 2026:** two checks that had been left to whoever read the list are now part of reading it. The attestors are the ones the Crowdlock's own file names, whatever the list says of itself; and every entry must carry this Crowdlock's fingerprint, not merely the same one as its neighbours.
 
+**17 November 2026, later:** an entry's age is now counted from its **stamp on the chain** (see "The waiting period"), not from `firstSeen`. `firstSeen` was a date written into the file by whoever added the entry, so it could be backdated, which is the one thing the waiting period exists to prevent. An entry without a stamp can no longer be paid.
+
 The only addresses committed money may ever be sent to.
 
 Bitcoin cannot restrict where a coin goes without covenants, which the network
@@ -125,8 +127,8 @@ field so that a verifier never has to guess.
 
 ## The waiting period
 
-**An entry must be publicly visible for the Crowdlock's waiting period before
-a proposal naming it may open.** The waiting period is the Crowdlock's own
+**An entry must have been stamped on the chain at least the Crowdlock's
+waiting period before a proposal naming it may open.** The waiting period is the Crowdlock's own
 choice, its `destination_wait_days`, recorded in the list as
 `minimum_age_days`. **We recommend at least seven days on real bitcoin**, which
 is The Kop Fund's. A test Crowdlock may set it to zero, so a proposal can be
@@ -135,24 +137,48 @@ days of every Crowdlock. The Kop Fund's founder judged a fortnight longer than
 needed, and that the length is each Crowdlock's to choose, not the method's.)
 
 This is the real protection while there is one attestor. At seven days, a
-fraudulent addition has to survive a week in public, in a file people watch,
-followed by the proposal's gathering (up to four weeks for The Kop Fund) — up to
-five weeks in which anyone can notice it before a penny moves.
+fraudulent addition has to have been attested and stamped a week before its
+proposal opens, and the proposal then gathers in public (up to four weeks for
+The Kop Fund) before a penny moves. The app publishes an entry in the same step
+that stamps it.
 
-**Age is measured from the entry's first public appearance in the repository, not
-from its `added` field.** The `added` field is written by the attestor and could
-be backdated. The repository's own history, its mirrors, and the time a change
-became publicly visible are not in the attestor's gift.
+**Age is measured from the entry's stamp on the chain**, not from its `added`
+field, and not from any other date written into the file. Whoever can write the
+file can write any date in it.
 
-That first appearance is recorded on the entry as `firstSeen`, and **an entry
-with no `firstSeen` is refused rather than dated from `added`.** This was the
-original failing: the code said in its own comment that `added` must never be
-used, and then fell back to it whenever `firstSeen` was absent — which handed
-an attestor precisely the backdating the waiting period exists to prevent. Add
-an address this morning, write last month's date beside it, name it in a
-proposal this afternoon. An entry whose publication date nobody can establish
-is one nobody should be spending against, so it is not merely untrusted for
-age; it is not spendable at all.
+**The stamp** is an ordinary bitcoin payment, made by the attestor once the
+entry is attested, from their own wallet back to itself. It has one extra
+output: `OP_RETURN` followed by 32 bytes, holding no money. Those 32 bytes are
+the SHA-256 of the **stamp line**:
+
+```
+<hash of the entry's signed line>|<attestor address>:<signature>|…
+```
+
+that is, the entry's hash (the same hash `prev` and the attestation statement
+use), then each attestation in the order the entry lists them, as address,
+colon, signature, joined by `|`. The payment's txid is recorded on the entry as
+`stamp`. The entry's age is counted from **the time of the block the stamp
+payment is in**.
+
+- **A block cannot be backdated.** Its time is fixed by the miners, to within a
+  couple of hours, and is the same for everyone who reads the chain.
+- **It covers the attestations, so it cannot be made ahead of time** by anybody
+  without an attestor's key. Somebody planning to add a destination later
+  cannot stamp it today and use its age then, unless they already hold the key.
+- **An entry with no stamp, a stamp that does not carry the entry and its
+  attestations, a stamp output holding money, or a stamp not yet in a block,
+  is refused.** If the attestations change, the entry must be stamped again,
+  and its age starts again.
+- **It costs one ordinary network fee per destination**, not per proposal: a
+  second proposal to the same destination stamps nothing.
+
+Until 17 November 2026 the age was counted from `firstSeen`, a date recorded on
+the entry by whoever added it. Before that, the code had fallen back to `added`
+whenever `firstSeen` was missing. Both handed an attestor precisely the
+backdating the waiting period exists to prevent: add an address this morning,
+write last month's date beside it, name it in a proposal this afternoon.
+Entries written before then may still carry a `firstSeen`; it is ignored.
 
 A proposal may wait longer than its Crowdlock requires, and should, for a large
 purchase. A Crowdlock that sets a short wait, or none, on real bitcoin is
@@ -180,7 +206,7 @@ Before completing any commitment, for the destination named in its proposal:
 1. The hash chain is intact from entry 1 to the head of the list.
 2. There is an `add` entry for the destination.
 3. Its attestations meet the threshold and every one verifies.
-4. The entry first appeared publicly at least the waiting period
+4. The entry's stamp is in a block at least the waiting period
    (`minimum_age_days`) before the proposal opened.
 5. There is no later `revoke` entry for that address.
 
