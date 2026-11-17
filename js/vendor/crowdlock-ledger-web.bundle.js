@@ -66861,7 +66861,7 @@ ${ge(n19)}`;
     return buildSend({ account, chain, to: lock.address, amount, feeRate, policies });
   }
   async function lockState({ chain, lock, medianTime, quick = false, finished = null }) {
-    const over = lock.locktime <= medianTime;
+    const over = lock.locktime < medianTime;
     const noted = over ? finished?.get(lock.address) : void 0;
     if (noted && (noted !== "unasked" || quick)) return { state: noted === "empty" ? "empty" : "withdrawn", confirmed: 0n, arriving: 0n };
     const coins = noted ? [] : await chain.utxos(lock.address);
@@ -67022,6 +67022,11 @@ ${ge(n19)}`;
     }
     if (derived !== L3.address) return fail("lock address does not re-derive from the stated keys and locktime");
     if (!isCosignerOf(crowdlock, L3.cosigner_pubkey)) return fail(`the lock's co-signer is not ${crowdlock.name}'s \u2014 this commitment belongs to a different Crowdlock, or to none`);
+    if (L3.locktime >= 5e8) {
+      const settles = Date.parse(proposal.settles_by ?? proposal.settlesBy ?? "");
+      if (Number.isNaN(settles)) return fail("the proposal's settling date can't be read, so whether the lock outlasts it can't be checked");
+      if (!(L3.locktime > settles / 1e3)) return fail("the lock opens before the proposal's settling ends, so its owner could take the money home first");
+    }
     let tx;
     try {
       tx = Transaction.fromHex(record.tx);
@@ -67100,6 +67105,7 @@ ${ge(n19)}`;
       if (BigInt(tx.outs[1].value) < dustFor(tx.outs[1].script)) return fail(`returns ${Number(tx.outs[1].value)} sats to the lock, too little for the network to pass on`);
     }
     if (!coin) return fail("the coin has already been spent, so this commitment is void");
+    if (!coin.confirmed) return fail("the coin it spends hasn't confirmed yet, so it counts toward nothing");
     const fee = coin.value - tx.outs.reduce((n19, o19) => n19 + Number(o19.value), 0);
     if (fee < 0) return fail("outputs exceed the input");
     if (fee > committedSats * crowdlock.max_commitment_fee) {
@@ -67117,7 +67123,7 @@ ${ge(n19)}`;
       return 0;
     }
     try {
-      await chain.txHex(tx.getId());
+      if (!(await chain.tx(tx.getId()))?.status?.confirmed) return 0;
     } catch {
       return 0;
     }

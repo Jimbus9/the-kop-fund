@@ -19,13 +19,15 @@ import { recordPass, planSwaps, SILENT_DAYS } from "../js/relayhealth.mjs";
 import { checkProposals, phaseOf, pilePath, emptyPile, checkPileShape, applyCommitments, applySettlement, dueToSend, commitmentFromEvent } from "../js/proposals.mjs";
 import { memberAddressForOwnerKey } from "../js/verify.mjs";
 import { Transaction } from "bitcoinjs-lib";
-import { ownersSigned, completedByBoth, coinsAt, coinValue, sendCompleted } from "./signed.mjs";
+import { ownersSigned, completedByBoth, coinsAt, coinValue, sendCompleted, readTx } from "./signed.mjs";
 
 // A large settlement is sent a few at a time, every pass, rather than all at
 // once (spec/proposal-and-settlement.md, "Pacing is not optional").
 const SEND_PER_PASS = 25;
 const hrpOf = (c) => (c.network === "mainnet" ? "bc" : c.network === "regtest" ? "bcrt" : "tb");
 const txidOf = (hex) => { try { return Transaction.fromHex(hex).getId(); } catch { return null; } };
+// The standard encoding of a payment: what is kept and what is sent.
+const canonical = (hex) => { try { return Transaction.fromHex(hex).toHex(); } catch { return null; } };
 
 // A relay connection can report an error after it has already been finished
 // with. Left alone, that would end the whole pass part-way — after one
@@ -67,6 +69,12 @@ const healthBefore = JSON.stringify(allHealth);
 // When each listed Crowdlock was last announced (method/relay/announced.json), and
 // where this repository's site is, so each file's public link can be given.
 const ANNOUNCED = join(HERE, "announced.json");
+// How far back each relay was read without finishing (see fetchRecords in
+// ./nostr.mjs), so the next pass carries on rather than starting again from
+// the newest. Kept on disk between the passes of one run; not committed.
+const CURSORS = join(HERE, "cursors.json");
+let cursors = {};
+try { cursors = JSON.parse(readFileSync(CURSORS, "utf8")); } catch {}
 let announced = {};
 try { announced = JSON.parse(readFileSync(ANNOUNCED, "utf8")); } catch {}
 const announcedBefore = JSON.stringify(announced);
@@ -98,7 +106,8 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
 
   const regPath = join(ROOT, crowdlock.register.registrations);
   const register = JSON.parse(readFileSync(regPath, "utf8"));
-  const { events, report } = await fetchRecords(crowdlock.relays, crowdlock.declaration.sha256, now - WINDOW);
+  const { events, report, cursors: nextCursors } = await fetchRecords(crowdlock.relays, crowdlock.declaration.sha256, now - WINDOW, { cursors: cursors[file] ?? {} });
+  cursors[file] = nextCursors;
   for (const r of report) console.log(`${file}: ${r.relay} ${r.ok ? `answered, ${r.count} record(s)${r.complete ? "" : " (stopped early: more than one pass reads; the rest waits for the next)"}` : `did not answer (${r.reason})`}`);
   if (!report.some((r) => r.ok)) { console.log(`${file}: no relay answered — nothing changed`); continue; }
 
@@ -166,7 +175,7 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
         const shape = checkPileShape(pile, p.hash);
         if (!shape.ok) { console.log(`${file}: pile for "${p.title}" left alone: ${shape.reason}`); continue; }
       }
-      const got = await applyCommitments(pile, events, { crowdlock, proposal: p, register: result.register, nowIso,
+      const got = await applyCommitments(pile, events, { crowdlock, proposal: p, register: result.register, nowIso, readTx,
         signed: (records) => ownersSigned(records, { coinsFor, seed: `${now}|${p.hash}` }) });
       for (const o of got.outcome) console.log(`${file}: commitment to "${p.title}" from ${o.lock} — ${o.added ? "ADDED" : `not added: ${o.reason}`}`);
       const n = got.outcome.filter((o) => o.added).length;
@@ -175,7 +184,7 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
       // What the co-signer has done: completed transactions, published here
       // so anyone can broadcast them, and a failure notice.
       const items = events.map((e) => commitmentFromEvent(e, crowdlock.declaration.sha256, p.hash)).filter((x) => x && x.type !== "commitment");
-      const settled = await applySettlement(got.pile, items, { crowdlock, hash: p.hash, hrp: hrpOf(crowdlock), addressOf: memberAddressForOwnerKey, txidOf, nowIso,
+      const settled = await applySettlement(got.pile, items, { crowdlock, hash: p.hash, hrp: hrpOf(crowdlock), addressOf: memberAddressForOwnerKey, txidOf, nowIso, canonical,
         completedBy: (candidates) => completedByBoth(candidates, { valueFor, seed: `${now}|${p.hash}` }) });
       for (const o of settled.outcome) console.log(`${file}: ${o.kind} for "${p.title}" — ${o.added ? "RECORDED" : `not recorded: ${o.reason}`}`);
       if (settled.outcome.some((o) => o.added && o.kind === "notice")) messages.push(`"${p.title}" declared dead by the co-signer`);
@@ -185,7 +194,7 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
       // commitment first, and only while the proposal is still settling.
       let sent = 0;
       for (const c of dueToSend(next, SEND_PER_PASS, txidOf)) {
-        const { state, refused, unreachable } = await sendCompleted(crowdlock.chain_api, c);
+        const { state, refused, unreachable } = await sendCompleted(crowdlock.chain_api, { ...c, tx: canonical(c.tx) ?? c.tx });
         if (refused) console.log(`${file}: ${c.txid} for "${p.title}" — refused by the network: ${refused}`);
         if (unreachable) console.log(`${file}: ${c.txid} — could not reach the network: ${unreachable}`);
         if (state) {
@@ -204,6 +213,8 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
     }
   }
 }
+
+try { writeFileSync(CURSORS, JSON.stringify(cursors) + "\n"); } catch {}
 
 if (JSON.stringify(announced) !== announcedBefore) {
   writeFileSync(ANNOUNCED, JSON.stringify(announced, null, 2) + "\n");

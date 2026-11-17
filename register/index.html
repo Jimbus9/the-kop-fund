@@ -165,6 +165,7 @@ python3 -m http.server            # then open localhost:8000/register/</pre>
 import { verifyMembership } from "../js/verify.mjs";
 import { checkCrowdlock, checkRegisterFiles, membershipStatement, joinedVersion, versionsOf } from "../js/crowdlock.mjs";
 import { earlyReleases, readHistory } from "../js/release.mjs";
+import { stampsFor } from "../js/proposals.mjs";
 import { hrpFor, lockIsGenuine } from "../js/lockrecord.mjs";
 
 const el = (id) => document.getElementById(id);
@@ -380,6 +381,14 @@ if (locks.length === 0) {
   let unread = 0;
   let destinations = null;
   try { destinations = await getJson(`${base}${crowdlock.register.destinations}`); } catch {}
+  // A payment counts as a purchase only to a destination attested and stamped
+  // on the chain, so the stamps are read once for the whole record.
+  const entries = destinations?.entries ?? [];
+  let stamps = {};
+  try {
+    stamps = await stampsFor(entries, [...new Set(entries.filter((e) => e.op === "add").map((e) => e.address))],
+      async (txid) => { const r = await fetch(`${CHAIN_API}/tx/${txid}`); if (!r.ok) throw new Error(String(r.status)); return r.json(); });
+  } catch {}
   for (const lock of locks) {
     const address = String(lock.address).toLowerCase();
     if (seenRel.has(address)) continue;
@@ -395,7 +404,7 @@ if (locks.length === 0) {
       };
       const h = await readHistory(() => page("txs"), (last) => page(`txs/chain/${last}`));
       if (!h.complete) unread++;
-      for (const r of earlyReleases(lock, h.txs, { destinations, crowdlock, register: data })) found.push({ ...r, address: lock.address });
+      for (const r of earlyReleases(lock, h.txs, { destinations, crowdlock, register: data, stamps })) found.push({ ...r, address: lock.address });
     } catch { unread++; }
   }
   const short = (x) => (x ? `${String(x).slice(0, 8)}…${String(x).slice(-6)}` : "");

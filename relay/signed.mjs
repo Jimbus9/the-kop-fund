@@ -64,6 +64,10 @@ function parse(txHex, lock) {
 export function ownerSigned(record, coins) {
   const p = parse(record.tx, record.lock);
   if (!p.tx) return { ok: false, reason: p.reason };
+  // A commitment leaves the co-signer's place empty. Until 17 November 2026
+  // this was not asked, so copies of a member's real commitment with junk in
+  // that place still carried the owner's signature and used up the lock's places.
+  if (p.w[0].length !== 0) return { ok: false, reason: "the co-signer's place is not empty, so this is not a commitment" };
   // The payment names its proposal in its last output, inside what the owner
   // signed (spec/commitment-format.md). A record relabelled for another
   // proposal is turned away here, before the explorer is asked anything.
@@ -137,6 +141,20 @@ export async function completedByBoth(candidates, { valueFor, limit = ASKED_PER_
     : pick.has(coin[i]) ? completedBy(c.tx, c.record, values.get(coin[i])) : { ok: false, reason: NEXT_PASS });
 }
 
+/**
+ * A transaction's id, the coin it spends and its standard encoding, or null if
+ * it can't be read or doesn't spend exactly one coin. The same payment can be
+ * written in more than one way (a count can be written long) and keep its id;
+ * the network takes only the standard one, so that is what is kept and sent.
+ */
+export function readTx(txHex) {
+  try {
+    const tx = Transaction.fromHex(txHex);
+    if (tx.ins.length !== 1) return null;
+    return { txid: tx.getId(), coin: `${hex(Buffer.from(tx.ins[0].hash).reverse())}:${tx.ins[0].index}`, hex: tx.toHex() };
+  } catch { return null; }
+}
+
 /** The coin a commitment spends, as "txid:vout", or null if its transaction cannot be read. */
 export function coinOf(txHex) {
   try {
@@ -156,7 +174,9 @@ export function coinsAt(chainApi, fetchImpl = fetch) {
     let coins = null;
     try {
       const r = await ask(`${chainApi}/address/${address}/utxo`, {}, fetchImpl);
-      if (r.ok) coins = Object.fromEntries((await r.json()).map((u) => [`${u.txid}:${u.vout}`, u.value]));
+      // Confirmed coins only: an unconfirmed one can be replaced by its sender
+      // and vanish, so a commitment spending it counts toward nothing.
+      if (r.ok) coins = Object.fromEntries((await r.json()).filter((u) => u?.status?.confirmed).map((u) => [`${u.txid}:${u.vout}`, u.value]));
     } catch {}
     asked.set(address, coins);
     return coins;

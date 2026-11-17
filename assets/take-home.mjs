@@ -4,6 +4,7 @@
 
 import { el } from "./shared.mjs";
 import { loadPage, setBox, L, same, chainFor, txLink, showFee, chosenRate, connect } from "./lock-common.mjs";
+import { lockIsGenuine } from "../js/lockrecord.mjs";
 
 let C = null;          // the Crowdlock file
 let REGISTER = null;   // its register
@@ -25,7 +26,9 @@ el("homeConnect").addEventListener("click", async () => {
   const list = el("homeLocks");
   list.replaceChildren();
   if (!acc) return;
-  const mine = (REGISTER.locks ?? []).filter((l) => same(l.member, acc.address));
+  // Only records that really are a lock of this Crowdlock owned by this key:
+  // the record's own `member` label is not believed (second review, 17 November 2026).
+  const mine = (REGISTER.locks ?? []).filter((l) => { const g = lockIsGenuine(l, { crowdlock: C, register: REGISTER }); return g.ok && same(g.owner, acc.address); });
   if (!mine.length) {
     setBox(el("homeStatus"), "", "No locks found", `Connected as ${acc.address}, but the register has no locks for it. A lock that was never published won't appear here.`);
     return;

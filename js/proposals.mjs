@@ -411,11 +411,21 @@ export function emptyPile(hash) {
  *           above it, so strangers' junk costs the caller as little as
  *           possible. Required: a caller that leaves it out is refused.
  */
-export async function applyCommitments(pile, events, { crowdlock, proposal, register, nowIso, signed }) {
+export async function applyCommitments(pile, events, { crowdlock, proposal, register, nowIso, signed, readTx = null }) {
   if (typeof signed !== "function") throw new Error("applyCommitments needs a check that each commitment is signed by its lock's owner");
   const fingerprint = crowdlock.declaration.sha256;
   const opens = Date.parse(proposal.opens) / 1000, closes = Date.parse(proposal.closes) / 1000;
-  const known = new Set(pile.commitments.map((c) => c.record.tx));
+  const settles = Date.parse(proposal.settles_by) / 1000;
+  // `readTx(hex)` gives { txid, coin, hex } (method/relay/signed.mjs). With it,
+  // copies are told apart by id rather than by text, one coin counts once, and
+  // what is kept is the payment's standard encoding: the same payment written
+  // another way is the same payment (second review, 17 November 2026).
+  // Copies whose signatures are junk share an id with the real one, so the id
+  // only rules out a record once one with that id has been taken.
+  const keyOf = (tx) => (readTx ? readTx(tx)?.txid ?? tx : tx);
+  const taken = new Set(pile.commitments.map((c) => keyOf(c.record.tx)));
+  const known = new Set([...pile.commitments.map((c) => c.record.tx), ...taken]);
+  const coins = new Set(readTx ? pile.commitments.map((c) => readTx(c.record.tx)?.coin).filter(Boolean) : []);
   const perLock = new Map();
   for (const c of pile.commitments) perLock.set(c.record.lock?.address, (perLock.get(c.record.lock?.address) ?? 0) + 1);
   const locks = new Map((register?.locks ?? []).map((l) => [l.address, l]));
@@ -431,15 +441,24 @@ export async function applyCommitments(pile, events, { crowdlock, proposal, regi
     const item = commitmentFromEvent(e, fingerprint, proposal.hash);
     if (!item || item.type !== "commitment") continue;
     const r = item.record;
-    if (known.has(r.tx)) continue; // already in the pile, or posted to two relays
+    if (typeof r.tx !== "string") continue;
+    const key = r.tx;
+    if (known.has(key) || taken.has(keyOf(r.tx))) continue; // already in the pile, or posted to two relays
     const lockAddress = r.lock?.address;
     const here = at++;
-    const refuse = (reason) => { outcome.push({ at: here, added: false, lock: lockAddress, reason }); known.add(r.tx); };
-    if (typeof r.tx !== "string" || r.tx.length > MAX_TX_HEX || !/^[0-9a-f]+$/.test(r.tx) || r.tx.length % 2) { refuse("its transaction is not hex of a sensible size"); continue; }
+    const refuse = (reason) => { outcome.push({ at: here, added: false, lock: lockAddress, reason }); known.add(key); };
+    if (r.tx.length > MAX_TX_HEX || !/^[0-9a-f]+$/.test(r.tx) || r.tx.length % 2) { refuse("its transaction is not hex of a sensible size"); continue; }
+    const read = readTx ? readTx(r.tx) : null;
+    if (readTx && !read) { refuse("its transaction cannot be read, or does not spend exactly one coin"); continue; }
     if (!(item.at >= opens && item.at < closes)) { refuse("it was posted outside the proposal's gathering window"); continue; }
     const onRegister = locks.get(lockAddress);
     if (!onRegister || onRegister.owner_pubkey !== r.lock.owner_pubkey || onRegister.cosigner_pubkey !== r.lock.cosigner_pubkey || onRegister.locktime !== r.lock.locktime) {
       refuse("its lock is not on this Crowdlock's register"); continue;
+    }
+    // Its lock must stay shut until settling ends, or its owner could take
+    // the money home first. (Heights are for private test chains only.)
+    if (onRegister.locktime >= 500000000 && !(onRegister.locktime > settles)) {
+      refuse("its lock opens before this proposal's settling ends, so its money isn't committed"); continue;
     }
     // Committing needs the version the proposal was published under. A lock
     // still counts in the total whatever its owner has signed; only backing
@@ -450,17 +469,22 @@ export async function applyCommitments(pile, events, { crowdlock, proposal, regi
       refuse(`its owner has not signed version ${needs} of the declaration, which this proposal was published under`); continue;
     }
     if ((perLock.get(lockAddress) ?? 0) >= PER_LOCK_LIMIT) { refuse(`that lock already has ${PER_LOCK_LIMIT} commitments in the pile`); continue; }
-    known.add(r.tx);
-    waiting.push({ r, lockAddress, member: onRegister.member, here });
+    known.add(key);
+    waiting.push({ r: read ? { ...r, tx: read.hex } : r, id: read?.txid ?? r.tx, coin: read?.coin ?? null, lockAddress, member: onRegister.member, here });
   }
 
   // Then the owner's signature, for those still standing. Only a signed
   // commitment takes one of a lock's places, so nobody but the owner can use
   // them up.
   const verdicts = waiting.length ? await signed(waiting.map((w) => w.r)) : [];
-  waiting.forEach(({ r, lockAddress, member, here }, i) => {
+  waiting.forEach(({ r, id, coin, lockAddress, member, here }, i) => {
     const v = verdicts[i];
     if (!v || v.ok !== true) { outcome.push({ at: here, added: false, lock: lockAddress, reason: v?.reason ?? "it could not be checked" }); return; }
+    if (taken.has(id)) return; // the same payment, written another way
+    taken.add(id);
+    // One coin, one commitment: the earlier stands (spec/commitment-format.md).
+    if (coin && coins.has(coin)) { outcome.push({ at: here, added: false, lock: lockAddress, reason: "an earlier commitment in the pile already spends that coin" }); return; }
+    if (coin) coins.add(coin);
     if ((perLock.get(lockAddress) ?? 0) >= PER_LOCK_LIMIT) { outcome.push({ at: here, added: false, lock: lockAddress, reason: `that lock already has ${PER_LOCK_LIMIT} commitments in the pile` }); return; }
     perLock.set(lockAddress, (perLock.get(lockAddress) ?? 0) + 1);
     const entry = { submitted: nowIso, record: r };
@@ -518,8 +542,12 @@ export function noticeIsGenuine(notice, { crowdlock, hash, hrp, addressOf }) {
  * nothing else can be smuggled in, and a fake cannot take the real one's place.
  * A notice is recorded once, if genuine; after it, no completion is recorded.
  */
-export async function applySettlement(pile, items, { crowdlock, hash, hrp, addressOf, txidOf, nowIso, completedBy }) {
+export async function applySettlement(pile, items, { crowdlock, hash, hrp, addressOf, txidOf, nowIso, completedBy, canonical = (h) => h }) {
   if (typeof completedBy !== "function") throw new Error("applySettlement needs a check that each completed payment is signed by the owner and the co-signer");
+  // A completion is kept, and so sent, in its standard encoding (`canonical`):
+  // a copy written another way has the same id, and the network refuses it.
+  // Until 17 November 2026 such a copy, posted first, took the real one's place.
+  items = items.map((it) => (it.type === "completed" ? { ...it, tx: canonical(it.tx) ?? it.tx } : it));
   const outcome = [];
   let next = pile;
   const ids = new Map();

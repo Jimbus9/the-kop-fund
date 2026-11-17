@@ -91,11 +91,12 @@ const READ_BUDGET = 90000; // milliseconds on one relay in one pass
  * a limit above, because a later batch failed, or because the relay ignored
  * `until`. Only a failure of the first batch is thrown.
  */
-export async function readBack(ask, since, { limit = PAGE, maxPages = MAX_PAGES, budget = READ_BUDGET } = {}) {
+export async function readBack(ask, since, { limit = PAGE, maxPages = MAX_PAGES, budget = READ_BUDGET, from = undefined } = {}) {
   const byId = new Map();
-  const done = (complete) => ({ events: [...byId.values()], complete });
+  // `reached`: how far back it got, for a later pass to carry on from.
+  const done = (complete) => ({ events: [...byId.values()], complete, reached: complete ? null : until ?? null });
   const started = Date.now();
-  let until, stale = 0;
+  let until = from, stale = 0;
   for (let page = 0; page < maxPages; page++) {
     if (Date.now() - started > budget) return done(false);
     let batch;
@@ -115,8 +116,34 @@ export async function readBack(ask, since, { limit = PAGE, maxPages = MAX_PAGES,
   return done(false);
 }
 
-/** Every record event for this fingerprint since `since`, from all relays, deduplicated by id. */
-export async function fetchRecords(relays, fingerprint, since) {
+/**
+ * One pass over one relay: the newest records first, with half the reading,
+ * then on from `saved` (how far back an earlier pass got) or from where this
+ * pass stopped, whichever is further back, with the other half.
+ * Returns { events, complete, cursor }: `cursor` is where to carry on next
+ * pass, or null when nothing is left unread.
+ */
+export async function readRelay(ask, since, saved, { maxPages = MAX_PAGES, budget = READ_BUDGET, limit = PAGE } = {}) {
+  const half = { limit, maxPages: Math.ceil(maxPages / 2), budget: budget / 2 };
+  const fresh = await readBack(ask, since, half);
+  if (fresh.complete) return { events: fresh.events, complete: true, cursor: null };
+  const from = Number.isInteger(saved) && saved >= since && saved < fresh.reached ? saved : fresh.reached;
+  const more = await readBack(ask, since, { ...half, from }).catch(() => ({ events: [], complete: false, reached: from }));
+  return { events: [...fresh.events, ...more.events], complete: more.complete, cursor: more.complete ? null : more.reached };
+}
+
+/**
+ * Every record event for this fingerprint since `since`, from all relays, deduplicated by id.
+ *
+ * `cursors` ({ relay: seconds }) is how far back an earlier pass got on each
+ * relay without finishing. Each pass reads the newest records first, with half
+ * its reading, then carries on from the cursor with the other half, so a flood
+ * of new junk can delay an older record but not hide it for ever. Until
+ * 17 November 2026 every pass started again from the newest, and enough junk
+ * hid older records from every pass. The new cursors are returned.
+ */
+export async function fetchRecords(relays, fingerprint, since, { cursors = {} } = {}) {
+  const nextCursors = {};
   const byId = new Map();
   const report = await Promise.all(relays.map(async (url) => {
     try {
@@ -129,11 +156,13 @@ export async function fetchRecords(relays, fingerprint, since) {
             oneose() { sub.close(); resolve(got); },
           });
         }), TIMEOUT, "reading");
-        const { events, complete } = await readBack(ask, since);
-        for (const e of events) byId.set(e.id, e);
-        return { relay: url, ok: true, count: events.length, complete };
+        const r = await readRelay(ask, since, cursors?.[url]);
+        for (const e of r.events) byId.set(e.id, e);
+        const complete = r.complete;
+        if (r.cursor !== null) nextCursors[url] = r.cursor;
+        return { relay: url, ok: true, count: r.events.length, complete };
       } finally { relay.close(); }
     } catch (e) { return { relay: url, ok: false, reason: String(e.message ?? e) }; }
   }));
-  return { events: [...byId.values()], report };
+  return { events: [...byId.values()], report, cursors: nextCursors };
 }

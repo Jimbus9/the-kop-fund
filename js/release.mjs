@@ -17,52 +17,76 @@
 // Works on the transaction JSON an Esplora-style explorer returns for
 // /address/<lock>/txs, so the register page and the app read it the same way.
 
-import { lockAddress, lockIsGenuine, hrpFor } from "./lockrecord.mjs";
+import { lockIsGenuine, hrpFor } from "./lockrecord.mjs";
+import { chainIsIntact, attestationsAreValid, stampedAt, attestorsOf } from "./proposals.mjs";
 
-/** Was this input opened with the co-signer's signature? */
+/**
+ * Was this input opened with the co-signer's signature, in the standard shape?
+ * A label only. earlyReleases does not rely on it: before a lock's date the
+ * owner alone cannot open it at all, so every spend before the date was
+ * co-signed, whatever its witness looks like. (Until 17 November 2026 a spend
+ * whose branch selector was the byte 00 rather than empty, which Bitcoin's
+ * rules accept in a block, was not read as co-signed and never showed.)
+ */
 export function isCoSigned(vin) {
   const w = vin?.witness;
   return Array.isArray(w) && w.length === 4 && w[1] === "";
 }
 
 /**
- * Is this address currently on the destinations list: added, and not revoked
- * by a later entry? A spend to one is shaped like a purchase. This is a
- * label for the page, not the full check a purchase gets before it is signed
- * (attestations, age) — that lives with the commitment code.
+ * Was this address a destination the co-signer could pay at time `at`
+ * (seconds)? The same checks a commitment gets before it is completed: the
+ * list is this Crowdlock's and its chain is intact, the entry is attested by
+ * the attestors the Crowdlock's own file names, it is stamped on the chain,
+ * and it had waited out the Crowdlock's waiting period by `at`. Not revoked.
+ *
+ *   context  { crowdlock, stamps, at, hrp }: `stamps` the stamp payments as
+ *            the explorer describes them, { txid: tx } (stampsFor in
+ *            proposals.mjs). Without the Crowdlock's file nothing is listed.
+ *
+ * Until 17 November 2026 this only asked whether the file had an `add` line
+ * for the address, so one unattested line made a release read as a purchase.
  */
-export function isListedDestination(address, destinations) {
+export function isListedDestination(address, destinations, { crowdlock = null, stamps = {}, at = Infinity, hrp } = {}) {
   const entries = Array.isArray(destinations?.entries) ? destinations.entries : [];
+  if (!crowdlock || !entries.length) return false;
+  const rules = attestorsOf(crowdlock, hrp ?? undefined);
+  if (!/^[0-9a-f]{64}$/.test(String(rules.instance ?? "")) || !Number.isInteger(rules.threshold)) return false;
+  if (!chainIsIntact(entries, rules.instance).ok) return false;
   const mine = entries.filter((e) => e.address === address);
   const added = mine.filter((e) => e.op === "add").pop();
   if (!added) return false;
-  return !mine.some((e) => e.op === "revoke" && e.index > added.index);
+  if (mine.some((e) => e.op === "revoke" && e.index > added.index)) return false;
+  if (!attestationsAreValid(added, { attestors: rules.attestors, threshold: rules.threshold, hrp: rules.hrp }).ok) return false;
+  const stamped = stampedAt(added, stamps?.[added.stamp] ?? null);
+  if (!stamped.ok) return false;
+  const wait = Number.isInteger(crowdlock.destination_wait_days) ? crowdlock.destination_wait_days : 0;
+  return at - stamped.at >= wait * 86400;
 }
 
 /**
- * Does money paid to this address stay locked? True if it is a lock of the
- * same owner, co-signed by this Crowdlock, opening no earlier than the lock
- * it came from: the remainder of a part-commitment. Either it is the lock the
- * same terms make under one of the Crowdlock's co-signer keys (how the app
- * makes a remainder), or it is on the register as a real lock of the same
- * owner with no earlier date.
+ * Does money paid to this address stay locked? True if it is the same lock
+ * (the remainder of a part-commitment, as the app makes it), or a genuine lock
+ * of the same owner on the register with no earlier date, whose own history
+ * the record also reads.
+ *
+ * Until 17 November 2026 any lock the same owner's key made under any of the
+ * Crowdlock's co-signer keys counted, on the register or not, so money could
+ * hop into a lock nobody watched and leave it unseen.
  */
 export function staysLocked(address, lock, { crowdlock, register, hrp }) {
   const a = String(address ?? "").toLowerCase();
   if (!a || !lock?.owner_pubkey) return false;
-  for (const k of crowdlock?.cosigner_keys ?? []) {
-    try {
-      if (lockAddress({ ownerPubkey: lock.owner_pubkey, cosignerPubkey: k, locktime: lock.locktime }, hrp) === a) return true;
-    } catch { /* a key that makes no lock with this owner */ }
-  }
+  const own = String(lock.cosigner_pubkey ?? "").slice(2);
+  if (a === String(lock.address ?? "").toLowerCase() && (crowdlock?.cosigner_keys ?? []).some((k) => String(k).slice(2) === own)) return true;
   return (register?.locks ?? []).some((r) => String(r.address).toLowerCase() === a
     && r.owner_pubkey === lock.owner_pubkey && r.locktime >= lock.locktime
     && lockIsGenuine(r, { crowdlock, register, hrp }).ok);
 }
 
-/** An output that can never be spent and carries nothing: OP_RETURN, value 0. */
+/** A commitment's proposal marker: OP_RETURN and 32 bytes, holding nothing. Nothing else counts. */
 function holdsNothing(o) {
-  return String(o?.scriptpubkey ?? "").startsWith("6a") && Number(o?.value) === 0;
+  return /^6a20[0-9a-f]{64}$/.test(String(o?.scriptpubkey ?? "")) && Number(o?.value) === 0;
 }
 
 /**
@@ -71,36 +95,44 @@ function holdsNothing(o) {
  *   lock     { address, locktime, owner_pubkey, cosigner_pubkey? }
  *   txs      the explorer's transactions for the lock's address: the whole
  *            history (readHistory), or a release can be pushed out of sight
- *   context  { destinations, crowdlock, register } — the Crowdlock's
- *            destinations file, its own file and its register
+ *   context  { destinations, crowdlock, register, stamps } — the Crowdlock's
+ *            destinations file, its own file, its register, and the
+ *            destinations' stamp payments (stampsFor in proposals.mjs)
  *   now      seconds; used for a spend not yet in a block
- * Returns [{ txid, at, sats, paidTo, confirmed, cosigner }]. A co-signed spend
- * after the date is left out: the owner could have done that alone.
+ * Returns [{ txid, at, sats, paidTo, confirmed, cosigner }]. A spend after the
+ * date is left out: the owner could have done that alone.
  *
- * A co-signed spend is a purchase only if EVERY output of it is one of: a
- * listed destination; money staying locked (staysLocked); or an OP_RETURN
- * holding nothing (a commitment's proposal marker). Until 17 November 2026
- * only the first output was looked at, so 330 sats to a listed destination
- * and the rest to the member's own wallet read as a purchase. `paidTo` is the
- * first output that is none of these.
+ * Any spend before the date is co-signed: the owner alone cannot open a lock
+ * until then, so the witness's shape is not asked about. It is a purchase only
+ * if EVERY output is one of: a destination the co-signer could pay at that
+ * moment (isListedDestination); money staying locked (staysLocked); or one
+ * proposal marker holding nothing; AND what it leaves as fee is no more than
+ * a commitment may (the Crowdlock's max_commitment_fee of what it spends).
+ * `paidTo` is the first output that is none of these, or null when the money
+ * went as fee.
  */
 export function earlyReleases(lock, txs, context = {}, now = Math.floor(Date.now() / 1000)) {
-  const { destinations = null, crowdlock = null, register = null } = context ?? {};
+  const { destinations = null, crowdlock = null, register = null, stamps = {} } = context ?? {};
   const hrp = context?.hrp ?? hrpFor(crowdlock?.network) ?? "bc";
+  const maxFee = typeof crowdlock?.max_commitment_fee === "number" ? crowdlock.max_commitment_fee : 0.01;
   const address = String(lock.address).toLowerCase();
-  const accounted = (o) => holdsNothing(o)
-    || (!!o?.scriptpubkey_address && isListedDestination(o.scriptpubkey_address, destinations))
-    || staysLocked(o?.scriptpubkey_address, lock, { crowdlock, register, hrp });
   const found = [];
   for (const tx of Array.isArray(txs) ? txs : []) {
     const at = tx.status?.confirmed ? tx.status.block_time : now;
-    for (const vin of tx.vin ?? []) {
+    const accounted = (o) => holdsNothing(o)
+      || (!!o?.scriptpubkey_address && isListedDestination(o.scriptpubkey_address, destinations, { crowdlock, stamps, at, hrp }))
+      || staysLocked(o?.scriptpubkey_address, lock, { crowdlock, register, hrp });
+    const ins = Array.isArray(tx.vin) ? tx.vin : [];
+    const outs = Array.isArray(tx.vout) ? tx.vout : [];
+    const spent = ins.reduce((n, v) => n + (Number(v?.prevout?.value) || 0), 0);
+    const paid = outs.reduce((n, o) => n + (Number(o?.value) || 0), 0);
+    const markers = outs.filter(holdsNothing).length;
+    for (const vin of ins) {
       if (String(vin.prevout?.scriptpubkey_address ?? "").toLowerCase() !== address) continue;
-      if (!isCoSigned(vin)) continue;
       if (!(at < lock.locktime)) continue;
-      const outs = Array.isArray(tx.vout) ? tx.vout : [];
       const stray = outs.find((o) => !accounted(o));
-      if (outs.length > 0 && !stray) continue;
+      const feeTooBig = spent - paid > spent * maxFee;
+      if (outs.length > 0 && !stray && !feeTooBig && markers <= 1 && paid > 0) continue;
       found.push({
         txid: tx.txid, at, sats: vin.prevout?.value ?? 0, paidTo: stray?.scriptpubkey_address ?? null,
         confirmed: !!tx.status?.confirmed, cosigner: lock.cosigner_pubkey ?? null,
