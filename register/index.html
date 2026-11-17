@@ -169,6 +169,9 @@ import { stampsFor } from "../js/proposals.mjs";
 import { hrpFor, lockIsGenuine } from "../js/lockrecord.mjs";
 
 const el = (id) => document.getElementById(id);
+// What a register file says is text, never markup (security loop, round 4):
+// with ?c= this page reads another site's register.
+const escText = (x) => String(x ?? "").replace(/[&<>"'`]/g, (ch) => `&#${ch.charCodeAt(0)};`);
 const fmtBtc = (sats) => (sats / 1e8).toFixed(8).replace(/0+$/, "").replace(/\.$/, "") || "0";
 
 function setVerdict(node, textNode, ok, text) {
@@ -313,9 +316,9 @@ if (members.length === 0) {
 } else {
   const rows = checked.map((m) => `
     <tr>
-      <td class="num">${m.n ?? ""}</td>
-      <td class="mono">${m.address}</td>
-      <td>${m.signed ?? ""}${manyVersions ? ` · version ${m.versions.join(", ")}` : ""}</td>
+      <td class="num">${escText(m.n ?? "")}</td>
+      <td class="mono">${escText(m.address)}</td>
+      <td>${escText(m.signed ?? "")}${manyVersions ? ` · version ${escText(m.versions.join(", "))}` : ""}</td>
       <td><span class="pill ${m.result.valid ? "ok" : "bad"}">${m.result.valid ? "verified" : "failed"}</span></td>
     </tr>`).join("");
   el("memberArea").innerHTML = `

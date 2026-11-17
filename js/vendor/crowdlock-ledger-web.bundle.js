@@ -46687,6 +46687,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     checkCommitment: () => checkCommitment,
     checkLedgerKey: () => checkLedgerKey,
     commitmentPaid: () => commitmentPaid,
+    commitmentPayment: () => commitmentPayment,
     commitmentTxid: () => commitmentTxid,
     connectLedger: () => connectLedger,
     esploraChain: () => esploraChain,
@@ -67257,29 +67258,35 @@ ${ge(n19)}`;
     }
   }
   async function commitmentPaid({ record, chain }) {
+    const p36 = await commitmentPayment({ record, chain });
+    return p36?.confirmed ? p36.sats : 0;
+  }
+  async function commitmentPayment({ record, chain }) {
     let tx;
     try {
       tx = Transaction.fromHex(record.tx);
     } catch {
-      return 0;
+      return null;
     }
-    if (tx.ins.length !== 1) return 0;
+    if (tx.ins.length !== 1) return null;
     try {
       const L3 = record.lock ?? {};
       const script = lockScript({ ownerPubkey: L3.owner_pubkey, cosignerPubkey: L3.cosigner_pubkey, locktime: L3.locktime });
       const from2 = toHex7(Uint8Array.from(tx.ins[0].hash).reverse());
       const src = Transaction.fromHex(String(await chain.txHex(from2)).trim());
       const spent = src.getId() === from2 ? src.outs[tx.ins[0].index] : null;
-      if (!spent || toHex7(spent.script) !== toHex7(lockOutputScript(script))) return 0;
+      if (!spent || toHex7(spent.script) !== toHex7(lockOutputScript(script))) return null;
     } catch {
-      return 0;
+      return null;
     }
+    let seen;
     try {
-      if (!(await chain.tx(tx.getId()))?.status?.confirmed) return 0;
+      seen = await chain.tx(tx.getId());
     } catch {
-      return 0;
+      return null;
     }
-    return Number(tx.outs[0].value);
+    if (!seen) return null;
+    return { sats: Number(tx.outs[0].value), confirmed: !!seen.status?.confirmed };
   }
   async function signStatementWith(account, statement) {
     if (account.kind !== "ledger") return signStatement(account, statement);

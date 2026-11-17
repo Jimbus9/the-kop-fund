@@ -116,8 +116,14 @@ export const ASKED_PER_PASS = 200;
  * had its own 200, so a proposal could cost 400 (OpenAI review, M-01).
  */
 export function explorerBudget(n = ASKED_PER_PASS) {
-  return { left: n };
+  // Some of it is kept back for completed payments. The commitment check
+  // runs first and what it asks is decided by whoever posts to the relays:
+  // junk naming 200 registered locks used every question, the completion
+  // check got none, and the inbox recorded and sent no completed payment
+  // for as long as the junk was there (security loop, round 4).
+  return { left: n, keptForCompletions: Math.min(KEPT_FOR_COMPLETIONS, Math.floor(n / 2)) };
 }
+export const KEPT_FOR_COMPLETIONS = 50;
 
 /**
  * Which of these to ask about this pass, when there are more than a pass
@@ -138,7 +144,7 @@ const NEXT_PASS = "more was posted than one pass asks the block explorer about; 
  *   seed:     anything that differs from pass to pass
  */
 export async function ownersSigned(records, { coinsFor, limit = ASKED_PER_PASS, seed = "", budget = null }) {
-  const pick = thisPass([...new Set(records.map((r) => r.lock.address))], budget ? Math.min(limit, budget.left) : limit, seed);
+  const pick = thisPass([...new Set(records.map((r) => r.lock.address))], budget ? Math.min(limit, Math.max(0, budget.left - (budget.keptForCompletions ?? 0))) : limit, seed);
   if (budget) budget.left -= pick.size;
   const coins = new Map();
   for (const address of pick) coins.set(address, await coinsFor(address));

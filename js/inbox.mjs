@@ -22,6 +22,44 @@
 
 import { addSignature } from "./append.mjs";
 import { prepareLock, addLock, hrpFor } from "./lockrecord.mjs";
+import { sha256 } from "./vendor/noble-hashes/sha256.js";
+
+// How many lock records one pass asks the block explorer about, in all and
+// for any one owner's key. A lock record carries no signature, so anybody can
+// post any number of them naming a member's published key, and each costs a
+// question. Until 17 November 2026 (security loop, round 4) there was no
+// limit: 20,000 of them made a pass longer than the job is allowed to run,
+// on every pass, and nothing was registered or collected. The per-owner
+// limit keeps a flood naming one member's key from holding up anybody else's
+// lock; which records are asked about changes from pass to pass.
+export const LOCKS_ASKED_PER_PASS = 200;
+export const LOCKS_ASKED_PER_OWNER = 5;
+// After this many questions in a row with no answer, the explorer is left alone for the rest of the pass.
+const UNANSWERED_IN_A_ROW = 3;
+const PUT_OFF = "more lock records were posted than one pass asks the block explorer about; it will be looked at on a later pass";
+
+const orderKey = (seed, text) => Array.from(sha256(new TextEncoder().encode(`${seed}|${text}`)), (b) => b.toString(16).padStart(2, "0")).join("");
+
+/** Which prepared locks to ask about this pass: a few per owner, owners taken in turn, a different selection for each seed. */
+function locksToAsk(prepared, seed) {
+  const byOwner = new Map();
+  for (const p of prepared) {
+    const list = byOwner.get(p.lock.owner_pubkey) ?? [];
+    list.push(p);
+    byOwner.set(p.lock.owner_pubkey, list);
+  }
+  const queues = [...byOwner.entries()]
+    .sort((a, b) => orderKey(seed, a[0]).localeCompare(orderKey(seed, b[0])))
+    .map(([, list]) => list.sort((a, b) => orderKey(seed, a.lock.address).localeCompare(orderKey(seed, b.lock.address))).slice(0, LOCKS_ASKED_PER_OWNER));
+  const chosen = new Set();
+  for (let round = 0; round < LOCKS_ASKED_PER_OWNER && chosen.size < LOCKS_ASKED_PER_PASS; round++) {
+    for (const q of queues) {
+      if (chosen.size >= LOCKS_ASKED_PER_PASS) break;
+      if (q[round]) chosen.add(q[round]);
+    }
+  }
+  return chosen;
+}
 
 /** The Nostr event kind a Crowdlock record is posted as (a "regular" kind relays store). */
 export const RECORD_KIND = 3713;
@@ -85,12 +123,15 @@ export function recordFromEvent(event, fingerprint) {
  *                   the Crowdlock file (kept so older callers still work)
  *   now, today      unix seconds and "YYYY-MM-DD", passed in
  *   confirmedSats   async (address) => confirmed sats at that address
+ *   seed            anything that differs from pass to pass: decides which
+ *                   lock records are asked about when more were posted than
+ *                   one pass asks (LOCKS_ASKED_PER_PASS, LOCKS_ASKED_PER_OWNER)
  *
  * Registrations go first, so a member's join and first lock can arrive in the
  * same run. Refusals are reported, never thrown: a record that is not valid
  * today (an unconfirmed lock) may be valid next run.
  */
-export async function applyRecords(register, events, { crowdlock, statement, now, today, confirmedSats }) {
+export async function applyRecords(register, events, { crowdlock, statement, now, today, confirmedSats, seed = "" }) {
   const fingerprint = crowdlock.declaration.sha256;
   const hrp = hrpFor(crowdlock.network);
   const seen = new Set();
@@ -106,27 +147,41 @@ export async function applyRecords(register, events, { crowdlock, statement, now
 
   let reg = register;
   const outcome = [];
-  for (const r of [...records.filter((x) => x.type === "join"), ...records.filter((x) => x.type === "lock")]) {
-    if (r.type === "join") {
-      // A join record carries a signature over one version of the
-      // declaration: a newcomer's over the current one, or an existing
-      // member's over a version they have not signed yet.
-      const res = addSignature(reg, r, { crowdlock, today, hrp });
-      if (res.ok) { reg = res.register; outcome.push({ added: true, type: "join", n: res.n, address: r.address, version: res.version, resigned: res.resigned }); }
-      else outcome.push({ added: false, type: "join", address: r.address, reason: res.reason });
-    } else {
-      const prepared = prepareLock(r, { crowdlock, register: reg, now });
-      if (!prepared.ok) { outcome.push({ added: false, type: "lock", address: r.address, reason: prepared.reason }); continue; }
-      let sats;
-      try { sats = await confirmedSats(prepared.lock.address); }
-      catch { outcome.push({ added: false, type: "lock", address: r.address, reason: "could not read the chain" }); continue; }
-      const res = addLock(reg, prepared.lock, { confirmedSats: sats, today });
-      if (res.ok) {
-        reg = res.register;
-        const n = reg.members.find((m) => String(m.address).toLowerCase() === prepared.lock.member)?.n;
-        outcome.push({ added: true, type: "lock", n, address: prepared.lock.address });
-      } else outcome.push({ added: false, type: "lock", address: r.address, reason: res.reason });
-    }
+  for (const r of records.filter((x) => x.type === "join")) {
+    // A join record carries a signature over one version of the
+    // declaration: a newcomer's over the current one, or an existing
+    // member's over a version they have not signed yet.
+    const res = addSignature(reg, r, { crowdlock, today, hrp });
+    if (res.ok) { reg = res.register; outcome.push({ added: true, type: "join", n: res.n, address: r.address, version: res.version, resigned: res.resigned }); }
+    else outcome.push({ added: false, type: "join", address: r.address, reason: res.reason });
+  }
+
+  // Locks. First everything that can be judged without the chain, which
+  // costs nothing; then the block explorer is asked about a limited number
+  // of those still standing (see LOCKS_ASKED_PER_PASS above).
+  const prepared = [];
+  const seenAddress = new Set();
+  for (const r of records.filter((x) => x.type === "lock")) {
+    const p = prepareLock(r, { crowdlock, register: reg, now });
+    if (!p.ok) { outcome.push({ added: false, type: "lock", address: r.address, reason: p.reason }); continue; }
+    if (seenAddress.has(p.lock.address)) continue; // the same lock, posted with its address written another way
+    seenAddress.add(p.lock.address);
+    prepared.push({ r, lock: p.lock });
+  }
+  const ask = locksToAsk(prepared, seed);
+  let unanswered = 0;
+  for (const p of prepared) {
+    if (!ask.has(p)) { outcome.push({ added: false, type: "lock", address: p.r.address, reason: PUT_OFF }); continue; }
+    if (unanswered >= UNANSWERED_IN_A_ROW) { outcome.push({ added: false, type: "lock", address: p.r.address, reason: "could not read the chain" }); continue; }
+    let sats;
+    try { sats = await confirmedSats(p.lock.address); unanswered = 0; }
+    catch { unanswered++; outcome.push({ added: false, type: "lock", address: p.r.address, reason: "could not read the chain" }); continue; }
+    const res = addLock(reg, p.lock, { confirmedSats: sats, today });
+    if (res.ok) {
+      reg = res.register;
+      const n = reg.members.find((m) => String(m.address).toLowerCase() === p.lock.member)?.n;
+      outcome.push({ added: true, type: "lock", n, address: p.lock.address });
+    } else outcome.push({ added: false, type: "lock", address: p.r.address, reason: res.reason });
   }
   return { register: reg, outcome };
 }

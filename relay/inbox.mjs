@@ -148,7 +148,7 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
     return s.funded_txo_sum - s.spent_txo_sum;
   };
   const result = await applyRecords(register, events, {
-    crowdlock, statement: membershipStatement(crowdlock), now, today, confirmedSats,
+    crowdlock, statement: membershipStatement(crowdlock), now, today, confirmedSats, seed: `${now}|${file}`,
   });
   for (const o of result.outcome) {
     console.log(`${file}: ${o.type} ${o.address} — ${o.added ? `ADDED${o.n ? ` (member ${o.n})` : ""}` : `not added: ${o.reason}`}`);

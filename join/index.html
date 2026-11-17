@@ -327,10 +327,15 @@ async function loadCrowdlock() {
     // The current version of the declaration: the one a new member signs.
     // (FINGERPRINT above stays the founding one: it is the Crowdlock's identity.)
     const d = currentVersion(c);
+    // What a Crowdlock's file says is text, never markup. With ?c= this page
+    // reads another site's file; until 17 November 2026 its title and file
+    // name were written into the page as HTML, so whoever could write that
+    // file could put a page of their own on this address (security loop, round 4).
+    const esc = (x) => String(x ?? "").replace(/[&<>"'`]/g, (ch) => `&#${ch.charCodeAt(0)};`);
     el("paramStatus").innerHTML =
-      `Signing <strong>${d.title} v${d.version}</strong> ` +
-      `· fingerprint <span class="mono">sha256:${d.sha256.slice(0, 8)}…${d.sha256.slice(-7)}</span> ` +
-      `· <a href="${base}${d.file}">read the exact text</a>`;
+      `Signing <strong>${esc(d.title)} v${esc(d.version)}</strong> ` +
+      `· fingerprint <span class="mono">sha256:${esc(String(d.sha256).slice(0, 8))}…${esc(String(d.sha256).slice(-7))}</span> ` +
+      `· <a href="${esc(new URL(String(d.file), new URL(base, location.href)).href)}">read the exact text</a>`;
     // The register, so a member signing a new version is told so. If it
     // doesn't load, the page still works: the register decides either way.
     fetch(`${base}${c.register.registrations}`, { cache: "no-store" })
