@@ -66503,6 +66503,11 @@ ${ge(n19)}`;
     }
     return new Uint8Array(import_buffer.Buffer.from(b64, "base64"));
   }
+  function memberAddressForOwnerKey(ownerPubkey, hrp = "bc") {
+    const bytes2 = typeof ownerPubkey === "string" ? Uint8Array.from(ownerPubkey.match(/../g).map((h6) => parseInt(h6, 16))) : Uint8Array.from(ownerPubkey);
+    if (bytes2.length !== 33) throw new Error("owner key must be 33 bytes (compressed)");
+    return encodeP2WPKH(hash1602(bytes2), hrp);
+  }
   function verifyMembership({ address, signature: signature2, message, hrp = "bc" }) {
     let sig;
     try {
@@ -66637,30 +66642,38 @@ ${ge(n19)}`;
     if (signers3.size < threshold) return { ok: false, reason: `entry ${entry.index} has ${signers3.size} valid attestation(s) from distinct attestors, needs ${threshold}`, signers: [...signers3] };
     return { ok: true, reason: "", signers: [...signers3] };
   }
-  function chainIsIntact(entries) {
+  function chainIsIntact(entries, instance2 = null) {
     let expected14 = ZERO_PREV;
-    const instance2 = entries[0]?.instance;
+    const wanted = instance2 ?? entries[0]?.instance;
     for (let i20 = 0; i20 < entries.length; i20++) {
       const e29 = entries[i20];
-      if (e29.instance !== instance2) return { ok: false, reason: `entry ${e29.index} belongs to a different instance` };
+      if (e29.instance !== wanted) return { ok: false, reason: `entry ${e29.index} belongs to a different instance` };
       if (e29.index !== i20 + 1) return { ok: false, reason: `entry at position ${i20} has index ${e29.index}, expected ${i20 + 1}` };
       if (e29.prev !== expected14) return { ok: false, reason: `entry ${e29.index} chains to ${String(e29.prev).slice(0, 12)}\u2026, expected ${expected14.slice(0, 12)}\u2026` };
       expected14 = destinationHash(e29);
     }
     return { ok: true, reason: "" };
   }
-  function destinationIsPermitted({ address, entries, opensAt, minimumAgeDays = 7, attestors = null, threshold = null, hrp = "bc" }) {
-    const chain = chainIsIntact(entries);
+  function attestorsOf(crowdlock, hrp = { mainnet: "bc", regtest: "bcrt" }[crowdlock?.network] ?? "tb") {
+    return {
+      attestors: (crowdlock?.attestor_keys ?? []).map((k8) => memberAddressForOwnerKey(k8, hrp)),
+      threshold: crowdlock?.attestor_threshold,
+      instance: crowdlock?.declaration?.sha256,
+      hrp
+    };
+  }
+  function destinationIsPermitted({ address, entries, opensAt, minimumAgeDays = 7, attestors = null, threshold = null, hrp = "bc", instance: instance2 = null }) {
+    if (!HEX64.test(String(instance2 ?? ""))) return { permitted: false, reason: "no Crowdlock fingerprint was supplied, so the list cannot be tied to this Crowdlock" };
+    if (!Array.isArray(attestors) || !Number.isInteger(threshold)) return { permitted: false, reason: "no attestor set was supplied, so the list cannot be checked for attestation" };
+    const chain = chainIsIntact(entries, instance2);
     if (!chain.ok) return { permitted: false, reason: `the list itself is broken: ${chain.reason}` };
     const mine = entries.filter((e29) => e29.address === address);
     const added = mine.filter((e29) => e29.op === "add").pop();
     if (!added) return { permitted: false, reason: "not on the published destinations list" };
     const revoked = mine.filter((e29) => e29.op === "revoke" && e29.index > added.index).pop();
     if (revoked) return { permitted: false, reason: `revoked by entry ${revoked.index}` };
-    if (attestors !== null || threshold !== null) {
-      const att = attestationsAreValid(added, { attestors: attestors ?? [], threshold: threshold ?? 1, hrp });
-      if (!att.ok) return { permitted: false, reason: att.reason };
-    }
+    const att = attestationsAreValid(added, { attestors, threshold, hrp });
+    if (!att.ok) return { permitted: false, reason: att.reason };
     if (!added.firstSeen) return { permitted: false, reason: `entry ${added.index} has no recorded first public appearance, so its age cannot be established` };
     const seen = Date.parse(added.firstSeen), opens = Date.parse(opensAt);
     if (Number.isNaN(seen) || Number.isNaN(opens)) return { permitted: false, reason: "the entry's first appearance or the proposal's opening is not a readable date" };
@@ -66677,6 +66690,10 @@ ${ge(n19)}`;
     regtest: { network: import_descriptors.networks.regtest, coin: 1 }
   };
   var DUST_SATS = 294n;
+  function dustFor(script) {
+    const witness = script.length >= 4 && script.length <= 42 && (script[0] === 0 || script[0] >= 81 && script[0] <= 96) && script[1] === script.length - 2;
+    return BigInt(3 * (8 + 1 + script.length + (witness ? 67 : 148)));
+  }
   function readXpub(text) {
     const t29 = String(text ?? "").trim();
     for (const net of [import_descriptors.networks.bitcoin, import_descriptors.networks.testnet]) {
@@ -66862,6 +66879,23 @@ ${ge(n19)}`;
     const tx = psbt.extractTransaction();
     return { hex: tx.toHex(), txid: tx.getId(), fee, sent };
   }
+  function proposalMarker(proposalHash) {
+    const out = new Uint8Array(34);
+    out[0] = 106;
+    out[1] = 32;
+    out.set(fromHex7(proposalHash), 2);
+    return out;
+  }
+  var SIGNATURE_BYTES = 72;
+  function commitmentVsize({ destinationScript, scriptLength, withRemainder }) {
+    const output2 = (len) => 8 + 1 + len;
+    const base2 = 4 + 1 + (36 + 1 + 4) + 1 + output2(destinationScript.length) + (withRemainder ? output2(34) : 0) + output2(34) + 4;
+    const witness = 2 + 1 + (1 + SIGNATURE_BYTES) + 1 + (1 + SIGNATURE_BYTES) + (1 + scriptLength);
+    return Math.ceil((base2 * 4 + witness) / 4);
+  }
+  function completedVsize(tx) {
+    return Math.ceil((tx.weight() + SIGNATURE_BYTES) / 4);
+  }
   async function buildCommitment({ account, chain, lock, coin, proposalHash, destination, amount, feeRate, maxFee = 0.01 }) {
     const net = account.network;
     if (!Number.isFinite(feeRate) || feeRate < 1 || feeRate > 1e3) {
@@ -66884,8 +66918,11 @@ ${ge(n19)}`;
     }
     const back = new import_descriptors.Output({ descriptor: lockDescriptor({ ...account, kind: "words" }, check15.cosignerPubkey, lock.locktime), network: net });
     const value2 = BigInt(coin.value);
-    const weightOf = (withRemainder) => 44 + out.inputWeight(true, "DANGEROUSLY_USE_FAKE_SIGNATURES") + dest.outputWeight() + (withRemainder ? back.outputWeight() : 0);
-    const feeFor = (withRemainder) => BigInt(Math.ceil(weightOf(withRemainder) / 4 * feeRate));
+    const destinationScript = dest.getScriptPubKey();
+    const lockScriptLength = out.getWitnessScript()?.length;
+    if (!lockScriptLength) throw new Error("the lock's script is missing \u2014 refusing");
+    const feeFor = (withRemainder) => BigInt(Math.ceil(commitmentVsize({ destinationScript, scriptLength: lockScriptLength, withRemainder }) * feeRate));
+    const leastCommitted = dustFor(destinationScript), leastBack = dustFor(back.getScriptPubKey());
     let committed, remainder, fee;
     if (amount === "all") {
       fee = feeFor(false);
@@ -66897,13 +66934,13 @@ ${ge(n19)}`;
       fee = feeFor(true);
       remainder = value2 - committed - fee;
       if (remainder < 0n) throw new Error("that is more than this coin holds, after the fee");
-      if (remainder < DUST_SATS) {
+      if (remainder < leastBack) {
         fee = feeFor(false);
         committed = value2 - fee;
         remainder = 0n;
       }
     }
-    if (committed < DUST_SATS) throw new Error("too little left to commit after the fee");
+    if (committed < leastCommitted) throw new Error("too little left to commit after the fee");
     if (Number(fee) > Number(committed) * maxFee) {
       const smallest = BigInt(Math.ceil(Number(fee) / maxFee));
       const btc = (v21) => (Number(v21) / 1e8).toFixed(8).replace(/0+$/, "").replace(/\.$/, "");
@@ -66913,8 +66950,11 @@ ${ge(n19)}`;
     out.updatePsbtAsInput({ psbt, txHex: await coinSource(chain, coin), vout: coin.vout });
     dest.updatePsbtAsOutput({ psbt, value: committed });
     if (remainder > 0n) back.updatePsbtAsOutput({ psbt, value: remainder });
+    psbt.addOutput({ script: proposalMarker(proposalHash), value: 0n });
     psbt.setLocktime(0);
     if (psbt.locktime !== 0 || psbt.txInputs.length !== 1) throw new Error("a commitment spends one coin and declares no date \u2014 refusing");
+    if (psbt.version !== 1 && psbt.version !== 2) throw new Error("a commitment must be an ordinary version 1 or 2 transaction \u2014 refusing");
+    if ((psbt.txInputs[0].sequence & 2147483648) === 0) throw new Error("a commitment's input must set no waiting period \u2014 refusing");
     await signWith(account, psbt, [{ descriptor, name: lockPolicyName(lock.locktime) }]);
     const sigs = psbt.data.inputs[0].partialSig ?? [];
     const mine = sigs.find((p36) => toHex7(p36.pubkey) === account.publicKey);
@@ -66923,6 +66963,7 @@ ${ge(n19)}`;
     if (!witnessScript) throw new Error("the lock's script is missing \u2014 refusing");
     const tx = Transaction.fromBuffer(psbt.data.globalMap.unsignedTx.toBuffer());
     tx.setWitness(0, [new Uint8Array(0), new Uint8Array(0), mine.signature, witnessScript]);
+    if (fee < BigInt(completedVsize(tx))) throw new Error("the fee came out below what the network needs \u2014 refusing");
     const record = {
       proposal: proposalHash,
       lock: { address: lock.address, owner_pubkey: account.publicKey, cosigner_pubkey: check15.cosignerPubkey, locktime: lock.locktime },
@@ -66966,14 +67007,20 @@ ${ge(n19)}`;
       try {
         const decoded = script_exports.signature.decode(w8[2]);
         const sighash = tx.hashForWitnessV0(0, script, BigInt(coin.value), Transaction.SIGHASH_ALL);
-        sigOk = decoded.hashType === Transaction.SIGHASH_ALL && ecc.verify(sighash, fromHex7(L3.owner_pubkey), decoded.signature);
+        sigOk = decoded.hashType === Transaction.SIGHASH_ALL && ecc.verify(sighash, fromHex7(L3.owner_pubkey), decoded.signature, true);
       } catch {
         sigOk = false;
       }
       if (!sigOk) return fail("the owner's signature does not verify over this transaction");
     }
     if (tx.locktime !== 0) return fail(`declares nLockTime ${tx.locktime}, must be 0`);
-    if (tx.outs.length < 1 || tx.outs.length > 2) return fail(`${tx.outs.length} outputs, must be 1 or 2`);
+    if (tx.version !== 1 && tx.version !== 2) return fail(`is transaction version ${tx.version}, which the network does not pass on \u2014 must be 1 or 2`);
+    if ((tx.ins[0].sequence & 2147483648) === 0) return fail("its sequence number sets a waiting period before it could be mined \u2014 it must set none");
+    if (tx.outs.length < 2 || tx.outs.length > 3) return fail(`${tx.outs.length} outputs, must be 2 or 3`);
+    const marker = tx.outs[tx.outs.length - 1];
+    if (toHex7(marker.script) !== toHex7(proposalMarker(proposal.hash)) || BigInt(marker.value) !== 0n) {
+      return fail("the payment does not name this proposal inside it \u2014 it could have been signed for another");
+    }
     let out0;
     try {
       out0 = address_exports.fromOutputScript(tx.outs[0].script, net);
@@ -66981,21 +67028,21 @@ ${ge(n19)}`;
       return fail("output 0 is not a recognisable address");
     }
     if (out0 !== proposal.destination) return fail(`output 0 pays ${out0}, but the proposal names ${proposal.destination}`);
-    if (!Array.isArray(destinations?.attestors) || destinations.threshold === void 0) {
-      return fail("no attestor set was supplied, so the destinations list cannot be checked for attestation");
-    }
+    const rules = attestorsOf(crowdlock, hrp);
     const permitted = destinationIsPermitted({
       address: out0,
-      entries: destinations.entries ?? [],
+      entries: destinations?.entries ?? [],
       opensAt: proposal.opens,
       minimumAgeDays: crowdlock.destination_wait_days,
-      attestors: destinations.attestors,
-      threshold: destinations.threshold,
+      attestors: rules.attestors,
+      threshold: rules.threshold,
+      instance: rules.instance,
       hrp
     });
     if (!permitted.permitted) return fail(`destination not permitted: ${permitted.reason}`);
     const committedSats = Number(tx.outs[0].value);
-    if (tx.outs.length === 2) {
+    if (BigInt(committedSats) < dustFor(tx.outs[0].script)) return fail(`commits ${committedSats} sats, too little for the network to pass on`);
+    if (tx.outs.length === 3) {
       const r11 = record.remainder;
       if (!r11) return fail("has a second output but no remainder lock declared to check it against");
       let back;
@@ -67013,6 +67060,7 @@ ${ge(n19)}`;
       if (r11.owner_pubkey !== L3.owner_pubkey) return fail("remainder lock has a different owner \u2014 this would move coins out of the owner's hands");
       if (r11.locktime < L3.locktime) return fail("remainder lock expires earlier than the lock being spent \u2014 an early escape");
       if (!isCosignerOf(crowdlock, r11.cosigner_pubkey)) return fail("remainder lock is co-signed by a different Crowdlock");
+      if (BigInt(tx.outs[1].value) < dustFor(tx.outs[1].script)) return fail(`returns ${Number(tx.outs[1].value)} sats to the lock, too little for the network to pass on`);
     }
     if (!coin) return fail("the coin has already been spent, so this commitment is void");
     const fee = coin.value - tx.outs.reduce((n19, o19) => n19 + Number(o19.value), 0);
@@ -67020,7 +67068,9 @@ ${ge(n19)}`;
     if (fee > committedSats * crowdlock.max_commitment_fee) {
       return fail(`fee of ${fee} sats is more than ${crowdlock.max_commitment_fee * 100}% of the ${committedSats} committed \u2014 refusing in case of a client bug`);
     }
-    return { valid: true, reason: "", committedSats, fee, ownerPubkey: L3.owner_pubkey };
+    const least = completedVsize(tx);
+    if (fee < least) return fail(`fee of ${fee} sats is below the ${least} the network needs to pass this payment on`);
+    return { valid: true, reason: "", committedSats, fee, ownerPubkey: L3.owner_pubkey, coin: `${txid}:${tx.ins[0].index}` };
   }
   async function commitmentPaid({ record, chain }) {
     let tx;

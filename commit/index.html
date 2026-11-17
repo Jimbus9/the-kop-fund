@@ -216,10 +216,14 @@ async function readPile(p) {
     if (it.type === "notice" && !notice && genuine(it.notice, p)) notice = it.notice;
   }
   let waiting = 0, paid = 0, count = 0;
+  // One coin counts once: of two commitments spending the same coin only one
+  // can ever be paid, so the earlier stands and the later is left out.
+  const counted = new Set();
   for (const it of items) {
     if (it.type !== "commitment") continue;
     const v = await L.checkCommitment({ record: it.record, crowdlock: C, proposal: p, destinations: DESTINATIONS, chain, network: C.network });
-    if (v.valid) { waiting += v.committedSats; count++; }
+    if (v.valid && v.coin && counted.has(v.coin)) continue;
+    if (v.valid) { if (v.coin) counted.add(v.coin); waiting += v.committedSats; count++; }
     else if (/already been spent/.test(v.reason)) paid += await L.commitmentPaid({ record: it.record, chain });
   }
   return { waiting, paid, count, notice };

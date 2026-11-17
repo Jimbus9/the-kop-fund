@@ -165,7 +165,7 @@ python3 -m http.server            # then open localhost:8000/register/</pre>
 import { verifyMembership } from "../js/verify.mjs";
 import { checkCrowdlock, checkRegisterFiles, membershipStatement, joinedVersion, versionsOf } from "../js/crowdlock.mjs";
 import { earlyReleases } from "../js/release.mjs";
-import { hrpFor } from "../js/lockrecord.mjs";
+import { hrpFor, lockIsGenuine } from "../js/lockrecord.mjs";
 
 const el = (id) => document.getElementById(id);
 const fmtBtc = (sats) => (sats / 1e8).toFixed(8).replace(/0+$/, "").replace(/\.$/, "") || "0";
@@ -342,25 +342,34 @@ if (locks.length === 0) {
   const committed = new Set();
   let sats = 0;
   let unreachable = 0;
+  let notLocks = 0;
   for (const lock of locks) {
     const address = String(lock.address).toLowerCase();
     if (seen.has(address) || !(lock.locktime > now)) continue;
     seen.add(address);
+    // A register is a file, and a file can say anything. A record is counted
+    // only if it really is a lock of this Crowdlock: its address is the lock
+    // its own terms make, co-signed by this Crowdlock's key. Until 17 November
+    // 2026 this page counted whatever address a record named.
+    const genuine = lockIsGenuine(lock, { crowdlock, register: data });
+    if (!genuine.ok) { notLocks++; continue; }
     try {
       const res = await fetch(`${CHAIN_API}/address/${lock.address}`);
       const s = (await res.json()).chain_stats;   // confirmed coins only
       const here = s.funded_txo_sum - s.spent_txo_sum;
       if (here >= minimum) {
         sats += here;
-        if (lock.member) committed.add(String(lock.member).toLowerCase());
+        // The owner is worked out from the lock's own key, not read from the record.
+        if (genuine.member) committed.add(genuine.owner);
       }
     } catch { unreachable++; }
   }
   el("lockedTotal").textContent = fmtBtc(sats) + " BTC";
   el("memberCount").textContent = String(committed.size);
-  el("asOf").textContent = unreachable === 0
+  el("asOf").textContent = (unreachable === 0
     ? "Read from the blockchain just now, in your browser."
-    : `${unreachable} lock${unreachable === 1 ? "" : "s"} could not be read from the chain, so this figure is incomplete.`;
+    : `${unreachable} lock${unreachable === 1 ? "" : "s"} could not be read from the chain, so this figure is incomplete.`)
+    + (notLocks === 0 ? "" : ` ${notLocks} record${notLocks === 1 ? "" : "s"} on the register ${notLocks === 1 ? "is not a lock" : "are not locks"} of this Crowdlock and ${notLocks === 1 ? "is" : "are"} not counted.`);
 }
 
 // ---- The co-signer's record ----------------------------------------------
@@ -375,6 +384,7 @@ if (locks.length === 0) {
     const address = String(lock.address).toLowerCase();
     if (seenRel.has(address)) continue;
     seenRel.add(address);
+    if (!lockIsGenuine(lock, { crowdlock, register: data }).ok) continue; // not a lock of this Crowdlock: nothing of the co-signer's to record
     try {
       const res = await fetch(`${CHAIN_API}/address/${lock.address}/txs`);
       if (!res.ok) throw new Error(String(res.status));

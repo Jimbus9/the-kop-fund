@@ -64,6 +64,13 @@ function parse(txHex, lock) {
 export function ownerSigned(record, coins) {
   const p = parse(record.tx, record.lock);
   if (!p.tx) return { ok: false, reason: p.reason };
+  // The payment names its proposal in its last output, inside what the owner
+  // signed (spec/commitment-format.md). A record relabelled for another
+  // proposal is turned away here, before the explorer is asked anything.
+  const last = p.tx.outs[p.tx.outs.length - 1];
+  if (!last || hex(last.script) !== `6a20${record.proposal}` || BigInt(last.value) !== 0n) {
+    return { ok: false, reason: "the payment does not name this proposal inside it" };
+  }
   if (coins === null || coins === undefined) return { ok: false, reason: "the block explorer could not be asked about that lock this pass; it will be looked at again on the next" };
   const value = coins[p.coin];
   if (value === undefined) return { ok: false, reason: "it does not spend a coin that lock holds" };

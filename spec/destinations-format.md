@@ -2,6 +2,8 @@
 
 **Version 1 · 24 October 2026**
 
+**17 November 2026:** two checks that had been left to whoever read the list are now part of reading it. The attestors are the ones the Crowdlock's own file names, whatever the list says of itself; and every entry must carry this Crowdlock's fingerprint, not merely the same one as its neighbours.
+
 The only addresses committed money may ever be sent to.
 
 Bitcoin cannot restrict where a coin goes without covenants, which the network
@@ -100,9 +102,15 @@ This is the point of the whole arrangement. If the key that attests destinations
 were the key that completes commitments, one compromise would deliver both halves
 and the list would protect nothing.
 
-The attestor keys are published in the list's own `attestors` field, are
-separate from the co-signing key, and should be held on different hardware. A
-co-signing key must never appear as an attestor.
+The attestor keys are published **in the Crowdlock's own file** (`attestor_keys`),
+are separate from the co-signing key, and should be held on different hardware.
+A co-signing key must never appear as an attestor, and the Crowdlock's file is
+refused if one does.
+
+The list repeats them, as addresses, in its own `attestors` field, and the two
+must agree. **A verifier takes the attestors from the Crowdlock's file, never
+from the list.** A list that could name its own attestors could approve its own
+destinations, and could name the co-signer as one.
 
 ### How many signatures
 
@@ -210,10 +218,12 @@ signature belongs to somebody else.
 Anybody, with no permission and nothing but the repository:
 
 1. Rebuild each entry's canonical line from the fields, including this
-   instance's declaration hash.
+   instance's declaration hash. **Every entry's `instance` must be this
+   Crowdlock's declaration hash**: an entry attested for another Crowdlock is
+   not an entry of this list, even if the same attestor signed it.
 2. Hash it, and confirm the next entry's `prev` matches.
-3. Verify each attestation against the published attestor addresses, using the
-   same verifier the register uses.
+3. Verify each attestation against the attestor addresses of the keys the
+   Crowdlock's file names, using the same verifier the register uses.
 4. Compare `added` against the commit history and against a mirror, to catch a
    backdated entry.
 

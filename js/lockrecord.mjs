@@ -77,6 +77,45 @@ export function lockAddress(terms, hrp = "bc") {
   return encodeP2WPKH(sha256(lockScript(terms)), hrp);
 }
 
+const KEY = /^0[23][0-9a-f]{64}$/;
+
+/**
+ * Is this record, as it sits on a register, really a lock of this Crowdlock?
+ *
+ * The relay inbox checks a lock before it adds one. A reader must check
+ * again, because a register is a file: one that has been altered, or one
+ * published by a Crowdlock's own founder, can list anything. Without this a
+ * register could name any well-funded address a "lock" and its total would
+ * count it (found by review, 17 November 2026).
+ *
+ * A record is a lock of this Crowdlock only if its address is the lock its
+ * stated terms make and its co-signer is one of this Crowdlock's keys.
+ *
+ * Returns { ok, reason, owner, member }:
+ *   owner   the address the lock's owner key hashes to, worked out here and
+ *           never read from the record's own `member` label
+ *   member  whether that address is a member on this register. The counting
+ *           rule counts a real lock's money either way, and counts its owner
+ *           among the committed members only if they are one.
+ *
+ * `hrp` is only for a private test chain whose addresses use another prefix.
+ */
+export function lockIsGenuine(lock, { crowdlock, register, hrp = hrpFor(crowdlock?.network) }) {
+  const no = (reason) => ({ ok: false, reason, owner: null, member: false });
+  if (!lock || typeof lock !== "object") return no("it is not a lock record");
+  if (!hrp) return no("this Crowdlock's network is not one the checker knows");
+  if (!KEY.test(String(lock.owner_pubkey ?? "")) || !KEY.test(String(lock.cosigner_pubkey ?? ""))) return no("its keys are not public keys");
+  if (!Number.isInteger(lock.locktime) || lock.locktime <= 0) return no("its date is not a date");
+  if (lock.owner_pubkey.slice(2) === lock.cosigner_pubkey.slice(2)) return no("its owner and co-signer are the same key");
+  let derived;
+  try { derived = lockAddress({ ownerPubkey: lock.owner_pubkey, cosignerPubkey: lock.cosigner_pubkey, locktime: lock.locktime }, hrp); } catch { return no("its terms do not make a lock"); }
+  if (derived !== String(lock.address ?? "").toLowerCase()) return no("its address is not the lock its terms make");
+  const cosigner = lock.cosigner_pubkey.slice(2);
+  if (!(crowdlock?.cosigner_keys ?? []).some((k) => String(k).slice(2) === cosigner)) return no("its co-signer is not this Crowdlock's");
+  const owner = memberAddressForOwnerKey(lock.owner_pubkey, hrp);
+  return { ok: true, reason: "", owner, member: (register?.members ?? []).some((m) => String(m.address).toLowerCase() === owner) };
+}
+
 function normalise(address) {
   const raw = String(address ?? "").trim();
   return raw === raw.toUpperCase() && raw !== raw.toLowerCase() ? raw.toLowerCase() : raw;

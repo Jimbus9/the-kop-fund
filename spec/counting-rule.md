@@ -4,6 +4,8 @@
 
 **11 November 2026:** no total of lapsed money is published (it was to be published separately). The counted total is unchanged.
 
+**17 November 2026:** says what had been assumed: a record on the register is counted only if it really is a lock of this Crowdlock, and a lock's member is worked out from its owner key, never read from the record.
+
 How every number this movement publishes is computed. Two people applying this
 document to the same public data must reach the same answer. If they do not,
 this document is at fault and should be corrected.
@@ -64,6 +66,12 @@ committed = Σ (confirmed balance of every lock address in state "locked"
   confirmation.
 - Each lock address is counted once. An address appearing twice in the register
   is counted once.
+- **Only a real lock is counted.** A register is a file, and a file can say
+  anything. A record counts only if its address is the lock its own stated
+  terms make (lock format, "Verifying a lock") and its co-signer is one of
+  this Crowdlock's keys. Anything else is not a lock of this Crowdlock, however
+  much money sits at the address it names, and the blockchain is not asked
+  about it.
 
 ## The minimum
 
@@ -120,6 +128,9 @@ key that owns the locks:
 member(lock) = P2WPKH address of hash160(lock's owner public key)
 committed_members = count of distinct member(lock) over all counted locks
 ```
+
+The member is always worked out this way, from the lock's own key. The record's
+`member` field is a convenience for readers and is never what is counted.
 
 A lock whose derived address is not on the register is counted in the money and
 not in the members. It is somebody's lock either way, and the money is the

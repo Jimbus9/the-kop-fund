@@ -10,7 +10,7 @@
 // The file format is spec/proposal-and-settlement.md, "Publishing a proposal".
 
 import { sha256 } from "./vendor/noble-hashes/sha256.js";
-import { verifyMembership } from "./verify.mjs";
+import { verifyMembership, memberAddressForOwnerKey } from "./verify.mjs";
 import { versionOf, hasSigned } from "./crowdlock.mjs";
 
 export const PROPOSALS_FORMAT = "crowdlock-proposals/1";
@@ -199,12 +199,14 @@ export function attestationsAreValid(entry, { attestors = [], threshold = 1, hrp
   return { ok: true, reason: "", signers: [...signers] };
 }
 
-export function chainIsIntact(entries) {
+export function chainIsIntact(entries, instance = null) {
   let expected = ZERO_PREV;
-  const instance = entries[0]?.instance;
+  // Given the Crowdlock's fingerprint, every entry must carry it; without
+  // one, they must at least all carry the same.
+  const wanted = instance ?? entries[0]?.instance;
   for (let i = 0; i < entries.length; i++) {
     const e = entries[i];
-    if (e.instance !== instance) return { ok: false, reason: `entry ${e.index} belongs to a different instance` };
+    if (e.instance !== wanted) return { ok: false, reason: `entry ${e.index} belongs to a different instance` };
     if (e.index !== i + 1) return { ok: false, reason: `entry at position ${i} has index ${e.index}, expected ${i + 1}` };
     if (e.prev !== expected) return { ok: false, reason: `entry ${e.index} chains to ${String(e.prev).slice(0, 12)}…, expected ${expected.slice(0, 12)}…` };
     expected = destinationHash(e);
@@ -212,18 +214,36 @@ export function chainIsIntact(entries) {
   return { ok: true, reason: "" };
 }
 
-export function destinationIsPermitted({ address, entries, opensAt, minimumAgeDays = 7, attestors = null, threshold = null, hrp = "bc" }) {
-  const chain = chainIsIntact(entries);
+/**
+ * The attestors a Crowdlock's destinations list must be signed by: the ones
+ * the Crowdlock's own file names (attestor_keys), as addresses. Never the
+ * `attestors` a destinations file lists for itself: a list must not be able
+ * to appoint its own attestors, and the rule that an attestor is never a
+ * co-signer is checked on the Crowdlock's file.
+ */
+export function attestorsOf(crowdlock, hrp = { mainnet: "bc", regtest: "bcrt" }[crowdlock?.network] ?? "tb") {
+  return {
+    attestors: (crowdlock?.attestor_keys ?? []).map((k) => memberAddressForOwnerKey(k, hrp)),
+    threshold: crowdlock?.attestor_threshold,
+    instance: crowdlock?.declaration?.sha256,
+    hrp,
+  };
+}
+
+export function destinationIsPermitted({ address, entries, opensAt, minimumAgeDays = 7, attestors = null, threshold = null, hrp = "bc", instance = null }) {
+  // The list must be this Crowdlock's own, and it must be checked for
+  // attestation. Both used to be the caller's to remember (17 November 2026).
+  if (!HEX64.test(String(instance ?? ""))) return { permitted: false, reason: "no Crowdlock fingerprint was supplied, so the list cannot be tied to this Crowdlock" };
+  if (!Array.isArray(attestors) || !Number.isInteger(threshold)) return { permitted: false, reason: "no attestor set was supplied, so the list cannot be checked for attestation" };
+  const chain = chainIsIntact(entries, instance);
   if (!chain.ok) return { permitted: false, reason: `the list itself is broken: ${chain.reason}` };
   const mine = entries.filter((e) => e.address === address);
   const added = mine.filter((e) => e.op === "add").pop();
   if (!added) return { permitted: false, reason: "not on the published destinations list" };
   const revoked = mine.filter((e) => e.op === "revoke" && e.index > added.index).pop();
   if (revoked) return { permitted: false, reason: `revoked by entry ${revoked.index}` };
-  if (attestors !== null || threshold !== null) {
-    const att = attestationsAreValid(added, { attestors: attestors ?? [], threshold: threshold ?? 1, hrp });
-    if (!att.ok) return { permitted: false, reason: att.reason };
-  }
+  const att = attestationsAreValid(added, { attestors, threshold, hrp });
+  if (!att.ok) return { permitted: false, reason: att.reason };
   if (!added.firstSeen) return { permitted: false, reason: `entry ${added.index} has no recorded first public appearance, so its age cannot be established` };
   const seen = Date.parse(added.firstSeen), opens = Date.parse(opensAt);
   if (Number.isNaN(seen) || Number.isNaN(opens)) return { permitted: false, reason: "the entry's first appearance or the proposal's opening is not a readable date" };

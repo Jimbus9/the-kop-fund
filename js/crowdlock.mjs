@@ -12,6 +12,7 @@
 // See spec/running-your-own.md for what each parameter means.
 
 import { sha256 } from "./vendor/noble-hashes/sha256.js";
+import { memberAddressForOwnerKey } from "./verify.mjs";
 
 const HASH = /^[0-9a-f]{64}$/;
 const PUBKEY = /^0[23][0-9a-f]{64}$/; // compressed only, as the lock format requires
@@ -294,6 +295,20 @@ export function checkRegisterFiles(c, { registrations, destinations }) {
       "the destinations file's waiting period disagrees with destination_wait_days");
     need(destinations.threshold === c.attestor_threshold,
       "the destinations file's threshold disagrees with attestor_threshold");
+    // The attestors are the Crowdlock file's (attestor_keys). The list repeats
+    // them as addresses, and the two must agree: a list that could name its
+    // own attestors could approve its own destinations.
+    if (Array.isArray(c.attestor_keys) && c.attestor_keys.every((k) => PUBKEY.test(k))) {
+      const hrp = { mainnet: "bc", regtest: "bcrt" }[c.network] ?? "tb";
+      const named = c.attestor_keys.map((k) => memberAddressForOwnerKey(k, hrp)).sort();
+      const listed = (Array.isArray(destinations.attestors) ? destinations.attestors : []).map(String).sort();
+      need(JSON.stringify(named) === JSON.stringify(listed),
+        "the destinations file's attestors are not the ones the Crowdlock's file names (attestor_keys)");
+    }
+    // Every entry was attested for one Crowdlock, named in the entry itself.
+    for (const e of Array.isArray(destinations.entries) ? destinations.entries : []) {
+      need(e?.instance === c.declaration.sha256, `destination entry ${e?.index} was attested for a different Crowdlock`);
+    }
   }
   return { ok: problems.length === 0, problems };
 }
