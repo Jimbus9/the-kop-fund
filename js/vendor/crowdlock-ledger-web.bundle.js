@@ -66665,8 +66665,8 @@ ${ge(n19)}`;
   // ../js/crowdlock.mjs
   init_shim();
   function isCosignerOf(c25, cosignerPubkeyHex) {
-    const x8 = String(cosignerPubkeyHex).toLowerCase().slice(2);
-    return (c25.cosigner_keys ?? []).some((k8) => k8.slice(2) === x8);
+    const key = String(cosignerPubkeyHex).toLowerCase();
+    return (c25.cosigner_keys ?? []).some((k8) => String(k8).toLowerCase() === key);
   }
 
   // ../js/lockrecord.mjs
@@ -66831,6 +66831,12 @@ ${ge(n19)}`;
     regtest: { network: import_descriptors.networks.regtest, coin: 1 }
   };
   var DUST_SATS = 294n;
+  var MOST_INPUTS = 200;
+  var TOO_SMALL = "every coin here is too small to be worth its own fee at this fee rate \u2014 choose a slower fee";
+  function worthSpending(coins, inputWeight, feeRate, most = MOST_INPUTS) {
+    const cost = BigInt(Math.ceil(inputWeight / 4 * feeRate));
+    return coins.filter((c25) => BigInt(c25.value) > cost).sort((a29, b8) => BigInt(b8.value) > BigInt(a29.value) ? 1 : BigInt(b8.value) < BigInt(a29.value) ? -1 : 0).slice(0, most);
+  }
   function dustFor(script) {
     const witness = script.length >= 4 && script.length <= 42 && (script[0] === 0 || script[0] >= 81 && script[0] <= 96) && script[1] === script.length - 2;
     return BigInt(3 * (8 + 1 + script.length + (witness ? 67 : 148)));
@@ -66887,8 +66893,10 @@ ${ge(n19)}`;
     } catch {
       throw new Error("that is not an address on this network");
     }
-    const coins = (await chain.utxos(account.address)).filter((c25) => c25.confirmed);
-    if (coins.length === 0) throw new Error("there is no confirmed money to send yet");
+    const everyCoin = (await chain.utxos(account.address)).filter((c25) => c25.confirmed);
+    if (everyCoin.length === 0) throw new Error("there is no confirmed money to send yet");
+    const coins = worthSpending(everyCoin, account.output.inputWeight(true, "DANGEROUSLY_USE_FAKE_SIGNATURES"), feeRate);
+    if (coins.length === 0) throw new Error(TOO_SMALL);
     const inputTotal = coins.reduce((s23, c25) => s23 + BigInt(c25.value), 0n);
     const sendAll = amount === "all";
     if (!sendAll && (typeof amount !== "bigint" || amount <= 0n)) throw new Error("amount must be a positive number of sats");
@@ -67001,8 +67009,10 @@ ${ge(n19)}`;
     } catch {
       throw new Error("that is not an address on this network");
     }
-    const coins = (await chain.utxos(lock.address)).filter((c25) => c25.confirmed);
-    if (coins.length === 0) throw new Error("there is no confirmed money in this lock");
+    const everyCoin = (await chain.utxos(lock.address)).filter((c25) => c25.confirmed);
+    if (everyCoin.length === 0) throw new Error("there is no confirmed money in this lock");
+    const coins = worthSpending(everyCoin, out.inputWeight(true, "DANGEROUSLY_USE_FAKE_SIGNATURES"), feeRate);
+    if (coins.length === 0) throw new Error(TOO_SMALL);
     const total = coins.reduce((s23, c25) => s23 + BigInt(c25.value), 0n);
     const weight = 44 + coins.length * out.inputWeight(true, "DANGEROUSLY_USE_FAKE_SIGNATURES") + dest.outputWeight();
     const fee = BigInt(Math.ceil(weight / 4 * feeRate));
@@ -67344,6 +67354,48 @@ ${ge(n19)}`;
 
   // ../../app/src/wallet/esplora.mjs
   init_shim();
+
+  // ../js/release.mjs
+  init_shim();
+  var CLOCK_WINDOW = 7 * 86400;
+  var PAGE = 25;
+  var MOST_PAGES = 40;
+  async function readHistory(first, after, { mostPages = MOST_PAGES } = {}) {
+    const page = await first();
+    const list = Array.isArray(page) ? page : [];
+    const txs = [...list];
+    const seen = new Set(list.map((t29) => t29.txid));
+    let complete = list.filter((t29) => !t29.status?.confirmed).length < 50;
+    let confirmed = list.filter((t29) => t29.status?.confirmed);
+    for (let pages = 1; confirmed.length >= PAGE; pages++) {
+      if (pages >= mostPages) {
+        complete = false;
+        break;
+      }
+      const next = await after(confirmed[confirmed.length - 1].txid);
+      confirmed = (Array.isArray(next) ? next : []).filter((t29) => t29.status?.confirmed && !seen.has(t29.txid));
+      for (const t29 of confirmed) {
+        seen.add(t29.txid);
+        txs.push(t29);
+      }
+    }
+    return { txs, complete };
+  }
+  function coinsFromHistory(address, txs) {
+    const a29 = String(address).toLowerCase();
+    const at2 = (x8) => String(x8 ?? "").toLowerCase() === a29;
+    const spent = /* @__PURE__ */ new Set();
+    const made = [];
+    for (const tx of Array.isArray(txs) ? txs : []) {
+      for (const v21 of tx?.vin ?? []) if (at2(v21?.prevout?.scriptpubkey_address)) spent.add(`${v21.txid}:${v21.vout}`);
+      (tx?.vout ?? []).forEach((o19, n19) => {
+        if (at2(o19?.scriptpubkey_address)) made.push({ txid: tx.txid, vout: n19, value: o19.value, confirmed: !!tx.status?.confirmed });
+      });
+    }
+    return made.filter((c25) => !spent.has(`${c25.txid}:${c25.vout}`));
+  }
+
+  // ../../app/src/wallet/esplora.mjs
   var TIMEOUT_MS = 2e4;
   var FIRST_TRY = 0.4;
   var PAUSE = 0.075;
@@ -67495,7 +67547,15 @@ ${ge(n19)}`;
     };
     return {
       async utxos(address) {
-        const list = await get(`/address/${address}/utxo`);
+        let list;
+        try {
+          list = await get(`/address/${address}/utxo`);
+        } catch (e29) {
+          if (!/answered 400/.test(String(e29?.message ?? e29))) throw e29;
+          const h6 = await readHistory(() => get(`/address/${address}/txs`), (last2) => get(`/address/${address}/txs/chain/${last2}`));
+          if (!h6.complete) throw e29;
+          return coinsFromHistory(address, h6.txs);
+        }
         return list.map((u13) => ({ txid: u13.txid, vout: u13.vout, value: u13.value, confirmed: !!u13.status?.confirmed }));
       },
       txHex: (txid) => get(`/tx/${txid}/hex`, "text"),

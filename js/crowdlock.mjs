@@ -340,8 +340,15 @@ export function checkSeparate(crowdlocks) {
   return { ok: problems.length === 0, problems };
 }
 
-/** Does a lock with this co-signer key belong to this Crowdlock? */
+/**
+ * Does a lock with this co-signer key belong to this Crowdlock? The key must
+ * be one the file names, exactly. Until 17 November 2026 (security loop,
+ * round 3) only its x-coordinate was compared, so a lock naming a key's
+ * mirror image (02… for 03…) counted as this Crowdlock's. It is a different
+ * lock: the co-signer's words do not make that key, so no tool here could
+ * ever complete a commitment from it, yet it counted toward a target.
+ */
 export function isCosignerOf(c, cosignerPubkeyHex) {
-  const x = String(cosignerPubkeyHex).toLowerCase().slice(2);
-  return (c.cosigner_keys ?? []).some((k) => k.slice(2) === x);
+  const key = String(cosignerPubkeyHex).toLowerCase();
+  return (c.cosigner_keys ?? []).some((k) => String(k).toLowerCase() === key);
 }

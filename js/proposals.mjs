@@ -433,7 +433,7 @@ function remainderProblem(remainder, script, lock, crowdlock) {
   if (!KEY66.test(remainder.owner_pubkey) || !KEY66.test(remainder.cosigner_pubkey) || !(remainder.locktime > 0)) return "its remainder lock's terms do not make a lock";
   if (remainder.owner_pubkey !== lock.owner_pubkey) return "its remainder lock has a different owner";
   if (remainder.locktime < lock.locktime) return "its remainder lock opens earlier than the lock it spends";
-  if (!(crowdlock.cosigner_keys ?? []).some((k) => String(k).slice(2) === remainder.cosigner_pubkey.slice(2))) return "its remainder lock is not co-signed by this Crowdlock";
+  if (!(crowdlock.cosigner_keys ?? []).some((k) => String(k).toLowerCase() === remainder.cosigner_pubkey)) return "its remainder lock is not co-signed by this Crowdlock";
   let made;
   try {
     made = "0020" + Array.from(sha256(lockScript({ ownerPubkey: remainder.owner_pubkey, cosignerPubkey: remainder.cosigner_pubkey, locktime: remainder.locktime })), (b) => b.toString(16).padStart(2, "0")).join("");

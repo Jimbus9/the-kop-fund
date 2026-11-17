@@ -396,8 +396,11 @@ if (locks.length === 0) {
   // 17 November 2026 a lock taken off the register, or with one digit of its
   // date changed, took its early release off this record with it.)
   const MEMORY = `crowdlock.seenlocks.v1:${crowdlock.declaration.sha256}`;
-  let remembered = [];
-  try { remembered = JSON.parse(localStorage.getItem(MEMORY) ?? "[]"); } catch {}
+  // What is kept: the terms of up to 500 locks, how many there were, and a
+  // running fingerprint of all of them in order, so a record removed or
+  // changed further back than the terms kept still shows (round 3).
+  let remembered = null;
+  try { remembered = JSON.parse(localStorage.getItem(MEMORY) ?? "null"); } catch {}
   const watched = locksToWatch({ crowdlock, register: data, remembered });
   try { localStorage.setItem(MEMORY, JSON.stringify(locksSeen({ crowdlock, register: data, remembered }))); } catch {}
   const gone = watched.gone.length;
@@ -429,11 +432,12 @@ if (locks.length === 0) {
   // The explorer's own page for the transaction, so anyone can see it for themselves.
   const txLink = (txid) => `${String(CHAIN_API).replace(/\/api$/, "")}/tx/${txid}`;
   const esc = (x) => String(x ?? "").replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`);
-  const goneNote = gone === 0 ? "" : ` ${gone === 1 ? "A lock this browser saw on the register is" : `${gone} locks this browser saw on the register are`} no longer on it as ${gone === 1 ? "it was" : "they were"}. Nothing is ever meant to be taken off the register or changed. ${gone === 1 ? "It is" : "They are"} still checked here.`;
+  const rewritten = watched.rewritten === true;
+  const goneNote = gone === 0 ? (rewritten ? " The register no longer matches what this browser saw before: a lock's record has been removed or changed, further back than it can name. Nothing is ever meant to be taken off the register or changed, so this browser can't say there were no early releases." : "") : ` ${gone === 1 ? "A lock this browser saw on the register is" : `${gone} locks this browser saw on the register are`} no longer on it as ${gone === 1 ? "it was" : "they were"}. Nothing is ever meant to be taken off the register or changed. ${gone === 1 ? "It is" : "They are"} still checked here.`;
   if (found.length === 0) {
     const none = watched.locks.length === 0;
-    setVerdict(el("releaseVerdict"), el("releaseText"), unread === 0 && gone === 0,
-      none ? "No locks yet, so nothing to release" : unread > 0 ? "Could not check every lock" : gone > 0 ? "No early releases, but the register has changed" : "No early releases");
+    setVerdict(el("releaseVerdict"), el("releaseText"), unread === 0 && gone === 0 && !rewritten,
+      none && !rewritten ? "No locks yet, so nothing to release" : unread > 0 ? "Could not check every lock" : gone > 0 || rewritten ? "No early release found, but the register has been rewritten" : "No early releases");
     el("releaseDetail").textContent = (none
       ? "When members lock money, any lock the co-signer opens early will show here."
       : unread === 0

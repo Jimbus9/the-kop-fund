@@ -150,8 +150,9 @@ export function lockIsGenuine(lock, { crowdlock, register, hrp = hrpFor(crowdloc
   let derived;
   try { derived = lockAddress({ ownerPubkey: lock.owner_pubkey, cosignerPubkey: lock.cosigner_pubkey, locktime: lock.locktime }, hrp); } catch { return no("its terms do not make a lock"); }
   if (derived !== String(lock.address ?? "").toLowerCase()) return no("its address is not the lock its terms make");
-  const cosigner = lock.cosigner_pubkey.slice(2);
-  if (!(crowdlock?.cosigner_keys ?? []).some((k) => String(k).slice(2) === cosigner)) return no("its co-signer is not this Crowdlock's");
+  // The key itself, not just its x-coordinate: a lock naming a key's mirror
+  // image is a different lock, which the co-signer's words cannot open.
+  if (!(crowdlock?.cosigner_keys ?? []).some((k) => String(k).toLowerCase() === lock.cosigner_pubkey)) return no("its co-signer is not this Crowdlock's");
   const owner = memberAddressForOwnerKey(lock.owner_pubkey, hrp);
   return { ok: true, reason: "", owner, member: isSignedMember(owner, { crowdlock, register, hrp }) };
 }

@@ -19,6 +19,7 @@ import { createHash } from "node:crypto";
 import { Transaction, script as bscript } from "bitcoinjs-lib";
 import { verify } from "../js/vendor/noble-secp256k1.js";
 import { lockScript } from "../js/lockrecord.mjs";
+import { readHistory, coinsFromHistory } from "../js/release.mjs";
 
 const hex = (b) => Buffer.from(b).toString("hex");
 const TIMEOUT_MS = 20000;
@@ -194,6 +195,16 @@ export function coinsAt(chainApi, fetchImpl = fetch) {
       // Confirmed coins only: an unconfirmed one can be replaced by its sender
       // and vanish, so a commitment spending it counts toward nothing.
       if (r.ok) coins = Object.fromEntries((await r.json()).filter((u) => u?.status?.confirmed).map((u) => [`${u.txid}:${u.vout}`, u.value]));
+      // Public explorers refuse to list the coins at an address holding more
+      // than 500 (they answer 400). Anyone can send 501 tiny coins to a
+      // lock's published address, and that lock's commitments could then
+      // never be taken. Its history says the same thing, a page at a time
+      // (security loop, 17 November 2026).
+      else if (r.status === 400) {
+        const page = async (path) => { const p = await ask(`${chainApi}/address/${address}/${path}`, {}, fetchImpl); if (!p.ok) throw new Error(String(p.status)); return p.json(); };
+        const h = await readHistory(() => page("txs"), (last) => page(`txs/chain/${last}`));
+        if (h.complete) coins = Object.fromEntries(coinsFromHistory(address, h.txs).filter((u) => u.confirmed).map((u) => [`${u.txid}:${u.vout}`, u.value]));
+      }
     } catch {}
     asked.set(address, coins);
     return coins;
