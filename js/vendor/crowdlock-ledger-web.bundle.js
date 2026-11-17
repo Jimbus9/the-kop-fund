@@ -66712,7 +66712,7 @@ ${ge(n19)}`;
     const opens = Date.parse(opensAt);
     if (Number.isNaN(opens)) return { permitted: false, reason: "the proposal's opening is not a readable date" };
     const ageDays = (opens - stamped.at * 1e3) / 864e5;
-    if (!(ageDays >= minimumAgeDays)) return { permitted: false, reason: `only ${ageDays.toFixed(1)} days old at the proposal's opening, needs ${minimumAgeDays}` };
+    if (minimumAgeDays > 0 && !(ageDays >= minimumAgeDays)) return { permitted: false, reason: `only ${ageDays.toFixed(1)} days old at the proposal's opening, needs ${minimumAgeDays}` };
     return { permitted: true, reason: "" };
   }
 

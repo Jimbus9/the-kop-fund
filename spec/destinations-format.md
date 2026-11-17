@@ -170,6 +170,10 @@ payment is in**.
   attestations, a stamp output holding money, or a stamp not yet in a block,
   is refused.** If the attestations change, the entry must be stamped again,
   and its age starts again.
+- **A block's clock can run up to two hours fast**, so a stamp can look a
+  little younger than it is, never older: it can only make a destination wait
+  longer. A Crowdlock with no waiting period needs only the stamp to be in a
+  block.
 - **It costs one ordinary network fee per destination**, not per proposal: a
   second proposal to the same destination stamps nothing.
 

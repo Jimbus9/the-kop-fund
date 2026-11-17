@@ -303,7 +303,11 @@ export function destinationIsPermitted({ address, entries, opensAt, minimumAgeDa
   const opens = Date.parse(opensAt);
   if (Number.isNaN(opens)) return { permitted: false, reason: "the proposal's opening is not a readable date" };
   const ageDays = (opens - stamped.at * 1000) / 86_400_000;
-  if (!(ageDays >= minimumAgeDays)) return { permitted: false, reason: `only ${ageDays.toFixed(1)} days old at the proposal's opening, needs ${minimumAgeDays}` };
+  // A miner may set a block's time up to two hours ahead, so a stamp can look
+  // younger than it is, never older. With no waiting period, being in a block
+  // is enough (17 November 2026: a test destination was refused for five
+  // minutes because its block's clock ran fast).
+  if (minimumAgeDays > 0 && !(ageDays >= minimumAgeDays)) return { permitted: false, reason: `only ${ageDays.toFixed(1)} days old at the proposal's opening, needs ${minimumAgeDays}` };
   return { permitted: true, reason: "" };
 }
 
