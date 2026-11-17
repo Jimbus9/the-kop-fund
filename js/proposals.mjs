@@ -381,6 +381,21 @@ export function commitmentFromEvent(event, fingerprint, proposal) {
 // ---------------------------------------------------------------------------
 
 export const PER_LOCK_LIMIT = 5;
+
+/**
+ * How long after a proposal closes a commitment posted before the close may
+ * still be taken, measured by when the repository (or a reader) first sees
+ * it, not by the time its poster wrote on it, which anyone can set. Covers an
+ * inbox that was briefly down. Until 17 November 2026 only the written time
+ * was checked, so a commitment posted hours after closing and dated before
+ * it was taken (OpenAI review, H-02).
+ */
+export const LATE_GRACE = 3600;
+
+/** May a commitment still be taken into this proposal's pile at `nowSeconds`, whatever it says of itself? */
+export function stillTakingCommitments(proposal, nowSeconds) {
+  return nowSeconds < Date.parse(proposal.closes) / 1000 + LATE_GRACE;
+}
 const MAX_TX_HEX = 4000;
 
 /** A new, empty pile for a proposal. */
@@ -451,6 +466,7 @@ export async function applyCommitments(pile, events, { crowdlock, proposal, regi
     const read = readTx ? readTx(r.tx) : null;
     if (readTx && !read) { refuse("its transaction cannot be read, or does not spend exactly one coin"); continue; }
     if (!(item.at >= opens && item.at < closes)) { refuse("it was posted outside the proposal's gathering window"); continue; }
+    if (!stillTakingCommitments(proposal, Date.parse(nowIso) / 1000)) { refuse("the repository first saw it more than an hour after the proposal closed, whatever time it gives itself"); continue; }
     const onRegister = locks.get(lockAddress);
     if (!onRegister || onRegister.owner_pubkey !== r.lock.owner_pubkey || onRegister.cosigner_pubkey !== r.lock.cosigner_pubkey || onRegister.locktime !== r.lock.locktime) {
       refuse("its lock is not on this Crowdlock's register"); continue;
@@ -542,7 +558,7 @@ export function noticeIsGenuine(notice, { crowdlock, hash, hrp, addressOf }) {
  * nothing else can be smuggled in, and a fake cannot take the real one's place.
  * A notice is recorded once, if genuine; after it, no completion is recorded.
  */
-export async function applySettlement(pile, items, { crowdlock, hash, hrp, addressOf, txidOf, nowIso, completedBy, canonical = (h) => h }) {
+export async function applySettlement(pile, items, { crowdlock, hash, hrp, addressOf, txidOf, nowIso, completedBy, canonical = (h) => h, closes = null }) {
   if (typeof completedBy !== "function") throw new Error("applySettlement needs a check that each completed payment is signed by the owner and the co-signer");
   // A completion is kept, and so sent, in its standard encoding (`canonical`):
   // a copy written another way has the same id, and the network refuses it.
@@ -576,12 +592,15 @@ export async function applySettlement(pile, items, { crowdlock, hash, hrp, addre
   for (const it of sorted) {
     if (it.type === "notice") {
       if (next.notice) continue;
+      // A proposal can only fail once gathering is over. Until 17 November
+      // 2026 a genuine notice was taken while it was still gathering, and the
+      // pile then said it had failed (OpenAI review, H-04).
+      if (!(closes && Date.parse(nowIso) >= Date.parse(closes))) { outcome.push({ added: false, kind: "notice", reason: "the proposal has not closed yet, so it cannot have failed" }); continue; }
       const g = noticeIsGenuine(it.notice, { crowdlock, hash, hrp, addressOf });
       if (!g.ok) { outcome.push({ added: false, kind: "notice", reason: g.reason }); continue; }
       next = { ...next, notice: { ...it.notice, statement: noticeStatement(hash), published: nowIso } };
       outcome.push({ added: true, kind: "notice" });
     } else if (it.type === "completed") {
-      if (next.notice) { outcome.push({ added: false, kind: "completed", reason: "the co-signer has declared this proposal dead" }); continue; }
       const id = txidOf(it.tx);
       if (!id || done.has(id)) continue;
       if (!ids.has(id)) { outcome.push({ added: false, kind: "completed", reason: "it completes no commitment in the pile" }); continue; }
@@ -591,8 +610,11 @@ export async function applySettlement(pile, items, { crowdlock, hash, hrp, addre
       // Not recorded, and its commitment stays open for the real completion.
       if (!v || v.ok !== true) { outcome.push({ added: false, kind: "completed", txid: id, reason: v?.reason ?? "it could not be checked" }); continue; }
       done.add(id);
-      next = { ...next, completed: [...(next.completed ?? []), { txid: id, tx: it.tx, published: nowIso }] };
-      outcome.push({ added: true, kind: "completed", txid: id });
+      // A completion signed by both is recorded even after a notice: it is
+      // evidence the co-signer went back on its word, and must not be hidden.
+      const breach = !!next.notice;
+      next = { ...next, completed: [...(next.completed ?? []), { txid: id, tx: it.tx, published: nowIso, ...(breach ? { after_notice: true } : {}) }] };
+      outcome.push({ added: true, kind: "completed", txid: id, ...(breach ? { reason: "completed AFTER the co-signer declared this proposal dead" } : {}) });
     }
   }
   return { pile: next, outcome };

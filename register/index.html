@@ -164,7 +164,7 @@ python3 -m http.server            # then open localhost:8000/register/</pre>
 <script type="module">
 import { verifyMembership } from "../js/verify.mjs";
 import { checkCrowdlock, checkRegisterFiles, membershipStatement, joinedVersion, versionsOf } from "../js/crowdlock.mjs";
-import { earlyReleases, readHistory } from "../js/release.mjs";
+import { earlyReleases, readHistory, clocksFor } from "../js/release.mjs";
 import { stampsFor } from "../js/proposals.mjs";
 import { hrpFor, lockIsGenuine } from "../js/lockrecord.mjs";
 
@@ -404,7 +404,14 @@ if (locks.length === 0) {
       };
       const h = await readHistory(() => page("txs"), (last) => page(`txs/chain/${last}`));
       if (!h.complete) unread++;
-      for (const r of earlyReleases(lock, h.txs, { destinations, crowdlock, register: data, stamps })) found.push({ ...r, address: lock.address });
+      // The network's clock for spends in blocks stamped just after the date:
+      // a spend it can't decide makes the lock unreadable, never clean.
+      const clocks = await clocksFor(lock, h.txs, async (hash) => { const r = await fetch(`${CHAIN_API}/block/${hash}`); if (!r.ok) throw new Error(String(r.status)); return r.json(); });
+      let undecided = false;
+      for (const r of earlyReleases(lock, h.txs, { destinations, crowdlock, register: data, stamps, clocks })) {
+        if (r.undecided) undecided = true; else found.push({ ...r, address: lock.address });
+      }
+      if (undecided) unread++;
     } catch { unread++; }
   }
   const short = (x) => (x ? `${String(x).slice(0, 8)}…${String(x).slice(-6)}` : "");

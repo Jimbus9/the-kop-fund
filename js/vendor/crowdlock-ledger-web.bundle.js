@@ -66555,6 +66555,15 @@ ${ge(n19)}`;
 
   // ../js/lockrecord.mjs
   init_shim();
+
+  // ../js/crowdlock.mjs
+  init_shim();
+  function isCosignerOf(c25, cosignerPubkeyHex) {
+    const x8 = String(cosignerPubkeyHex).toLowerCase().slice(2);
+    return (c25.cosigner_keys ?? []).some((k8) => k8.slice(2) === x8);
+  }
+
+  // ../js/lockrecord.mjs
   var DAY = 86400;
   var YEAR = 365.25 * DAY;
   var SLACK = 31 * DAY;
@@ -66595,15 +66604,6 @@ ${ge(n19)}`;
 
   // ../js/proposals.mjs
   init_shim();
-
-  // ../js/crowdlock.mjs
-  init_shim();
-  function isCosignerOf(c25, cosignerPubkeyHex) {
-    const x8 = String(cosignerPubkeyHex).toLowerCase().slice(2);
-    return (c25.cosigner_keys ?? []).some((k8) => k8.slice(2) === x8);
-  }
-
-  // ../js/proposals.mjs
   var HEX64 = /^[0-9a-f]{64}$/;
   var DAY2 = 86400 * 1e3;
   function hex(bytes2) {
@@ -67363,6 +67363,8 @@ ${ge(n19)}`;
       txs: (address) => get(`/address/${address}/txs`),
       /** The next page of the address's confirmed history, after this transaction. */
       txsAfter: (address, txid) => get(`/address/${address}/txs/chain/${txid}`),
+      /** One block, as the explorer describes it (its previous block, its median time). Never changes once asked. */
+      block: (hash) => get(`/block/${hash}`, "json", true),
       /** One transaction, as the explorer describes it: its outputs, and its block if it is in one. */
       tx: (txid) => get(`/tx/${txid}`),
       /** Has anything ever been sent to this address, confirmed or not? */

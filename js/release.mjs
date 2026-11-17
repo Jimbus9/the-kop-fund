@@ -89,15 +89,64 @@ function holdsNothing(o) {
   return /^6a20[0-9a-f]{64}$/.test(String(o?.scriptpubkey ?? "")) && Number(o?.value) === 0;
 }
 
+// ---------------------------------------------------------------------------
+// When was a spend early? Bitcoin lets the owner alone open a lock only once
+// the median time of the eleven blocks BEFORE the spending block is past the
+// lock's date (BIP 113), not when the spending block's own timestamp is. A
+// miner chooses that timestamp, up to about two hours ahead, so a co-signed
+// spend in a block stamped just after the date may still have been early.
+// Until 17 November 2026 the block's own timestamp was used (OpenAI review,
+// C-02). Spends whose block is stamped before the date are early whatever the
+// clock; those stamped within CLOCK_WINDOW after it need the network's clock,
+// read with clocksFor; beyond that they are not early.
+// ---------------------------------------------------------------------------
+
+/** How long after a lock's date a spend's block timestamp leaves its earliness in doubt. */
+export const CLOCK_WINDOW = 7 * 86400;
+
+/** Does this confirmed spend of the lock need the network's clock to decide whether it was early? */
+export function needsClock(lock, tx) {
+  if (!tx?.status?.confirmed || !Number.isInteger(tx.status.block_time)) return false;
+  const address = String(lock.address).toLowerCase();
+  if (!(tx.vin ?? []).some((v) => String(v.prevout?.scriptpubkey_address ?? "").toLowerCase() === address)) return false;
+  const after = tx.status.block_time - lock.locktime;
+  return after >= 0 && after < CLOCK_WINDOW;
+}
+
+/**
+ * The network's clock for each block that needs it: { block_hash: median
+ * time of the blocks before it }. `getBlock(hash)` is the explorer's
+ * /block/<hash> (it gives `previousblockhash` and `mediantime`). A block that
+ * can't be read is left out, and its spend is reported as undecided.
+ */
+export async function clocksFor(lock, txs, getBlock) {
+  const out = {};
+  for (const tx of Array.isArray(txs) ? txs : []) {
+    if (!needsClock(lock, tx)) continue;
+    const hash = tx.status.block_hash;
+    if (!hash || hash in out) continue;
+    try {
+      const prev = (await getBlock(hash))?.previousblockhash;
+      const mtp = prev ? (await getBlock(prev))?.mediantime : undefined;
+      if (Number.isInteger(mtp)) out[hash] = mtp;
+    } catch { /* left out: undecided */ }
+  }
+  return out;
+}
+
 /**
  * Every time the co-signer helped open this lock before its date, other than
  * for a purchase.
  *   lock     { address, locktime, owner_pubkey, cosigner_pubkey? }
  *   txs      the explorer's transactions for the lock's address: the whole
  *            history (readHistory), or a release can be pushed out of sight
- *   context  { destinations, crowdlock, register, stamps } — the Crowdlock's
- *            destinations file, its own file, its register, and the
- *            destinations' stamp payments (stampsFor in proposals.mjs)
+ *   context  { destinations, crowdlock, register, stamps, clocks } — the
+ *            Crowdlock's destinations file, its own file, its register, the
+ *            destinations' stamp payments (stampsFor in proposals.mjs), and
+ *            the network's clock for blocks stamped just after the date
+ *            (clocksFor). A spend whose earliness can't be decided without a
+ *            clock that is missing is returned with `undecided: true`: the
+ *            caller says the lock could not be checked, never "no releases".
  *   now      seconds; used for a spend not yet in a block
  * Returns [{ txid, at, sats, paidTo, confirmed, cosigner }]. A spend after the
  * date is left out: the owner could have done that alone.
@@ -112,7 +161,7 @@ function holdsNothing(o) {
  * went as fee.
  */
 export function earlyReleases(lock, txs, context = {}, now = Math.floor(Date.now() / 1000)) {
-  const { destinations = null, crowdlock = null, register = null, stamps = {} } = context ?? {};
+  const { destinations = null, crowdlock = null, register = null, stamps = {}, clocks = {} } = context ?? {};
   const hrp = context?.hrp ?? hrpFor(crowdlock?.network) ?? "bc";
   const maxFee = typeof crowdlock?.max_commitment_fee === "number" ? crowdlock.max_commitment_fee : 0.01;
   const address = String(lock.address).toLowerCase();
@@ -129,13 +178,21 @@ export function earlyReleases(lock, txs, context = {}, now = Math.floor(Date.now
     const markers = outs.filter(holdsNothing).length;
     for (const vin of ins) {
       if (String(vin.prevout?.scriptpubkey_address ?? "").toLowerCase() !== address) continue;
-      if (!(at < lock.locktime)) continue;
+      // Early if the network's clock had not passed the date. Before it in the
+      // block's own time means early for certain; just after it, ask the clock.
+      let undecided = false;
+      if (!(at < lock.locktime)) {
+        if (!needsClock(lock, tx)) continue;
+        const mtp = clocks?.[tx.status.block_hash];
+        if (Number.isInteger(mtp)) { if (mtp > lock.locktime) continue; }
+        else undecided = true;
+      }
       const stray = outs.find((o) => !accounted(o));
       const feeTooBig = spent - paid > spent * maxFee;
       if (outs.length > 0 && !stray && !feeTooBig && markers <= 1 && paid > 0) continue;
       found.push({
         txid: tx.txid, at, sats: vin.prevout?.value ?? 0, paidTo: stray?.scriptpubkey_address ?? null,
-        confirmed: !!tx.status?.confirmed, cosigner: lock.cosigner_pubkey ?? null,
+        confirmed: !!tx.status?.confirmed, cosigner: lock.cosigner_pubkey ?? null, ...(undecided ? { undecided: true } : {}),
       });
     }
   }

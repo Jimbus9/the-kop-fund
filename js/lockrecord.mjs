@@ -24,7 +24,8 @@
 // published and simply not counted.
 
 import { sha256 } from "./vendor/noble-hashes/sha256.js";
-import { encodeP2WPKH, memberAddressForOwnerKey } from "./verify.mjs";
+import { encodeP2WPKH, memberAddressForOwnerKey, verifyMembership } from "./verify.mjs";
+import { membershipStatement, joinedVersion } from "./crowdlock.mjs";
 
 const PUBKEY = /^0[23][0-9a-f]{64}$/;
 const LOCKTIME_THRESHOLD = 500000000; // below this a locktime is a block height
@@ -79,6 +80,31 @@ export function lockAddress(terms, hrp = "bc") {
 
 const KEY = /^0[23][0-9a-f]{64}$/;
 
+// Signatures already checked, so a register with many locks per member checks each once.
+const checkedSignatures = new Map();
+
+/**
+ * Is this address a member of this register whose signature really verifies
+ * against the version of the declaration it joined with? A register is a file,
+ * and a file can list an address with any signature at all; until 17 November
+ * 2026 the address alone made a lock's owner a committed member (OpenAI
+ * review, H-03).
+ */
+export function isSignedMember(address, { crowdlock, register, hrp }) {
+  const a = String(address ?? "").toLowerCase();
+  const m = (register?.members ?? []).find((x) => String(x?.address ?? "").toLowerCase() === a);
+  if (!m || !crowdlock?.declaration) return false;
+  let statement;
+  try { statement = membershipStatement(crowdlock, joinedVersion(crowdlock, m)); } catch { return false; }
+  const key = `${hrp}|${a}|${m.signature}|${statement}`;
+  if (!checkedSignatures.has(key)) {
+    let ok = false;
+    try { ok = verifyMembership({ address: a, signature: String(m.signature ?? ""), message: statement, hrp }).valid; } catch { ok = false; }
+    checkedSignatures.set(key, ok);
+  }
+  return checkedSignatures.get(key);
+}
+
 /**
  * Is this record, as it sits on a register, really a lock of this Crowdlock?
  *
@@ -94,7 +120,8 @@ const KEY = /^0[23][0-9a-f]{64}$/;
  * Returns { ok, reason, owner, member }:
  *   owner   the address the lock's owner key hashes to, worked out here and
  *           never read from the record's own `member` label
- *   member  whether that address is a member on this register. The counting
+ *   member  whether that address is a member on this register, with a
+ *           signature that verifies (isSignedMember). The counting
  *           rule counts a real lock's money either way, and counts its owner
  *           among the committed members only if they are one.
  *
@@ -113,7 +140,7 @@ export function lockIsGenuine(lock, { crowdlock, register, hrp = hrpFor(crowdloc
   const cosigner = lock.cosigner_pubkey.slice(2);
   if (!(crowdlock?.cosigner_keys ?? []).some((k) => String(k).slice(2) === cosigner)) return no("its co-signer is not this Crowdlock's");
   const owner = memberAddressForOwnerKey(lock.owner_pubkey, hrp);
-  return { ok: true, reason: "", owner, member: (register?.members ?? []).some((m) => String(m.address).toLowerCase() === owner) };
+  return { ok: true, reason: "", owner, member: isSignedMember(owner, { crowdlock, register, hrp }) };
 }
 
 function normalise(address) {

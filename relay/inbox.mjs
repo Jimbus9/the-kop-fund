@@ -108,7 +108,7 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
   const register = JSON.parse(readFileSync(regPath, "utf8"));
   const { events, report, cursors: nextCursors } = await fetchRecords(crowdlock.relays, crowdlock.declaration.sha256, now - WINDOW, { cursors: cursors[file] ?? {} });
   cursors[file] = nextCursors;
-  for (const r of report) console.log(`${file}: ${r.relay} ${r.ok ? `answered, ${r.count} record(s)${r.complete ? "" : " (stopped early: more than one pass reads; the rest waits for the next)"}` : `did not answer (${r.reason})`}`);
+  for (const r of report) console.log(`${file}: ${r.relay} ${r.ok ? `answered, ${r.count} record(s)${r.saturated ? " (WARNING: some second holds more records than this relay gives at once, so some of them can't be read from it: a flood, or junk aimed at hiding a record)" : r.complete ? "" : " (stopped early: more than one pass reads; the rest waits for the next)"}` : `did not answer (${r.reason})`}`);
   if (!report.some((r) => r.ok)) { console.log(`${file}: no relay answered — nothing changed`); continue; }
 
   // Relay health, and a swap for any relay silent for SILENT_DAYS.
@@ -184,7 +184,7 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
       // What the co-signer has done: completed transactions, published here
       // so anyone can broadcast them, and a failure notice.
       const items = events.map((e) => commitmentFromEvent(e, crowdlock.declaration.sha256, p.hash)).filter((x) => x && x.type !== "commitment");
-      const settled = await applySettlement(got.pile, items, { crowdlock, hash: p.hash, hrp: hrpOf(crowdlock), addressOf: memberAddressForOwnerKey, txidOf, nowIso, canonical,
+      const settled = await applySettlement(got.pile, items, { crowdlock, hash: p.hash, hrp: hrpOf(crowdlock), addressOf: memberAddressForOwnerKey, txidOf, nowIso, canonical, closes: p.closes,
         completedBy: (candidates) => completedByBoth(candidates, { valueFor, seed: `${now}|${p.hash}` }) });
       for (const o of settled.outcome) console.log(`${file}: ${o.kind} for "${p.title}" — ${o.added ? "RECORDED" : `not recorded: ${o.reason}`}`);
       if (settled.outcome.some((o) => o.added && o.kind === "notice")) messages.push(`"${p.title}" declared dead by the co-signer`);

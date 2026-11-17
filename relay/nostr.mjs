@@ -94,7 +94,13 @@ const READ_BUDGET = 90000; // milliseconds on one relay in one pass
 export async function readBack(ask, since, { limit = PAGE, maxPages = MAX_PAGES, budget = READ_BUDGET, from = undefined } = {}) {
   const byId = new Map();
   // `reached`: how far back it got, for a later pass to carry on from.
-  const done = (complete) => ({ events: [...byId.values()], complete, reached: complete ? null : until ?? null });
+  // `saturated`: a second held more records than the relay gives at once, so
+  // some of that second could not be read. Paging is by time only, so they
+  // can't be reached; the read is then never called complete (OpenAI review
+  // H-01, 17 November 2026: it used to step past the second and say it was).
+  let saturated = false, biggest = 0;
+  // `paged`: every page back to `since` was read; `reached` is where to carry on if not.
+  const done = (paged) => ({ events: [...byId.values()], complete: paged && !saturated, saturated, reached: paged ? null : until ?? null });
   const started = Date.now();
   let until = from, stale = 0;
   for (let page = 0; page < maxPages; page++) {
@@ -108,6 +114,10 @@ export async function readBack(ask, since, { limit = PAGE, maxPages = MAX_PAGES,
       if (!byId.has(e.id)) { byId.set(e.id, e); fresh++; }
       if (e.created_at < oldest) oldest = e.created_at;
     }
+    // Nothing new, and as many as the relay has ever given at once: the whole
+    // batch is one second (the one `until` asked again for), and it may hold more.
+    if (fresh === 0 && batch.length >= biggest && batch.length > 1) saturated = true;
+    if (batch.length > biggest) biggest = batch.length;
     stale = fresh === 0 ? stale + 1 : 0;
     if (stale === 2) return done(false);   // the same records twice running: this relay is not honouring `until`
     until = fresh === 0 ? oldest - 1 : oldest;
@@ -126,10 +136,11 @@ export async function readBack(ask, since, { limit = PAGE, maxPages = MAX_PAGES,
 export async function readRelay(ask, since, saved, { maxPages = MAX_PAGES, budget = READ_BUDGET, limit = PAGE } = {}) {
   const half = { limit, maxPages: Math.ceil(maxPages / 2), budget: budget / 2 };
   const fresh = await readBack(ask, since, half);
-  if (fresh.complete) return { events: fresh.events, complete: true, cursor: null };
+  if (fresh.reached === null) return { events: fresh.events, complete: fresh.complete, saturated: fresh.saturated, cursor: null };
   const from = Number.isInteger(saved) && saved >= since && saved < fresh.reached ? saved : fresh.reached;
   const more = await readBack(ask, since, { ...half, from }).catch(() => ({ events: [], complete: false, reached: from }));
-  return { events: [...fresh.events, ...more.events], complete: more.complete, cursor: more.complete ? null : more.reached };
+  const saturated = !!(fresh.saturated || more.saturated);
+  return { events: [...fresh.events, ...more.events], complete: more.complete && !saturated, saturated, cursor: more.reached };
 }
 
 /**
@@ -160,7 +171,7 @@ export async function fetchRecords(relays, fingerprint, since, { cursors = {} } 
         for (const e of r.events) byId.set(e.id, e);
         const complete = r.complete;
         if (r.cursor !== null) nextCursors[url] = r.cursor;
-        return { relay: url, ok: true, count: r.events.length, complete };
+        return { relay: url, ok: true, count: r.events.length, complete, saturated: !!r.saturated };
       } finally { relay.close(); }
     } catch (e) { return { relay: url, ok: false, reason: String(e.message ?? e) }; }
   }));

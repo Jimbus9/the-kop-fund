@@ -142,7 +142,7 @@
 // method/ledger-web in the method's repository): buildCommitment signs the
 // owner's half on the device, and checkCommitment checks it, as the app does.
 // This page adds no signing or transaction code.
-import { checkProposals, phaseOf, pilePath, checkPileShape, commitmentEventTemplate, commitmentFromEvent, PROPOSAL_TAG, proposalVersion, noticeIsGenuine } from "../js/proposals.mjs";
+import { checkProposals, phaseOf, pilePath, checkPileShape, commitmentEventTemplate, commitmentFromEvent, PROPOSAL_TAG, proposalVersion, noticeIsGenuine, stillTakingCommitments } from "../js/proposals.mjs";
 import { memberAddressForOwnerKey } from "../js/verify.mjs";
 import { hrpFor, lockIsGenuine } from "../js/lockrecord.mjs";
 import { hasSigned, signedVersions, versionsOf } from "../js/crowdlock.mjs";
@@ -211,8 +211,11 @@ async function readPile(p) {
       }
     }
   } catch {}
+  // Commitments only on the relays count until an hour after closing; after
+  // that only the repository's record does, since a late one could carry any date.
+  const relaysCount = stillTakingCommitments(p, Date.now() / 1000);
   for (const it of await relayItems(p.hash)) {
-    if (it.type === "commitment" && !inFile.has(it.record.tx)) items.push(it);
+    if (it.type === "commitment" && !inFile.has(it.record.tx) && relaysCount) items.push(it);
     if (it.type === "notice" && !notice && genuine(it.notice, p)) notice = it.notice;
   }
   let waiting = 0, paid = 0, count = 0;
@@ -226,7 +229,11 @@ async function readPile(p) {
     if (v.valid) { if (v.coin) counted.add(v.coin); waiting += v.committedSats; count++; }
     else if (/already been spent/.test(v.reason)) paid += await L.commitmentPaid({ record: it.record, chain });
   }
-  return { waiting, paid, count, notice };
+  // A proposal can't have failed while it is still gathering, so a notice then
+  // is ignored; one against a pile that reaches its target is contradicted.
+  if (notice && (phaseOf(p) === "soon" || phaseOf(p) === "gathering")) notice = null;
+  const contradicted = !!notice && waiting + paid >= p.target.sats;
+  return { waiting, paid, count, notice, contradicted };
 }
 
 function renderList() {
@@ -254,7 +261,9 @@ function renderList() {
     readPile(p).then((x) => {
       const funded = x.paid >= p.target.sats;
       if (funded) status.textContent = `Funded and paid · ${btc(x.paid)} sent to the seller · closed`;
-      else if (x.notice) status.textContent = "Declared dead by the co-signer: it didn't reach its target, and none of its commitments will be completed.";
+      else if (x.notice) status.textContent = x.contradicted
+        ? "Declared dead by the co-signer, although the commitments checked here add up to its target. The co-signer has said it will complete none of them."
+        : "Declared dead by the co-signer: it didn't reach its target, and none of its commitments will be completed.";
       else status.textContent = `${PHASE[phaseOf(p)]} · needs ${money(p.requires, p.currency)} · committed ${btc(x.waiting + x.paid)} of ${btc(p.target.sats)} (${x.count} waiting${x.paid ? `, ${btc(x.paid)} paid` : ""})`;
       if (!funded && !x.notice && phaseOf(p) === "gathering") {
         const b = document.createElement("button"); b.type = "button"; b.className = "go"; b.textContent = "Commit to this";
