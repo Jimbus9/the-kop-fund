@@ -211,6 +211,16 @@ settlement runway be squeezed to nothing by a proposal funded the day before.
 `requires` is met, gathering ends and settlement begins. A proposal funded on day
 three does not hold anybody for another twenty-five days.
 
+**Commitments past the target are a reserve** (decided 18 November 2026).
+Commitments are still taken until `closes`, but the co-signer completes them in
+the order they were submitted and stops once the target is met; the last one
+may tip it slightly over, since a commitment can't be split. One further back is
+used only if the target has been restated upward as the price fell, or one
+ahead of it no longer passes its check. A commitment that isn't used is never
+completed, and its owner's bitcoin stays in the lock as before. Committing
+earns no share of anything: it is money towards the price, and the seller is
+paid the price, not whatever happened to be committed.
+
 **Why four weeks to gather is recommended.** Signing does not touch the
 blockchain, so nothing about the network constrains gathering. What constrains it
 is people: a global support includes supporters who look at this once a
