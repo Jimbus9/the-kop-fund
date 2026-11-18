@@ -213,6 +213,14 @@ export function prepareLock(submission, { crowdlock, register, now }) {
   if (!cosigners.includes(cosigner)) {
     return no(400, "that co-signer key is not this Crowdlock's — a lock is counted by the Crowdlock whose co-signer it names");
   }
+  // A new lock names the newest key only. Older keys stay listed so the locks
+  // already naming them keep counting, but a key is retired for a reason
+  // (lost, or feared copied), so nothing new may be put under it (James's
+  // decision, 18 November 2026: "Needs James" item 10). The app has always
+  // offered only the newest key (app/src/crowdlocks.mjs, newestCosigner).
+  if (cosigner !== cosigners[cosigners.length - 1]) {
+    return no(400, "that co-signer key has been retired — a new lock must name this Crowdlock's newest co-signer key");
+  }
 
   // Dates, not heights, on every real network (spec/lock-format.md, Locktime).
   // Regtest is for testing, where heights are exact and quick.

@@ -33,9 +33,9 @@ var CrowdlockLedger = (() => {
   ));
   var __toCommonJS = (mod3) => __copyProps(__defProp({}, "__esModule", { value: true }), mod3);
 
-  // ../../app/node_modules/base64-js/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/base64-js/index.js
   var require_base64_js = __commonJS({
-    "../../app/node_modules/base64-js/index.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/base64-js/index.js"(exports) {
       "use strict";
       init_shim();
       exports.byteLength = byteLength;
@@ -135,9 +135,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/ieee754/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/ieee754/index.js
   var require_ieee754 = __commonJS({
-    "../../app/node_modules/ieee754/index.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/ieee754/index.js"(exports) {
       init_shim();
       /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
       exports.read = function(buffer, offset, isLE2, mLen, nBytes) {
@@ -220,9 +220,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/buffer/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/buffer/index.js
   var require_buffer = __commonJS({
-    "../../app/node_modules/buffer/index.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/buffer/index.js"(exports) {
       "use strict";
       init_shim();
       /*!
@@ -1828,9 +1828,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/reflect-metadata/Reflect.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/reflect-metadata/Reflect.js
   var require_Reflect = __commonJS({
-    "node_modules/reflect-metadata/Reflect.js"() {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/reflect-metadata/Reflect.js"() {
       init_shim();
       /*! *****************************************************************************
       Copyright (C) Microsoft. All rights reserved.
@@ -2928,9 +2928,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/internal/constants.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/internal/constants.js
   var require_constants = __commonJS({
-    "node_modules/semver/internal/constants.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/internal/constants.js"(exports, module2) {
       "use strict";
       init_shim();
       var SEMVER_SPEC_VERSION = "2.0.0";
@@ -2961,9 +2961,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/internal/debug.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/internal/debug.js
   var require_debug = __commonJS({
-    "node_modules/semver/internal/debug.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/internal/debug.js"(exports, module2) {
       "use strict";
       init_shim();
       var debug = typeof process === "object" && process.env && process.env.NODE_DEBUG && /\bsemver\b/i.test(process.env.NODE_DEBUG) ? (...args) => console.error("SEMVER", ...args) : () => {
@@ -2972,9 +2972,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/internal/re.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/internal/re.js
   var require_re = __commonJS({
-    "node_modules/semver/internal/re.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/internal/re.js"(exports, module2) {
       "use strict";
       init_shim();
       var {
@@ -3061,9 +3061,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/internal/parse-options.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/internal/parse-options.js
   var require_parse_options = __commonJS({
-    "node_modules/semver/internal/parse-options.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/internal/parse-options.js"(exports, module2) {
       "use strict";
       init_shim();
       var looseOption = Object.freeze({ loose: true });
@@ -3081,9 +3081,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/internal/identifiers.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/internal/identifiers.js
   var require_identifiers = __commonJS({
-    "node_modules/semver/internal/identifiers.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/internal/identifiers.js"(exports, module2) {
       "use strict";
       init_shim();
       var numeric = /^[0-9]+$/;
@@ -3104,9 +3104,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/classes/semver.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/classes/semver.js
   var require_semver = __commonJS({
-    "node_modules/semver/classes/semver.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/classes/semver.js"(exports, module2) {
       "use strict";
       init_shim();
       var debug = require_debug();
@@ -3366,9 +3366,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/parse.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/parse.js
   var require_parse = __commonJS({
-    "node_modules/semver/functions/parse.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/parse.js"(exports, module2) {
       "use strict";
       init_shim();
       var SemVer = require_semver();
@@ -3389,9 +3389,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/valid.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/valid.js
   var require_valid = __commonJS({
-    "node_modules/semver/functions/valid.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/valid.js"(exports, module2) {
       "use strict";
       init_shim();
       var parse2 = require_parse();
@@ -3403,9 +3403,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/clean.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/clean.js
   var require_clean = __commonJS({
-    "node_modules/semver/functions/clean.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/clean.js"(exports, module2) {
       "use strict";
       init_shim();
       var parse2 = require_parse();
@@ -3417,9 +3417,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/inc.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/inc.js
   var require_inc = __commonJS({
-    "node_modules/semver/functions/inc.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/inc.js"(exports, module2) {
       "use strict";
       init_shim();
       var SemVer = require_semver();
@@ -3442,9 +3442,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/diff.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/diff.js
   var require_diff = __commonJS({
-    "node_modules/semver/functions/diff.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/diff.js"(exports, module2) {
       "use strict";
       init_shim();
       var parse2 = require_parse();
@@ -3487,9 +3487,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/major.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/major.js
   var require_major = __commonJS({
-    "node_modules/semver/functions/major.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/major.js"(exports, module2) {
       "use strict";
       init_shim();
       var SemVer = require_semver();
@@ -3498,9 +3498,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/minor.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/minor.js
   var require_minor = __commonJS({
-    "node_modules/semver/functions/minor.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/minor.js"(exports, module2) {
       "use strict";
       init_shim();
       var SemVer = require_semver();
@@ -3509,9 +3509,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/patch.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/patch.js
   var require_patch = __commonJS({
-    "node_modules/semver/functions/patch.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/patch.js"(exports, module2) {
       "use strict";
       init_shim();
       var SemVer = require_semver();
@@ -3520,9 +3520,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/prerelease.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/prerelease.js
   var require_prerelease = __commonJS({
-    "node_modules/semver/functions/prerelease.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/prerelease.js"(exports, module2) {
       "use strict";
       init_shim();
       var parse2 = require_parse();
@@ -3534,9 +3534,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/compare.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/compare.js
   var require_compare = __commonJS({
-    "node_modules/semver/functions/compare.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/compare.js"(exports, module2) {
       "use strict";
       init_shim();
       var SemVer = require_semver();
@@ -3545,9 +3545,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/rcompare.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/rcompare.js
   var require_rcompare = __commonJS({
-    "node_modules/semver/functions/rcompare.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/rcompare.js"(exports, module2) {
       "use strict";
       init_shim();
       var compare7 = require_compare();
@@ -3556,9 +3556,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/compare-loose.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/compare-loose.js
   var require_compare_loose = __commonJS({
-    "node_modules/semver/functions/compare-loose.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/compare-loose.js"(exports, module2) {
       "use strict";
       init_shim();
       var compare7 = require_compare();
@@ -3567,9 +3567,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/compare-build.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/compare-build.js
   var require_compare_build = __commonJS({
-    "node_modules/semver/functions/compare-build.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/compare-build.js"(exports, module2) {
       "use strict";
       init_shim();
       var SemVer = require_semver();
@@ -3582,9 +3582,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/sort.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/sort.js
   var require_sort = __commonJS({
-    "node_modules/semver/functions/sort.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/sort.js"(exports, module2) {
       "use strict";
       init_shim();
       var compareBuild = require_compare_build();
@@ -3593,9 +3593,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/rsort.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/rsort.js
   var require_rsort = __commonJS({
-    "node_modules/semver/functions/rsort.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/rsort.js"(exports, module2) {
       "use strict";
       init_shim();
       var compareBuild = require_compare_build();
@@ -3604,9 +3604,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/gt.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/gt.js
   var require_gt = __commonJS({
-    "node_modules/semver/functions/gt.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/gt.js"(exports, module2) {
       "use strict";
       init_shim();
       var compare7 = require_compare();
@@ -3615,9 +3615,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/lt.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/lt.js
   var require_lt = __commonJS({
-    "node_modules/semver/functions/lt.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/lt.js"(exports, module2) {
       "use strict";
       init_shim();
       var compare7 = require_compare();
@@ -3626,9 +3626,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/eq.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/eq.js
   var require_eq = __commonJS({
-    "node_modules/semver/functions/eq.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/eq.js"(exports, module2) {
       "use strict";
       init_shim();
       var compare7 = require_compare();
@@ -3637,9 +3637,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/neq.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/neq.js
   var require_neq = __commonJS({
-    "node_modules/semver/functions/neq.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/neq.js"(exports, module2) {
       "use strict";
       init_shim();
       var compare7 = require_compare();
@@ -3648,9 +3648,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/gte.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/gte.js
   var require_gte = __commonJS({
-    "node_modules/semver/functions/gte.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/gte.js"(exports, module2) {
       "use strict";
       init_shim();
       var compare7 = require_compare();
@@ -3659,9 +3659,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/lte.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/lte.js
   var require_lte = __commonJS({
-    "node_modules/semver/functions/lte.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/lte.js"(exports, module2) {
       "use strict";
       init_shim();
       var compare7 = require_compare();
@@ -3670,9 +3670,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/cmp.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/cmp.js
   var require_cmp = __commonJS({
-    "node_modules/semver/functions/cmp.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/cmp.js"(exports, module2) {
       "use strict";
       init_shim();
       var eq = require_eq();
@@ -3721,9 +3721,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/coerce.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/coerce.js
   var require_coerce = __commonJS({
-    "node_modules/semver/functions/coerce.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/coerce.js"(exports, module2) {
       "use strict";
       init_shim();
       var SemVer = require_semver();
@@ -3768,9 +3768,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/internal/lrucache.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/internal/lrucache.js
   var require_lrucache = __commonJS({
-    "node_modules/semver/internal/lrucache.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/internal/lrucache.js"(exports, module2) {
       "use strict";
       init_shim();
       var LRUCache = class {
@@ -3807,9 +3807,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/classes/range.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/classes/range.js
   var require_range = __commonJS({
-    "node_modules/semver/classes/range.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/classes/range.js"(exports, module2) {
       "use strict";
       init_shim();
       var SPACE_CHARACTERS = /\s+/g;
@@ -4184,9 +4184,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/classes/comparator.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/classes/comparator.js
   var require_comparator = __commonJS({
-    "node_modules/semver/classes/comparator.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/classes/comparator.js"(exports, module2) {
       "use strict";
       init_shim();
       var ANY = Symbol("SemVer ANY");
@@ -4298,9 +4298,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/functions/satisfies.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/satisfies.js
   var require_satisfies = __commonJS({
-    "node_modules/semver/functions/satisfies.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/functions/satisfies.js"(exports, module2) {
       "use strict";
       init_shim();
       var Range = require_range();
@@ -4316,9 +4316,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/ranges/to-comparators.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/to-comparators.js
   var require_to_comparators = __commonJS({
-    "node_modules/semver/ranges/to-comparators.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/to-comparators.js"(exports, module2) {
       "use strict";
       init_shim();
       var Range = require_range();
@@ -4327,9 +4327,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/ranges/max-satisfying.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/max-satisfying.js
   var require_max_satisfying = __commonJS({
-    "node_modules/semver/ranges/max-satisfying.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/max-satisfying.js"(exports, module2) {
       "use strict";
       init_shim();
       var SemVer = require_semver();
@@ -4357,9 +4357,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/ranges/min-satisfying.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/min-satisfying.js
   var require_min_satisfying = __commonJS({
-    "node_modules/semver/ranges/min-satisfying.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/min-satisfying.js"(exports, module2) {
       "use strict";
       init_shim();
       var SemVer = require_semver();
@@ -4387,9 +4387,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/ranges/min-version.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/min-version.js
   var require_min_version = __commonJS({
-    "node_modules/semver/ranges/min-version.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/min-version.js"(exports, module2) {
       "use strict";
       init_shim();
       var SemVer = require_semver();
@@ -4447,9 +4447,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/ranges/valid.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/valid.js
   var require_valid2 = __commonJS({
-    "node_modules/semver/ranges/valid.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/valid.js"(exports, module2) {
       "use strict";
       init_shim();
       var Range = require_range();
@@ -4464,9 +4464,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/ranges/outside.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/outside.js
   var require_outside = __commonJS({
-    "node_modules/semver/ranges/outside.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/outside.js"(exports, module2) {
       "use strict";
       init_shim();
       var SemVer = require_semver();
@@ -4534,9 +4534,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/ranges/gtr.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/gtr.js
   var require_gtr = __commonJS({
-    "node_modules/semver/ranges/gtr.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/gtr.js"(exports, module2) {
       "use strict";
       init_shim();
       var outside = require_outside();
@@ -4545,9 +4545,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/ranges/ltr.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/ltr.js
   var require_ltr = __commonJS({
-    "node_modules/semver/ranges/ltr.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/ltr.js"(exports, module2) {
       "use strict";
       init_shim();
       var outside = require_outside();
@@ -4556,9 +4556,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/ranges/intersects.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/intersects.js
   var require_intersects = __commonJS({
-    "node_modules/semver/ranges/intersects.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/intersects.js"(exports, module2) {
       "use strict";
       init_shim();
       var Range = require_range();
@@ -4571,9 +4571,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/ranges/simplify.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/simplify.js
   var require_simplify = __commonJS({
-    "node_modules/semver/ranges/simplify.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/simplify.js"(exports, module2) {
       "use strict";
       init_shim();
       var satisfies = require_satisfies();
@@ -4622,9 +4622,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/ranges/subset.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/subset.js
   var require_subset = __commonJS({
-    "node_modules/semver/ranges/subset.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/ranges/subset.js"(exports, module2) {
       "use strict";
       init_shim();
       var Range = require_range();
@@ -4785,9 +4785,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // node_modules/semver/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/index.js
   var require_semver2 = __commonJS({
-    "node_modules/semver/index.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/method/ledger-web/node_modules/semver/index.js"(exports, module2) {
       "use strict";
       init_shim();
       var internalRe = require_re();
@@ -4881,9 +4881,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/networks.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/networks.js
   var require_networks = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/networks.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/networks.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -4917,9 +4917,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/lodash.memoize/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/lodash.memoize/index.js
   var require_lodash = __commonJS({
-    "../../app/node_modules/lodash.memoize/index.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/app/node_modules/lodash.memoize/index.js"(exports, module2) {
       init_shim();
       var FUNC_ERROR_TEXT = "Expected a function";
       var HASH_UNDEFINED = "__lodash_hash_undefined__";
@@ -5150,9 +5150,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/bitcoinLib.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/bitcoinLib.js
   var require_bitcoinLib = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/bitcoinLib.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/bitcoinLib.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -5206,7 +5206,7 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/varuint-bitcoin/node_modules/uint8array-tools/src/mjs/browser.js
+  // ../../../jimbus9/crowdlock/app/node_modules/varuint-bitcoin/node_modules/uint8array-tools/src/mjs/browser.js
   var browser_exports = {};
   __export(browser_exports, {
     compare: () => compare,
@@ -5599,7 +5599,7 @@ var CrowdlockLedger = (() => {
   }
   var HEX_STRINGS, HEX_CODES, HEX_CODEPOINTS, ENCODER, DECODER;
   var init_browser = __esm({
-    "../../app/node_modules/varuint-bitcoin/node_modules/uint8array-tools/src/mjs/browser.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/varuint-bitcoin/node_modules/uint8array-tools/src/mjs/browser.js"() {
       init_shim();
       HEX_STRINGS = "0123456789abcdefABCDEF";
       HEX_CODES = HEX_STRINGS.split("").map((c25) => c25.codePointAt(0));
@@ -5613,9 +5613,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/varuint-bitcoin/src/cjs/index.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/varuint-bitcoin/src/cjs/index.cjs
   var require_cjs = __commonJS({
-    "../../app/node_modules/varuint-bitcoin/src/cjs/index.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/varuint-bitcoin/src/cjs/index.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o19, m15, k8, k22) {
@@ -5725,7 +5725,7 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/uint8array-tools/src/mjs/browser.js
+  // ../../../jimbus9/crowdlock/app/node_modules/uint8array-tools/src/mjs/browser.js
   var browser_exports2 = {};
   __export(browser_exports2, {
     compare: () => compare2,
@@ -6118,7 +6118,7 @@ var CrowdlockLedger = (() => {
   }
   var HEX_STRINGS2, HEX_CODES2, HEX_CODEPOINTS2, ENCODER2, DECODER2;
   var init_browser2 = __esm({
-    "../../app/node_modules/uint8array-tools/src/mjs/browser.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/uint8array-tools/src/mjs/browser.js"() {
       init_shim();
       HEX_STRINGS2 = "0123456789abcdefABCDEF";
       HEX_CODES2 = HEX_STRINGS2.split("").map((c25) => c25.codePointAt(0));
@@ -6132,9 +6132,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/bitcoinjs-lib-internals.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/bitcoinjs-lib-internals.js
   var require_bitcoinjs_lib_internals = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/bitcoinjs-lib-internals.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/bitcoinjs-lib-internals.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -6185,9 +6185,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/psbt.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/psbt.js
   var require_psbt = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/psbt.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/psbt.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -6368,9 +6368,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/checksum.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/checksum.js
   var require_checksum = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/checksum.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/checksum.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -6426,9 +6426,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/re.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/re.js
   var require_re2 = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/re.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/re.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -6490,9 +6490,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/keyExpressions.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/keyExpressions.js
   var require_keyExpressions = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/keyExpressions.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/keyExpressions.js"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o19, m15, k8, k22) {
@@ -6692,9 +6692,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/bip68/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip68/index.js
   var require_bip68 = __commonJS({
-    "../../app/node_modules/bip68/index.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip68/index.js"(exports, module2) {
       init_shim();
       var SEQUENCE_FINAL = 4294967295;
       var SEQUENCE_LOCKTIME_DISABLE_FLAG = 1 << 31;
@@ -6732,9 +6732,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/miniscript/dist/satisfier/maxLock.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/satisfier/maxLock.js
   var require_maxLock = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/miniscript/dist/satisfier/maxLock.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/satisfier/maxLock.js"(exports) {
       "use strict";
       init_shim();
       var __importDefault = exports && exports.__importDefault || function(mod3) {
@@ -6804,9 +6804,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/miniscript/dist/satisfier/satisfactions.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/satisfier/satisfactions.js
   var require_satisfactions = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/miniscript/dist/satisfier/satisfactions.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/satisfier/satisfactions.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -7165,9 +7165,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/miniscript/dist/compiler/parse.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/compiler/parse.js
   var require_parse2 = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/miniscript/dist/compiler/parse.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/compiler/parse.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -7369,9 +7369,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/miniscript/dist/compiler/compile.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/compiler/compile.js
   var require_compile = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/miniscript/dist/compiler/compile.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/compiler/compile.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -7614,9 +7614,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/miniscript/dist/compiler/correctness.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/compiler/correctness.js
   var require_correctness = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/miniscript/dist/compiler/correctness.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/compiler/correctness.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -8071,9 +8071,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/miniscript/dist/compiler/malleability.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/compiler/malleability.js
   var require_malleability = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/miniscript/dist/compiler/malleability.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/compiler/malleability.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -8213,9 +8213,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/miniscript/dist/compiler/analyze.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/compiler/analyze.js
   var require_analyze = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/miniscript/dist/compiler/analyze.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/compiler/analyze.js"(exports) {
       "use strict";
       init_shim();
       var __importDefault = exports && exports.__importDefault || function(mod3) {
@@ -8787,9 +8787,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/miniscript/dist/compiler/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/compiler/index.js
   var require_compiler = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/miniscript/dist/compiler/index.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/compiler/index.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -8816,9 +8816,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/miniscript/dist/satisfier/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/satisfier/index.js
   var require_satisfier = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/miniscript/dist/satisfier/index.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/satisfier/index.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -9047,9 +9047,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/miniscript/dist/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/index.js
   var require_dist = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/miniscript/dist/index.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/miniscript/dist/index.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -9068,9 +9068,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/miniscript.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/miniscript.js
   var require_miniscript = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/miniscript.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/miniscript.js"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o19, m15, k8, k22) {
@@ -9246,9 +9246,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/parseUtils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/parseUtils.js
   var require_parseUtils = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/parseUtils.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/parseUtils.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -9294,9 +9294,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/tapTree.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/tapTree.js
   var require_tapTree = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/tapTree.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/tapTree.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -9400,9 +9400,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/resourceLimits.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/resourceLimits.js
   var require_resourceLimits = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/resourceLimits.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/resourceLimits.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -9471,9 +9471,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/tapMiniscript.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/tapMiniscript.js
   var require_tapMiniscript = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/tapMiniscript.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/tapMiniscript.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -9811,9 +9811,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/multipath.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/multipath.js
   var require_multipath = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/multipath.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/multipath.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -9874,9 +9874,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/descriptors.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/descriptors.js
   var require_descriptors = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/descriptors.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/descriptors.js"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o19, m15, k8, k22) {
@@ -11440,9 +11440,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/bip174.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/bip174.js
   var require_bip174 = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/bip174.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/bip174.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -11456,9 +11456,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/bitcoinjsHdPatch.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/bitcoinjsHdPatch.js
   var require_bitcoinjsHdPatch = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/bitcoinjsHdPatch.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/bitcoinjsHdPatch.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -11598,9 +11598,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/signers.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/signers.js
   var require_signers = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/signers.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/signers.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -11690,9 +11690,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/networkUtils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/networkUtils.js
   var require_networkUtils = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/networkUtils.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/networkUtils.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -11708,9 +11708,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/scriptExpressions.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/scriptExpressions.js
   var require_scriptExpressions = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/scriptExpressions.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/scriptExpressions.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -11749,9 +11749,9 @@ var CrowdlockLedger = (() => {
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/index.js
   var require_dist2 = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/index.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/index.js"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o19, m15, k8, k22) {
@@ -11825,9 +11825,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/networks.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/networks.cjs
   var require_networks2 = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/networks.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/networks.cjs"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -11892,9 +11892,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/bip66.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/bip66.cjs
   var require_bip66 = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/bip66.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/bip66.cjs"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -11973,9 +11973,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/ops.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/ops.cjs
   var require_ops = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/ops.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/ops.cjs"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -12105,7 +12105,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/uint8array-tools/src/mjs/browser.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/uint8array-tools/src/mjs/browser.js
   var browser_exports3 = {};
   __export(browser_exports3, {
     compare: () => compare3,
@@ -12498,7 +12498,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   }
   var HEX_STRINGS3, HEX_CODES3, HEX_CODEPOINTS3, ENCODER3, DECODER3;
   var init_browser3 = __esm({
-    "../../app/node_modules/bitcoinjs-lib/node_modules/uint8array-tools/src/mjs/browser.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/uint8array-tools/src/mjs/browser.js"() {
       init_shim();
       HEX_STRINGS3 = "0123456789abcdefABCDEF";
       HEX_CODES3 = HEX_STRINGS3.split("").map((c25) => c25.codePointAt(0));
@@ -12512,9 +12512,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/push_data.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/push_data.cjs
   var require_push_data = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/push_data.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/push_data.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -12605,9 +12605,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/script_number.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/script_number.cjs
   var require_script_number = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/script_number.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/script_number.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -12694,9 +12694,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/valibot/dist/index.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/valibot/dist/index.cjs
   var require_dist3 = __commonJS({
-    "../../app/node_modules/valibot/dist/index.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/valibot/dist/index.cjs"(exports) {
       init_shim();
       var store$42;
       var DEFAULT_CONFIG2 = {
@@ -18814,9 +18814,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/types.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/types.cjs
   var require_types = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/types.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/types.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -18932,9 +18932,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/script_signature.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/script_signature.cjs
   var require_script_signature = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/script_signature.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/script_signature.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -19024,9 +19024,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/script.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/script.cjs
   var require_script = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/script.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/script.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -19230,9 +19230,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/payments/lazy.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/lazy.cjs
   var require_lazy = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/payments/lazy.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/lazy.cjs"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -19268,9 +19268,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/payments/embed.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/embed.cjs
   var require_embed = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/payments/embed.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/embed.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -19351,9 +19351,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/payments/p2ms.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/p2ms.cjs
   var require_p2ms = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/payments/p2ms.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/p2ms.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -19542,9 +19542,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/payments/p2pk.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/p2pk.cjs
   var require_p2pk = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/payments/p2pk.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/p2pk.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -19656,9 +19656,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/crypto.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/crypto.js
   var require_crypto = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/crypto.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/crypto.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -19667,9 +19667,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/utils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/utils.js
   var require_utils = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/utils.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/utils.js"(exports) {
       "use strict";
       init_shim();
       /*! noble-hashes - MIT License (c) 2022 Paul Miller (paulmillr.com) */
@@ -19911,9 +19911,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/_md.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/_md.js
   var require_md = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/_md.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/_md.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -20090,9 +20090,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/legacy.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/legacy.js
   var require_legacy = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/legacy.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/legacy.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -20359,9 +20359,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/ripemd160.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/ripemd160.js
   var require_ripemd160 = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/ripemd160.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/ripemd160.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -20372,9 +20372,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/_u64.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/_u64.js
   var require_u64 = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/_u64.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/_u64.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -20469,9 +20469,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/sha2.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/sha2.js
   var require_sha2 = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/sha2.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/sha2.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -20940,9 +20940,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/sha256.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/sha256.js
   var require_sha256 = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/sha256.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/sha256.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -20955,9 +20955,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/sha1.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/sha1.js
   var require_sha1 = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/sha1.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/sha1.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -20968,9 +20968,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/crypto.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/crypto.cjs
   var require_crypto2 = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/crypto.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/crypto.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -21653,9 +21653,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bs58check/node_modules/@noble/hashes/crypto.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/crypto.js
   var require_crypto3 = __commonJS({
-    "../../app/node_modules/bs58check/node_modules/@noble/hashes/crypto.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/crypto.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -21664,9 +21664,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bs58check/node_modules/@noble/hashes/utils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/utils.js
   var require_utils2 = __commonJS({
-    "../../app/node_modules/bs58check/node_modules/@noble/hashes/utils.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/utils.js"(exports) {
       "use strict";
       init_shim();
       /*! noble-hashes - MIT License (c) 2022 Paul Miller (paulmillr.com) */
@@ -21908,9 +21908,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bs58check/node_modules/@noble/hashes/_md.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/_md.js
   var require_md2 = __commonJS({
-    "../../app/node_modules/bs58check/node_modules/@noble/hashes/_md.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/_md.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -22087,9 +22087,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bs58check/node_modules/@noble/hashes/_u64.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/_u64.js
   var require_u642 = __commonJS({
-    "../../app/node_modules/bs58check/node_modules/@noble/hashes/_u64.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/_u64.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -22184,9 +22184,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bs58check/node_modules/@noble/hashes/sha2.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/sha2.js
   var require_sha22 = __commonJS({
-    "../../app/node_modules/bs58check/node_modules/@noble/hashes/sha2.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/sha2.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -22655,9 +22655,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bs58check/node_modules/@noble/hashes/sha256.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/sha256.js
   var require_sha2562 = __commonJS({
-    "../../app/node_modules/bs58check/node_modules/@noble/hashes/sha256.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/sha256.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -22670,9 +22670,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/base-x/src/cjs/index.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/base-x/src/cjs/index.cjs
   var require_cjs2 = __commonJS({
-    "../../app/node_modules/base-x/src/cjs/index.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/base-x/src/cjs/index.cjs"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -22808,9 +22808,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bs58/src/cjs/index.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58/src/cjs/index.cjs
   var require_cjs3 = __commonJS({
-    "../../app/node_modules/bs58/src/cjs/index.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bs58/src/cjs/index.cjs"(exports) {
       "use strict";
       init_shim();
       var __importDefault = exports && exports.__importDefault || function(mod3) {
@@ -22823,9 +22823,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bs58check/src/cjs/base.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/src/cjs/base.cjs
   var require_base = __commonJS({
-    "../../app/node_modules/bs58check/src/cjs/base.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bs58check/src/cjs/base.cjs"(exports) {
       "use strict";
       init_shim();
       var __importDefault = exports && exports.__importDefault || function(mod3) {
@@ -22874,9 +22874,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bs58check/src/cjs/index.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/src/cjs/index.cjs
   var require_cjs4 = __commonJS({
-    "../../app/node_modules/bs58check/src/cjs/index.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bs58check/src/cjs/index.cjs"(exports) {
       "use strict";
       init_shim();
       var __importDefault = exports && exports.__importDefault || function(mod3) {
@@ -22892,9 +22892,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/payments/p2pkh.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/p2pkh.cjs
   var require_p2pkh = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/payments/p2pkh.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/p2pkh.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -23059,9 +23059,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/payments/p2sh.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/p2sh.cjs
   var require_p2sh = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/payments/p2sh.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/p2sh.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -23276,9 +23276,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bech32/dist/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bech32/dist/index.js
   var require_dist4 = __commonJS({
-    "../../app/node_modules/bech32/dist/index.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bech32/dist/index.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -23443,9 +23443,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/payments/p2wpkh.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/p2wpkh.cjs
   var require_p2wpkh = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/payments/p2wpkh.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/p2wpkh.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -23607,9 +23607,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/payments/p2wsh.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/p2wsh.cjs
   var require_p2wsh = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/payments/p2wsh.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/p2wsh.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -23819,9 +23819,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/ecc_lib.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/ecc_lib.cjs
   var require_ecc_lib = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/ecc_lib.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/ecc_lib.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -23948,9 +23948,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/bufferutils.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/bufferutils.cjs
   var require_bufferutils = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/bufferutils.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/bufferutils.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -24138,9 +24138,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/payments/bip341.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/bip341.cjs
   var require_bip341 = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/payments/bip341.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/bip341.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -24271,9 +24271,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/payments/p2tr.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/p2tr.cjs
   var require_p2tr = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/payments/p2tr.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/p2tr.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -24576,9 +24576,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/payments/index.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/index.cjs
   var require_payments = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/payments/index.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/payments/index.cjs"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -24642,9 +24642,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/address.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/address.cjs
   var require_address = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/address.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/address.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -24838,9 +24838,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/merkle.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/merkle.cjs
   var require_merkle = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/merkle.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/merkle.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -24902,9 +24902,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/transaction.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/transaction.cjs
   var require_transaction = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/transaction.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/transaction.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -25426,9 +25426,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/block.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/block.cjs
   var require_block = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/block.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/block.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -25666,9 +25666,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/typeFields.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/typeFields.cjs
   var require_typeFields = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/typeFields.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/typeFields.cjs"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -25735,7 +25735,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/node_modules/uint8array-tools/src/mjs/browser.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/node_modules/uint8array-tools/src/mjs/browser.js
   var browser_exports4 = {};
   __export(browser_exports4, {
     compare: () => compare4,
@@ -26128,7 +26128,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   }
   var HEX_STRINGS4, HEX_CODES4, HEX_CODEPOINTS4, ENCODER4, DECODER4;
   var init_browser4 = __esm({
-    "../../app/node_modules/bip174/node_modules/uint8array-tools/src/mjs/browser.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/node_modules/uint8array-tools/src/mjs/browser.js"() {
       init_shim();
       HEX_STRINGS4 = "0123456789abcdefABCDEF";
       HEX_CODES4 = HEX_STRINGS4.split("").map((c25) => c25.codePointAt(0));
@@ -26142,9 +26142,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/global/globalXpub.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/global/globalXpub.cjs
   var require_globalXpub = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/global/globalXpub.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/global/globalXpub.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -26230,9 +26230,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/global/unsignedTx.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/global/unsignedTx.cjs
   var require_unsignedTx = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/global/unsignedTx.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/global/unsignedTx.cjs"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -26247,9 +26247,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/input/finalScriptSig.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/finalScriptSig.cjs
   var require_finalScriptSig = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/input/finalScriptSig.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/finalScriptSig.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -26294,9 +26294,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/input/finalScriptWitness.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/finalScriptWitness.cjs
   var require_finalScriptWitness = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/input/finalScriptWitness.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/finalScriptWitness.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -26341,9 +26341,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/input/nonWitnessUtxo.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/nonWitnessUtxo.cjs
   var require_nonWitnessUtxo = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/input/nonWitnessUtxo.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/nonWitnessUtxo.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -26387,9 +26387,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/input/partialSig.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/partialSig.cjs
   var require_partialSig = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/input/partialSig.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/partialSig.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -26459,9 +26459,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/input/porCommitment.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/porCommitment.cjs
   var require_porCommitment = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/input/porCommitment.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/porCommitment.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -26506,9 +26506,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/input/sighashType.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/sighashType.cjs
   var require_sighashType = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/input/sighashType.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/sighashType.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -26555,9 +26555,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/input/tapKeySig.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/tapKeySig.cjs
   var require_tapKeySig = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/input/tapKeySig.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/tapKeySig.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -26604,9 +26604,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/input/tapLeafScript.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/tapLeafScript.cjs
   var require_tapLeafScript = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/input/tapLeafScript.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/tapLeafScript.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -26668,9 +26668,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/input/tapMerkleRoot.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/tapMerkleRoot.cjs
   var require_tapMerkleRoot = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/input/tapMerkleRoot.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/tapMerkleRoot.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -26715,9 +26715,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/input/tapScriptSig.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/tapScriptSig.cjs
   var require_tapScriptSig = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/input/tapScriptSig.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/tapScriptSig.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -26783,9 +26783,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/input/witnessUtxo.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/witnessUtxo.cjs
   var require_witnessUtxo = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/input/witnessUtxo.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/input/witnessUtxo.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -26850,9 +26850,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/output/tapTree.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/output/tapTree.cjs
   var require_tapTree2 = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/output/tapTree.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/output/tapTree.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -26924,9 +26924,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/shared/bip32Derivation.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/shared/bip32Derivation.cjs
   var require_bip32Derivation = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/shared/bip32Derivation.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/shared/bip32Derivation.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -27015,9 +27015,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/shared/checkPubkey.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/shared/checkPubkey.cjs
   var require_checkPubkey = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/shared/checkPubkey.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/shared/checkPubkey.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -27051,9 +27051,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/shared/redeemScript.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/shared/redeemScript.cjs
   var require_redeemScript = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/shared/redeemScript.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/shared/redeemScript.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -27103,9 +27103,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/shared/tapBip32Derivation.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/shared/tapBip32Derivation.cjs
   var require_tapBip32Derivation = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/shared/tapBip32Derivation.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/shared/tapBip32Derivation.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -27165,9 +27165,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/shared/tapInternalKey.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/shared/tapInternalKey.cjs
   var require_tapInternalKey = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/shared/tapInternalKey.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/shared/tapInternalKey.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -27219,9 +27219,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/shared/witnessScript.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/shared/witnessScript.cjs
   var require_witnessScript = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/shared/witnessScript.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/shared/witnessScript.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -27271,9 +27271,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/index.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/index.cjs
   var require_converter = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/index.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/index.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -27377,9 +27377,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/converter/tools.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/tools.cjs
   var require_tools = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/converter/tools.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/converter/tools.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -27431,9 +27431,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/parser/fromBuffer.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/parser/fromBuffer.cjs
   var require_fromBuffer = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/parser/fromBuffer.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/parser/fromBuffer.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -27826,9 +27826,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/parser/toBuffer.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/parser/toBuffer.cjs
   var require_toBuffer = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/parser/toBuffer.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/parser/toBuffer.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -27898,9 +27898,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/parser/index.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/parser/index.cjs
   var require_parser = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/parser/index.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/parser/index.cjs"(exports) {
       "use strict";
       init_shim();
       function __export2(m15) {
@@ -27912,9 +27912,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/combiner/index.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/combiner/index.cjs
   var require_combiner = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/combiner/index.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/combiner/index.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -28010,9 +28010,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/utils.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/utils.cjs
   var require_utils3 = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/utils.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/utils.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -28154,9 +28154,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip174/src/cjs/lib/psbt.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/psbt.cjs
   var require_psbt2 = __commonJS({
-    "../../app/node_modules/bip174/src/cjs/lib/psbt.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip174/src/cjs/lib/psbt.cjs"(exports) {
       "use strict";
       init_shim();
       var __importStar = exports && exports.__importStar || function(mod3) {
@@ -28318,9 +28318,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/psbt/psbtutils.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/psbt/psbtutils.cjs
   var require_psbtutils = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/psbt/psbtutils.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/psbt/psbtutils.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -28466,9 +28466,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/psbt/bip371.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/psbt/bip371.cjs
   var require_bip371 = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/psbt/bip371.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/psbt/bip371.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -28775,9 +28775,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/psbt.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/psbt.cjs
   var require_psbt3 = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/psbt.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/psbt.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -30347,9 +30347,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bitcoinjs-lib/src/cjs/index.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/index.cjs
   var require_cjs5 = __commonJS({
-    "../../app/node_modules/bitcoinjs-lib/src/cjs/index.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/cjs/index.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -30440,9 +30440,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/node_modules/@noble/hashes/crypto.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/crypto.js
   var require_crypto4 = __commonJS({
-    "../../app/node_modules/bip32/node_modules/@noble/hashes/crypto.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/crypto.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -30451,9 +30451,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/node_modules/@noble/hashes/utils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/utils.js
   var require_utils4 = __commonJS({
-    "../../app/node_modules/bip32/node_modules/@noble/hashes/utils.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/utils.js"(exports) {
       "use strict";
       init_shim();
       /*! noble-hashes - MIT License (c) 2022 Paul Miller (paulmillr.com) */
@@ -30695,9 +30695,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/node_modules/@noble/hashes/hmac.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/hmac.js
   var require_hmac = __commonJS({
-    "../../app/node_modules/bip32/node_modules/@noble/hashes/hmac.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/hmac.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -30774,9 +30774,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/node_modules/@noble/hashes/_md.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/_md.js
   var require_md3 = __commonJS({
-    "../../app/node_modules/bip32/node_modules/@noble/hashes/_md.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/_md.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -30953,9 +30953,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/node_modules/@noble/hashes/legacy.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/legacy.js
   var require_legacy2 = __commonJS({
-    "../../app/node_modules/bip32/node_modules/@noble/hashes/legacy.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/legacy.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -31222,9 +31222,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/node_modules/@noble/hashes/ripemd160.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/ripemd160.js
   var require_ripemd1602 = __commonJS({
-    "../../app/node_modules/bip32/node_modules/@noble/hashes/ripemd160.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/ripemd160.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -31235,9 +31235,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/node_modules/@noble/hashes/_u64.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/_u64.js
   var require_u643 = __commonJS({
-    "../../app/node_modules/bip32/node_modules/@noble/hashes/_u64.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/_u64.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -31332,9 +31332,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/node_modules/@noble/hashes/sha2.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/sha2.js
   var require_sha23 = __commonJS({
-    "../../app/node_modules/bip32/node_modules/@noble/hashes/sha2.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/sha2.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -31803,9 +31803,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/node_modules/@noble/hashes/sha256.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/sha256.js
   var require_sha2563 = __commonJS({
-    "../../app/node_modules/bip32/node_modules/@noble/hashes/sha256.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/sha256.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -31818,9 +31818,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/node_modules/@noble/hashes/sha512.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/sha512.js
   var require_sha512 = __commonJS({
-    "../../app/node_modules/bip32/node_modules/@noble/hashes/sha512.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@noble/hashes/sha512.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -31837,9 +31837,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/src/cjs/crypto.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/src/cjs/crypto.cjs
   var require_crypto5 = __commonJS({
-    "../../app/node_modules/bip32/src/cjs/crypto.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/src/cjs/crypto.cjs"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -31858,7 +31858,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/node_modules/uint8array-tools/src/mjs/browser.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/uint8array-tools/src/mjs/browser.js
   var browser_exports5 = {};
   __export(browser_exports5, {
     compare: () => compare5,
@@ -32096,7 +32096,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   }
   var HEX_STRINGS5, HEX_CODES5, HEX_CODEPOINTS5, ENCODER5, DECODER5;
   var init_browser5 = __esm({
-    "../../app/node_modules/bip32/node_modules/uint8array-tools/src/mjs/browser.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/uint8array-tools/src/mjs/browser.js"() {
       init_shim();
       HEX_STRINGS5 = "0123456789abcdefABCDEF";
       HEX_CODES5 = HEX_STRINGS5.split("").map((c25) => c25.codePointAt(0));
@@ -32110,9 +32110,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/src/cjs/testecc.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/src/cjs/testecc.cjs
   var require_testecc = __commonJS({
-    "../../app/node_modules/bip32/src/cjs/testecc.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/src/cjs/testecc.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o19, m15, k8, k22) {
@@ -32184,9 +32184,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/node_modules/@scure/base/lib/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@scure/base/lib/index.js
   var require_lib = __commonJS({
-    "../../app/node_modules/bip32/node_modules/@scure/base/lib/index.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/node_modules/@scure/base/lib/index.js"(exports) {
       "use strict";
       init_shim();
       /*! scure-base - MIT License (c) 2022 Paul Miller (paulmillr.com) */
@@ -32706,9 +32706,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/src/cjs/types.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/src/cjs/types.cjs
   var require_types2 = __commonJS({
-    "../../app/node_modules/bip32/src/cjs/types.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/src/cjs/types.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o19, m15, k8, k22) {
@@ -32757,9 +32757,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/wif/src/cjs/index.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/wif/src/cjs/index.cjs
   var require_cjs6 = __commonJS({
-    "../../app/node_modules/wif/src/cjs/index.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/wif/src/cjs/index.cjs"(exports) {
       "use strict";
       init_shim();
       var __importDefault = exports && exports.__importDefault || function(mod3) {
@@ -32813,9 +32813,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/src/cjs/bip32.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/src/cjs/bip32.cjs
   var require_bip32 = __commonJS({
-    "../../app/node_modules/bip32/src/cjs/bip32.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/src/cjs/bip32.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o19, m15, k8, k22) {
@@ -33164,9 +33164,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32/src/cjs/index.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32/src/cjs/index.cjs
   var require_cjs7 = __commonJS({
-    "../../app/node_modules/bip32/src/cjs/index.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32/src/cjs/index.cjs"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -33181,9 +33181,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/ecpair/src/cjs/networks.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/ecpair/src/cjs/networks.cjs
   var require_networks3 = __commonJS({
-    "../../app/node_modules/ecpair/src/cjs/networks.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/ecpair/src/cjs/networks.cjs"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -33213,9 +33213,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/ecpair/src/cjs/types.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/ecpair/src/cjs/types.cjs
   var require_types3 = __commonJS({
-    "../../app/node_modules/ecpair/src/cjs/types.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/ecpair/src/cjs/types.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -33280,7 +33280,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/ecpair/node_modules/uint8array-tools/src/mjs/browser.js
+  // ../../../jimbus9/crowdlock/app/node_modules/ecpair/node_modules/uint8array-tools/src/mjs/browser.js
   var browser_exports6 = {};
   __export(browser_exports6, {
     compare: () => compare6,
@@ -33518,7 +33518,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   }
   var HEX_STRINGS6, HEX_CODES6, HEX_CODEPOINTS6, ENCODER6, DECODER6;
   var init_browser6 = __esm({
-    "../../app/node_modules/ecpair/node_modules/uint8array-tools/src/mjs/browser.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/ecpair/node_modules/uint8array-tools/src/mjs/browser.js"() {
       init_shim();
       HEX_STRINGS6 = "0123456789abcdefABCDEF";
       HEX_CODES6 = HEX_STRINGS6.split("").map((c25) => c25.codePointAt(0));
@@ -33532,9 +33532,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/ecpair/src/cjs/testecc.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/ecpair/src/cjs/testecc.cjs
   var require_testecc2 = __commonJS({
-    "../../app/node_modules/ecpair/src/cjs/testecc.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/ecpair/src/cjs/testecc.cjs"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -33756,9 +33756,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/ecpair/src/cjs/ecpair.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/ecpair/src/cjs/ecpair.cjs
   var require_ecpair = __commonJS({
-    "../../app/node_modules/ecpair/src/cjs/ecpair.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/ecpair/src/cjs/ecpair.cjs"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function(o19, m15, k8, k22) {
@@ -33977,9 +33977,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/ecpair/src/cjs/index.cjs
+  // ../../../jimbus9/crowdlock/app/node_modules/ecpair/src/cjs/index.cjs
   var require_cjs8 = __commonJS({
-    "../../app/node_modules/ecpair/src/cjs/index.cjs"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/ecpair/src/cjs/index.cjs"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -34006,9 +34006,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/adapters/bitcoinjs.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/adapters/bitcoinjs.js
   var require_bitcoinjs = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/adapters/bitcoinjs.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/adapters/bitcoinjs.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -34062,9 +34062,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/bitcoinjs.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/bitcoinjs.js
   var require_bitcoinjs2 = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/bitcoinjs.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/bitcoinjs.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -34076,7 +34076,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@noble/hashes/_u64.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@noble/hashes/_u64.js
   function setU64FromNum(view, byteOffset, n19, isLE2) {
     const h6 = fromNumH(n19);
     const l22 = fromNumL(n19);
@@ -34085,14 +34085,14 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   }
   var fromNumH, fromNumL;
   var init_u64 = __esm({
-    "../../app/node_modules/@noble/hashes/_u64.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/@noble/hashes/_u64.js"() {
       init_shim();
       fromNumH = (n19) => n19 / 2 ** 32 | 0;
       fromNumL = (n19) => n19 >>> 0;
     }
   });
 
-  // ../../app/node_modules/@noble/hashes/utils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@noble/hashes/utils.js
   function isBytes(a29) {
     return a29 instanceof Uint8Array || ArrayBuffer.isView(a29) && a29.constructor.name === "Uint8Array" && "BYTES_PER_ELEMENT" in a29 && a29.BYTES_PER_ELEMENT === 1;
   }
@@ -34245,7 +34245,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   }
   var atitle, aobject, aopts, hasHexBuiltin, hexes, oidNist;
   var init_utils = __esm({
-    "../../app/node_modules/@noble/hashes/utils.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/@noble/hashes/utils.js"() {
       init_shim();
       atitle = (title) => title ? `"${title}" ` : "";
       aobject = (value2, label) => {
@@ -34273,7 +34273,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@noble/hashes/_md.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@noble/hashes/_md.js
   function Chi(a29, b8, c25) {
     return a29 & b8 ^ ~a29 & c25;
   }
@@ -34282,7 +34282,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   }
   var HashMD, SHA256_IV;
   var init_md = __esm({
-    "../../app/node_modules/@noble/hashes/_md.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/@noble/hashes/_md.js"() {
       init_shim();
       init_u64();
       init_utils();
@@ -34394,10 +34394,10 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@noble/hashes/sha2.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@noble/hashes/sha2.js
   var SHA256_K, SHA256_W, SHA2_32B, _SHA256, sha256;
   var init_sha2 = __esm({
-    "../../app/node_modules/@noble/hashes/sha2.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/@noble/hashes/sha2.js"() {
       init_shim();
       init_md();
       init_utils();
@@ -34567,7 +34567,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@noble/curves/utils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@noble/curves/utils.js
   var utils_exports = {};
   __export(utils_exports, {
     aInRange: () => aInRange,
@@ -34811,7 +34811,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   }
   var abytes2, anumber2, bytesToHex2, concatBytes2, hexToBytes2, isBytes2, randomBytes2, _0n, _1n, atitle2, bitMask, notImplemented;
   var init_utils2 = __esm({
-    "../../app/node_modules/@noble/curves/utils.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/@noble/curves/utils.js"() {
       init_shim();
       init_utils();
       /*! noble-curves - MIT License (c) 2022 Paul Miller (paulmillr.com) */
@@ -34835,7 +34835,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@noble/curves/abstract/modular.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@noble/curves/abstract/modular.js
   function mod(a29, b8) {
     if (b8 <= _0n2)
       throw new Error("mod: expected positive modulus, got " + b8);
@@ -35136,7 +35136,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   }
   var _0n2, _1n2, _2n, _3n, _4n, _5n, _7n, _8n, _9n, _15n, _16n, POW_WINDOWED_MIN, FIELD_FIELDS, FIELD_SQRT, _Field;
   var init_modular = __esm({
-    "../../app/node_modules/@noble/curves/abstract/modular.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/@noble/curves/abstract/modular.js"() {
       init_shim();
       init_utils2();
       /*! noble-curves - MIT License (c) 2022 Paul Miller (paulmillr.com) */
@@ -35309,7 +35309,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@noble/curves/abstract/curve.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@noble/curves/abstract/curve.js
   function validatePointCons(Point2) {
     const pc = Point2;
     if (typeof pc !== "function")
@@ -35484,7 +35484,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   }
   var _0n3, _1n3, _4n2, BLIND_BYTES, BLIND_BITS, FW_WINDOW, TABLE_BYTES_MAX, pointWindowSizes, ScalarMultiplier;
   var init_curve = __esm({
-    "../../app/node_modules/@noble/curves/abstract/curve.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/@noble/curves/abstract/curve.js"() {
       init_shim();
       init_utils2();
       init_modular();
@@ -35705,7 +35705,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@noble/curves/abstract/fft.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@noble/curves/abstract/fft.js
   function checkU32(n19, title = "n") {
     if (typeof n19 !== "number")
       throw new TypeError(`wrong u32 integer "${title}": expected number, got type=${typeof n19}`);
@@ -35935,13 +35935,13 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     };
   }
   var init_fft = __esm({
-    "../../app/node_modules/@noble/curves/abstract/fft.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/@noble/curves/abstract/fft.js"() {
       init_shim();
       init_modular();
     }
   });
 
-  // ../../app/node_modules/@noble/curves/abstract/hash-to-curve.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@noble/curves/abstract/hash-to-curve.js
   function i2osp(value2, length2) {
     asafenumber(value2);
     asafenumber(length2);
@@ -36263,7 +36263,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   }
   var _0n4, _1n4, _2n2, _3n2, _4n3, os2ip, _DST_scalar;
   var init_hash_to_curve = __esm({
-    "../../app/node_modules/@noble/curves/abstract/hash-to-curve.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/@noble/curves/abstract/hash-to-curve.js"() {
       init_shim();
       init_utils2();
       init_modular();
@@ -36277,7 +36277,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@noble/curves/abstract/frost.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@noble/curves/abstract/frost.js
   function createFROST(opts) {
     validateObject(opts, {
       name: "string",
@@ -37007,7 +37007,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   }
   var validateSigners, validateCommitmentsNum, AggErr;
   var init_frost = __esm({
-    "../../app/node_modules/@noble/curves/abstract/frost.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/@noble/curves/abstract/frost.js"() {
       init_shim();
       init_utils();
       init_utils2();
@@ -37036,10 +37036,10 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@noble/hashes/hmac.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@noble/hashes/hmac.js
   var _HMAC, hmac;
   var init_hmac = __esm({
-    "../../app/node_modules/@noble/hashes/hmac.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/@noble/hashes/hmac.js"() {
       init_shim();
       init_utils();
       _HMAC = class {
@@ -37120,10 +37120,10 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@noble/curves/abstract/der.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@noble/curves/abstract/der.js
   var _0n5, DERErr, _DER, DER;
   var init_der = __esm({
-    "../../app/node_modules/@noble/curves/abstract/der.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/@noble/curves/abstract/der.js"() {
       init_shim();
       init_utils2();
       /*! noble-curves - MIT License (c) 2022 Paul Miller (paulmillr.com) */
@@ -37255,7 +37255,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@noble/curves/abstract/weierstrass.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@noble/curves/abstract/weierstrass.js
   function _splitEndoScalar(k8, basis, n19) {
     aInRange("scalar", k8, _0n6, n19);
     const [[a1, b1], [a29, b22]] = basis;
@@ -38082,7 +38082,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   }
   var divNearest, _0n6, _1n5, _2n3, _3n3, _4n4;
   var init_weierstrass = __esm({
-    "../../app/node_modules/@noble/curves/abstract/weierstrass.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/@noble/curves/abstract/weierstrass.js"() {
       init_shim();
       init_hmac();
       init_utils();
@@ -38100,7 +38100,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@noble/curves/secp256k1.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@noble/curves/secp256k1.js
   var secp256k1_exports = {};
   __export(secp256k1_exports, {
     __TEST: () => __TEST,
@@ -38285,7 +38285,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   }
   var secp256k1_CURVE, secp256k1_ENDO, _0n7, _2n4, Fpk1, Pointk1, secp256k1, TAGGED_HASH_PREFIXES, pointToBytes, affineXToBytes, hasEven, num, __TEST, schnorr, isoMap, mapSWU, getMapSWU, secp256k1_hasher, secp256k1_FROST, schnorr_FROST;
   var init_secp256k1 = __esm({
-    "../../app/node_modules/@noble/curves/secp256k1.js"() {
+    "../../../jimbus9/crowdlock/app/node_modules/@noble/curves/secp256k1.js"() {
       init_shim();
       init_sha2();
       init_utils();
@@ -38451,9 +38451,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/secp256k1/dist/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/secp256k1/dist/index.js
   var require_dist5 = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/secp256k1/dist/index.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/secp256k1/dist/index.js"(exports) {
       "use strict";
       init_shim();
       var secp256k1_js = (init_secp256k1(), __toCommonJS(secp256k1_exports));
@@ -38910,9 +38910,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors/dist/backend.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors/dist/backend.js
   var require_backend = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors/dist/backend.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors/dist/backend.js"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o19, m15, k8, k22) {
@@ -38961,9 +38961,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors/dist/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors/dist/index.js
   var require_dist6 = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors/dist/index.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors/dist/index.js"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o19, m15, k8, k22) {
@@ -39099,9 +39099,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/crypto.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/crypto.js
   var require_crypto6 = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/crypto.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/crypto.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -39110,9 +39110,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/utils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/utils.js
   var require_utils5 = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/utils.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/utils.js"(exports) {
       "use strict";
       init_shim();
       /*! noble-hashes - MIT License (c) 2022 Paul Miller (paulmillr.com) */
@@ -39354,9 +39354,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/_md.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/_md.js
   var require_md4 = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/_md.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/_md.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -39533,9 +39533,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/_u64.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/_u64.js
   var require_u644 = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/_u64.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/_u64.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -39630,9 +39630,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/sha2.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/sha2.js
   var require_sha24 = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/sha2.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/sha2.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -40101,9 +40101,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/hmac.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/hmac.js
   var require_hmac2 = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/hmac.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/hashes/hmac.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -40180,9 +40180,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/utils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/utils.js
   var require_utils6 = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/utils.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/utils.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -40465,9 +40465,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/modular.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/modular.js
   var require_modular = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/modular.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/modular.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -40873,9 +40873,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/curve.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/curve.js
   var require_curve = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/curve.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/curve.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -41223,9 +41223,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/weierstrass.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/weierstrass.js
   var require_weierstrass = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/weierstrass.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/weierstrass.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -42391,9 +42391,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/_shortw_utils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/_shortw_utils.js
   var require_shortw_utils = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/_shortw_utils.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/_shortw_utils.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -42411,9 +42411,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/hash-to-curve.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/hash-to-curve.js
   var require_hash_to_curve = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/hash-to-curve.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/hash-to-curve.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -42587,9 +42587,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/secp256k1.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/secp256k1.js
   var require_secp256k1 = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/secp256k1.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/secp256k1.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -42814,9 +42814,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/utils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/utils.js
   var require_utils7 = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/utils.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@noble/curves/abstract/utils.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -42857,9 +42857,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@bitcoinerlab/secp256k1/dist/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@bitcoinerlab/secp256k1/dist/index.js
   var require_dist7 = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@bitcoinerlab/secp256k1/dist/index.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/node_modules/@bitcoinerlab/secp256k1/dist/index.js"(exports) {
       "use strict";
       init_shim();
       var secp256k12 = require_secp256k1();
@@ -43302,9 +43302,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/bip32-path/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip32-path/index.js
   var require_bip32_path = __commonJS({
-    "../../app/node_modules/bip32-path/index.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/app/node_modules/bip32-path/index.js"(exports, module2) {
       init_shim();
       var HARDENED = 2147483648;
       var BIPPath = function(path) {
@@ -43387,9 +43387,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/bip32.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/bip32.js
   var require_bip322 = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/bip32.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/bip32.js"(exports) {
       "use strict";
       init_shim();
       var __importDefault = exports && exports.__importDefault || function(mod3) {
@@ -43452,9 +43452,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/varint.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/varint.js
   var require_varint = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/varint.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/varint.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -43549,9 +43549,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/buffertools.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/buffertools.js
   var require_buffertools = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/buffertools.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/buffertools.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -43680,9 +43680,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/merkle.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/merkle.js
   var require_merkle2 = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/merkle.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/merkle.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -43792,9 +43792,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/clientCommands.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/clientCommands.js
   var require_clientCommands = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/clientCommands.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/clientCommands.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -44043,9 +44043,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/merkleMap.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/merkleMap.js
   var require_merkleMap = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/merkleMap.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/merkleMap.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -44083,9 +44083,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/psbtv2.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/psbtv2.js
   var require_psbtv2 = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/psbtv2.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/psbtv2.js"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o19, m15, k8, k22) {
@@ -44699,9 +44699,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/merkelizedPsbt.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/merkelizedPsbt.js
   var require_merkelizedPsbt = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/merkelizedPsbt.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/merkelizedPsbt.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -44748,9 +44748,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/appClient.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/appClient.js
   var require_appClient = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/appClient.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/appClient.js"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o19, m15, k8, k22) {
@@ -45099,9 +45099,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/policy.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/policy.js
   var require_policy = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/policy.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/lib/policy.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -45157,9 +45157,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/index.js
   var require_main = __commonJS({
-    "../../app/node_modules/@ledgerhq/ledger-bitcoin/build/main/index.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/ledger-bitcoin/build/main/index.js"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o19, m15, k8, k22) {
@@ -45221,9 +45221,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/client.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/client.js
   var require_client = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/client.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/client.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -45411,9 +45411,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/hww/helpers.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/hww/helpers.js
   var require_helpers = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/hww/helpers.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/hww/helpers.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -45500,9 +45500,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/hww/policies.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/hww/policies.js
   var require_policies = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/hww/policies.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/hww/policies.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -45764,9 +45764,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/policies.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/policies.js
   var require_policies2 = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/policies.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/policies.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -45782,9 +45782,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/keyExpressions.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/keyExpressions.js
   var require_keyExpressions2 = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/keyExpressions.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/keyExpressions.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -45814,9 +45814,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/signers.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/signers.js
   var require_signers2 = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/signers.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/signers.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -45957,9 +45957,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/scriptExpressions.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/scriptExpressions.js
   var require_scriptExpressions2 = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/scriptExpressions.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/scriptExpressions.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -46002,9 +46002,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/connectors.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/connectors.js
   var require_connectors = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/connectors.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/connectors.js"(exports) {
       "use strict";
       init_shim();
       Object.defineProperty(exports, "__esModule", { value: true });
@@ -46059,9 +46059,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/index.js
   var require_ledger = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/index.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors-core/dist/ledger/index.js"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o19, m15, k8, k22) {
@@ -46282,9 +46282,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/@bitcoinerlab/descriptors/dist/ledger.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors/dist/ledger.js
   var require_ledger2 = __commonJS({
-    "../../app/node_modules/@bitcoinerlab/descriptors/dist/ledger.js"(exports) {
+    "../../../jimbus9/crowdlock/app/node_modules/@bitcoinerlab/descriptors/dist/ledger.js"(exports) {
       "use strict";
       init_shim();
       var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o19, m15, k8, k22) {
@@ -46309,9 +46309,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   });
 
-  // ../../app/node_modules/events/events.js
+  // ../../../jimbus9/crowdlock/app/node_modules/events/events.js
   var require_events = __commonJS({
-    "../../app/node_modules/events/events.js"(exports, module2) {
+    "../../../jimbus9/crowdlock/app/node_modules/events/events.js"(exports, module2) {
       "use strict";
       init_shim();
       var R7 = typeof Reflect === "object" ? Reflect : null;
@@ -46702,17 +46702,17 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   });
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/index.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/index.js
   init_shim();
   var import_reflect_metadata3 = __toESM(require_Reflect());
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/index.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/model/Apdu.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/model/Apdu.js
   init_shim();
   var s = class {
     cla;
@@ -46729,13 +46729,13 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/utils/ApduBuilder.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/utils/ApduBuilder.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/utils/ByteArrayBuilder.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/utils/ByteArrayBuilder.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/utils/HexaString.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/utils/HexaString.js
   init_shim();
   function f(r11) {
     if (r11.startsWith("0x") && (r11 = r11.slice(2)), r11.length === 0) return new Uint8Array();
@@ -46747,7 +46747,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     return `${t29 ? "0x" : ""}${Array.from(r11, (i20) => i20.toString(16).padStart(2, "0")).join("")}`;
   }
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/utils/AppBuilderError.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/utils/AppBuilderError.js
   init_shim();
   var l = class {
     _tag = "ValueOverflow";
@@ -46774,7 +46774,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/utils/ByteArrayBuilder.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/utils/ByteArrayBuilder.js
   var b = 4294967295;
   var g = class {
     constructor(t29 = b) {
@@ -46858,7 +46858,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/utils/ApduBuilder.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/utils/ApduBuilder.js
   var a = 255;
   var l2 = a + 5;
   var A = class {
@@ -46885,10 +46885,10 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     getErrors = () => this.data.getErrors();
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/utils/ApduParser.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/utils/ApduParser.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/utils/ByteArrayParser.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/utils/ByteArrayParser.js
   init_shim();
   var s3 = class {
     constructor(e29) {
@@ -46998,7 +46998,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/utils/ApduParser.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/apdu/utils/ApduParser.js
   var i2 = class {
     parser;
     constructor(e29) {
@@ -47018,7 +47018,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     getUnparsedRemainingLength = () => this.parser.getUnparsedRemainingLength();
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/Errors.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/Errors.js
   init_shim();
   var n = class {
     _tag = "InvalidStatusWordError";
@@ -47035,10 +47035,10 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/model/CommandResult.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/model/CommandResult.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/model/DmkResult.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/model/DmkResult.js
   init_shim();
   var s4 = ((t29) => (t29.Error = "ERROR", t29.Success = "SUCCESS", t29))(s4 || {});
   function e(r11) {
@@ -47051,7 +47051,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     return r11.status === "SUCCESS";
   }
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/model/CommandResult.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/model/CommandResult.js
   function s5({ data: r11, error: o19 }) {
     return o19 !== void 0 ? u({ error: o19 }) : u({ data: r11 });
   }
@@ -47059,10 +47059,10 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     return a2(r11);
   }
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/CloseAppCommand.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/CloseAppCommand.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/utils/CommandUtils.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/utils/CommandUtils.js
   init_shim();
   var e2 = class _e2 {
     static isValidStatusCode(r11) {
@@ -47092,10 +47092,10 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/utils/GlobalCommandError.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/utils/GlobalCommandError.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/Error.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/Error.js
   init_shim();
   var a3 = class {
     _tag;
@@ -47115,11 +47115,11 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/utils/CommandErrors.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/utils/CommandErrors.js
   init_shim();
   var o2 = (r11, e29) => Object.keys(e29).includes(r11);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/utils/GlobalCommandError.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/utils/GlobalCommandError.js
   var d2 = class extends a3 {
     constructor(r11) {
       super({ tag: "GlobalCommandError", ...r11 });
@@ -47133,10 +47133,10 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/DeleteLanguagePackCommand.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/DeleteLanguagePackCommand.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/GetAppAndVersionCommand.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/GetAppAndVersionCommand.js
   init_shim();
   var R = class {
     name = "getAppAndVersion";
@@ -47156,19 +47156,19 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/GetBackgroundImageSizeCommand.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/GetBackgroundImageSizeCommand.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/GetBatteryStatusCommand.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/GetBatteryStatusCommand.js
   init_shim();
   var R2 = ((e29) => (e29[e29.BATTERY_PERCENTAGE = 0] = "BATTERY_PERCENTAGE", e29[e29.BATTERY_VOLTAGE = 1] = "BATTERY_VOLTAGE", e29[e29.BATTERY_TEMPERATURE = 2] = "BATTERY_TEMPERATURE", e29[e29.BATTERY_CURRENT = 3] = "BATTERY_CURRENT", e29[e29.BATTERY_FLAGS = 4] = "BATTERY_FLAGS", e29))(R2 || {});
   var B = ((r11) => (r11[r11.NONE = 0] = "NONE", r11[r11.USB = 1] = "USB", r11[r11.QI = 2] = "QI", r11))(B || {});
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/GetOsVersionCommand.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/GetOsVersionCommand.js
   init_shim();
   var import_semver = __toESM(require_semver2());
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device/DeviceModel.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device/DeviceModel.js
   init_shim();
   var t2 = ((e29) => (e29.NANO_S = "nanoS", e29.NANO_SP = "nanoSP", e29.NANO_X = "nanoX", e29.STAX = "stax", e29.FLEX = "flex", e29.APEX = "apexp", e29))(t2 || {});
   var i3 = class {
@@ -47181,15 +47181,15 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   };
   var l3 = 11415;
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/SecureElementFlagsParser.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/SecureElementFlagsParser.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device/SecureElementFlags.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device/SecureElementFlags.js
   init_shim();
   var r = { Twelve: 12, Eighteen: 18, TwentyFour: 24 };
   var o4 = ((e29) => (e29.Unknown = "unknown", e29.WelcomeScreen1 = "welcome-screen-1", e29.WelcomeScreen2 = "welcome-screen-2", e29.WelcomeScreen3 = "welcome-screen-3", e29.WelcomeScreen4 = "welcome-screen-4", e29.WelcomeScreenReminder = "welcome-screen-reminder", e29.SetupChoice = "setup-choice", e29.Pin = "pin", e29.NewDevice = "new-device", e29.ConfirmNewDevice = "confirm-new-device", e29.RestoreRecoveryPhrase = "restore-recovery-phrase", e29.SafetyWarning = "safety-warning", e29.DeviceIsReady = "device-is-ready", e29.ChooseName = "choose-name", e29.RestoreRecoverBackup = "restore-recover-backup", e29.SetupRestoreChoice = "setup-restore-choice", e29.OnboardingStatusCheck = "onboarding-status-check", e29.RestoreWithRk = "restore-with-rk", e29))(o4 || {});
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/SecureElementFlagsParser.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/SecureElementFlagsParser.js
   var o5 = { 0: o4.WelcomeScreen1, 1: o4.WelcomeScreen2, 2: o4.WelcomeScreen3, 3: o4.WelcomeScreen4, 4: o4.WelcomeScreenReminder, 5: o4.SetupChoice, 6: o4.Pin, 7: o4.NewDevice, 8: o4.ConfirmNewDevice, 9: o4.RestoreRecoveryPhrase, 10: o4.SafetyWarning, 11: o4.DeviceIsReady, 12: o4.ChooseName, 13: o4.RestoreRecoverBackup, 14: o4.SetupRestoreChoice, 15: o4.OnboardingStatusCheck, 16: o4.RestoreWithRk };
   var c = class {
     seFlags;
@@ -47217,7 +47217,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/GetOsVersionCommand.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/GetOsVersionCommand.js
   var X = class {
     name = "getOsVersion";
     args = void 0;
@@ -47301,43 +47301,43 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/ListAppsCommand.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/ListAppsCommand.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/ListLanguagePackCommand.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/ListLanguagePackCommand.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/LoadCertificateCommand.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/LoadCertificateCommand.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/OpenAppCommand.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/os/OpenAppCommand.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device/DeviceStatus.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device/DeviceStatus.js
   init_shim();
   var E = ((C5) => (C5.LOCKED = "LOCKED", C5.BUSY = "BUSY", C5.CONNECTED = "CONNECTED", C5.NOT_CONNECTED = "NOT CONNECTED", C5))(E || {});
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/model/DeviceActionState.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/model/DeviceActionState.js
   init_shim();
   var t3 = ((e29) => (e29.NotStarted = "not-started", e29.Pending = "pending", e29.Stopped = "stopped", e29.Completed = "completed", e29.Error = "error", e29))(t3 || {});
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/model/UserInteractionRequired.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/model/UserInteractionRequired.js
   init_shim();
   var o6 = ((l22) => (l22.None = "none", l22.UnlockDevice = "unlock-device", l22.AllowSecureConnection = "allow-secure-connection", l22.ConfirmOpenApp = "confirm-open-app", l22.SignTransaction = "sign-transaction", l22.SignTypedData = "sign-typed-data", l22.AllowListApps = "allow-list-apps", l22.VerifyAddress = "verify-address", l22.SignPersonalMessage = "sign-personal-message", l22.SignDelegationAuthorization = "sign-delegation-authorization", l22.Web3ChecksOptIn = "web3-checks-opt-in", l22.VerifySafeAddress = "verify-safe-address", l22.RegisterWallet = "register-wallet", l22.ConfirmLoadImage = "confirm-load-image", l22.ConfirmCommitImage = "confirm-commit-image", l22.ConfirmRemoveImage = "confirm-remove-image", l22.GrantConsent = "grant-consent", l22.AllowInstallFirmware = "allow-install-firmware", l22))(o6 || {});
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/CallTaskInAppDeviceAction/CallTaskInAppDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/CallTaskInAppDeviceAction/CallTaskInAppDeviceAction.js
   init_shim();
 
-  // node_modules/purify-ts/esm/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/purify-ts/esm/index.js
   init_shim();
 
-  // node_modules/purify-ts/esm/Codec.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/purify-ts/esm/Codec.js
   init_shim();
 
-  // node_modules/purify-ts/esm/Either.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/purify-ts/esm/Either.js
   init_shim();
 
-  // node_modules/purify-ts/esm/Maybe.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/purify-ts/esm/Maybe.js
   init_shim();
   var Maybe = {
     of(value2) {
@@ -47604,7 +47604,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   var just = (value2) => new Just(value2);
   var nothing = new Nothing();
 
-  // node_modules/purify-ts/esm/Either.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/purify-ts/esm/Either.js
   var Either = {
     of(value2) {
       return right(value2);
@@ -47861,11 +47861,11 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   var left = (value2) => new Left(value2);
   var right = (value2) => new Right(value2);
 
-  // node_modules/purify-ts/esm/Function.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/purify-ts/esm/Function.js
   init_shim();
   var identity = (x8) => x8;
 
-  // node_modules/purify-ts/esm/NonEmptyList.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/purify-ts/esm/NonEmptyList.js
   init_shim();
   var NonEmptyListConstructor = (list) => list;
   var NonEmptyList = Object.assign(NonEmptyListConstructor, {
@@ -47883,7 +47883,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     tail: (list) => list.slice(1)
   });
 
-  // node_modules/purify-ts/esm/Codec.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/purify-ts/esm/Codec.js
   var serializeValue = (_9, value2) => {
     return typeof value2 === "bigint" ? value2.toString() : value2;
   };
@@ -48037,10 +48037,10 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     schema: () => ({ type: "string", format: "date-time" })
   });
 
-  // node_modules/purify-ts/esm/List.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/purify-ts/esm/List.js
   init_shim();
 
-  // node_modules/purify-ts/esm/Tuple.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/purify-ts/esm/Tuple.js
   init_shim();
   var TupleImpl = class {
     constructor(first, second) {
@@ -48123,10 +48123,10 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   });
   TupleImpl.prototype.constructor = Tuple;
 
-  // node_modules/purify-ts/esm/MaybeAsync.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/purify-ts/esm/MaybeAsync.js
   init_shim();
 
-  // node_modules/purify-ts/esm/EitherAsync.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/purify-ts/esm/EitherAsync.js
   init_shim();
   var _a;
   var helpers = {
@@ -48307,7 +48307,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   });
   EitherAsyncImpl.prototype.constructor = EitherAsync;
 
-  // node_modules/purify-ts/esm/MaybeAsync.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/purify-ts/esm/MaybeAsync.js
   var _a2;
   var helpers2 = {
     liftMaybe(maybe) {
@@ -48440,16 +48440,16 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
   });
   MaybeAsyncImpl.prototype.constructor = MaybeAsync;
 
-  // node_modules/xstate/dist/xstate.esm.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/xstate/dist/xstate.esm.js
   init_shim();
 
-  // node_modules/xstate/actors/dist/xstate-actors.esm.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/xstate/actors/dist/xstate-actors.esm.js
   init_shim();
 
-  // node_modules/xstate/dist/raise-c17ec2bc.esm.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/xstate/dist/raise-c17ec2bc.esm.js
   init_shim();
 
-  // node_modules/xstate/dev/dist/xstate-dev.esm.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/xstate/dev/dist/xstate-dev.esm.js
   init_shim();
   function getGlobal() {
     if (typeof globalThis !== "undefined") {
@@ -48482,7 +48482,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     }
   };
 
-  // node_modules/xstate/dist/raise-c17ec2bc.esm.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/xstate/dist/raise-c17ec2bc.esm.js
   var Mailbox = class {
     constructor(_process) {
       this._process = _process;
@@ -50644,7 +50644,7 @@ ${err2.message}`);
     return raise2;
   }
 
-  // node_modules/xstate/actors/dist/xstate-actors.esm.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/xstate/actors/dist/xstate-actors.esm.js
   function fromTransition(transition, initialContext) {
     return {
       config: transition,
@@ -50670,7 +50670,7 @@ ${err2.message}`);
   }
   var emptyLogic = fromTransition((_9) => void 0, void 0);
 
-  // node_modules/xstate/dist/log-3d9d72a9.esm.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/xstate/dist/log-3d9d72a9.esm.js
   init_shim();
   function createSpawner(actorScope, {
     machine,
@@ -50783,7 +50783,7 @@ ${err2.message}`);
     return emit2;
   }
 
-  // node_modules/xstate/dist/xstate.esm.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/xstate/dist/xstate.esm.js
   var cache = /* @__PURE__ */ new WeakMap();
   function memo(object2, key, fn) {
     let memoizedData = cache.get(object2);
@@ -51273,31 +51273,31 @@ ${err2.message}`);
     };
   }
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/Errors.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/Errors.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/OpenAppDeviceAction/OpenAppDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/OpenAppDeviceAction/OpenAppDeviceAction.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/Const.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/Const.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/GetDeviceStatus/GetDeviceStatusDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/GetDeviceStatus/GetDeviceStatusDeviceAction.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/WaitForAppAndVersion/WaitForAppAndVersionDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/WaitForAppAndVersion/WaitForAppAndVersionDeviceAction.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/index.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/Observable.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/Observable.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/Subscriber.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/Subscriber.js
   init_shim();
 
-  // node_modules/rxjs/node_modules/tslib/tslib.es6.mjs
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/node_modules/tslib/tslib.es6.mjs
   init_shim();
   var extendStatics = function(d19, b8) {
     extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d20, b9) {
@@ -51513,19 +51513,19 @@ ${err2.message}`);
     }
   }
 
-  // node_modules/rxjs/dist/esm5/internal/util/isFunction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/isFunction.js
   init_shim();
   function isFunction(value2) {
     return typeof value2 === "function";
   }
 
-  // node_modules/rxjs/dist/esm5/internal/Subscription.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/Subscription.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/util/UnsubscriptionError.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/UnsubscriptionError.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/util/createErrorClass.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/createErrorClass.js
   init_shim();
   function createErrorClass(createImpl) {
     var _super = function(instance2) {
@@ -51538,7 +51538,7 @@ ${err2.message}`);
     return ctorFunc;
   }
 
-  // node_modules/rxjs/dist/esm5/internal/util/UnsubscriptionError.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/UnsubscriptionError.js
   var UnsubscriptionError = createErrorClass(function(_super) {
     return function UnsubscriptionErrorImpl(errors) {
       _super(this);
@@ -51550,7 +51550,7 @@ ${err2.message}`);
     };
   });
 
-  // node_modules/rxjs/dist/esm5/internal/util/arrRemove.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/arrRemove.js
   init_shim();
   function arrRemove(arr, item) {
     if (arr) {
@@ -51559,7 +51559,7 @@ ${err2.message}`);
     }
   }
 
-  // node_modules/rxjs/dist/esm5/internal/Subscription.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/Subscription.js
   var Subscription = (function() {
     function Subscription2(initialTeardown) {
       this.initialTeardown = initialTeardown;
@@ -51692,7 +51692,7 @@ ${err2.message}`);
     }
   }
 
-  // node_modules/rxjs/dist/esm5/internal/config.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/config.js
   init_shim();
   var config = {
     onUnhandledError: null,
@@ -51702,10 +51702,10 @@ ${err2.message}`);
     useDeprecatedNextContext: false
   };
 
-  // node_modules/rxjs/dist/esm5/internal/util/reportUnhandledError.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/reportUnhandledError.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/scheduler/timeoutProvider.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduler/timeoutProvider.js
   init_shim();
   var timeoutProvider = {
     setTimeout: function(handler, timeout2) {
@@ -51726,7 +51726,7 @@ ${err2.message}`);
     delegate: void 0
   };
 
-  // node_modules/rxjs/dist/esm5/internal/util/reportUnhandledError.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/reportUnhandledError.js
   function reportUnhandledError2(err2) {
     timeoutProvider.setTimeout(function() {
       var onUnhandledError = config.onUnhandledError;
@@ -51738,12 +51738,12 @@ ${err2.message}`);
     });
   }
 
-  // node_modules/rxjs/dist/esm5/internal/util/noop.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/noop.js
   init_shim();
   function noop() {
   }
 
-  // node_modules/rxjs/dist/esm5/internal/NotificationFactories.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/NotificationFactories.js
   init_shim();
   var COMPLETE_NOTIFICATION = (function() {
     return createNotification("C", void 0, void 0);
@@ -51762,7 +51762,7 @@ ${err2.message}`);
     };
   }
 
-  // node_modules/rxjs/dist/esm5/internal/util/errorContext.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/errorContext.js
   init_shim();
   var context = null;
   function errorContext(cb) {
@@ -51790,7 +51790,7 @@ ${err2.message}`);
     }
   }
 
-  // node_modules/rxjs/dist/esm5/internal/Subscriber.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/Subscriber.js
   var Subscriber = (function(_super) {
     __extends(Subscriber2, _super);
     function Subscriber2(destination) {
@@ -51955,22 +51955,22 @@ ${err2.message}`);
     complete: noop
   };
 
-  // node_modules/rxjs/dist/esm5/internal/symbol/observable.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/symbol/observable.js
   init_shim();
   var observable = (function() {
     return typeof Symbol === "function" && Symbol.observable || "@@observable";
   })();
 
-  // node_modules/rxjs/dist/esm5/internal/util/pipe.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/pipe.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/util/identity.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/identity.js
   init_shim();
   function identity2(x8) {
     return x8;
   }
 
-  // node_modules/rxjs/dist/esm5/internal/util/pipe.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/pipe.js
   function pipeFromArray(fns) {
     if (fns.length === 0) {
       return identity2;
@@ -51985,7 +51985,7 @@ ${err2.message}`);
     };
   }
 
-  // node_modules/rxjs/dist/esm5/internal/Observable.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/Observable.js
   var Observable = (function() {
     function Observable2(subscribe) {
       if (subscribe) {
@@ -52077,7 +52077,7 @@ ${err2.message}`);
     return value2 && value2 instanceof Subscriber || isObserver(value2) && isSubscription(value2);
   }
 
-  // node_modules/rxjs/dist/esm5/internal/util/lift.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/lift.js
   init_shim();
   function hasLift(source) {
     return isFunction(source === null || source === void 0 ? void 0 : source.lift);
@@ -52097,7 +52097,7 @@ ${err2.message}`);
     };
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/OperatorSubscriber.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/OperatorSubscriber.js
   init_shim();
   function createOperatorSubscriber(destination, onNext, onComplete, onError, onFinalize) {
     return new OperatorSubscriber(destination, onNext, onComplete, onError, onFinalize);
@@ -52146,10 +52146,10 @@ ${err2.message}`);
     return OperatorSubscriber2;
   })(Subscriber);
 
-  // node_modules/rxjs/dist/esm5/internal/Subject.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/Subject.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/util/ObjectUnsubscribedError.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/ObjectUnsubscribedError.js
   init_shim();
   var ObjectUnsubscribedError = createErrorClass(function(_super) {
     return function ObjectUnsubscribedErrorImpl() {
@@ -52159,7 +52159,7 @@ ${err2.message}`);
     };
   });
 
-  // node_modules/rxjs/dist/esm5/internal/Subject.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/Subject.js
   var Subject = (function(_super) {
     __extends(Subject2, _super);
     function Subject2() {
@@ -52314,7 +52314,7 @@ ${err2.message}`);
     return AnonymousSubject2;
   })(Subject);
 
-  // node_modules/rxjs/dist/esm5/internal/BehaviorSubject.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/BehaviorSubject.js
   init_shim();
   var BehaviorSubject = (function(_super) {
     __extends(BehaviorSubject2, _super);
@@ -52349,10 +52349,10 @@ ${err2.message}`);
     return BehaviorSubject2;
   })(Subject);
 
-  // node_modules/rxjs/dist/esm5/internal/ReplaySubject.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/ReplaySubject.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/scheduler/dateTimestampProvider.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduler/dateTimestampProvider.js
   init_shim();
   var dateTimestampProvider = {
     now: function() {
@@ -52361,7 +52361,7 @@ ${err2.message}`);
     delegate: void 0
   };
 
-  // node_modules/rxjs/dist/esm5/internal/ReplaySubject.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/ReplaySubject.js
   var ReplaySubject = (function(_super) {
     __extends(ReplaySubject2, _super);
     function ReplaySubject2(_bufferSize, _windowTime, _timestampProvider) {
@@ -52422,10 +52422,10 @@ ${err2.message}`);
     return ReplaySubject2;
   })(Subject);
 
-  // node_modules/rxjs/dist/esm5/internal/scheduler/AsyncAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduler/AsyncAction.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/scheduler/Action.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduler/Action.js
   init_shim();
   var Action = (function(_super) {
     __extends(Action2, _super);
@@ -52441,7 +52441,7 @@ ${err2.message}`);
     return Action2;
   })(Subscription);
 
-  // node_modules/rxjs/dist/esm5/internal/scheduler/intervalProvider.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduler/intervalProvider.js
   init_shim();
   var intervalProvider = {
     setInterval: function(handler, timeout2) {
@@ -52462,7 +52462,7 @@ ${err2.message}`);
     delegate: void 0
   };
 
-  // node_modules/rxjs/dist/esm5/internal/scheduler/AsyncAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduler/AsyncAction.js
   var AsyncAction = (function(_super) {
     __extends(AsyncAction2, _super);
     function AsyncAction2(scheduler, work) {
@@ -52552,10 +52552,10 @@ ${err2.message}`);
     return AsyncAction2;
   })(Action);
 
-  // node_modules/rxjs/dist/esm5/internal/scheduler/AsyncScheduler.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduler/AsyncScheduler.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/Scheduler.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/Scheduler.js
   init_shim();
   var Scheduler = (function() {
     function Scheduler2(schedulerActionCtor, now) {
@@ -52575,7 +52575,7 @@ ${err2.message}`);
     return Scheduler2;
   })();
 
-  // node_modules/rxjs/dist/esm5/internal/scheduler/AsyncScheduler.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduler/AsyncScheduler.js
   var AsyncScheduler = (function(_super) {
     __extends(AsyncScheduler2, _super);
     function AsyncScheduler2(SchedulerAction, now) {
@@ -52611,30 +52611,30 @@ ${err2.message}`);
     return AsyncScheduler2;
   })(Scheduler);
 
-  // node_modules/rxjs/dist/esm5/internal/scheduler/async.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduler/async.js
   init_shim();
   var asyncScheduler = new AsyncScheduler(AsyncAction);
   var async = asyncScheduler;
 
-  // node_modules/rxjs/dist/esm5/internal/observable/empty.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/observable/empty.js
   init_shim();
   var EMPTY = new Observable(function(subscriber) {
     return subscriber.complete();
   });
 
-  // node_modules/rxjs/dist/esm5/internal/observable/of.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/observable/of.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/util/args.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/args.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/util/isScheduler.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/isScheduler.js
   init_shim();
   function isScheduler(value2) {
     return value2 && isFunction(value2.schedule);
   }
 
-  // node_modules/rxjs/dist/esm5/internal/util/args.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/args.js
   function last(arr) {
     return arr[arr.length - 1];
   }
@@ -52648,52 +52648,52 @@ ${err2.message}`);
     return typeof last(args) === "number" ? args.pop() : defaultValue;
   }
 
-  // node_modules/rxjs/dist/esm5/internal/observable/from.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/observable/from.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/scheduled/scheduled.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduled/scheduled.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/scheduled/scheduleObservable.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduled/scheduleObservable.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/observable/innerFrom.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/observable/innerFrom.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/util/isArrayLike.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/isArrayLike.js
   init_shim();
   var isArrayLike = (function(x8) {
     return x8 && typeof x8.length === "number" && typeof x8 !== "function";
   });
 
-  // node_modules/rxjs/dist/esm5/internal/util/isPromise.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/isPromise.js
   init_shim();
   function isPromise(value2) {
     return isFunction(value2 === null || value2 === void 0 ? void 0 : value2.then);
   }
 
-  // node_modules/rxjs/dist/esm5/internal/util/isInteropObservable.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/isInteropObservable.js
   init_shim();
   function isInteropObservable(input) {
     return isFunction(input[observable]);
   }
 
-  // node_modules/rxjs/dist/esm5/internal/util/isAsyncIterable.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/isAsyncIterable.js
   init_shim();
   function isAsyncIterable(obj) {
     return Symbol.asyncIterator && isFunction(obj === null || obj === void 0 ? void 0 : obj[Symbol.asyncIterator]);
   }
 
-  // node_modules/rxjs/dist/esm5/internal/util/throwUnobservableError.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/throwUnobservableError.js
   init_shim();
   function createInvalidObservableTypeError(input) {
     return new TypeError("You provided " + (input !== null && typeof input === "object" ? "an invalid object" : "'" + input + "'") + " where a stream was expected. You can provide an Observable, Promise, ReadableStream, Array, AsyncIterable, or Iterable.");
   }
 
-  // node_modules/rxjs/dist/esm5/internal/util/isIterable.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/isIterable.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/symbol/iterator.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/symbol/iterator.js
   init_shim();
   function getSymbolIterator() {
     if (typeof Symbol !== "function" || !Symbol.iterator) {
@@ -52703,12 +52703,12 @@ ${err2.message}`);
   }
   var iterator = getSymbolIterator();
 
-  // node_modules/rxjs/dist/esm5/internal/util/isIterable.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/isIterable.js
   function isIterable(input) {
     return isFunction(input === null || input === void 0 ? void 0 : input[iterator]);
   }
 
-  // node_modules/rxjs/dist/esm5/internal/util/isReadableStreamLike.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/isReadableStreamLike.js
   init_shim();
   function readableStreamLikeToAsyncGenerator(readableStream) {
     return __asyncGenerator(this, arguments, function readableStreamLikeToAsyncGenerator_1() {
@@ -52752,7 +52752,7 @@ ${err2.message}`);
     return isFunction(obj === null || obj === void 0 ? void 0 : obj.getReader);
   }
 
-  // node_modules/rxjs/dist/esm5/internal/observable/innerFrom.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/observable/innerFrom.js
   function innerFrom(input) {
     if (input instanceof Observable) {
       return input;
@@ -52892,10 +52892,10 @@ ${err2.message}`);
     });
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/observeOn.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/observeOn.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/util/executeSchedule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/executeSchedule.js
   init_shim();
   function executeSchedule(parentSubscription, scheduler, work, delay, repeat) {
     if (delay === void 0) {
@@ -52918,7 +52918,7 @@ ${err2.message}`);
     }
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/observeOn.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/observeOn.js
   function observeOn(scheduler, delay) {
     if (delay === void 0) {
       delay = 0;
@@ -52940,7 +52940,7 @@ ${err2.message}`);
     });
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/subscribeOn.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/subscribeOn.js
   init_shim();
   function subscribeOn(scheduler, delay) {
     if (delay === void 0) {
@@ -52953,18 +52953,18 @@ ${err2.message}`);
     });
   }
 
-  // node_modules/rxjs/dist/esm5/internal/scheduled/scheduleObservable.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduled/scheduleObservable.js
   function scheduleObservable(input, scheduler) {
     return innerFrom(input).pipe(subscribeOn(scheduler), observeOn(scheduler));
   }
 
-  // node_modules/rxjs/dist/esm5/internal/scheduled/schedulePromise.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduled/schedulePromise.js
   init_shim();
   function schedulePromise(input, scheduler) {
     return innerFrom(input).pipe(subscribeOn(scheduler), observeOn(scheduler));
   }
 
-  // node_modules/rxjs/dist/esm5/internal/scheduled/scheduleArray.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduled/scheduleArray.js
   init_shim();
   function scheduleArray(input, scheduler) {
     return new Observable(function(subscriber) {
@@ -52982,7 +52982,7 @@ ${err2.message}`);
     });
   }
 
-  // node_modules/rxjs/dist/esm5/internal/scheduled/scheduleIterable.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduled/scheduleIterable.js
   init_shim();
   function scheduleIterable(input, scheduler) {
     return new Observable(function(subscriber) {
@@ -53012,7 +53012,7 @@ ${err2.message}`);
     });
   }
 
-  // node_modules/rxjs/dist/esm5/internal/scheduled/scheduleAsyncIterable.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduled/scheduleAsyncIterable.js
   init_shim();
   function scheduleAsyncIterable(input, scheduler) {
     if (!input) {
@@ -53034,13 +53034,13 @@ ${err2.message}`);
     });
   }
 
-  // node_modules/rxjs/dist/esm5/internal/scheduled/scheduleReadableStreamLike.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduled/scheduleReadableStreamLike.js
   init_shim();
   function scheduleReadableStreamLike(input, scheduler) {
     return scheduleAsyncIterable(readableStreamLikeToAsyncGenerator(input), scheduler);
   }
 
-  // node_modules/rxjs/dist/esm5/internal/scheduled/scheduled.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/scheduled/scheduled.js
   function scheduled(input, scheduler) {
     if (input != null) {
       if (isInteropObservable(input)) {
@@ -53065,12 +53065,12 @@ ${err2.message}`);
     throw createInvalidObservableTypeError(input);
   }
 
-  // node_modules/rxjs/dist/esm5/internal/observable/from.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/observable/from.js
   function from(input, scheduler) {
     return scheduler ? scheduled(input, scheduler) : innerFrom(input);
   }
 
-  // node_modules/rxjs/dist/esm5/internal/observable/of.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/observable/of.js
   function of() {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
@@ -53080,10 +53080,10 @@ ${err2.message}`);
     return from(args, scheduler);
   }
 
-  // node_modules/rxjs/dist/esm5/internal/lastValueFrom.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/lastValueFrom.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/util/EmptyError.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/EmptyError.js
   init_shim();
   var EmptyError = createErrorClass(function(_super) {
     return function EmptyErrorImpl() {
@@ -53093,7 +53093,7 @@ ${err2.message}`);
     };
   });
 
-  // node_modules/rxjs/dist/esm5/internal/lastValueFrom.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/lastValueFrom.js
   function lastValueFrom(source, config2) {
     var hasConfig = typeof config2 === "object";
     return new Promise(function(resolve, reject) {
@@ -53118,16 +53118,16 @@ ${err2.message}`);
     });
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/timeout.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/timeout.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/util/isDate.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/util/isDate.js
   init_shim();
   function isValidDate(value2) {
     return value2 instanceof Date && !isNaN(value2);
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/timeout.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/timeout.js
   var TimeoutError = createErrorClass(function(_super) {
     return function TimeoutErrorImpl(info) {
       if (info === void 0) {
@@ -53181,7 +53181,7 @@ ${err2.message}`);
     throw new TimeoutError(info);
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/map.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/map.js
   init_shim();
   function map(project, thisArg) {
     return operate(function(source, subscriber) {
@@ -53192,19 +53192,19 @@ ${err2.message}`);
     });
   }
 
-  // node_modules/rxjs/dist/esm5/internal/observable/concat.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/observable/concat.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/operators/concatAll.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/concatAll.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/operators/mergeAll.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/mergeAll.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/operators/mergeMap.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/mergeMap.js
   init_shim();
 
-  // node_modules/rxjs/dist/esm5/internal/operators/mergeInternals.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/mergeInternals.js
   init_shim();
   function mergeInternals(source, subscriber, project, concurrent, onBeforeNext, expand, innerSubScheduler, additionalFinalizer) {
     var buffer = [];
@@ -53265,7 +53265,7 @@ ${err2.message}`);
     };
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/mergeMap.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/mergeMap.js
   function mergeMap(project, resultSelector, concurrent) {
     if (concurrent === void 0) {
       concurrent = Infinity;
@@ -53284,7 +53284,7 @@ ${err2.message}`);
     });
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/mergeAll.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/mergeAll.js
   function mergeAll(concurrent) {
     if (concurrent === void 0) {
       concurrent = Infinity;
@@ -53292,12 +53292,12 @@ ${err2.message}`);
     return mergeMap(identity2, concurrent);
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/concatAll.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/concatAll.js
   function concatAll() {
     return mergeAll(1);
   }
 
-  // node_modules/rxjs/dist/esm5/internal/observable/concat.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/observable/concat.js
   function concat() {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
@@ -53306,7 +53306,7 @@ ${err2.message}`);
     return concatAll()(from(args, popScheduler(args)));
   }
 
-  // node_modules/rxjs/dist/esm5/internal/observable/timer.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/observable/timer.js
   init_shim();
   function timer(dueTime, intervalOrScheduler, scheduler) {
     if (dueTime === void 0) {
@@ -53342,7 +53342,7 @@ ${err2.message}`);
     });
   }
 
-  // node_modules/rxjs/dist/esm5/internal/observable/merge.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/observable/merge.js
   init_shim();
   function merge() {
     var args = [];
@@ -53355,7 +53355,7 @@ ${err2.message}`);
     return !sources.length ? EMPTY : sources.length === 1 ? innerFrom(sources[0]) : mergeAll(concurrent)(from(sources, scheduler));
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/filter.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/filter.js
   init_shim();
   function filter(predicate, thisArg) {
     return operate(function(source, subscriber) {
@@ -53366,7 +53366,7 @@ ${err2.message}`);
     });
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/scanInternals.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/scanInternals.js
   init_shim();
   function scanInternals(accumulator, seed, hasSeed, emitOnNext, emitBeforeComplete) {
     return function(source, subscriber) {
@@ -53384,7 +53384,7 @@ ${err2.message}`);
     };
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/distinctUntilChanged.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/distinctUntilChanged.js
   init_shim();
   function distinctUntilChanged(comparator, keySelector) {
     if (keySelector === void 0) {
@@ -53408,7 +53408,7 @@ ${err2.message}`);
     return a29 === b8;
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/finalize.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/finalize.js
   init_shim();
   function finalize(callback) {
     return operate(function(source, subscriber) {
@@ -53420,13 +53420,13 @@ ${err2.message}`);
     });
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/scan.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/scan.js
   init_shim();
   function scan(accumulator, seed) {
     return operate(scanInternals(accumulator, seed, arguments.length >= 2, true));
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/startWith.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/startWith.js
   init_shim();
   function startWith() {
     var values = [];
@@ -53439,7 +53439,7 @@ ${err2.message}`);
     });
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/switchMap.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/switchMap.js
   init_shim();
   function switchMap(project, resultSelector) {
     return operate(function(source, subscriber) {
@@ -53466,7 +53466,7 @@ ${err2.message}`);
     });
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/tap.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/tap.js
   init_shim();
   function tap(observerOrNext, error, complete) {
     var tapObserver = isFunction(observerOrNext) || error || complete ? { next: observerOrNext, error, complete } : observerOrNext;
@@ -53498,7 +53498,7 @@ ${err2.message}`);
     }) : identity2;
   }
 
-  // node_modules/rxjs/dist/esm5/internal/operators/withLatestFrom.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/rxjs/dist/esm5/internal/operators/withLatestFrom.js
   init_shim();
   function withLatestFrom() {
     var inputs2 = [];
@@ -53534,28 +53534,28 @@ ${err2.message}`);
     });
   }
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/xstate-utils/XStateDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/xstate-utils/XStateDeviceAction.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/logger-publisher/utils/noopLoggerFactory.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/logger-publisher/utils/noopLoggerFactory.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/utils/AppName.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/utils/AppName.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/WaitForAppAndVersion/types.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/WaitForAppAndVersion/types.js
   init_shim();
   var e3 = Object.freeze({ GET_APP_AND_VERSION: "os.waitForAppAndVersion.steps.getAppAndVersion", UNLOCK_DEVICE: "os.waitForAppAndVersion.steps.unlockDevice" });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-session/DeviceSessionState.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-session/DeviceSessionState.js
   init_shim();
   var a4 = ((e29) => (e29[e29.Connected = 0] = "Connected", e29[e29.ReadyWithoutSecureChannel = 1] = "ReadyWithoutSecureChannel", e29[e29.ReadyWithSecureChannel = 2] = "ReadyWithSecureChannel", e29))(a4 || {});
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/GetDeviceStatus/types.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/GetDeviceStatus/types.js
   init_shim();
   var e5 = Object.freeze({ WAIT_FOR_APP_AND_VERSION: "os.getDeviceStatus.steps.waitForAppAndVersion", ONBOARD_CHECK: "os.getDeviceStatus.steps.onboardCheck" });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/transport/model/Errors.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/transport/model/Errors.js
   init_shim();
   var n4 = class {
     _tag = "GeneralDmkError";
@@ -53648,48 +53648,48 @@ ${err2.message}`);
     _tag = "NoTransportProvidedError";
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/OpenAppDeviceAction/types.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/OpenAppDeviceAction/types.js
   init_shim();
   var e6 = Object.freeze({ LIST_APPS: "os.openApp.steps.listApps", ONBOARD_CHECK: "os.openApp.steps.onboardCheck", GET_DEVICE_STATUS: "os.openApp.steps.getDeviceStatus", DASHBOARD_CHECK: "os.openApp.steps.dashboardCheck", CONFIRM_OPEN_APP: "os.openApp.steps.confirmOpenApp", CLOSE_APP: "os.openApp.steps.closeApp" });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/CallTaskInAppDeviceAction/CallTaskInAppDeviceActionTypes.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/CallTaskInAppDeviceAction/CallTaskInAppDeviceActionTypes.js
   init_shim();
   var e7 = Object.freeze({ OPEN_APP: "os.callTaskInApp.steps.openApp", CALL_TASK: "os.callTaskInApp.steps.callTask" });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/GetDeviceMetadata/GetDeviceMetadataDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/GetDeviceMetadata/GetDeviceMetadataDeviceAction.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/GoToDashboard/GoToDashboardDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/GoToDashboard/GoToDashboardDeviceAction.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/GoToDashboard/types.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/GoToDashboard/types.js
   init_shim();
   var t4 = Object.freeze({ GET_DEVICE_STATUS: "os.goToDashboard.steps.getDeviceStatus", DASHBOARD_CHECK: "os.goToDashboard.steps.dashboardCheck", CLOSE_APP: "os.goToDashboard.steps.closeApp", CONFIRM_DASHBOARD_OPEN: "os.goToDashboard.steps.confirmDashboardOpen" });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/ListApps/ListAppsDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/ListApps/ListAppsDeviceAction.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/ListApps/types.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/ListApps/types.js
   init_shim();
   var t5 = Object.freeze({ GO_TO_DASHBOARD: "os.listApps.steps.goToDashboard", LIST_APPS: "os.listApps.steps.listApps" });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/task/GetApplicationsMetadataTask.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/task/GetApplicationsMetadataTask.js
   init_shim();
   var import_semver2 = __toESM(require_semver2());
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/task/Errors.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/task/Errors.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/task/GetFirmwareMetadataTask.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/task/GetFirmwareMetadataTask.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/device-action/ListInstalledApps/types.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/device-action/ListInstalledApps/types.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/task/ConnectToSecureChannelTask.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/task/ConnectToSecureChannelTask.js
   init_shim();
 
-  // node_modules/isomorphic-ws/browser.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/isomorphic-ws/browser.js
   init_shim();
   var ws = null;
   if (typeof WebSocket !== "undefined") {
@@ -53705,23 +53705,23 @@ ${err2.message}`);
   }
   var browser_default = ws;
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/task/types.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/task/types.js
   init_shim();
   var t7 = ((r11) => (r11.GenuineCheck = "GenuineCheck", r11.ListInstalledApps = "ListInstalledApps", r11.UpdateMcu = "UpdateMcu", r11.UpdateFirmware = "UpdateFirmware", r11.InstallApp = "InstallApp", r11.UninstallApp = "UninstallApp", r11))(t7 || {});
   var s9 = ((n19) => (n19.EXCHANGE = "exchange", n19.BULK = "bulk", n19.ERROR = "error", n19.WARNING = "warning", n19.SUCCESS = "success", n19))(s9 || {});
   var p3 = ((a29) => (a29.SUCCESS = "success", a29.ERROR = "error", a29))(p3 || {});
   var o10 = ((e29) => (e29.Opened = "opened", e29.Closed = "closed", e29.PermissionRequested = "permission-requested", e29.PermissionGranted = "permission-granted", e29.PreExchange = "pre-exchange", e29.Exchange = "exchange", e29.DeviceId = "device-id", e29.Progress = "progress", e29.Warning = "warning", e29.Error = "error", e29.Result = "result", e29))(o10 || {});
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/utils.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/utils.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/constants.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/constants.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/crypto/NobleCryptoService.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/crypto/NobleCryptoService.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/secure-channel/model/Errors.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/secure-channel/model/Errors.js
   init_shim();
   var u2 = ((r11) => (r11[r11.AppAlreadyInstalled = 0] = "AppAlreadyInstalled", r11[r11.DeviceLocked = 1] = "DeviceLocked", r11[r11.OutOfMemory = 2] = "OutOfMemory", r11[r11.RefusedByUser = 3] = "RefusedByUser", r11[r11.Unknown = 4] = "Unknown", r11))(u2 || {});
   var i7 = class {
@@ -53733,63 +53733,63 @@ ${err2.message}`);
     originalError;
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/GetDeviceMetadata/types.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/GetDeviceMetadata/types.js
   init_shim();
   var e8 = Object.freeze({ GET_DEVICE_METADATA: "os.getDeviceMetadata.steps.getDeviceMetadata", GO_TO_DASHBOARD: "os.getDeviceMetadata.steps.goToDashboard", GET_FIRMWARE_METADATA: "os.getDeviceMetadata.steps.getFirmwareMetadata", LIST_APPS_SECURE_CHANNEL: "os.getDeviceMetadata.steps.listAppsSecureChannel", LIST_APPS: "os.getDeviceMetadata.steps.listApps", GET_APPLICATIONS_METADATA: "os.getDeviceMetadata.steps.getApplicationsMetadata" });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/InstallLanguagePackage/InstallLanguagePackageDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/InstallLanguagePackage/InstallLanguagePackageDeviceAction.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/task/InstallLanguagePackageTask.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/task/InstallLanguagePackageTask.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/InstallLanguagePackage/types.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/InstallLanguagePackage/types.js
   init_shim();
   var a7 = Object.freeze({ DEVICE_READY: "os.installLanguagePackage.steps.deviceReady", GET_DEVICE_METADATA: "os.installLanguagePackage.steps.getDeviceMetadata", DELETE_CURRENT_LANGUAGE_PACK: "os.installLanguagePackage.steps.deleteCurrentLanguagePack", INSTALL_LANGUAGE_PACK: "os.installLanguagePackage.steps.installLanguagePack" });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/InstallOrUpdateApps/InstallOrUpdateAppsDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/InstallOrUpdateApps/InstallOrUpdateAppsDeviceAction.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/task/BuildAppsInstallPlanTask.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/task/BuildAppsInstallPlanTask.js
   init_shim();
   var import_semver3 = __toESM(require_semver2());
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/task/PredictOutOfMemoryTask.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/task/PredictOutOfMemoryTask.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/InstallOrUpdateApps/types.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/InstallOrUpdateApps/types.js
   init_shim();
   var e9 = Object.freeze({ UPDATE_DEVICE_METADATA: "os.installOrUpdateApps.steps.updateDeviceMetadata", BUILD_INSTALL_PLAN: "os.installOrUpdateApps.steps.buildInstallPlan", CHECK_IF_ENOUGH_MEMORY: "os.installOrUpdateApps.steps.checkIfEnoughMemory", INSTALL_APPLICATION: "os.installOrUpdateApps.steps.installApplication" });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/ListAppsWithMetadata/ListAppsWithMetadataDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/ListAppsWithMetadata/ListAppsWithMetadataDeviceAction.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/ListAppsWithMetadata/types.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/ListAppsWithMetadata/types.js
   init_shim();
   var t10 = Object.freeze({ LIST_APPS: "os.listAppsWithMetadata.steps.listApps", FETCH_METADATA: "os.listAppsWithMetadata.steps.fetchMetadata", SAVE_SESSION: "os.listAppsWithMetadata.steps.saveSession" });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/OpenAppWithDependencies/OpenAppWithDependenciesDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/OpenAppWithDependencies/OpenAppWithDependenciesDeviceAction.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/OpenAppWithDependencies/types.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/OpenAppWithDependencies/types.js
   init_shim();
   var e10 = Object.freeze({ GET_DEVICE_METADATA: "os.openAppWithDependencies.steps.getDeviceMetadata", INSTALL_OR_UPDATE_APPS: "os.openAppWithDependencies.steps.installOrUpdateApps", OPEN_APP: "os.openAppWithDependencies.steps.openApp" });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/SendCommandInAppDeviceAction/SendCommandInAppDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/SendCommandInAppDeviceAction/SendCommandInAppDeviceAction.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/SendCommandInAppDeviceAction/SendCommandInAppDeviceActionTypes.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/os/SendCommandInAppDeviceAction/SendCommandInAppDeviceActionTypes.js
   init_shim();
   var e11 = Object.freeze({ OPEN_APP: "os.sendCommandInApp.steps.openApp", SEND_COMMAND: "os.sendCommandInApp.steps.sendCommand" });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-model/data/StaticDeviceModelDataSource.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-model/data/StaticDeviceModelDataSource.js
   init_shim();
 
-  // node_modules/inversify/lib/esm/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/inversify/lib/esm/index.js
   init_shim();
   var import_reflect_metadata2 = __toESM(require_Reflect(), 1);
 
-  // node_modules/@inversifyjs/common/lib/esm/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@inversifyjs/common/lib/esm/index.js
   init_shim();
   function e12(e29) {
     return ("object" == typeof e29 && null !== e29 || "function" == typeof e29) && "function" == typeof e29.then;
@@ -53820,11 +53820,11 @@ ${err2.message}`);
     }
   };
 
-  // node_modules/@inversifyjs/container/lib/esm/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@inversifyjs/container/lib/esm/index.js
   init_shim();
   var import_reflect_metadata = __toESM(require_Reflect(), 1);
 
-  // node_modules/@inversifyjs/reflect-metadata-utils/lib/esm/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@inversifyjs/reflect-metadata-utils/lib/esm/index.js
   init_shim();
   function t12(t29, e29) {
     return Reflect.getOwnMetadata(e29, t29);
@@ -53837,13 +53837,13 @@ ${err2.message}`);
     Reflect.defineMetadata(n19, c25, e29);
   }
 
-  // node_modules/@inversifyjs/core/lib/esm/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@inversifyjs/core/lib/esm/index.js
   init_shim();
 
-  // node_modules/@inversifyjs/prototype-utils/lib/esm/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@inversifyjs/prototype-utils/lib/esm/index.js
   init_shim();
 
-  // node_modules/@inversifyjs/core/lib/esm/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@inversifyjs/core/lib/esm/index.js
   var s11 = "@inversifyjs/container/bindingId";
   function c6() {
     const i20 = t12(Object, s11) ?? 0;
@@ -54743,7 +54743,7 @@ ${ge(n19)}`;
     return at(e29, n19);
   }
 
-  // node_modules/@inversifyjs/container/lib/esm/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@inversifyjs/container/lib/esm/index.js
   var m2 = "@inversifyjs/container/bindingId";
   var w4 = class {
     #i;
@@ -55204,10 +55204,10 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-model/data/StaticDeviceModelDataSource.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-model/data/StaticDeviceModelDataSource.js
   var import_semver4 = __toESM(require_semver2());
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-model/model/BleDeviceInfos.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-model/model/BleDeviceInfos.js
   init_shim();
   var s12 = class {
     constructor(e29, r11, t29, c25, o19) {
@@ -55219,7 +55219,7 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-model/model/DeviceModel.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-model/model/DeviceModel.js
   init_shim();
   var i9 = class {
     id;
@@ -55236,7 +55236,7 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-model/data/StaticDeviceModelDataSource.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-model/data/StaticDeviceModelDataSource.js
   var n7 = Object.defineProperty;
   var v2 = Object.getOwnPropertyDescriptor;
   var f5 = (s23, e29, d19) => e29 in s23 ? n7(s23, e29, { enumerable: true, configurable: true, writable: true, value: d19 }) : s23[e29] = d19;
@@ -55267,7 +55267,7 @@ ${ge(n19)}`;
   };
   U3(i10, "deviceModelByIds", { [t2.NANO_S]: new i9({ id: t2.NANO_S, productName: "Ledger Nano S", usbProductId: 16, bootloaderUsbProductId: 1, usbOnly: true, memorySize: 320 * 1024, getBlockSize: (e29) => import_semver4.default.lt(import_semver4.default.coerce(e29.firmwareVersion) ?? "", "2.0.0") ? 4 * 1024 : 2 * 1024, masks: [823132160] }), [t2.NANO_SP]: new i9({ id: t2.NANO_SP, productName: "Ledger Nano S Plus", usbProductId: 80, bootloaderUsbProductId: 5, usbOnly: true, memorySize: 1533 * 1024, getBlockSize: () => 512, masks: [856686592] }), [t2.NANO_X]: new i9({ id: t2.NANO_X, productName: "Ledger Nano X", usbProductId: 64, bootloaderUsbProductId: 4, usbOnly: false, memorySize: 2 * 1024 * 1024, getBlockSize: () => 4 * 1024, masks: [855638016], bluetoothSpec: [{ serviceUuid: "13d63400-2c97-0004-0000-4c6564676572", notifyUuid: "13d63400-2c97-0004-0001-4c6564676572", writeUuid: "13d63400-2c97-0004-0002-4c6564676572", writeCmdUuid: "13d63400-2c97-0004-0003-4c6564676572" }] }), [t2.STAX]: new i9({ id: t2.STAX, productName: "Ledger Stax", usbProductId: 96, bootloaderUsbProductId: 6, usbOnly: false, memorySize: 1533 * 1024, getBlockSize: () => 512, masks: [857735168], bluetoothSpec: [{ serviceUuid: "13d63400-2c97-6004-0000-4c6564676572", notifyUuid: "13d63400-2c97-6004-0001-4c6564676572", writeUuid: "13d63400-2c97-6004-0002-4c6564676572", writeCmdUuid: "13d63400-2c97-6004-0003-4c6564676572" }] }), [t2.FLEX]: new i9({ id: t2.FLEX, productName: "Ledger Flex", usbProductId: 112, bootloaderUsbProductId: 7, usbOnly: false, memorySize: 1533 * 1024, getBlockSize: () => 512, masks: [858783744], bluetoothSpec: [{ serviceUuid: "13d63400-2c97-3004-0000-4c6564676572", notifyUuid: "13d63400-2c97-3004-0001-4c6564676572", writeUuid: "13d63400-2c97-3004-0002-4c6564676572", writeCmdUuid: "13d63400-2c97-3004-0003-4c6564676572" }] }), [t2.APEX]: new i9({ id: t2.APEX, productName: "Ledger\xA0Nano\xA0Gen5", usbProductId: 128, bootloaderUsbProductId: 8, usbOnly: false, memorySize: 1533 * 1024, getBlockSize: () => 512, masks: [859832320], bluetoothSpec: [{ serviceUuid: "13d63400-2c97-8004-0000-4c6564676572", notifyUuid: "13d63400-2c97-8004-0001-4c6564676572", writeUuid: "13d63400-2c97-8004-0002-4c6564676572", writeCmdUuid: "13d63400-2c97-8004-0003-4c6564676572" }, { serviceUuid: "13d63400-2c97-9004-0000-4c6564676572", notifyUuid: "13d63400-2c97-9004-0001-4c6564676572", writeUuid: "13d63400-2c97-9004-0002-4c6564676572", writeCmdUuid: "13d63400-2c97-9004-0003-4c6564676572" }] }) }), i10 = m3([z()], i10);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-session/ApduResponse.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-session/ApduResponse.js
   init_shim();
   var a10 = class {
     statusCode;
@@ -55277,7 +55277,7 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-session/data/FramerConst.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-session/data/FramerConst.js
   init_shim();
   var o11 = 5;
   var t14 = 1;
@@ -55285,28 +55285,28 @@ ${ge(n19)}`;
   var A5 = 2;
   var H2 = 2;
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/device-action/GenuineCheck/GenuineCheckDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/device-action/GenuineCheck/GenuineCheckDeviceAction.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/device-action/InstallApp/InstallAppDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/device-action/InstallApp/InstallAppDeviceAction.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/device-action/ListInstalledApps/ListInstalledAppsDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/device-action/ListInstalledApps/ListInstalledAppsDeviceAction.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/device-action/UninstallApp/UninstallAppDeviceAction.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/secure-channel/device-action/UninstallApp/UninstallAppDeviceAction.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-session/service/DefaultApduReceiverService.stub.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-session/service/DefaultApduReceiverService.stub.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/service/DefaultApduReceiverService.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/service/DefaultApduReceiverService.js
   init_shim();
 
-  // node_modules/uuid/dist/esm-browser/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/uuid/dist/esm-browser/index.js
   init_shim();
 
-  // node_modules/uuid/dist/esm-browser/stringify.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/uuid/dist/esm-browser/stringify.js
   init_shim();
   var byteToHex = [];
   for (let i20 = 0; i20 < 256; ++i20) {
@@ -55316,7 +55316,7 @@ ${ge(n19)}`;
     return (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
   }
 
-  // node_modules/uuid/dist/esm-browser/rng.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/uuid/dist/esm-browser/rng.js
   init_shim();
   var getRandomValues;
   var rnds8 = new Uint8Array(16);
@@ -55330,15 +55330,15 @@ ${ge(n19)}`;
     return getRandomValues(rnds8);
   }
 
-  // node_modules/uuid/dist/esm-browser/v4.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/uuid/dist/esm-browser/v4.js
   init_shim();
 
-  // node_modules/uuid/dist/esm-browser/native.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/uuid/dist/esm-browser/native.js
   init_shim();
   var randomUUID = typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
   var native_default = { randomUUID };
 
-  // node_modules/uuid/dist/esm-browser/v4.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/uuid/dist/esm-browser/v4.js
   function v4(options, buf, offset) {
     if (native_default.randomUUID && !buf && !options) {
       return native_default.randomUUID();
@@ -55358,7 +55358,7 @@ ${ge(n19)}`;
   }
   var v4_default = v4;
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-session/utils/FramerUtils.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-session/utils/FramerUtils.js
   init_shim();
   var u4 = { getLastBytesFrom(r11, e29) {
     return r11.slice(-e29);
@@ -55370,12 +55370,12 @@ ${ge(n19)}`;
     return new Uint8Array(e29).map((n19, t29) => r11 >> 8 * (e29 - 1 - t29) & 255);
   } };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/data/ApduResponseConst.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/data/ApduResponseConst.js
   init_shim();
   var E7 = 2;
   var T5 = 800;
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/Errors.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/Errors.js
   init_shim();
   var e13 = class {
     _tag = "FramerOverflowError";
@@ -55406,7 +55406,7 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/Frame.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/Frame.js
   init_shim();
   var d6 = class {
     _header;
@@ -55429,7 +55429,7 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/FrameHeader.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/FrameHeader.js
   init_shim();
   var d7 = class {
     _uuid;
@@ -55458,11 +55458,11 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/logger-publisher/di/loggerTypes.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/logger-publisher/di/loggerTypes.js
   init_shim();
   var e14 = { LoggerPublisherServiceFactory: Symbol.for("LoggerPublisherServiceFactory") };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/service/DefaultApduReceiverService.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/service/DefaultApduReceiverService.js
   var S3 = Object.defineProperty;
   var N3 = Object.getOwnPropertyDescriptor;
   var d8 = (s23, e29, r11, t29) => {
@@ -55508,10 +55508,10 @@ ${ge(n19)}`;
   };
   g4 = d8([z(), l7(1, N(e14.LoggerPublisherServiceFactory))], g4);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-session/service/DefaultApduSenderService.stub.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-session/service/DefaultApduSenderService.stub.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/service/DefaultApduSenderService.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/service/DefaultApduSenderService.js
   init_shim();
   var A6 = Object.defineProperty;
   var _6 = Object.getOwnPropertyDescriptor;
@@ -55558,48 +55558,48 @@ ${ge(n19)}`;
   };
   o12 = c7([z(), d9(1, N(e14.LoggerPublisherServiceFactory))], o12);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/DeviceManagementKit.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/DeviceManagementKit.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/di/commandTypes.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/di/commandTypes.js
   init_shim();
   var e15 = { SendCommandUseCase: Symbol.for("SendCommandUseCase") };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/di/configTypes.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/di/configTypes.js
   init_shim();
   var o13 = { LocalConfigDataSource: Symbol.for("LocalConfigDataSource"), RemoteConfigDataSource: Symbol.for("RemoteConfigDataSource"), ConfigService: Symbol.for("ConfigService"), GetDmkVersionUseCase: Symbol.for("GetDmkVersionUseCase") };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/di/deviceSessionTypes.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/di/deviceSessionTypes.js
   init_shim();
   var e16 = { ApduSenderServiceFactory: Symbol.for("ApduSenderServiceFactory"), ApduReceiverServiceFactory: Symbol.for("ApduReceiverServiceFactory"), DeviceSessionService: Symbol.for("DeviceSessionService"), GetDeviceSessionStateUseCase: Symbol.for("GetDeviceSessionStateUseCase"), DisableDeviceSessionRefresherUseCase: Symbol.for("DisableDeviceSessionRefresherUseCase"), CloseSessionsUseCase: Symbol.for("CloseSessionsUseCase"), UnsafeBypassIntentQueueUseCase: Symbol.for("UnsafeBypassIntentQueueUseCase") };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/di/discoveryTypes.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/di/discoveryTypes.js
   init_shim();
   var e17 = { StartDiscoveringUseCase: Symbol.for("StartDiscoveringUseCase"), StopDiscoveringUseCase: Symbol.for("StopDiscoveringUseCase"), ConnectUseCase: Symbol.for("ConnectUseCase"), DisconnectUseCase: Symbol.for("DisconnectUseCase"), GetConnectedDeviceUseCase: Symbol.for("GetConnectedDeviceUseCase"), ListenToAvailableDevicesUseCase: Symbol.for("ListenToAvailableDevicesUseCase"), ListenToConnectedDeviceUseCase: Symbol.for("ListenToConnectedDeviceUseCase"), ListConnectedDevicesUseCase: Symbol.for("ListConnectedDevicesUseCase"), ReconnectUseCase: Symbol.for("ReconnectUseCase") };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/di/managerApiTypes.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/di/managerApiTypes.js
   init_shim();
   var e18 = { ManagerApiService: Symbol.for("ManagerApiService"), ManagerApiDataSource: Symbol.for("ManagerApiDataSource"), DmkConfig: Symbol.for("ManagerApiDmkConfig"), SetProviderUseCase: Symbol.for("SetProviderUseCase"), SetFirmwareDistributionSaltUseCase: Symbol.for("SetFirmwareDistributionSaltUseCase") };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/secure-channel/di/secureChannelTypes.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/secure-channel/di/secureChannelTypes.js
   init_shim();
   var e19 = { SecureChannelService: Symbol.for("SecureChannelService"), SecureChannelDataSource: Symbol.for("SecureChannelDataSource"), DmkConfig: Symbol.for("SecureChannelDmkConfig"), SetWebSocketUrlUseCase: Symbol.for("SetWebSocketUrlUseCase") };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/send/di/sendTypes.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/send/di/sendTypes.js
   init_shim();
   var e20 = { SendApduUseCase: Symbol.for("SendApduUseCase") };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/transport/di/transportDiTypes.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/transport/di/transportDiTypes.js
   init_shim();
   var r3 = { DmkConfig: Symbol.for("TransportDmkConfig"), TransportService: Symbol.for("TransportService"), TransportsInput: Symbol.for("TransportsInput") };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/di.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/di.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/di/commandModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/di/commandModule.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/use-case/SendCommandUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/use-case/SendCommandUseCase.js
   init_shim();
   var S4 = Object.defineProperty;
   var d10 = Object.getOwnPropertyDescriptor;
@@ -55622,7 +55622,7 @@ ${ge(n19)}`;
   };
   n9 = g5([z(), a11(0, N(e16.DeviceSessionService)), a11(1, N(e14.LoggerPublisherServiceFactory))], n9);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/di.stub.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/di.stub.js
   init_shim();
   var t15 = Object.defineProperty;
   var x4 = Object.getOwnPropertyDescriptor;
@@ -55635,15 +55635,15 @@ ${ge(n19)}`;
   };
   r4 = p9([z()], r4);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/di/commandModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/command/di/commandModule.js
   var i12 = ({ stub: e29 = false } = {}) => new w4(({ bind: m15, rebindSync: a29 }) => {
     m15(e15.SendCommandUseCase).to(n9), e29 && a29(e15.SendCommandUseCase).to(r4);
   });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/di/deviceActionModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/di/deviceActionModule.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/use-case/ExecuteDeviceActionUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/use-case/ExecuteDeviceActionUseCase.js
   init_shim();
   var p10 = Object.defineProperty;
   var m4 = Object.getOwnPropertyDescriptor;
@@ -55666,28 +55666,28 @@ ${ge(n19)}`;
   };
   s15 = v3([z(), u5(0, N(e16.DeviceSessionService)), u5(1, N(e14.LoggerPublisherServiceFactory))], s15);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/di/deviceActionTypes.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/di/deviceActionTypes.js
   init_shim();
   var e21 = { ExecuteDeviceActionUseCase: Symbol.for("ExecuteDeviceActionUseCase") };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/di/deviceActionModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-action/di/deviceActionModule.js
   var l8 = ({ stub: o19 = false } = {}) => new w4(({ bind: t29, rebindSync: i20 }) => {
     t29(e21.ExecuteDeviceActionUseCase).to(s15), o19 && i20(e21.ExecuteDeviceActionUseCase).to(r4);
   });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/di/configModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/di/configModule.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/data/LocalConfigDataSource.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/data/LocalConfigDataSource.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/model/Config.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/model/Config.js
   init_shim();
   function i13(n19) {
     return typeof n19 == "object" && n19 !== null && "version" in n19 && "name" in n19 && typeof n19.version == "string" && typeof n19.name == "string";
   }
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/model/Errors.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/model/Errors.js
   init_shim();
   var a12 = class {
     constructor(r11) {
@@ -55722,7 +55722,7 @@ ${ge(n19)}`;
     originalError;
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/package.json
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/package.json
   var package_default = {
     dependencies: {
       "@noble/hashes": "^1.8.0",
@@ -55790,7 +55790,7 @@ ${ge(n19)}`;
     version: "1.11.0"
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/data/LocalConfigDataSource.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/data/LocalConfigDataSource.js
   var c8 = Object.defineProperty;
   var g6 = Object.getOwnPropertyDescriptor;
   var s16 = (t29, r11, o19, n19) => {
@@ -55810,7 +55810,7 @@ ${ge(n19)}`;
   };
   i15 = s16([z()], i15);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/data/LocalConfigDataSource.stub.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/data/LocalConfigDataSource.stub.js
   init_shim();
   var s17 = Object.defineProperty;
   var g7 = Object.getOwnPropertyDescriptor;
@@ -55825,7 +55825,7 @@ ${ge(n19)}`;
   };
   m5 = p11([z()], m5);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/data/RemoteConfigDataSource.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/data/RemoteConfigDataSource.js
   init_shim();
   var c9 = Object.defineProperty;
   var E9 = Object.getOwnPropertyDescriptor;
@@ -55855,7 +55855,7 @@ ${ge(n19)}`;
   };
   t16 = p12([z()], t16);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/data/RemoteConfigDataSource.stub.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/data/RemoteConfigDataSource.stub.js
   init_shim();
   var t17 = Object.defineProperty;
   var a13 = Object.getOwnPropertyDescriptor;
@@ -55870,7 +55870,7 @@ ${ge(n19)}`;
   };
   o14 = p13([z()], o14);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/service/DefaultConfigService.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/service/DefaultConfigService.js
   init_shim();
   var s18 = Object.defineProperty;
   var u6 = Object.getOwnPropertyDescriptor;
@@ -55899,7 +55899,7 @@ ${ge(n19)}`;
   };
   g8 = f6([z(), a14(0, N(o13.LocalConfigDataSource)), a14(1, N(o13.RemoteConfigDataSource)), a14(2, N(e14.LoggerPublisherServiceFactory))], g8);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/use-case/GetDmkVersionUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/use-case/GetDmkVersionUseCase.js
   init_shim();
   var S5 = Object.defineProperty;
   var p14 = Object.getOwnPropertyDescriptor;
@@ -55919,27 +55919,27 @@ ${ge(n19)}`;
   };
   n10 = g9([z(), v5(0, N(o13.ConfigService))], n10);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/di/configModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/config/di/configModule.js
   var y2 = ({ stub: r11 }) => new w4(({ bind: t29, rebindSync: e29 }) => {
     t29(o13.LocalConfigDataSource).to(i15), t29(o13.RemoteConfigDataSource).to(t16), t29(o13.GetDmkVersionUseCase).to(n10), t29(o13.ConfigService).to(g8), r11 && (e29(o13.LocalConfigDataSource).to(m5), e29(o13.RemoteConfigDataSource).to(o14));
   });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-model/di/deviceModelModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-model/di/deviceModelModule.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-model/di/deviceModelTypes.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-model/di/deviceModelTypes.js
   init_shim();
   var e23 = { DeviceModelDataSource: Symbol.for("DeviceModelDataSource") };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-model/di/deviceModelModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-model/di/deviceModelModule.js
   var p15 = ({ stub: o19 }) => new w4(({ bind: e29 }) => {
     e29(e23.DeviceModelDataSource).to(i10);
   });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/di/deviceSessionModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/di/deviceSessionModule.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-session/use-case/DisableDeviceSessionRefresher.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-session/use-case/DisableDeviceSessionRefresher.js
   init_shim();
   var p16 = Object.defineProperty;
   var l10 = Object.getOwnPropertyDescriptor;
@@ -55962,7 +55962,7 @@ ${ge(n19)}`;
   };
   t18 = v6([z(), n11(0, N(e16.DeviceSessionService)), n11(1, N(e14.LoggerPublisherServiceFactory))], t18);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/service/DefaultDeviceSessionService.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/service/DefaultDeviceSessionService.js
   init_shim();
   var S6 = Object.defineProperty;
   var a15 = Object.getOwnPropertyDescriptor;
@@ -56000,7 +56000,7 @@ ${ge(n19)}`;
   };
   t19 = v7([z(), h3(0, N(e14.LoggerPublisherServiceFactory))], t19);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/use-case/CloseSessionsUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/use-case/CloseSessionsUseCase.js
   init_shim();
   var a16 = Object.defineProperty;
   var m6 = Object.getOwnPropertyDescriptor;
@@ -56022,7 +56022,7 @@ ${ge(n19)}`;
   };
   c10 = S7([z(), v8(0, N(e16.DeviceSessionService)), v8(1, N(r3.TransportService))], c10);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/use-case/GetDeviceSessionStateUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/use-case/GetDeviceSessionStateUseCase.js
   init_shim();
   var p17 = Object.defineProperty;
   var a17 = Object.getOwnPropertyDescriptor;
@@ -56045,7 +56045,7 @@ ${ge(n19)}`;
   };
   t20 = g10([z(), v9(0, N(e16.DeviceSessionService)), v9(1, N(e14.LoggerPublisherServiceFactory))], t20);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/use-case/UnsafeBypassIntentQueueUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/use-case/UnsafeBypassIntentQueueUseCase.js
   init_shim();
   var a18 = Object.defineProperty;
   var p18 = Object.getOwnPropertyDescriptor;
@@ -56070,7 +56070,7 @@ ${ge(n19)}`;
   };
   t21 = v10([z(), g11(0, N(e16.DeviceSessionService)), g11(1, N(e14.LoggerPublisherServiceFactory))], t21);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/di/deviceSessionModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/di/deviceSessionModule.js
   var b4 = ({ stub: n19 } = { stub: false }) => new w4(({ bind: r11, rebindSync: o19 }) => {
     r11(e16.ApduSenderServiceFactory).toFactory((s23) => {
       const t29 = s23.get(e14.LoggerPublisherServiceFactory);
@@ -56081,16 +56081,16 @@ ${ge(n19)}`;
     }), r11(e16.DeviceSessionService).to(t19).inSingletonScope(), r11(e16.GetDeviceSessionStateUseCase).to(t20), r11(e16.CloseSessionsUseCase).to(c10), r11(e16.DisableDeviceSessionRefresherUseCase).to(t18), r11(e16.UnsafeBypassIntentQueueUseCase).to(t21), n19 && (o19(e16.GetDeviceSessionStateUseCase).to(r4), o19(e16.DisableDeviceSessionRefresherUseCase).to(r4), o19(e16.UnsafeBypassIntentQueueUseCase).to(r4));
   });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/di/discoveryModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/di/discoveryModule.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/ConnectUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/ConnectUseCase.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/DeviceSession.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/DeviceSession.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/utils/apduLogs.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/utils/apduLogs.js
   init_shim();
   function i16(e29) {
     return `[will send APDU] ~...> ${o(e29, false)}`;
@@ -56107,16 +56107,16 @@ ${ge(n19)}`;
     return { message: a19(r11), data: { type: g12, sessionId: e29, apdu: s23, response: o19 } };
   }
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/data/DeviceSessionRefresherConst.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/data/DeviceSessionRefresherConst.js
   init_shim();
   var E10 = 1e3;
   var I3 = 1e3;
   var S8 = { isRefresherDisabled: false, pollingInterval: 1e3 };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/service/IntentQueueService.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/service/IntentQueueService.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/DeviceSessionEventDispatcher.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/DeviceSessionEventDispatcher.js
   init_shim();
   var t22 = ((E14) => (E14.NEW_STATE = "NEW_STATE", E14.REFRESH_NEEDED = "REFRESH_NEEDED", E14.COMMAND_SUCCEEDED = "COMMAND_SUCCEEDED", E14.DEVICE_STATE_UPDATE_BUSY = "DEVICE_STATE_UPDATE_BUSY", E14.DEVICE_STATE_UPDATE_LOCKED = "DEVICE_STATE_UPDATE_LOCKED", E14.DEVICE_STATE_UPDATE_CONNECTED = "DEVICE_STATE_UPDATE_CONNECTED", E14.DEVICE_STATE_UPDATE_UNKNOWN = "DEVICE_STATE_UPDATE_UNKNOWN", E14))(t22 || {});
   var T6 = class {
@@ -56129,7 +56129,7 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/service/IntentQueueService.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/service/IntentQueueService.js
   var p19 = class {
     constructor(e29, t29) {
       this.loggerModuleFactory = e29;
@@ -56176,7 +56176,7 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/service/RefresherService.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/service/RefresherService.js
   init_shim();
   var l11 = class {
     constructor(r11, e29) {
@@ -56203,7 +56203,7 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/DevicePinger.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/DevicePinger.js
   init_shim();
   var D4 = class {
     constructor(e29, t29, r11, n19) {
@@ -56251,7 +56251,7 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/DeviceSessionRefresher.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/DeviceSessionRefresher.js
   init_shim();
   var D5 = class {
     constructor(s23, r11, e29, i20) {
@@ -56288,7 +56288,7 @@ ${ge(n19)}`;
     };
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/DeviceSessionStateHandler.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/DeviceSessionStateHandler.js
   init_shim();
   var D6 = class {
     constructor(e29, n19, t29, a29, r11) {
@@ -56343,7 +56343,7 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/DeviceSession.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/device-session/model/DeviceSession.js
   var K4 = class {
     _id;
     _connectedDevice;
@@ -56457,7 +56457,7 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/ConnectUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/ConnectUseCase.js
   var S9 = Object.defineProperty;
   var g13 = Object.getOwnPropertyDescriptor;
   var p20 = (c25, e29, s23, r11) => {
@@ -56496,7 +56496,7 @@ ${ge(n19)}`;
   };
   v11 = p20([z(), t23(0, N(r3.TransportService)), t23(1, N(e16.DeviceSessionService)), t23(2, N(e14.LoggerPublisherServiceFactory)), t23(3, N(e18.ManagerApiService)), t23(4, N(e19.SecureChannelService))], v11);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/DisconnectUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/DisconnectUseCase.js
   init_shim();
   var S10 = Object.defineProperty;
   var g14 = Object.getOwnPropertyDescriptor;
@@ -56526,10 +56526,10 @@ ${ge(n19)}`;
   };
   v12 = p21([z(), c11(0, N(r3.TransportService)), c11(1, N(e16.DeviceSessionService)), c11(2, N(e14.LoggerPublisherServiceFactory))], v12);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/GetConnectedDeviceUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/GetConnectedDeviceUseCase.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/transport/model/ConnectedDevice.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/transport/model/ConnectedDevice.js
   init_shim();
   var c12 = class {
     id;
@@ -56543,7 +56543,7 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/GetConnectedDeviceUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/GetConnectedDeviceUseCase.js
   var d11 = Object.defineProperty;
   var p22 = Object.getOwnPropertyDescriptor;
   var g15 = (o19, i20, r11, e29) => {
@@ -56565,7 +56565,7 @@ ${ge(n19)}`;
   };
   c13 = g15([z(), v13(0, N(e16.DeviceSessionService)), v13(1, N(e14.LoggerPublisherServiceFactory))], c13);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/ListConnectedDevicesUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/ListConnectedDevicesUseCase.js
   init_shim();
   var p23 = Object.defineProperty;
   var l12 = Object.getOwnPropertyDescriptor;
@@ -56586,7 +56586,7 @@ ${ge(n19)}`;
   };
   s19 = g16([z(), v14(0, N(e16.DeviceSessionService)), v14(1, N(e14.LoggerPublisherServiceFactory))], s19);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/ListenToAvailableDevicesUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/ListenToAvailableDevicesUseCase.js
   init_shim();
   var m7 = Object.defineProperty;
   var g17 = Object.getOwnPropertyDescriptor;
@@ -56618,7 +56618,7 @@ ${ge(n19)}`;
   };
   a20 = v15([z(), p24(0, N(r3.TransportService)), p24(1, N(e14.LoggerPublisherServiceFactory))], a20);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/ListenToConnectedDeviceUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/ListenToConnectedDeviceUseCase.js
   init_shim();
   var l13 = Object.defineProperty;
   var m8 = Object.getOwnPropertyDescriptor;
@@ -56639,7 +56639,7 @@ ${ge(n19)}`;
   };
   c14 = g18([z(), v16(0, N(e16.DeviceSessionService)), v16(1, N(e14.LoggerPublisherServiceFactory))], c14);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/ReconnectUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/ReconnectUseCase.js
   init_shim();
   var d12 = Object.defineProperty;
   var C3 = Object.getOwnPropertyDescriptor;
@@ -56661,7 +56661,7 @@ ${ge(n19)}`;
   };
   n12 = p25([z(), t24(0, N(e17.ConnectUseCase)), t24(1, N(e17.DisconnectUseCase)), t24(2, N(e14.LoggerPublisherServiceFactory))], n12);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/StartDiscoveringUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/StartDiscoveringUseCase.js
   init_shim();
   var v17 = Object.defineProperty;
   var d13 = Object.getOwnPropertyDescriptor;
@@ -56690,7 +56690,7 @@ ${ge(n19)}`;
   };
   p26 = a21([z(), c15(0, N(r3.TransportService))], p26);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/StopDiscoveringUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/use-case/StopDiscoveringUseCase.js
   init_shim();
   var l14 = Object.defineProperty;
   var v18 = Object.getOwnPropertyDescriptor;
@@ -56712,22 +56712,22 @@ ${ge(n19)}`;
   };
   s20 = a22([z(), c16(0, N(r3.TransportService)), c16(1, N(e14.LoggerPublisherServiceFactory))], s20);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/di/discoveryModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/discovery/di/discoveryModule.js
   var w5 = ({ stub: a29 = false }) => new w4(({ bind: o19, rebindSync: s23 }) => {
     o19(e17.ConnectUseCase).to(v11), o19(e17.DisconnectUseCase).to(v12), o19(e17.ReconnectUseCase).to(n12), o19(e17.StartDiscoveringUseCase).to(p26), o19(e17.StopDiscoveringUseCase).to(s20), o19(e17.GetConnectedDeviceUseCase).to(c13), o19(e17.ListenToAvailableDevicesUseCase).to(a20), o19(e17.ListenToConnectedDeviceUseCase).to(c14), o19(e17.ListConnectedDevicesUseCase).to(s19), a29 && (s23(e17.ConnectUseCase).to(r4), s23(e17.DisconnectUseCase).to(r4), s23(e17.StartDiscoveringUseCase).to(r4), s23(e17.StopDiscoveringUseCase).to(r4), s23(e17.GetConnectedDeviceUseCase).to(r4), s23(e17.ListenToAvailableDevicesUseCase).to(r4), s23(e17.ListenToConnectedDeviceUseCase).to(r4), s23(e17.ListConnectedDevicesUseCase).to(r4));
   });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/logger-publisher/di/loggerModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/logger-publisher/di/loggerModule.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/logger-publisher/service/DefaultLoggerPublisherService.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/logger-publisher/service/DefaultLoggerPublisherService.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/logger-subscriber/model/LogLevel.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/logger-subscriber/model/LogLevel.js
   init_shim();
   var n13 = ((r11) => (r11[r11.Fatal = 0] = "Fatal", r11[r11.Error = 1] = "Error", r11[r11.Warning = 2] = "Warning", r11[r11.Info = 3] = "Info", r11[r11.Debug = 4] = "Debug", r11))(n13 || {});
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/logger-subscriber/service/DefaultLogTagFormatter.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/logger-subscriber/service/DefaultLogTagFormatter.js
   init_shim();
   var a23 = class {
     format(r11) {
@@ -56735,7 +56735,7 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/logger-publisher/service/sanitiseData.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/logger-publisher/service/sanitiseData.js
   init_shim();
   function c17(n19, r11) {
     if (typeof n19 == "bigint") return n19.toString();
@@ -56757,7 +56757,7 @@ ${ge(n19)}`;
     return t29;
   }
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/logger-publisher/service/DefaultLoggerPublisherService.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/logger-publisher/service/DefaultLoggerPublisherService.js
   var L2 = Object.defineProperty;
   var c18 = Object.getOwnPropertyDescriptor;
   var n14 = (m15, r11, t29, o19) => {
@@ -56793,21 +56793,21 @@ ${ge(n19)}`;
   };
   a24 = n14([z()], a24);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/logger-publisher/di/loggerModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/logger-publisher/di/loggerModule.js
   var u8 = ({ subscribers: r11 } = { subscribers: [] }) => new w4(({ bind: e29 }) => {
     e29(e14.LoggerPublisherServiceFactory).toFactory((g24) => (o19) => new a24(r11, o19));
   });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/di/managerApiModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/di/managerApiModule.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/data/HttpManagerApiDataSource.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/data/HttpManagerApiDataSource.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/network/DmkNetworkClient.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/network/DmkNetworkClient.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/network/DmkNetworkClientError.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/network/DmkNetworkClientError.js
   init_shim();
   var t25 = class extends Error {
     status;
@@ -56820,7 +56820,7 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/network/DmkNetworkClientHelpers.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/network/DmkNetworkClientHelpers.js
   init_shim();
   var d14 = "application/json";
   function c19(e29, t29) {
@@ -56897,7 +56897,7 @@ ${ge(n19)}`;
     return new t25({ message: t29 instanceof Error ? t29.message : "Network request failed", cause: t29 });
   }
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/network/DmkNetworkClient.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/network/DmkNetworkClient.js
   var f9 = class {
     baseUrl;
     defaultHeaders;
@@ -56947,18 +56947,18 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/model/Application.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/model/Application.js
   init_shim();
   var r5 = ((n19) => (n19.currency = "currency", n19.plugin = "plugin", n19.tool = "tool", n19.swap = "swap", n19))(r5 || {});
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/model/Const.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/model/Const.js
   init_shim();
   var e25 = "https://manager.api.live.ledger.com/api";
   var t26 = "https://device-mock-server.aws.ldg-ps-default.ldg-tech.com";
   var _7 = 1;
   var o15 = "0";
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/model/Errors.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/model/Errors.js
   init_shim();
   var t27 = class {
     constructor(r11) {
@@ -56969,11 +56969,11 @@ ${ge(n19)}`;
     originalError;
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/data/ManagerApiDto.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/data/ManagerApiDto.js
   init_shim();
   var r6 = ((n19) => (n19.currency = "currency", n19.plugin = "plugin", n19.tool = "tool", n19.swap = "swap", n19))(r6 || {});
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/data/HttpManagerApiDataSource.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/data/HttpManagerApiDataSource.js
   var _8 = Object.defineProperty;
   var w7 = Object.getOwnPropertyDescriptor;
   var y4 = (n19, r11, e29, t29) => {
@@ -57108,7 +57108,7 @@ ${ge(n19)}`;
   };
   l16 = y4([z(), u9(0, N(e18.DmkConfig)), u9(1, N(e14.LoggerPublisherServiceFactory))], l16);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/service/DefaultManagerApiService.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/service/DefaultManagerApiService.js
   init_shim();
   var g20 = Object.defineProperty;
   var u10 = Object.getOwnPropertyDescriptor;
@@ -57168,7 +57168,7 @@ ${ge(n19)}`;
   };
   o16 = p27([z(), m10(0, N(e18.ManagerApiDataSource))], o16);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/use-case/SetFirmwareDistributionSaltUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/use-case/SetFirmwareDistributionSaltUseCase.js
   init_shim();
   var S11 = Object.defineProperty;
   var m11 = Object.getOwnPropertyDescriptor;
@@ -57205,7 +57205,7 @@ ${ge(n19)}`;
   };
   n15 = p28([z(), a25(0, N(e16.DeviceSessionService)), a25(1, N(e18.ManagerApiDataSource)), a25(2, N(e14.LoggerPublisherServiceFactory))], n15);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/use-case/SetProviderUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/use-case/SetProviderUseCase.js
   init_shim();
   var m12 = Object.defineProperty;
   var v19 = Object.getOwnPropertyDescriptor;
@@ -57229,15 +57229,15 @@ ${ge(n19)}`;
   };
   n16 = p29([z(), c20(0, N(e16.DeviceSessionService)), c20(1, N(e18.ManagerApiDataSource))], n16);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/di/managerApiModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/manager-api/di/managerApiModule.js
   var A7 = ({ stub: a29, config: i20 }) => new w4(({ bind: o19, rebindSync: t29 }) => {
     o19(e18.DmkConfig).toConstantValue(i20), o19(e18.ManagerApiDataSource).to(l16).inSingletonScope(), o19(e18.ManagerApiService).to(o16).inSingletonScope(), o19(e18.SetProviderUseCase).to(n16), o19(e18.SetFirmwareDistributionSaltUseCase).to(n15), a29 && (t29(e18.ManagerApiDataSource).to(r4), t29(e18.ManagerApiService).to(r4), t29(e18.SetProviderUseCase).to(r4), t29(e18.SetFirmwareDistributionSaltUseCase).to(r4));
   });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/secure-channel/di/secureChannelModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/secure-channel/di/secureChannelModule.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/secure-channel/data/DefaultSecureChannelDataSource.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/secure-channel/data/DefaultSecureChannelDataSource.js
   init_shim();
   var k6 = Object.defineProperty;
   var p30 = Object.getOwnPropertyDescriptor;
@@ -57291,7 +57291,7 @@ ${ge(n19)}`;
   };
   c21 = l17([z(), b6(0, N(e19.DmkConfig))], c21);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/secure-channel/service/DefaultSecureChannelService.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/secure-channel/service/DefaultSecureChannelService.js
   init_shim();
   var l18 = Object.defineProperty;
   var d15 = Object.getOwnPropertyDescriptor;
@@ -57331,7 +57331,7 @@ ${ge(n19)}`;
   };
   i17 = m13([z(), c22(0, N(e19.SecureChannelDataSource))], i17);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/secure-channel/use-case/SetWebSocketUrlUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/secure-channel/use-case/SetWebSocketUrlUseCase.js
   init_shim();
   var l19 = Object.defineProperty;
   var p31 = Object.getOwnPropertyDescriptor;
@@ -57350,19 +57350,19 @@ ${ge(n19)}`;
   };
   t28 = i18([z(), h4(0, N(e19.SecureChannelDataSource))], t28);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/secure-channel/di/secureChannelModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/secure-channel/di/secureChannelModule.js
   var D7 = ({ stub: t29, config: r11 }) => new w4(({ bind: o19, rebindSync: a29 }) => {
     o19(e19.DmkConfig).toConstantValue(r11), o19(e19.SecureChannelDataSource).to(c21).inSingletonScope(), o19(e19.SecureChannelService).to(i17), o19(e19.SetWebSocketUrlUseCase).to(t28), t29 && a29(e19.SetWebSocketUrlUseCase).to(r4);
   });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/secure-channel/model/Const.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/secure-channel/model/Const.js
   init_shim();
   var e26 = "wss://scriptrunner.api.live.ledger.com/update";
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/send/di/sendModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/send/di/sendModule.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/send/use-case/SendApduUseCase.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/send/use-case/SendApduUseCase.js
   init_shim();
   var a26 = Object.defineProperty;
   var d16 = Object.getOwnPropertyDescriptor;
@@ -57387,15 +57387,15 @@ ${ge(n19)}`;
   };
   g21 = S12([z(), v20(0, N(e16.DeviceSessionService)), v20(1, N(e14.LoggerPublisherServiceFactory))], g21);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/send/di/sendModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/send/di/sendModule.js
   var f10 = ({ stub: o19 = false }) => new w4(({ bind: s23, rebindSync: r11 }) => {
     s23(e20.SendApduUseCase).to(g21), o19 && r11(e20.SendApduUseCase).to(r4);
   });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/transport/di/transportModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/transport/di/transportModule.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/transport/service/DefaultTransportService.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/transport/service/DefaultTransportService.js
   init_shim();
   var m14 = Object.defineProperty;
   var u11 = Object.getOwnPropertyDescriptor;
@@ -57438,18 +57438,18 @@ ${ge(n19)}`;
   };
   c23 = g22([z(), i19(0, N(r3.TransportsInput)), i19(1, N(r3.DmkConfig)), i19(2, N(e14.LoggerPublisherServiceFactory)), i19(3, N(e23.DeviceModelDataSource)), i19(4, N(e16.ApduSenderServiceFactory)), i19(5, N(e16.ApduReceiverServiceFactory))], c23);
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/transport/di/transportModule.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/internal/transport/di/transportModule.js
   var f11 = ({ stub: r11 = false, transports: a29 = [], config: n19 } = {}) => new w4(({ bind: o19 }) => {
     o19(r3.TransportsInput).toConstantValue(a29), o19(r3.TransportService).to(c23).inSingletonScope(), o19(r3.DmkConfig).toConstantValue(n19);
   });
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/di.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/di.js
   var x6 = ({ stub: o19 = false, transports: t29 = [], loggers: i20 = [], config: r11 = { mockUrl: t26, managerApiUrl: e25, webSocketUrl: e26, provider: _7, firmwareDistributionSalt: o15 } }) => {
     const e29 = new L();
     return e29.loadSync(y2({ stub: o19 }), p15({ stub: o19 }), f11({ stub: o19, transports: t29, config: r11 }), A7({ stub: o19, config: r11 }), D7({ stub: o19, config: r11 }), w5({ stub: o19 }), u8({ subscribers: i20 }), b4({ stub: o19 }), f10({ stub: o19 }), i12({ stub: o19 }), l8({ stub: o19 })), e29;
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/DeviceManagementKit.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/DeviceManagementKit.js
   var I4 = class {
     container;
     constructor({ stub: e29, transports: n19, loggers: o19, config: a29 } = {}) {
@@ -57532,7 +57532,7 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/DeviceManagementKitBuilder.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/DeviceManagementKitBuilder.js
   init_shim();
   var c24 = class {
     stub = false;
@@ -57556,13 +57556,13 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/logger-subscriber/service/ConsoleLogger.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/logger-subscriber/service/ConsoleLogger.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/logger-subscriber/service/WebLogsExporterLogger.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/logger-subscriber/service/WebLogsExporterLogger.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/transport/model/DeviceConnectionStateMachine.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/transport/model/DeviceConnectionStateMachine.js
   init_shim();
   var b7 = 1e4;
   var F3 = class {
@@ -57656,7 +57656,7 @@ ${ge(n19)}`;
     } } } }, Terminated: { entry: ["signalTermination", "closeConnection"], type: "final" } } });
   }
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/transport/model/TransportConnectedDevice.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/transport/model/TransportConnectedDevice.js
   init_shim();
   var d17 = class {
     id;
@@ -57670,32 +57670,32 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/transport/model/TransportConnectedDevice.stub.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/transport/model/TransportConnectedDevice.stub.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-model/model/DeviceModel.stub.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-model/model/DeviceModel.stub.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-session/ApduResponse.stub.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/device-session/ApduResponse.stub.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/types.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/types.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/utils/ApplicationChecker.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/utils/ApplicationChecker.js
   init_shim();
   var import_semver5 = __toESM(require_semver2());
 
-  // node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/utils/Base64String.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-management-kit/lib/esm/src/api/utils/Base64String.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-transport-kit-web-hid/lib/esm/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-transport-kit-web-hid/lib/esm/index.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-transport-kit-web-hid/lib/esm/api/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-transport-kit-web-hid/lib/esm/api/index.js
   init_shim();
 
-  // node_modules/@ledgerhq/device-transport-kit-web-hid/lib/esm/api/model/Errors.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-transport-kit-web-hid/lib/esm/api/model/Errors.js
   init_shim();
   var d18 = class extends n4 {
     constructor(r11) {
@@ -57712,13 +57712,13 @@ ${ge(n19)}`;
     _tag = "WebHidSendReportError";
   };
 
-  // node_modules/@ledgerhq/device-transport-kit-web-hid/lib/esm/api/transport/WebHidTransport.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-transport-kit-web-hid/lib/esm/api/transport/WebHidTransport.js
   init_shim();
 
-  // node_modules/@sentry/minimal/esm/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/minimal/esm/index.js
   init_shim();
 
-  // node_modules/tslib/tslib.es6.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/tslib/tslib.es6.js
   init_shim();
   /*! *****************************************************************************
   Copyright (c) Microsoft Corporation.
@@ -57778,25 +57778,25 @@ ${ge(n19)}`;
     return ar;
   }
 
-  // node_modules/@sentry/hub/esm/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/hub/esm/index.js
   init_shim();
 
-  // node_modules/@sentry/hub/esm/scope.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/hub/esm/scope.js
   init_shim();
 
-  // node_modules/@sentry/utils/esm/global.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/utils/esm/global.js
   init_shim();
 
-  // node_modules/@sentry/utils/esm/node.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/utils/esm/node.js
   init_shim();
 
-  // node_modules/@sentry/utils/esm/env.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/utils/esm/env.js
   init_shim();
   function isBrowserBundle() {
     return typeof __SENTRY_BROWSER_BUNDLE__ !== "undefined" && !!__SENTRY_BROWSER_BUNDLE__;
   }
 
-  // node_modules/@sentry/utils/esm/node.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/utils/esm/node.js
   function isNodeEnv() {
     return !isBrowserBundle() && Object.prototype.toString.call(typeof process !== "undefined" ? process : 0) === "[object process]";
   }
@@ -57804,7 +57804,7 @@ ${ge(n19)}`;
     return mod3.require(request);
   }
 
-  // node_modules/@sentry/utils/esm/global.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/utils/esm/global.js
   var fallbackGlobalObject = {};
   function getGlobalObject() {
     return isNodeEnv() ? globalThis : typeof window !== "undefined" ? window : typeof self !== "undefined" ? self : fallbackGlobalObject;
@@ -57816,7 +57816,7 @@ ${ge(n19)}`;
     return singleton;
   }
 
-  // node_modules/@sentry/utils/esm/is.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/utils/esm/is.js
   init_shim();
   var objectToString = Object.prototype.toString;
   function isBuiltin(wat, ty) {
@@ -57829,11 +57829,11 @@ ${ge(n19)}`;
     return Boolean(wat && wat.then && typeof wat.then === "function");
   }
 
-  // node_modules/@sentry/utils/esm/flags.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/utils/esm/flags.js
   init_shim();
   var IS_DEBUG_BUILD = typeof __SENTRY_DEBUG__ === "undefined" ? true : __SENTRY_DEBUG__;
 
-  // node_modules/@sentry/utils/esm/logger.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/utils/esm/logger.js
   init_shim();
   var global2 = getGlobalObject();
   var PREFIX = "Sentry Logger ";
@@ -57901,7 +57901,7 @@ ${ge(n19)}`;
     logger = makeLogger();
   }
 
-  // node_modules/@sentry/utils/esm/object.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/utils/esm/object.js
   init_shim();
   function dropUndefinedKeys(val) {
     var e_1, _a3;
@@ -57931,7 +57931,7 @@ ${ge(n19)}`;
     return val;
   }
 
-  // node_modules/@sentry/utils/esm/misc.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/utils/esm/misc.js
   init_shim();
   function uuid4() {
     var global3 = getGlobalObject();
@@ -57957,7 +57957,7 @@ ${ge(n19)}`;
     });
   }
 
-  // node_modules/@sentry/utils/esm/syncpromise.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/utils/esm/syncpromise.js
   init_shim();
   var SyncPromise = (
     /** @class */
@@ -58075,7 +58075,7 @@ ${ge(n19)}`;
     })()
   );
 
-  // node_modules/@sentry/utils/esm/time.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/utils/esm/time.js
   init_shim();
   var dateTimestampSource = {
     nowSeconds: function() {
@@ -58140,7 +58140,7 @@ ${ge(n19)}`;
     return dateNow;
   })();
 
-  // node_modules/@sentry/hub/esm/scope.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/hub/esm/scope.js
   var MAX_BREADCRUMBS = 100;
   var Scope = (
     /** @class */
@@ -58432,7 +58432,7 @@ ${ge(n19)}`;
     });
   }
 
-  // node_modules/@sentry/hub/esm/session.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/hub/esm/session.js
   init_shim();
   var Session = (
     /** @class */
@@ -58538,11 +58538,11 @@ ${ge(n19)}`;
     })()
   );
 
-  // node_modules/@sentry/hub/esm/flags.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/hub/esm/flags.js
   init_shim();
   var IS_DEBUG_BUILD2 = typeof __SENTRY_DEBUG__ === "undefined" ? true : __SENTRY_DEBUG__;
 
-  // node_modules/@sentry/hub/esm/hub.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/hub/esm/hub.js
   init_shim();
   var API_VERSION = 4;
   var DEFAULT_BREADCRUMBS = 100;
@@ -58866,7 +58866,7 @@ ${ge(n19)}`;
     return true;
   }
 
-  // node_modules/@sentry/minimal/esm/index.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@sentry/minimal/esm/index.js
   function callOnHub(method) {
     var args = [];
     for (var _i = 1; _i < arguments.length; _i++) {
@@ -58887,12 +58887,12 @@ ${ge(n19)}`;
     });
   }
 
-  // node_modules/@ledgerhq/device-transport-kit-web-hid/lib/esm/api/data/WebHidConfig.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-transport-kit-web-hid/lib/esm/api/data/WebHidConfig.js
   init_shim();
   var E12 = 64;
   var o18 = 6e3;
 
-  // node_modules/@ledgerhq/device-transport-kit-web-hid/lib/esm/api/transport/WebHidApduSender.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-transport-kit-web-hid/lib/esm/api/transport/WebHidApduSender.js
   init_shim();
   var E13 = class {
     dependencies;
@@ -58952,7 +58952,7 @@ ${ge(n19)}`;
     }
   };
 
-  // node_modules/@ledgerhq/device-transport-kit-web-hid/lib/esm/api/transport/WebHidTransport.js
+  // ../../../jimbus9/crowdlock/method/ledger-web/node_modules/@ledgerhq/device-transport-kit-web-hid/lib/esm/api/transport/WebHidTransport.js
   var P5 = "WEB-HID";
   var R6 = class {
     constructor(e29, i20, t29, n19, o19 = (c25) => new F3(c25), s23 = (c25, p36) => new E13(c25, p36)) {
@@ -59134,11 +59134,11 @@ ${ge(n19)}`;
   var ledgerApi2 = __toESM(require_ledger2(), 1);
   var bitcoinApi = __toESM(require_main(), 1);
 
-  // ../../app/node_modules/@ledgerhq/hw-transport/lib-es/Transport.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/hw-transport/lib-es/Transport.js
   init_shim();
   var import_events = __toESM(require_events());
 
-  // ../../app/node_modules/@ledgerhq/hw-transport/lib-es/errors.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/hw-transport/lib-es/errors.js
   init_shim();
   var HwTransportErrorType;
   (function(HwTransportErrorType2) {
@@ -59271,7 +59271,7 @@ ${ge(n19)}`;
     }
   };
 
-  // ../../app/node_modules/@ledgerhq/logs/lib-es/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/logs/lib-es/index.js
   init_shim();
   var id = 0;
   var subscribers = [];
@@ -59373,7 +59373,7 @@ ${ge(n19)}`;
     window.__ledgerLogsListen = listen;
   }
 
-  // ../../app/node_modules/@ledgerhq/hw-transport/lib-es/Transport.js
+  // ../../../jimbus9/crowdlock/app/node_modules/@ledgerhq/hw-transport/lib-es/Transport.js
   var DEFAULT_LOG_TYPE = "transport";
   var Transport = class {
     exchangeTimeout = 3e4;
@@ -59701,19 +59701,19 @@ ${ge(n19)}`;
   var import_descriptors = __toESM(require_dist6(), 1);
   var ecc = __toESM(require_dist5(), 1);
 
-  // ../../app/node_modules/bs58check/src/esm/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/src/esm/index.js
   init_shim();
 
-  // ../../app/node_modules/bs58check/node_modules/@noble/hashes/esm/sha256.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/esm/sha256.js
   init_shim();
 
-  // ../../app/node_modules/bs58check/node_modules/@noble/hashes/esm/sha2.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/esm/sha2.js
   init_shim();
 
-  // ../../app/node_modules/bs58check/node_modules/@noble/hashes/esm/_md.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/esm/_md.js
   init_shim();
 
-  // ../../app/node_modules/bs58check/node_modules/@noble/hashes/esm/utils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/esm/utils.js
   init_shim();
   /*! noble-hashes - MIT License (c) 2022 Paul Miller (paulmillr.com) */
   function isBytes3(a29) {
@@ -59771,7 +59771,7 @@ ${ge(n19)}`;
     return hashC;
   }
 
-  // ../../app/node_modules/bs58check/node_modules/@noble/hashes/esm/_md.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/esm/_md.js
   function setBigUint64(view, byteOffset, value2, isLE2) {
     if (typeof view.setBigUint64 === "function")
       return view.setBigUint64(byteOffset, value2, isLE2);
@@ -59891,7 +59891,7 @@ ${ge(n19)}`;
     1541459225
   ]);
 
-  // ../../app/node_modules/bs58check/node_modules/@noble/hashes/esm/sha2.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/esm/sha2.js
   var SHA256_K2 = /* @__PURE__ */ Uint32Array.from([
     1116352408,
     1899447441,
@@ -60031,16 +60031,16 @@ ${ge(n19)}`;
   };
   var sha2562 = /* @__PURE__ */ createHasher3(() => new SHA256());
 
-  // ../../app/node_modules/bs58check/node_modules/@noble/hashes/esm/sha256.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/node_modules/@noble/hashes/esm/sha256.js
   var sha2563 = sha2562;
 
-  // ../../app/node_modules/bs58check/src/esm/base.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/src/esm/base.js
   init_shim();
 
-  // ../../app/node_modules/bs58/src/esm/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58/src/esm/index.js
   init_shim();
 
-  // ../../app/node_modules/base-x/src/esm/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/base-x/src/esm/index.js
   init_shim();
   function base(ALPHABET2) {
     if (ALPHABET2.length >= 255) {
@@ -60172,11 +60172,11 @@ ${ge(n19)}`;
   }
   var esm_default = base;
 
-  // ../../app/node_modules/bs58/src/esm/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58/src/esm/index.js
   var ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
   var esm_default2 = esm_default(ALPHABET);
 
-  // ../../app/node_modules/bs58check/src/esm/base.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/src/esm/base.js
   function base_default(checksumFn) {
     function encode20(payload) {
       var payloadU8 = Uint8Array.from(payload);
@@ -60215,16 +60215,16 @@ ${ge(n19)}`;
     };
   }
 
-  // ../../app/node_modules/bs58check/src/esm/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bs58check/src/esm/index.js
   function sha256x2(buffer) {
     return sha2563(sha2563(buffer));
   }
   var esm_default3 = base_default(sha256x2);
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/index.js
   init_shim();
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/address.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/address.js
   var address_exports = {};
   __export(address_exports, {
     fromBase58Check: () => fromBase58Check,
@@ -60236,7 +60236,7 @@ ${ge(n19)}`;
   });
   init_shim();
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/networks.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/networks.js
   init_shim();
   var bitcoin = {
     /**
@@ -60274,13 +60274,13 @@ ${ge(n19)}`;
     wif: 128
   };
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/payments/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/payments/index.js
   init_shim();
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/payments/embed.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/payments/embed.js
   init_shim();
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/script.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/script.js
   var script_exports = {};
   __export(script_exports, {
     OPS: () => OPS,
@@ -60299,7 +60299,7 @@ ${ge(n19)}`;
   });
   init_shim();
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/bip66.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/bip66.js
   init_shim();
   function check(buffer) {
     if (buffer.length < 8) return false;
@@ -60371,7 +60371,7 @@ ${ge(n19)}`;
     return signature2;
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/ops.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/ops.js
   init_shim();
   var OPS;
   (function(OPS9) {
@@ -60496,7 +60496,7 @@ ${ge(n19)}`;
     OPS9[OPS9["OP_INVALIDOPCODE"] = 255] = "OP_INVALIDOPCODE";
   })(OPS || (OPS = {}));
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/push_data.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/push_data.js
   init_shim();
   init_browser3();
   function encodingLength(i20) {
@@ -60546,7 +60546,7 @@ ${ge(n19)}`;
     };
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/script_number.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/script_number.js
   var script_number_exports = {};
   __export(script_number_exports, {
     decode: () => decode3,
@@ -60600,7 +60600,7 @@ ${ge(n19)}`;
     return buffer;
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/script_signature.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/script_signature.js
   var script_signature_exports = {};
   __export(script_signature_exports, {
     decode: () => decode4,
@@ -60608,7 +60608,7 @@ ${ge(n19)}`;
   });
   init_shim();
 
-  // ../../app/node_modules/valibot/dist/index.mjs
+  // ../../../jimbus9/crowdlock/app/node_modules/valibot/dist/index.mjs
   init_shim();
   var store$4;
   var DEFAULT_CONFIG = {
@@ -61199,10 +61199,10 @@ ${ge(n19)}`;
     });
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/script_signature.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/script_signature.js
   init_browser3();
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/types.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/types.js
   init_shim();
   init_browser3();
   var ZERO32 = new Uint8Array(32);
@@ -61274,7 +61274,7 @@ ${ge(n19)}`;
     )
   );
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/script_signature.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/script_signature.js
   var ZERO = new Uint8Array(1);
   function toDER(x8) {
     let i20 = 0;
@@ -61320,7 +61320,7 @@ ${ge(n19)}`;
     return concat4([encode(r11, s23), hashTypeBuffer]);
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/script.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/script.js
   init_browser3();
   var OP_INT_BASE = OPS.OP_RESERVED;
   var StackSchema = array(union([instance(Uint8Array), number2()]));
@@ -61463,7 +61463,7 @@ ${ge(n19)}`;
   var number3 = script_number_exports;
   var signature = script_signature_exports;
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/payments/lazy.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/payments/lazy.js
   init_shim();
   function prop(object2, name, f14) {
     Object.defineProperty(object2, name, {
@@ -61493,7 +61493,7 @@ ${ge(n19)}`;
     };
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/payments/p2ms.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/payments/p2ms.js
   init_shim();
   var OPS2 = OPS;
   var OP_INT_BASE2 = OPS2.OP_RESERVED;
@@ -61636,7 +61636,7 @@ ${ge(n19)}`;
     return Object.assign(o19, a29);
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/payments/p2pk.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/payments/p2pk.js
   init_shim();
   init_browser3();
   var OPS3 = OPS;
@@ -61705,10 +61705,10 @@ ${ge(n19)}`;
     return Object.assign(o19, a29);
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/payments/p2pkh.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/payments/p2pkh.js
   init_shim();
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/crypto.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/crypto.js
   var crypto_exports = {};
   __export(crypto_exports, {
     TAGGED_HASH_PREFIXES: () => TAGGED_HASH_PREFIXES2,
@@ -61722,16 +61722,16 @@ ${ge(n19)}`;
   });
   init_shim();
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/ripemd160.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/ripemd160.js
   init_shim();
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/legacy.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/legacy.js
   init_shim();
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/_md.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/_md.js
   init_shim();
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/utils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/utils.js
   init_shim();
   /*! noble-hashes - MIT License (c) 2022 Paul Miller (paulmillr.com) */
   function isBytes4(a29) {
@@ -61792,7 +61792,7 @@ ${ge(n19)}`;
     return hashC;
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/_md.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/_md.js
   function setBigUint642(view, byteOffset, value2, isLE2) {
     if (typeof view.setBigUint64 === "function")
       return view.setBigUint64(byteOffset, value2, isLE2);
@@ -61912,7 +61912,7 @@ ${ge(n19)}`;
     1541459225
   ]);
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/legacy.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/legacy.js
   var SHA1_IV = /* @__PURE__ */ Uint32Array.from([
     1732584193,
     4023233417,
@@ -62102,13 +62102,13 @@ ${ge(n19)}`;
   };
   var ripemd160 = /* @__PURE__ */ createHasher4(() => new RIPEMD160());
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/ripemd160.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/ripemd160.js
   var ripemd1602 = ripemd160;
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/sha256.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/sha256.js
   init_shim();
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/sha2.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/sha2.js
   init_shim();
   var SHA256_K3 = /* @__PURE__ */ Uint32Array.from([
     1116352408,
@@ -62249,17 +62249,17 @@ ${ge(n19)}`;
   };
   var sha2564 = /* @__PURE__ */ createHasher4(() => new SHA2562());
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/sha256.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/sha256.js
   var sha2565 = sha2564;
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/crypto.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/crypto.js
   init_browser3();
 
-  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/sha1.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/sha1.js
   init_shim();
   var sha12 = sha1;
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/crypto.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/crypto.js
   function hash160(buffer) {
     return ripemd1602(sha2565(buffer));
   }
@@ -62877,7 +62877,7 @@ ${ge(n19)}`;
     return sha2565(concat4([TAGGED_HASH_PREFIXES2[prefix], data]));
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/payments/p2pkh.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/payments/p2pkh.js
   init_browser3();
   var OPS4 = OPS;
   function p2pkh(a29, opts) {
@@ -62993,7 +62993,7 @@ ${ge(n19)}`;
     return Object.assign(o19, a29);
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/payments/p2sh.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/payments/p2sh.js
   init_shim();
   init_browser3();
   var OPS5 = OPS;
@@ -63161,7 +63161,7 @@ ${ge(n19)}`;
     return Object.assign(o19, a29);
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/payments/p2wpkh.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/payments/p2wpkh.js
   init_shim();
   var import_bech32 = __toESM(require_dist4(), 1);
   init_browser3();
@@ -63280,7 +63280,7 @@ ${ge(n19)}`;
     return Object.assign(o19, a29);
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/payments/p2wsh.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/payments/p2wsh.js
   init_shim();
   var import_bech322 = __toESM(require_dist4(), 1);
   init_browser3();
@@ -63446,10 +63446,10 @@ ${ge(n19)}`;
     return Object.assign(o19, a29);
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/payments/p2tr.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/payments/p2tr.js
   init_shim();
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/ecc_lib.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/ecc_lib.js
   init_shim();
   init_browser3();
   var _ECCLIB_CACHE = {};
@@ -63461,13 +63461,13 @@ ${ge(n19)}`;
     return _ECCLIB_CACHE.eccLib;
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/payments/bip341.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/payments/bip341.js
   init_shim();
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/bufferutils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/bufferutils.js
   init_shim();
 
-  // ../../app/node_modules/varuint-bitcoin/src/esm/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/varuint-bitcoin/src/esm/index.js
   var esm_exports2 = {};
   __export(esm_exports2, {
     decode: () => decode5,
@@ -63549,7 +63549,7 @@ ${ge(n19)}`;
     return n19 < 253 ? 1 : n19 <= 65535 ? 3 : n19 <= 4294967295 ? 5 : 9;
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/bufferutils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/bufferutils.js
   init_browser3();
   var MAX_JS_NUMBER = 9007199254740991;
   function verifuint(value2, max) {
@@ -63686,7 +63686,7 @@ ${ge(n19)}`;
     }
   };
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/payments/bip341.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/payments/bip341.js
   init_browser3();
   var LEAF_VERSION_TAPSCRIPT = 192;
   var isHashBranch = (ht) => "left" in ht && "right" in ht;
@@ -63764,7 +63764,7 @@ ${ge(n19)}`;
     return concat4([buffer, s23]);
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/payments/p2tr.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/payments/p2tr.js
   var import_bech323 = __toESM(require_dist4(), 1);
   init_browser3();
   var OPS8 = OPS;
@@ -64009,7 +64009,7 @@ ${ge(n19)}`;
     return Object.assign(o19, a29);
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/address.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/address.js
   var import_bech324 = __toESM(require_dist4(), 1);
   init_browser3();
   var FUTURE_SEGWIT_MAX_SIZE = 40;
@@ -64148,14 +64148,14 @@ ${ge(n19)}`;
     throw new Error(address + " has no matching Script");
   }
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/block.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/block.js
   init_shim();
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/merkle.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/merkle.js
   init_shim();
   init_browser3();
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/transaction.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/transaction.js
   init_shim();
   init_browser3();
   function varSliceSize(someScript) {
@@ -64619,7 +64619,7 @@ ${ge(n19)}`;
     }
   };
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/block.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/block.js
   init_browser3();
   var errorMerkleNoTxes = new TypeError(
     "Cannot compute merkle root for zero transactions"
@@ -64628,22 +64628,22 @@ ${ge(n19)}`;
     "Cannot compute witness commit for non-segwit block"
   );
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/psbt.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/psbt.js
   init_shim();
 
-  // ../../app/node_modules/bip174/src/esm/lib/psbt.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/psbt.js
   init_shim();
 
-  // ../../app/node_modules/bip174/src/esm/lib/combiner/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/combiner/index.js
   init_shim();
 
-  // ../../app/node_modules/bip174/src/esm/lib/parser/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/parser/index.js
   init_shim();
 
-  // ../../app/node_modules/bip174/src/esm/lib/parser/fromBuffer.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/parser/fromBuffer.js
   init_shim();
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/index.js
   var converter_exports = {};
   __export(converter_exports, {
     globals: () => globals,
@@ -64652,7 +64652,7 @@ ${ge(n19)}`;
   });
   init_shim();
 
-  // ../../app/node_modules/bip174/src/esm/lib/typeFields.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/typeFields.js
   init_shim();
   var GlobalTypes;
   (function(GlobalTypes2) {
@@ -64688,7 +64688,7 @@ ${ge(n19)}`;
     OutputTypes2[OutputTypes2["TAP_BIP32_DERIVATION"] = 7] = "TAP_BIP32_DERIVATION";
   })(OutputTypes || (OutputTypes = {}));
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/global/globalXpub.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/global/globalXpub.js
   var globalXpub_exports = {};
   __export(globalXpub_exports, {
     canAddToArray: () => canAddToArray,
@@ -64763,7 +64763,7 @@ ${ge(n19)}`;
     return array2.filter((v21) => compare4(v21.extendedPubkey, item.extendedPubkey)).length === 0;
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/global/unsignedTx.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/global/unsignedTx.js
   var unsignedTx_exports = {};
   __export(unsignedTx_exports, {
     encode: () => encode7
@@ -64776,7 +64776,7 @@ ${ge(n19)}`;
     };
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/input/finalScriptSig.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/input/finalScriptSig.js
   var finalScriptSig_exports = {};
   __export(finalScriptSig_exports, {
     canAdd: () => canAdd,
@@ -64810,7 +64810,7 @@ ${ge(n19)}`;
     return !!currentData && !!newData && currentData.finalScriptSig === void 0;
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/input/finalScriptWitness.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/input/finalScriptWitness.js
   var finalScriptWitness_exports = {};
   __export(finalScriptWitness_exports, {
     canAdd: () => canAdd2,
@@ -64844,7 +64844,7 @@ ${ge(n19)}`;
     return !!currentData && !!newData && currentData.finalScriptWitness === void 0;
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/input/nonWitnessUtxo.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/input/nonWitnessUtxo.js
   var nonWitnessUtxo_exports = {};
   __export(nonWitnessUtxo_exports, {
     canAdd: () => canAdd3,
@@ -64877,7 +64877,7 @@ ${ge(n19)}`;
     return !!currentData && !!newData && currentData.nonWitnessUtxo === void 0;
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/input/partialSig.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/input/partialSig.js
   var partialSig_exports = {};
   __export(partialSig_exports, {
     canAddToArray: () => canAddToArray2,
@@ -64936,7 +64936,7 @@ ${ge(n19)}`;
     return array2.filter((v21) => compare4(v21.pubkey, item.pubkey) === 0).length === 0;
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/input/porCommitment.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/input/porCommitment.js
   var porCommitment_exports = {};
   __export(porCommitment_exports, {
     canAdd: () => canAdd4,
@@ -64970,7 +64970,7 @@ ${ge(n19)}`;
     return !!currentData && !!newData && currentData.porCommitment === void 0;
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/input/sighashType.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/input/sighashType.js
   var sighashType_exports = {};
   __export(sighashType_exports, {
     canAdd: () => canAdd5,
@@ -65006,7 +65006,7 @@ ${ge(n19)}`;
     return !!currentData && !!newData && currentData.sighashType === void 0;
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/input/tapKeySig.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/input/tapKeySig.js
   var tapKeySig_exports = {};
   __export(tapKeySig_exports, {
     canAdd: () => canAdd6,
@@ -65042,7 +65042,7 @@ ${ge(n19)}`;
     return !!currentData && !!newData && currentData.tapKeySig === void 0;
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/input/tapLeafScript.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/input/tapLeafScript.js
   var tapLeafScript_exports = {};
   __export(tapLeafScript_exports, {
     canAddToArray: () => canAddToArray3,
@@ -65093,7 +65093,7 @@ ${ge(n19)}`;
     return array2.filter((v21) => compare4(v21.controlBlock, item.controlBlock) === 0).length === 0;
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/input/tapMerkleRoot.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/input/tapMerkleRoot.js
   var tapMerkleRoot_exports = {};
   __export(tapMerkleRoot_exports, {
     canAdd: () => canAdd7,
@@ -65127,7 +65127,7 @@ ${ge(n19)}`;
     return !!currentData && !!newData && currentData.tapMerkleRoot === void 0;
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/input/tapScriptSig.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/input/tapScriptSig.js
   var tapScriptSig_exports = {};
   __export(tapScriptSig_exports, {
     canAddToArray: () => canAddToArray4,
@@ -65182,7 +65182,7 @@ ${ge(n19)}`;
     ).length === 0;
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/input/witnessUtxo.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/input/witnessUtxo.js
   var witnessUtxo_exports = {};
   __export(witnessUtxo_exports, {
     canAdd: () => canAdd8,
@@ -65235,7 +65235,7 @@ ${ge(n19)}`;
     return !!currentData && !!newData && currentData.witnessUtxo === void 0;
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/output/tapTree.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/output/tapTree.js
   var tapTree_exports = {};
   __export(tapTree_exports, {
     canAdd: () => canAdd9,
@@ -65295,7 +65295,7 @@ ${ge(n19)}`;
     return !!currentData && !!newData && currentData.tapTree === void 0;
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/shared/bip32Derivation.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/shared/bip32Derivation.js
   init_shim();
   init_browser4();
   var range2 = (n19) => [...Array(n19).keys()];
@@ -65369,7 +65369,7 @@ ${ge(n19)}`;
     };
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/shared/checkPubkey.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/shared/checkPubkey.js
   init_shim();
   init_browser4();
   function makeChecker(pubkeyTypes) {
@@ -65388,7 +65388,7 @@ ${ge(n19)}`;
     }
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/shared/redeemScript.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/shared/redeemScript.js
   init_shim();
   init_browser4();
   function makeConverter2(TYPE_BYTE) {
@@ -65423,7 +65423,7 @@ ${ge(n19)}`;
     };
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/shared/tapBip32Derivation.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/shared/tapBip32Derivation.js
   init_shim();
   init_browser4();
   var isValidBIP340Key = (pubkey) => pubkey.length === 32;
@@ -65466,7 +65466,7 @@ ${ge(n19)}`;
     };
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/shared/tapInternalKey.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/shared/tapInternalKey.js
   init_shim();
   init_browser4();
   function makeConverter4(TYPE_BYTE) {
@@ -65503,7 +65503,7 @@ ${ge(n19)}`;
     };
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/shared/witnessScript.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/shared/witnessScript.js
   init_shim();
   init_browser4();
   function makeConverter5(TYPE_BYTE) {
@@ -65538,7 +65538,7 @@ ${ge(n19)}`;
     };
   }
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/index.js
   var globals = {
     unsignedTx: unsignedTx_exports,
     globalXpub: globalXpub_exports,
@@ -65581,21 +65581,21 @@ ${ge(n19)}`;
     tapInternalKey: makeConverter4(OutputTypes.TAP_INTERNAL_KEY)
   };
 
-  // ../../app/node_modules/bip174/src/esm/lib/converter/tools.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/converter/tools.js
   init_shim();
   init_browser4();
 
-  // ../../app/node_modules/bip174/src/esm/lib/parser/fromBuffer.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/parser/fromBuffer.js
   init_browser4();
 
-  // ../../app/node_modules/bip174/src/esm/lib/parser/toBuffer.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/parser/toBuffer.js
   init_shim();
   init_browser4();
 
-  // ../../app/node_modules/bip174/src/esm/lib/combiner/index.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/combiner/index.js
   init_browser4();
 
-  // ../../app/node_modules/bip174/src/esm/lib/utils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/utils.js
   init_shim();
   init_browser4();
   function throwForUpdateMaker(typeName, name, expected14, data) {
@@ -65644,13 +65644,13 @@ ${ge(n19)}`;
   var updateInput = updateMaker("input");
   var updateOutput = updateMaker("output");
 
-  // ../../app/node_modules/bip174/src/esm/lib/psbt.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bip174/src/esm/lib/psbt.js
   init_browser4();
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/psbt/bip371.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/psbt/bip371.js
   init_shim();
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/psbt/psbtutils.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/psbt/psbtutils.js
   init_shim();
   init_browser3();
   function isPaymentFactory(payment) {
@@ -65671,10 +65671,10 @@ ${ge(n19)}`;
   var isP2SHScript = isPaymentFactory(p2sh);
   var isP2TR = isPaymentFactory(p2tr);
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/psbt/bip371.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/psbt/bip371.js
   init_browser3();
 
-  // ../../app/node_modules/bitcoinjs-lib/src/esm/psbt.js
+  // ../../../jimbus9/crowdlock/app/node_modules/bitcoinjs-lib/src/esm/psbt.js
   init_browser3();
   function scriptCheckerFactory(payment, paymentScriptName) {
     return (inputIndex, scriptPubKey, redeemScript, ioType) => {

@@ -1,0 +1,33 @@
+# Checks that The Kop Fund's register has only ever grown: no lock or
+# member taken off or changed in any commit, ever (tests/register-history.mjs).
+# Force-pushes to main are refused, so the history it reads is the whole one.
+#
+# It runs when somebody pushes a change to the register, and once a day for
+# the relay inbox's own commits (a workflow's commits start no workflows).
+
+name: Register history
+
+on:
+  push:
+    branches: [main]
+    paths: ["registrations.json", "tests/register-history.mjs", "js/history.mjs", ".github/workflows/register-history.yml"]
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node tests/register-history.mjs registrations.json

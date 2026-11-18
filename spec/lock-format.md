@@ -237,7 +237,7 @@ A lock on the register is a record of exactly these fields:
 | `address` | The lock address |
 | `member` | The address the owner key hashes to — the member who owns it |
 | `owner_pubkey` | The owner's compressed public key, hex |
-| `cosigner_pubkey` | The co-signer key the lock names, hex. Must be one of this Crowdlock's `cosigner_keys` |
+| `cosigner_pubkey` | The co-signer key the lock names, hex. Must be one of this Crowdlock's `cosigner_keys`; a new lock must name the newest (the last), and older keys only keep counting the locks already made with them |
 | `locktime` | The locktime as a number |
 | `unlocks` | The same date written as `YYYY-MM-DD`, for reading at a glance |
 | `submitted` | When it was published |
