@@ -66,6 +66,15 @@ export function lockScript({ ownerPubkey, cosignerPubkey, locktime }) {
   // 2026 nought, a fraction or a number too large still made "a script", and
   // not the one the proven code makes.
   if (!Number.isInteger(locktime) || locktime < 1 || locktime > 0xffffffff) throw new Error("a lock's date must be a whole number from 1 to 4294967295");
+  // Both keys are compressed public keys: 33 bytes, starting 02 or 03, as
+  // method/lock/lock.mjs requires. Until 17 November 2026 (security loop,
+  // round 5) nothing here asked: the script says "33 bytes follow" and then
+  // carried whatever it was given, so a 65-byte key still made "a lock" with
+  // an address, and the app's commitment checker went on with it where the
+  // reference checker refused.
+  for (const [who, key] of [["owner", ownerPubkey], ["co-signer", cosignerPubkey]]) {
+    if (typeof key !== "string" || !/^0[23][0-9a-fA-F]{64}$/.test(key)) throw new Error(`the ${who}'s key must be a compressed public key: 33 bytes, 66 hex characters`);
+  }
   const owner = hexToBytes(ownerPubkey);
   const cosigner = hexToBytes(cosignerPubkey);
   // 1 to 16 have opcodes of their own (OP_1 … OP_16), which is how Bitcoin's

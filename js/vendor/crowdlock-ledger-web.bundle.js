@@ -66688,6 +66688,9 @@ ${ge(n19)}`;
   }
   function lockScript({ ownerPubkey, cosignerPubkey, locktime }) {
     if (!Number.isInteger(locktime) || locktime < 1 || locktime > 4294967295) throw new Error("a lock's date must be a whole number from 1 to 4294967295");
+    for (const [who, key] of [["owner", ownerPubkey], ["co-signer", cosignerPubkey]]) {
+      if (typeof key !== "string" || !/^0[23][0-9a-fA-F]{64}$/.test(key)) throw new Error(`the ${who}'s key must be a compressed public key: 33 bytes, 66 hex characters`);
+    }
     const owner = hexToBytes3(ownerPubkey);
     const cosigner = hexToBytes3(cosignerPubkey);
     const t29 = scriptNumber(locktime);

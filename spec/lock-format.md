@@ -189,7 +189,9 @@ Given a lock address, an owner key, a co-signer key and a locktime:
    the same — or one is the other's mirror image, sharing its x-coordinate — it
    is not a lock: one person could supply both purchase signatures and move the
    coin at any time. It is not counted.
-2. Rebuild the witness script exactly as above.
+2. Rebuild the witness script exactly as above. Both keys must be compressed
+   public keys: 33 bytes, beginning `02` or `03`. Anything else makes no
+   script and is not a lock.
 3. Derive the P2WSH address from it.
 4. The lock is genuine if and only if the derived address matches.
 
