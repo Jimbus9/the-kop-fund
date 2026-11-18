@@ -22,8 +22,7 @@ const NETWORKS = ["mainnet", "testnet4", "signet", "regtest"];
 
 const hex = (bytes) => Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
 
-// Where a Crowdlock lives (security loop, "Needs James" item 4; reworked the
-// same day after OpenAI review 7). A copy of a Crowdlock's file put up at
+// Where a Crowdlock lives. A copy of a Crowdlock's file put up at
 // another address would show the real one's locks under its own name. So a
 // Crowdlock may say where it lives, `home`, and then EVERY one of its co-signer
 // keys must have signed that: a standard Bitcoin Signed Message by the key's
@@ -31,8 +30,8 @@ const hex = (bytes) => Array.from(bytes, (b) => b.toString(16).padStart(2, "0"))
 // real co-signer key's signature over its own address, so a copy that lists
 // the real key fails; one that drops the real key counts none of the real
 // locks; and one that keeps the real `home` sends a reader to the real one.
-// (The first version let any one listed key sign, so a copy could list the
-// real key beside one of its own and sign with its own.)
+// (Were one key's signature enough, a copy could list the real key beside one
+// of its own, and sign with its own.)
 
 const HRP = { mainnet: "bc", testnet4: "tb", testnet: "tb", signet: "tb", regtest: "bcrt" };
 
@@ -259,8 +258,7 @@ export function checkCrowdlock(c, { declarationText, versionTexts } = {}) {
 
   // At most 5%: the fee goes to miners, not the seller, and a Crowdlock that
   // let a commitment leave half as "fee" would let its co-signer, working
-  // with a miner, take half of what members commit (James's decision, 18
-  // November 2026: security loop "Needs James" item 6).
+  // with a miner, take half of what members commit.
   need(typeof c.max_commitment_fee === "number" && c.max_commitment_fee > 0 && c.max_commitment_fee <= MAX_FEE_LIMIT,
     `max_commitment_fee must be a fraction above 0 and at most ${MAX_FEE_LIMIT} (5%)`);
 
@@ -396,9 +394,8 @@ export function checkSeparate(crowdlocks) {
 
 /**
  * Does a lock with this co-signer key belong to this Crowdlock? The key must
- * be one the file names, exactly. Until 17 November 2026 (security loop,
- * round 3) only its x-coordinate was compared, so a lock naming a key's
- * mirror image (02… for 03…) counted as this Crowdlock's. It is a different
+ * be one the file names, exactly, not just its x-coordinate: a lock naming a
+ * key's mirror image (02… for 03…) is not this Crowdlock's. It is a different
  * lock: the co-signer's words do not make that key, so no tool here could
  * ever complete a commitment from it, yet it counted toward a target.
  */

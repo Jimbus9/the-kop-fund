@@ -328,9 +328,9 @@ async function loadCrowdlock() {
     // (FINGERPRINT above stays the founding one: it is the Crowdlock's identity.)
     const d = currentVersion(c);
     // What a Crowdlock's file says is text, never markup. With ?c= this page
-    // reads another site's file; until 17 November 2026 its title and file
-    // name were written into the page as HTML, so whoever could write that
-    // file could put a page of their own on this address (security loop, round 4).
+    // reads another site's file, and written into the page as HTML, its title
+    // and file name would let whoever writes that file put a page of their
+    // own on this address.
     const esc = (x) => String(x ?? "").replace(/[&<>"'`]/g, (ch) => `&#${ch.charCodeAt(0)};`);
     el("paramStatus").innerHTML =
       `Signing <strong>${esc(d.title)} v${esc(d.version)}</strong> ` +
@@ -365,7 +365,7 @@ async function loadCrowdlock() {
 function setVerdict(kind, head, body) {
   const v = el("verdict");
   v.className = "verdict-live" + (kind ? " " + kind : "");
-  // Built from text, never markup: register data reaches these messages (OpenAI review 7).
+  // Built from text, never markup: register data reaches these messages.
   const b = document.createElement("b"); b.textContent = String(head);
   const p = document.createElement("p"); p.textContent = String(body);
   v.replaceChildren(b, p);
@@ -431,7 +431,7 @@ function joinOutcome(kind, head, body) {
   const box = el("joinResult");
   box.hidden = false;
   box.className = "verdict-live" + (kind ? " " + kind : "");
-  // Built from text, never markup: register data reaches these messages (OpenAI review 7).
+  // Built from text, never markup: register data reaches these messages.
   const b = document.createElement("b"); b.textContent = String(head);
   const p = document.createElement("p"); p.textContent = String(body);
   box.replaceChildren(b, p);

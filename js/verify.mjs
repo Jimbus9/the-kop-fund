@@ -137,9 +137,8 @@ export function memberAddressForOwnerKey(ownerPubkey, hrp = "bc") {
  * bcrt1…) may be written all in capitals or all in small letters, and both
  * are the same address; it is kept and compared in small letters. Mixed case
  * is not an address and is left as it is, so it matches nothing. Any other
- * kind of address is case-sensitive and is left as it is. Until 17 November
- * 2026 destinations were compared as typed, so a capitalised copy was a
- * second "destination" no payment could match (OpenAI review, M-02).
+ * kind of address is case-sensitive and is left as it is. Compared as typed, a
+ * capitalised copy would be a second "destination" no payment could match.
  */
 export function canonicalAddress(address) {
   const a = String(address ?? "").trim();

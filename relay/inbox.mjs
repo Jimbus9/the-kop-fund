@@ -203,7 +203,7 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
       let sent = 0;
       // The completed payments must, together, reach the target before any
       // is sent: a set short of it would pay part of a purchase that can't
-      // happen (OpenAI review 7).
+      // happen.
       const completedSats = (next.completed ?? []).reduce((a, x) => { try { return a + Number(Transaction.fromHex(x.tx).outs[0].value); } catch { return a; } }, 0);
       const due = completedSats >= p.target.sats ? dueToSend(next, SEND_PER_PASS, txidOf) : [];
       if (!due.length && (next.completed ?? []).some((x) => !x.sent) && completedSats < p.target.sats) {
@@ -214,7 +214,7 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
         if (refused) console.log(`${file}: ${c.txid} for "${p.title}" — refused by the network: ${refused}`);
         if (unreachable) console.log(`${file}: ${c.txid} — could not reach the network: ${unreachable}`);
         // Oldest first, and none after one that didn't go: the next pass
-        // starts again from that one (OpenAI review 7).
+        // starts again from that one.
         if (!state) { console.log(`${file}: stopped sending for "${p.title}" until that one goes`); break; }
         if (state) {
           next = { ...next, completed: next.completed.map((x) => x.txid === c.txid ? { ...x, sent: nowIso } : x) };

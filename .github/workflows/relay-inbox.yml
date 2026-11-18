@@ -43,10 +43,7 @@ jobs:
       # own user, "inboxer", in a copy of this repository, with no token in
       # their environment and no sudo. Only the patch each pass leaves comes
       # back, and relay/accept.mjs, from a copy kept apart, decides whether it
-      # is the kind of change a pass makes before anything is committed
-      # (OpenAI review 7, 18 November 2026). Until then they ran with this
-      # job's permission to write to the repository, its website and its
-      # app releases.
+      # is the kind of change a pass makes before anything is committed.
       - name: Set the libraries apart
         run: |
           (cd relay && npm ci --ignore-scripts --no-audit --no-fund)

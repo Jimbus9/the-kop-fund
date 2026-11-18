@@ -96,8 +96,7 @@ export async function readBack(ask, since, { limit = PAGE, maxPages = MAX_PAGES,
   // `reached`: how far back it got, for a later pass to carry on from.
   // `saturated`: a second held more records than the relay gives at once, so
   // some of that second could not be read. Paging is by time only, so they
-  // can't be reached; the read is then never called complete (OpenAI review
-  // H-01, 17 November 2026: it used to step past the second and say it was).
+  // can't be reached; the read is then never called complete.
   let saturated = false, biggest = 0;
   // `paged`: every page back to `since` was read; `reached` is where to carry on if not.
   const done = (paged) => ({ events: [...byId.values()], complete: paged && !saturated, saturated, reached: paged ? null : until ?? null });

@@ -33,8 +33,7 @@ const utf8 = (s) => new TextEncoder().encode(String(s).normalize("NFC"));
 // A commitment's fee is fixed when its owner signs it, maybe weeks before
 // settling; if fees are higher by then, the payment can wait unconfirmed, and
 // a lock that opened in the meantime could be taken home alone, losing the
-// purchase its money. A week gives a slow payment time to confirm (James's
-// decision, 18 November 2026: security loop "Needs James" item 9). None on a
+// purchase its money. A week gives a slow payment time to confirm. None on a
 // private test chain, where everything takes minutes.
 export const SETTLE_MARGIN = 7 * 86400;
 export const settleMargin = (network) => (network === "regtest" ? 0 : SETTLE_MARGIN);
@@ -141,12 +140,11 @@ export function checkProposals(file, crowdlock) {
     // The target is restated as the bitcoin price moves, so it stays out of
     // the hash; but it must be what `requires` comes to at the rate it states.
     // Cutting it then means stating a rate anyone can see is wrong, rather than
-    // quietly changing one number (security loop, "Needs James" item 5,
-    // 18 November 2026).
+    // quietly changing one number.
     const r = /^1 BTC = (\d+(?:\.\d{1,8})?) ([A-Z]{3})$/.exec(t.rate);
     if (!r || r[2] !== p.currency) return bad(`its target's rate must read "1 BTC = <price> ${p.currency}"`);
-    // A price of zero, or one too long to be a number, gives an endless or a
-    // zero target, which any target "matched" (OpenAI review 7).
+    // A price of zero, or one too long to be a number, would give an endless
+    // or a zero target, which any target would "match".
     const price = Number(r[1]);
     if (!(Number.isFinite(price) && price > 0 && r[1].length <= 20)) return bad("its target's rate must be a real, positive price");
     const expected = targetSats(p.requires, p.currency, price);
@@ -319,7 +317,7 @@ export function attestorsOf(crowdlock, hrp = { mainnet: "bc", regtest: "bcrt" }[
 
 export function destinationIsPermitted({ address, entries, opensAt, minimumAgeDays = 7, attestors = null, threshold = null, hrp = "bc", instance = null, stamps = {} }) {
   // The list must be this Crowdlock's own, and it must be checked for
-  // attestation. Both used to be the caller's to remember (17 November 2026).
+  // attestation: neither is left to the caller to remember.
   if (!HEX64.test(String(instance ?? ""))) return { permitted: false, reason: "no Crowdlock fingerprint was supplied, so the list cannot be tied to this Crowdlock" };
   if (!Array.isArray(attestors) || !Number.isInteger(threshold)) return { permitted: false, reason: "no attestor set was supplied, so the list cannot be checked for attestation" };
   const chain = chainIsIntact(entries, instance);
@@ -331,9 +329,8 @@ export function destinationIsPermitted({ address, entries, opensAt, minimumAgeDa
   if (revoked) return { permitted: false, reason: `revoked by entry ${revoked.index}` };
   const att = attestationsAreValid(added, { attestors, threshold, hrp });
   if (!att.ok) return { permitted: false, reason: att.reason };
-  // Its age is counted from its stamp's block, which nobody can backdate.
-  // Until 17 November 2026 it was counted from `firstSeen`, a date written
-  // into the file by whoever added the entry.
+  // Its age is counted from its stamp's block, which nobody can backdate,
+  // never from a date written into the file.
   const stamped = stampedAt(added, stamps?.[added.stamp] ?? null);
   if (!stamped.ok) return { permitted: false, reason: stamped.reason };
   const opens = Date.parse(opensAt);
@@ -341,8 +338,7 @@ export function destinationIsPermitted({ address, entries, opensAt, minimumAgeDa
   const ageDays = (opens - stamped.at * 1000) / 86_400_000;
   // A miner may set a block's time up to two hours ahead, so a stamp can look
   // younger than it is, never older. With no waiting period, being in a block
-  // is enough (17 November 2026: a test destination was refused for five
-  // minutes because its block's clock ran fast).
+  // is enough.
   if (minimumAgeDays > 0 && !(ageDays >= minimumAgeDays)) return { permitted: false, reason: `only ${ageDays.toFixed(1)} days old at the proposal's opening, needs ${minimumAgeDays}` };
   return { permitted: true, reason: "" };
 }
@@ -422,9 +418,7 @@ export const PER_LOCK_LIMIT = 5;
  * How long after a proposal closes a commitment posted before the close may
  * still be taken, measured by when the repository (or a reader) first sees
  * it, not by the time its poster wrote on it, which anyone can set. Covers an
- * inbox that was briefly down. Until 17 November 2026 only the written time
- * was checked, so a commitment posted hours after closing and dated before
- * it was taken (OpenAI review, H-02).
+ * inbox that was briefly down.
  */
 export const LATE_GRACE = 3600;
 
@@ -442,7 +436,7 @@ const KEY66 = /^0[23][0-9a-f]{64}$/;
  * and the owner's signature covers only the payment: everything beside it
  * (the lock's terms, the remainder lock, anything else a poster adds) is the
  * poster's own. So what is judged, told apart from copies, and kept is this
- * and only this (security loop, 17 November 2026).
+ * and only this.
  */
 export function cleanRecord(r) {
   const L = r?.lock;
@@ -477,14 +471,13 @@ function remainderProblem(remainder, script, lock, crowdlock) {
 }
 
 // ---------------------------------------------------------------------------
-// Commitments that are only on the relays (security loop, 17 November 2026).
+// Commitments that are only on the relays.
 //
-// Anybody can post to the relays. The repository's inbox takes a commitment
-// only from a lock on the register; a reader counted any that passed its
-// checks, and asked the block explorer about every one first. A stranger
-// could post hundreds naming made-up locks, and the explorer turned the
-// reader away before it reached a real one. So a reader looks only at those
-// the inbox could take: from a real lock on this register, a few per lock.
+// Anybody can post to the relays. A stranger could post hundreds naming
+// made-up locks, and if a reader asked the block explorer about each, the
+// explorer would turn it away before it reached a real one. So a reader looks
+// only at those the inbox itself could take: from a real lock on this
+// register, by a member who may back the proposal, a few per lock.
 // ---------------------------------------------------------------------------
 
 export const RELAY_ONLY_PER_LOCK = 20;
@@ -513,7 +506,7 @@ export function relayOnlyCommitments(found, { crowdlock, register, inPile = new 
     const on = locks.get(address);
     if (!on || on.owner_pubkey !== r.lock.owner_pubkey || on.cosigner_pubkey !== r.lock.cosigner_pubkey || on.locktime !== r.lock.locktime) continue;
     // Posted while the proposal was gathering, and by a member who may back
-    // it: what the repository's inbox would take (OpenAI review 7).
+    // it: what the repository's inbox would take.
     if (proposal) {
       if (Number.isFinite(it.at) && !(it.at >= Date.parse(proposal.opens) / 1000 && it.at <= Date.parse(proposal.closes) / 1000 + LATE_GRACE)) continue;
       if (!commitmentEligible(r, { crowdlock, register, proposal, hrp }).ok) continue;
@@ -531,8 +524,8 @@ export function relayOnlyCommitments(found, { crowdlock, register, inPile = new 
 
 /**
  * May this commitment back this proposal? The same answer for the inbox, the
- * app, the website and the co-signer's final check (OpenAI review 7: they
- * disagreed). Its lock must be on the register with exactly these terms and
+ * app, the website and the co-signer's final check, which all call this. Its
+ * lock must be on the register with exactly these terms and
  * genuine, and the lock's owner, re-derived from its key, must be a member
  * whose own signature on the declaration version this proposal was published
  * under checks. Returns { ok, reason }.
@@ -589,7 +582,7 @@ export async function applyCommitments(pile, events, { crowdlock, proposal, regi
   // `readTx(hex)` gives { txid, coin, hex } (method/relay/signed.mjs). With it,
   // copies are told apart by id rather than by text, one coin counts once, and
   // what is kept is the payment's standard encoding: the same payment written
-  // another way is the same payment (second review, 17 November 2026).
+  // another way is the same payment.
   // Copies whose signatures are junk share an id with the real one, so the id
   // only rules out a record once one with that id has been taken.
   const keyOf = (tx) => (readTx ? readTx(tx)?.txid ?? tx : tx);
@@ -597,10 +590,8 @@ export async function applyCommitments(pile, events, { crowdlock, proposal, regi
   // What has been judged already this pass: the whole record, not its
   // payment alone. A record is refused for what it says beside the payment
   // as often as for the payment, and anyone can post a member's payment with
-  // those parts changed. Until 17 November 2026 a refusal was remembered by
-  // the payment's text, so such a copy, dated a second earlier, was refused
-  // and then hid the member's real record behind it on every pass (security
-  // loop, round 1).
+  // those parts changed: remembered by the payment alone, a refused copy dated
+  // a second earlier would hide the member's real record on every pass.
   const known = new Set();
   const coins = new Set(readTx ? pile.commitments.map((c) => readTx(c.record.tx)?.coin).filter(Boolean) : []);
   const perLock = new Map();
@@ -645,7 +636,7 @@ export async function applyCommitments(pile, events, { crowdlock, proposal, regi
     // Its lock must stay shut until settling ends, or its owner could take
     // the money home first. A lock dated by block height is for a private
     // test chain only: anywhere else it is refused, because it may already
-    // be open (security loop, 17 November 2026).
+    // be open.
     if (onRegister.locktime < 500000000 && crowdlock.network !== "regtest") {
       refuse("its lock is dated by block height, which only a private test chain uses, so its money isn't committed"); continue;
     }
@@ -741,8 +732,8 @@ export function noticeIsGenuine(notice, { crowdlock, hash, hrp, addressOf }) {
 export async function applySettlement(pile, items, { crowdlock, hash, hrp, addressOf, txidOf, nowIso, completedBy, canonical = (h) => h, closes = null }) {
   if (typeof completedBy !== "function") throw new Error("applySettlement needs a check that each completed payment is signed by the owner and the co-signer");
   // A completion is kept, and so sent, in its standard encoding (`canonical`):
-  // a copy written another way has the same id, and the network refuses it.
-  // Until 17 November 2026 such a copy, posted first, took the real one's place.
+  // a copy written another way has the same id, and the network refuses it,
+  // so a copy posted first must not take the real one's place.
   items = items.map((it) => (it.type === "completed" ? { ...it, tx: canonical(it.tx) ?? it.tx } : it));
   const outcome = [];
   let next = pile;
@@ -772,9 +763,8 @@ export async function applySettlement(pile, items, { crowdlock, hash, hrp, addre
   for (const it of sorted) {
     if (it.type === "notice") {
       if (next.notice) continue;
-      // A proposal can only fail once gathering is over. Until 17 November
-      // 2026 a genuine notice was taken while it was still gathering, and the
-      // pile then said it had failed (OpenAI review, H-04).
+      // A proposal can only fail once gathering is over: a notice while it is
+      // still gathering is not taken.
       if (!(closes && Date.parse(nowIso) >= Date.parse(closes))) { outcome.push({ added: false, kind: "notice", reason: "the proposal has not closed yet, so it cannot have failed" }); continue; }
       const g = noticeIsGenuine(it.notice, { crowdlock, hash, hrp, addressOf });
       if (!g.ok) { outcome.push({ added: false, kind: "notice", reason: g.reason }); continue; }

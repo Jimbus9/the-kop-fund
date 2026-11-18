@@ -27,7 +27,7 @@ el("homeConnect").addEventListener("click", async () => {
   list.replaceChildren();
   if (!acc) return;
   // Only records that really are a lock of this Crowdlock owned by this key:
-  // the record's own `member` label is not believed (second review, 17 November 2026).
+  // the record's own `member` label is not believed.
   const mine = (REGISTER.locks ?? []).filter((l) => { const g = lockIsGenuine(l, { crowdlock: C, register: REGISTER }); return g.ok && same(g.owner, acc.address); });
   if (!mine.length) {
     setBox(el("homeStatus"), "", "No locks found", `Connected as ${acc.address}, but the register has no locks for it. A lock that was never published won't appear here.`);

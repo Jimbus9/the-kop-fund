@@ -27,9 +27,9 @@ import { sha256 } from "./vendor/noble-hashes/sha256.js";
 // How many lock records one pass asks the block explorer about, in all and
 // for any one owner's key. A lock record need carry no signature, so anybody
 // can post any number of them naming a member's published key, and each costs
-// a question. One its owner signed is asked about first (lockrecord.mjs). Until 17 November 2026 (security loop, round 4) there was no
-// limit: 20,000 of them made a pass longer than the job is allowed to run,
-// on every pass, and nothing was registered or collected. The per-owner
+// a question. One its owner signed is asked about first (lockrecord.mjs).
+// Without a limit, 20,000 of them would make every pass longer than the job
+// may run, and nothing would be registered or collected. The per-owner
 // limit keeps a flood naming one member's key from holding up anybody else's
 // lock; which records are asked about changes from pass to pass.
 export const LOCKS_ASKED_PER_PASS = 200;
@@ -87,7 +87,7 @@ export function recordEventTemplate(record, fingerprint, createdAt) {
  * Text for a log, on one line. Records come from anybody, and a log is read
  * line by line (GitHub's reads a line starting "::" as a command to itself),
  * so nothing posted may start a line of its own: every control character,
- * line breaks included, becomes a space (security loop, 17 November 2026).
+ * line breaks included, becomes a space.
  */
 export function oneLine(text) {
   return String(text).replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]+/g, " ");
@@ -112,7 +112,7 @@ export function recordFromEvent(event, fingerprint) {
     const r = { type: "lock", owner_pubkey: c.owner_pubkey, cosigner_pubkey: c.cosigner_pubkey, locktime: c.locktime, address: c.address };
     // A signature that is there is kept as it came, whatever it is, so that a
     // malformed one is refused rather than quietly dropped and the record
-    // taken unsigned (OpenAI review 7). prepareLock checks it.
+    // taken unsigned. prepareLock checks it.
     if (c.owner_signature !== undefined) r.owner_signature = typeof c.owner_signature === "string" ? c.owner_signature.slice(0, 400) : String(c.owner_signature).slice(0, 400);
     return r;
   }

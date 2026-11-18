@@ -62,16 +62,13 @@ function scriptNumber(n) {
  */
 export function lockScript({ ownerPubkey, cosignerPubkey, locktime }) {
   // A locktime is a whole number that fits Bitcoin's 32-bit field. Anything
-  // else is refused, as method/lock/lock.mjs refuses it: until 17 November
-  // 2026 nought, a fraction or a number too large still made "a script", and
-  // not the one the proven code makes.
+  // else is refused, as method/lock/lock.mjs refuses it: nought, a fraction
+  // or a number too large would make "a script", and not the one the proven
+  // code makes.
   if (!Number.isInteger(locktime) || locktime < 1 || locktime > 0xffffffff) throw new Error("a lock's date must be a whole number from 1 to 4294967295");
   // Both keys are compressed public keys: 33 bytes, starting 02 or 03, as
-  // method/lock/lock.mjs requires. Until 17 November 2026 (security loop,
-  // round 5) nothing here asked: the script says "33 bytes follow" and then
-  // carried whatever it was given, so a 65-byte key still made "a lock" with
-  // an address, and the app's commitment checker went on with it where the
-  // reference checker refused.
+  // method/lock/lock.mjs requires: the script says "33 bytes follow", and a
+  // 65-byte key would otherwise still make "a lock" with an address.
   for (const [who, key] of [["owner", ownerPubkey], ["co-signer", cosignerPubkey]]) {
     if (typeof key !== "string" || !/^0[23][0-9a-fA-F]{64}$/.test(key)) throw new Error(`the ${who}'s key must be a compressed public key: 33 bytes, 66 hex characters`);
   }
@@ -101,17 +98,10 @@ const KEY = /^0[23][0-9a-f]{64}$/;
 const checkedSignatures = new Map();
 
 /**
- * Is this address a member of this register whose signature really verifies
- * against the version of the declaration it joined with? A register is a file,
- * and a file can list an address with any signature at all; until 17 November
- * 2026 the address alone made a lock's owner a committed member (OpenAI
- * review, H-03).
- */
-/**
  * Has the member at this address really signed this version of the
  * declaration? Their signature is checked, not just the version number the
- * register gives (OpenAI review 7): the joining signature for the version they
- * joined with, the later one in also_signed for any other.
+ * register gives: the joining signature for the version they joined with, the
+ * later one in also_signed for any other.
  */
 export function hasSignedVerified(address, version, { crowdlock, register, hrp }) {
   const a = String(address ?? "").toLowerCase();
@@ -131,6 +121,11 @@ export function hasSignedVerified(address, version, { crowdlock, register, hrp }
   return checkedSignatures.get(key);
 }
 
+/**
+ * Is this address a member of this register whose signature really verifies
+ * against the version of the declaration it joined with? A register is a file,
+ * and a file can list an address with any signature at all.
+ */
 export function isSignedMember(address, { crowdlock, register, hrp }) {
   const a = String(address ?? "").toLowerCase();
   const m = (register?.members ?? []).find((x) => String(x?.address ?? "").toLowerCase() === a);
@@ -153,7 +148,7 @@ export function isSignedMember(address, { crowdlock, register, hrp }) {
  * again, because a register is a file: one that has been altered, or one
  * published by a Crowdlock's own founder, can list anything. Without this a
  * register could name any well-funded address a "lock" and its total would
- * count it (found by review, 17 November 2026).
+ * count it.
  *
  * A record is a lock of this Crowdlock only if its address is the lock its
  * stated terms make and its co-signer is one of this Crowdlock's keys.
@@ -178,7 +173,7 @@ export function lockIsGenuine(lock, { crowdlock, register, hrp = hrpFor(crowdloc
   // Dates, not heights, on every real network (spec/lock-format.md), as the
   // inbox already requires before it adds a lock. A reader must ask too: a
   // register is a file, and a "lock" dated by a block height long passed is
-  // money its owner can take home alone (security loop, 17 November 2026).
+  // money its owner can take home alone.
   if (lock.locktime < LOCKTIME_THRESHOLD && hrp !== "bcrt") return no("its date is a block height, which only a private test chain uses");
   let derived;
   try { derived = lockAddress({ ownerPubkey: lock.owner_pubkey, cosignerPubkey: lock.cosigner_pubkey, locktime: lock.locktime }, hrp); } catch { return no("its terms do not make a lock"); }
@@ -244,9 +239,8 @@ export function prepareLock(submission, { crowdlock, register, now }) {
   }
   // A new lock names the newest key only. Older keys stay listed so the locks
   // already naming them keep counting, but a key is retired for a reason
-  // (lost, or feared copied), so nothing new may be put under it (James's
-  // decision, 18 November 2026: "Needs James" item 10). The app has always
-  // offered only the newest key (app/src/crowdlocks.mjs, newestCosigner).
+  // (lost, or feared copied), so nothing new may be put under it. The app only
+  // offers the newest key (app/src/crowdlocks.mjs, newestCosigner).
   if (cosigner !== cosigners[cosigners.length - 1]) {
     return no(400, "that co-signer key has been retired — a new lock must name this Crowdlock's newest co-signer key");
   }
@@ -260,8 +254,7 @@ export function prepareLock(submission, { crowdlock, register, now }) {
     if (locktime > now + years * YEAR + SLACK) {
       return no(400, `that lock runs longer than this Crowdlock offers (at most ${years} years)`);
     }
-    // Nor shorter than the shortest length it offers (James's decision, 18
-    // November 2026: security loop "Needs James" item 7). The app and the
+    // Nor shorter than the shortest length it offers. The app and the
     // site only offer those lengths, but a lock record can be posted by hand,
     // and a week-long lock would pad the total. A month's allowance, because
     // a lock is only added once its coins have confirmed, maybe days later.
@@ -295,8 +288,7 @@ export function prepareLock(submission, { crowdlock, register, now }) {
   // declaration is signed with. It is optional, so the website and a Ledger
   // can still post a lock, but a signed one is asked about first: a flood of
   // records naming somebody else's key can't hold it up, because nobody else
-  // can sign for that key (James's decision, 18 November 2026: security loop
-  // "Needs James" item 8). A signature that is there must check.
+  // can sign for that key. A signature that is there must check.
   let signed = false;
   if (submission.owner_signature !== undefined) {
     const message = lockLine(crowdlock?.declaration?.sha256, { address, owner_pubkey: owner, cosigner_pubkey: cosigner, locktime });

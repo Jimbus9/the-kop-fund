@@ -6535,7 +6535,7 @@ var CrowdlockLedger = (() => {
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.parseKeyExpression = parseKeyExpression;
       exports.assertChangeIndexKeyPath = assertChangeIndexKeyPath;
-      exports.keyExpressionBIP32 = keyExpressionBIP322;
+      exports.keyExpressionBIP32 = keyExpressionBIP326;
       var bitcoinLib_1 = require_bitcoinLib();
       var networks_1 = require_networks();
       var uint8array_tools_1 = (init_browser2(), __toCommonJS(browser_exports2));
@@ -6553,7 +6553,7 @@ var CrowdlockLedger = (() => {
         }
         return node.derivePath(parsedPath);
       };
-      function parseKeyExpression({ keyExpression: keyExpression2, isSegwit, isTaproot, ECPair, BIP32: BIP322, network = networks_1.networks.bitcoin }) {
+      function parseKeyExpression({ keyExpression: keyExpression2, isSegwit, isTaproot, ECPair, BIP32: BIP326, network = networks_1.networks.bitcoin }) {
         if (isTaproot && isSegwit !== true)
           throw new Error(`Error: taproot key expressions require isSegwit`);
         let pubkey;
@@ -6609,7 +6609,7 @@ var CrowdlockLedger = (() => {
           xPub = xPubKey.match(RE.reXpub)?.[0];
           if (!xPub)
             throw new Error(`Error: xpub could not be matched`);
-          bip32 = BIP322.fromBase58(xPub, network);
+          bip32 = BIP326.fromBase58(xPub, network);
           const mPath = xPubKey.match(RE.rePath);
           if (mPath !== null) {
             keyPath = xPubKey.match(RE.rePath)?.[0];
@@ -6625,7 +6625,7 @@ var CrowdlockLedger = (() => {
           xPrv = xPrvKey.match(RE.reXprv)?.[0];
           if (!xPrv)
             throw new Error(`Error: xprv could not be matched`);
-          bip32 = BIP322.fromBase58(xPrv, network);
+          bip32 = BIP326.fromBase58(xPrv, network);
           xPub = bip32.neutered().toBase58();
           const mPath = xPrvKey.match(RE.rePath);
           if (mPath !== null) {
@@ -6673,7 +6673,7 @@ var CrowdlockLedger = (() => {
         if (change !== void 0 === (keyPath !== void 0))
           throw new Error(`Error: Pass either change and index or a keyPath`);
       }
-      function keyExpressionBIP322({ masterNode, originPath, keyPath, change, index, isPublic = true }) {
+      function keyExpressionBIP326({ masterNode, originPath, keyPath, change, index, isPublic = true }) {
         masterNode = (0, bitcoinLib_1.toBIP32Interface)(masterNode);
         assertChangeIndexKeyPath({
           ...change !== void 0 ? { change } : {},
@@ -9121,7 +9121,7 @@ var CrowdlockLedger = (() => {
       var miniscript_1 = require_dist();
       var uint8array_tools_1 = (init_browser2(), __toCommonJS(browser_exports2));
       var bitcoinLib_1 = require_bitcoinLib();
-      function expandMiniscript({ miniscript, isSegwit, isTaproot, network = networks_1.networks.bitcoin, ECPair, BIP32: BIP322 }) {
+      function expandMiniscript({ miniscript, isSegwit, isTaproot, network = networks_1.networks.bitcoin, ECPair, BIP32: BIP326 }) {
         const reKeyExp = isTaproot ? RE.reTaprootKeyExp : isSegwit ? RE.reSegwitKeyExp : RE.reNonSegwitKeyExp;
         const expansionMap = {};
         let keyIndex = 0;
@@ -9140,7 +9140,7 @@ var CrowdlockLedger = (() => {
             isTaproot,
             network,
             ECPair,
-            BIP32: BIP322
+            BIP32: BIP326
           });
           return key;
         };
@@ -9496,17 +9496,17 @@ var CrowdlockLedger = (() => {
       var tapTree_1 = require_tapTree();
       var resourceLimits_1 = require_resourceLimits();
       var TAPROOT_LEAF_VERSION_TAPSCRIPT = 192;
-      function expandTaprootMiniscript({ miniscript, network = networks_1.networks.bitcoin, BIP32: BIP322, ECPair }) {
+      function expandTaprootMiniscript({ miniscript, network = networks_1.networks.bitcoin, BIP32: BIP326, ECPair }) {
         return (0, miniscript_1.expandMiniscript)({
           miniscript,
           isSegwit: true,
           isTaproot: true,
           network,
-          BIP32: BIP322,
+          BIP32: BIP326,
           ECPair
         });
       }
-      function buildTapTreeInfo({ tapTree, network = networks_1.networks.bitcoin, BIP32: BIP322, ECPair, leafExpansionOverride }) {
+      function buildTapTreeInfo({ tapTree, network = networks_1.networks.bitcoin, BIP32: BIP326, ECPair, leafExpansionOverride }) {
         (0, tapTree_1.assertTapTreeDepth)(tapTree);
         if ("expression" in tapTree) {
           const expression = tapTree.expression;
@@ -9523,7 +9523,7 @@ var CrowdlockLedger = (() => {
             const expanded = expandTaprootMiniscript({
               miniscript: expression,
               network,
-              BIP32: BIP322,
+              BIP32: BIP326,
               ECPair
             });
             expandedExpression = expanded.expandedMiniscript;
@@ -9548,14 +9548,14 @@ var CrowdlockLedger = (() => {
           left: buildTapTreeInfo({
             tapTree: tapTree.left,
             network,
-            BIP32: BIP322,
+            BIP32: BIP326,
             ECPair,
             leafExpansionOverride
           }),
           right: buildTapTreeInfo({
             tapTree: tapTree.right,
             network,
-            BIP32: BIP322,
+            BIP32: BIP326,
             ECPair,
             leafExpansionOverride
           })
@@ -10098,7 +10098,7 @@ var CrowdlockLedger = (() => {
         const { p2sh: p2sh2, p2wpkh: p2wpkh2, p2pkh: p2pkh2, p2pk: p2pk2, p2wsh: p2wsh2, p2tr: p2tr2 } = payments;
         const address = bitcoinLib.address;
         const Transaction2 = bitcoinLib.Transaction;
-        const BIP322 = bitcoinLib.BIP32;
+        const BIP326 = bitcoinLib.BIP32;
         const ECPair = bitcoinLib.ECPair;
         const signatureValidator = (pubkey, msghash, signature2) => {
           if (pubkey.length === 32) {
@@ -10114,7 +10114,7 @@ var CrowdlockLedger = (() => {
             ...typeof isSegwit === "boolean" ? { isSegwit } : {},
             ...typeof isTaproot === "boolean" ? { isTaproot } : {},
             ECPair,
-            BIP32: BIP322
+            BIP32: BIP326
           });
         };
         function buildTapLeafSortedMultiAOverride({ expression, network = networks_1.networks.bitcoin }) {
@@ -10488,7 +10488,7 @@ var CrowdlockLedger = (() => {
                 tapTreeInfo = (0, tapMiniscript_1.buildTapTreeInfo)({
                   tapTree,
                   network,
-                  BIP32: BIP322,
+                  BIP32: BIP326,
                   ECPair,
                   // `leafExpansionOverride` runs per leaf expression.
                   // For non-matching leaves it returns undefined and
@@ -10543,11 +10543,11 @@ var CrowdlockLedger = (() => {
             isTaproot: false,
             //TODO:
             network,
-            BIP32: BIP322,
+            BIP32: BIP326,
             ECPair
           });
         }
-        class Output2 {
+        class Output6 {
           /**
            * @param options
            * @throws {Error} - when descriptor is invalid
@@ -11413,9 +11413,9 @@ var CrowdlockLedger = (() => {
           }
         };
         const nativeKeys = isBitcoinJsLib(bitcoinLib);
-        activeOutput = Output2;
+        activeOutput = Output6;
         return {
-          Output: Output2,
+          Output: Output6,
           parseKeyExpression,
           expand,
           ECPair: nativeKeys ? (
@@ -11428,7 +11428,7 @@ var CrowdlockLedger = (() => {
             unsupportedKeyApi("ECPair")
           ),
           // Same behavior for BIP32: full API only for native bitcoinjs adapter.
-          BIP32: nativeKeys ? BIP322 : unsupportedKeyApi("BIP32")
+          BIP32: nativeKeys ? BIP326 : unsupportedKeyApi("BIP32")
         };
       }
       var activeOutput;
@@ -11509,7 +11509,7 @@ var CrowdlockLedger = (() => {
         if (myDerivations.length === 0) {
           throw new Error("Need one tapBip32Derivation masterFingerprint to match the HDSigner fingerprint");
         }
-        const signers3 = myDerivations.map((bipDv) => {
+        const signers7 = myDerivations.map((bipDv) => {
           const node = hdKeyPair.derivePath(bipDv.path);
           if ((0, uint8array_tools_1.compare)(bipDv.pubkey, toXOnly2(node.publicKey)) !== 0) {
             throw new Error("pubkey did not match tapBip32Derivation");
@@ -11523,7 +11523,7 @@ var CrowdlockLedger = (() => {
           const tweakValue = (0, bitcoinjs_lib_internals_1.tapTweakHash)(toXOnly2(node.publicKey), h6);
           return node.tweak(tweakValue);
         });
-        return signers3;
+        return signers7;
       }
       function getSignersFromHD(inputIndex, inputs2, hdKeyPair) {
         const input = (0, bip174_1.checkForInput)(inputs2, inputIndex);
@@ -11543,14 +11543,14 @@ var CrowdlockLedger = (() => {
         if (myDerivations.length === 0) {
           throw new Error("Need one bip32Derivation masterFingerprint to match the HDSigner fingerprint");
         }
-        const signers3 = myDerivations.map((bipDv) => {
+        const signers7 = myDerivations.map((bipDv) => {
           const node = hdKeyPair.derivePath(bipDv.path);
           if ((0, uint8array_tools_1.compare)(bipDv.pubkey, node.publicKey) !== 0) {
             throw new Error("pubkey did not match bip32Derivation");
           }
           return node;
         });
-        return signers3;
+        return signers7;
       }
       var applyPR2137 = (psbt) => {
         const patchedPsbt = psbt;
@@ -11558,9 +11558,9 @@ var CrowdlockLedger = (() => {
           if (!hdKeyPair || !hdKeyPair.publicKey || !hdKeyPair.fingerprint) {
             throw new Error("Need HDSigner to sign input");
           }
-          const signers3 = getSignersFromHD(inputIndex, this.data.inputs, hdKeyPair);
+          const signers7 = getSignersFromHD(inputIndex, this.data.inputs, hdKeyPair);
           const results = [];
-          for (const signer of signers3) {
+          for (const signer of signers7) {
             try {
               this.signInput(inputIndex, signer, sighashTypes);
               results.push(true);
@@ -11814,8 +11814,8 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       Object.defineProperty(exports, "checksum", { enumerable: true, get: function() {
         return checksum_1.DescriptorChecksum;
       } });
-      var signers3 = __importStar(require_signers());
-      exports.signers = signers3;
+      var signers7 = __importStar(require_signers());
+      exports.signers = signers7;
       var keyExpressions_1 = require_keyExpressions();
       Object.defineProperty(exports, "keyExpressionBIP32", { enumerable: true, get: function() {
         return keyExpressions_1.keyExpressionBIP32;
@@ -23878,41 +23878,41 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         return _ECCLIB_CACHE2.eccLib;
       }
       var h6 = (hex2) => tools.fromHex(hex2);
-      function verifyEcc(ecc2) {
-        assert(typeof ecc2.isXOnlyPoint === "function");
+      function verifyEcc(ecc6) {
+        assert(typeof ecc6.isXOnlyPoint === "function");
         assert(
-          ecc2.isXOnlyPoint(
+          ecc6.isXOnlyPoint(
             h6("79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798")
           )
         );
         assert(
-          ecc2.isXOnlyPoint(
+          ecc6.isXOnlyPoint(
             h6("fffffffffffffffffffffffffffffffffffffffffffffffffffffffeeffffc2e")
           )
         );
         assert(
-          ecc2.isXOnlyPoint(
+          ecc6.isXOnlyPoint(
             h6("f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9")
           )
         );
         assert(
-          ecc2.isXOnlyPoint(
+          ecc6.isXOnlyPoint(
             h6("0000000000000000000000000000000000000000000000000000000000000001")
           )
         );
         assert(
-          !ecc2.isXOnlyPoint(
+          !ecc6.isXOnlyPoint(
             h6("0000000000000000000000000000000000000000000000000000000000000000")
           )
         );
         assert(
-          !ecc2.isXOnlyPoint(
+          !ecc6.isXOnlyPoint(
             h6("fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f")
           )
         );
-        assert(typeof ecc2.xOnlyPointAddTweak === "function");
+        assert(typeof ecc6.xOnlyPointAddTweak === "function");
         tweakAddVectors.forEach((t29) => {
-          const r11 = ecc2.xOnlyPointAddTweak(h6(t29.pubkey), h6(t29.tweak));
+          const r11 = ecc6.xOnlyPointAddTweak(h6(t29.pubkey), h6(t29.tweak));
           if (t29.result === null) {
             assert(r11 === null);
           } else {
@@ -24689,7 +24689,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       exports.toBech32 = toBech322;
       exports.fromOutputScript = fromOutputScript2;
       exports.toOutputScript = toOutputScript2;
-      var networks2 = __importStar(require_networks2());
+      var networks6 = __importStar(require_networks2());
       var payments = __importStar(require_payments());
       var bscript = __importStar(require_script());
       var types_js_1 = require_types();
@@ -24765,7 +24765,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         return version === 0 ? bech32_1.bech32.encode(prefix, words) : bech32_1.bech32m.encode(prefix, words);
       }
       function fromOutputScript2(output2, network) {
-        network = network || networks2.bitcoin;
+        network = network || networks6.bitcoin;
         try {
           return payments.p2pkh({ output: output2, network }).address;
         } catch (e29) {
@@ -24793,7 +24793,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         throw new Error(bscript.toASM(output2) + " has no matching Address");
       }
       function toOutputScript2(address, network) {
-        network = network || networks2.bitcoin;
+        network = network || networks6.bitcoin;
         let decodeBase58;
         let decodeBech32;
         try {
@@ -28175,7 +28175,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       var typeFields_js_1 = require_typeFields();
       var utils_js_1 = require_utils3();
       var tools = __importStar((init_browser4(), __toCommonJS(browser_exports4)));
-      var Psbt4 = class {
+      var Psbt8 = class {
         constructor(tx) {
           this.inputs = [];
           this.outputs = [];
@@ -28311,7 +28311,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           return this.globalMap.unsignedTx.toBuffer();
         }
       };
-      exports.Psbt = Psbt4;
+      exports.Psbt = Psbt8;
       var utils_js_2 = require_utils3();
       exports.checkForInput = utils_js_2.checkForInput;
       exports.checkForOutput = utils_js_2.checkForOutput;
@@ -28847,7 +28847,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         maximumFeeRate: 5e3
         // satoshi per byte
       };
-      var Psbt4 = class _Psbt {
+      var Psbt8 = class _Psbt {
         data;
         static fromBase64(data, opts = {}) {
           const buffer = tools.fromBase64(data);
@@ -29304,8 +29304,8 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           if (!hdKeyPair || !hdKeyPair.publicKey || !hdKeyPair.fingerprint) {
             throw new Error("Need HDSigner to sign input");
           }
-          const signers3 = getSignersFromHD(inputIndex, this.data.inputs, hdKeyPair);
-          signers3.forEach((signer) => this.signInput(inputIndex, signer, sighashTypes));
+          const signers7 = getSignersFromHD(inputIndex, this.data.inputs, hdKeyPair);
+          signers7.forEach((signer) => this.signInput(inputIndex, signer, sighashTypes));
           return this;
         }
         signInputHDAsync(inputIndex, hdKeyPair, sighashTypes = [transaction_js_1.Transaction.SIGHASH_ALL]) {
@@ -29313,8 +29313,8 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
             if (!hdKeyPair || !hdKeyPair.publicKey || !hdKeyPair.fingerprint) {
               return reject(new Error("Need HDSigner to sign input"));
             }
-            const signers3 = getSignersFromHD(inputIndex, this.data.inputs, hdKeyPair);
-            const promises = signers3.map(
+            const signers7 = getSignersFromHD(inputIndex, this.data.inputs, hdKeyPair);
+            const promises = signers7.map(
               (signer) => this.signInputAsync(inputIndex, signer, sighashTypes)
             );
             return Promise.all(promises).then(() => {
@@ -29625,7 +29625,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           return this;
         }
       };
-      exports.Psbt = Psbt4;
+      exports.Psbt = Psbt8;
       var transactionFromBuffer = (buffer) => new PsbtTransaction(buffer);
       var PsbtTransaction = class {
         tx;
@@ -30093,14 +30093,14 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
             "Need one bip32Derivation masterFingerprint to match the HDSigner fingerprint"
           );
         }
-        const signers3 = myDerivations.map((bipDv) => {
+        const signers7 = myDerivations.map((bipDv) => {
           const node = hdKeyPair.derivePath(bipDv.path);
           if (tools.compare(bipDv.pubkey, node.publicKey) !== 0) {
             throw new Error("pubkey did not match bip32Derivation");
           }
           return node;
         });
-        return signers3;
+        return signers7;
       }
       function getSortedSigs(script, partialSig) {
         const p2ms2 = payments.p2ms({ output: script });
@@ -30390,8 +30390,8 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       exports.address = address;
       var crypto3 = __importStar(require_crypto2());
       exports.crypto = crypto3;
-      var networks2 = __importStar(require_networks2());
-      exports.networks = networks2;
+      var networks6 = __importStar(require_networks2());
+      exports.networks = networks6;
       var payments = __importStar(require_payments());
       exports.payments = payments;
       var script = __importStar(require_script());
@@ -32146,35 +32146,35 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       exports.testEcc = testEcc;
       var tools = __importStar((init_browser5(), __toCommonJS(browser_exports5)));
       var h6 = (hex2) => tools.fromHex(hex2);
-      function testEcc(ecc2) {
-        assert(ecc2.isPoint(h6("0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798")));
-        assert(!ecc2.isPoint(h6("030000000000000000000000000000000000000000000000000000000000000005")));
-        assert(ecc2.isPrivate(h6("79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798")));
-        assert(ecc2.isPrivate(h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140")));
-        assert(!ecc2.isPrivate(h6("0000000000000000000000000000000000000000000000000000000000000000")));
-        assert(!ecc2.isPrivate(h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141")));
-        assert(!ecc2.isPrivate(h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364142")));
-        assert(tools.compare(ecc2.pointFromScalar(h6("b1121e4088a66a28f5b6b0f5844943ecd9f610196d7bb83b25214b60452c09af")), h6("02b07ba9dca9523b7ef4bd97703d43d20399eb698e194704791a25ce77a400df99")) === 0);
-        if (ecc2.xOnlyPointAddTweak) {
-          assert(ecc2.xOnlyPointAddTweak(h6("79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"), h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140")) === null);
-          let xOnlyRes = ecc2.xOnlyPointAddTweak(h6("1617d38ed8d8657da4d4761e8057bc396ea9e4b9d29776d4be096016dbd2509b"), h6("a8397a935f0dfceba6ba9618f6451ef4d80637abf4e6af2669fbc9de6a8fd2ac"));
+      function testEcc(ecc6) {
+        assert(ecc6.isPoint(h6("0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798")));
+        assert(!ecc6.isPoint(h6("030000000000000000000000000000000000000000000000000000000000000005")));
+        assert(ecc6.isPrivate(h6("79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798")));
+        assert(ecc6.isPrivate(h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140")));
+        assert(!ecc6.isPrivate(h6("0000000000000000000000000000000000000000000000000000000000000000")));
+        assert(!ecc6.isPrivate(h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141")));
+        assert(!ecc6.isPrivate(h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364142")));
+        assert(tools.compare(ecc6.pointFromScalar(h6("b1121e4088a66a28f5b6b0f5844943ecd9f610196d7bb83b25214b60452c09af")), h6("02b07ba9dca9523b7ef4bd97703d43d20399eb698e194704791a25ce77a400df99")) === 0);
+        if (ecc6.xOnlyPointAddTweak) {
+          assert(ecc6.xOnlyPointAddTweak(h6("79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"), h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140")) === null);
+          let xOnlyRes = ecc6.xOnlyPointAddTweak(h6("1617d38ed8d8657da4d4761e8057bc396ea9e4b9d29776d4be096016dbd2509b"), h6("a8397a935f0dfceba6ba9618f6451ef4d80637abf4e6af2669fbc9de6a8fd2ac"));
           assert(tools.compare(xOnlyRes.xOnlyPubkey, h6("e478f99dab91052ab39a33ea35fd5e6e4933f4d28023cd597c9a1f6760346adf")) === 0 && xOnlyRes.parity === 1);
-          xOnlyRes = ecc2.xOnlyPointAddTweak(h6("2c0b7cf95324a07d05398b240174dc0c2be444d96b159aa6c7f7b1e668680991"), h6("823c3cd2142744b075a87eade7e1b8678ba308d566226a0056ca2b7a76f86b47"));
+          xOnlyRes = ecc6.xOnlyPointAddTweak(h6("2c0b7cf95324a07d05398b240174dc0c2be444d96b159aa6c7f7b1e668680991"), h6("823c3cd2142744b075a87eade7e1b8678ba308d566226a0056ca2b7a76f86b47"));
         }
-        assert(tools.compare(ecc2.pointAddScalar(h6("0379be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"), h6("0000000000000000000000000000000000000000000000000000000000000003")), h6("02c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5")) === 0);
-        assert(tools.compare(ecc2.privateAdd(h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd036413e"), h6("0000000000000000000000000000000000000000000000000000000000000002")), h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140")) === 0);
-        if (ecc2.privateNegate) {
-          assert(tools.compare(ecc2.privateNegate(h6("0000000000000000000000000000000000000000000000000000000000000001")), h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140")) === 0);
-          assert(tools.compare(ecc2.privateNegate(h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd036413e")), h6("0000000000000000000000000000000000000000000000000000000000000003")) === 0);
-          assert(tools.compare(ecc2.privateNegate(h6("b1121e4088a66a28f5b6b0f5844943ecd9f610196d7bb83b25214b60452c09af")), h6("4eede1bf775995d70a494f0a7bb6bc11e0b8cccd41cce8009ab1132c8b0a3792")) === 0);
+        assert(tools.compare(ecc6.pointAddScalar(h6("0379be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"), h6("0000000000000000000000000000000000000000000000000000000000000003")), h6("02c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5")) === 0);
+        assert(tools.compare(ecc6.privateAdd(h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd036413e"), h6("0000000000000000000000000000000000000000000000000000000000000002")), h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140")) === 0);
+        if (ecc6.privateNegate) {
+          assert(tools.compare(ecc6.privateNegate(h6("0000000000000000000000000000000000000000000000000000000000000001")), h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140")) === 0);
+          assert(tools.compare(ecc6.privateNegate(h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd036413e")), h6("0000000000000000000000000000000000000000000000000000000000000003")) === 0);
+          assert(tools.compare(ecc6.privateNegate(h6("b1121e4088a66a28f5b6b0f5844943ecd9f610196d7bb83b25214b60452c09af")), h6("4eede1bf775995d70a494f0a7bb6bc11e0b8cccd41cce8009ab1132c8b0a3792")) === 0);
         }
-        assert(tools.compare(ecc2.sign(h6("5e9f0a0d593efdcf78ac923bc3313e4e7d408d574354ee2b3288c0da9fbba6ed"), h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140")), h6("54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed07082304410efa6b2943111b6a4e0aaa7b7db55a07e9861d1fb3cb1f421044a5")) === 0);
-        assert(ecc2.verify(h6("5e9f0a0d593efdcf78ac923bc3313e4e7d408d574354ee2b3288c0da9fbba6ed"), h6("0379be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"), h6("54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed07082304410efa6b2943111b6a4e0aaa7b7db55a07e9861d1fb3cb1f421044a5")));
-        if (ecc2.signSchnorr) {
-          assert(tools.compare(ecc2.signSchnorr(h6("7e2d58d8b3bcdf1abadec7829054f90dda9805aab56c77333024b9d0a508b75c"), h6("c90fdaa22168c234c4c6628b80dc1cd129024e088a67cc74020bbea63b14e5c9"), h6("c87aa53824b4d7ae2eb035a2b5bbbccc080e76cdc6d1692c4b0b62d798e6d906")), h6("5831aaeed7b44bb74e5eab94ba9d4294c49bcf2a60728d8b4c200f50dd313c1bab745879a5ad954a72c45a91c3a51d3c7adea98d82f8481e0e1e03674a6f3fb7")) === 0);
+        assert(tools.compare(ecc6.sign(h6("5e9f0a0d593efdcf78ac923bc3313e4e7d408d574354ee2b3288c0da9fbba6ed"), h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140")), h6("54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed07082304410efa6b2943111b6a4e0aaa7b7db55a07e9861d1fb3cb1f421044a5")) === 0);
+        assert(ecc6.verify(h6("5e9f0a0d593efdcf78ac923bc3313e4e7d408d574354ee2b3288c0da9fbba6ed"), h6("0379be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"), h6("54c4a33c6423d689378f160a7ff8b61330444abb58fb470f96ea16d99d4a2fed07082304410efa6b2943111b6a4e0aaa7b7db55a07e9861d1fb3cb1f421044a5")));
+        if (ecc6.signSchnorr) {
+          assert(tools.compare(ecc6.signSchnorr(h6("7e2d58d8b3bcdf1abadec7829054f90dda9805aab56c77333024b9d0a508b75c"), h6("c90fdaa22168c234c4c6628b80dc1cd129024e088a67cc74020bbea63b14e5c9"), h6("c87aa53824b4d7ae2eb035a2b5bbbccc080e76cdc6d1692c4b0b62d798e6d906")), h6("5831aaeed7b44bb74e5eab94ba9d4294c49bcf2a60728d8b4c200f50dd313c1bab745879a5ad954a72c45a91c3a51d3c7adea98d82f8481e0e1e03674a6f3fb7")) === 0);
         }
-        if (ecc2.verifySchnorr) {
-          assert(ecc2.verifySchnorr(h6("7e2d58d8b3bcdf1abadec7829054f90dda9805aab56c77333024b9d0a508b75c"), h6("dd308afec5777e13121fa72b9cc1b7cc0139715309b086c960e18fd969774eb8"), h6("5831aaeed7b44bb74e5eab94ba9d4294c49bcf2a60728d8b4c200f50dd313c1bab745879a5ad954a72c45a91c3a51d3c7adea98d82f8481e0e1e03674a6f3fb7")));
+        if (ecc6.verifySchnorr) {
+          assert(ecc6.verifySchnorr(h6("7e2d58d8b3bcdf1abadec7829054f90dda9805aab56c77333024b9d0a508b75c"), h6("dd308afec5777e13121fa72b9cc1b7cc0139715309b086c960e18fd969774eb8"), h6("5831aaeed7b44bb74e5eab94ba9d4294c49bcf2a60728d8b4c200f50dd313c1bab745879a5ad954a72c45a91c3a51d3c7adea98d82f8481e0e1e03674a6f3fb7")));
         }
       }
       function assert(bool) {
@@ -32860,8 +32860,8 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         encode: (data) => _bs58check.encode(data),
         decode: (str2) => _bs58check.decode(str2)
       };
-      function BIP32Factory(ecc2) {
-        (0, testecc_js_1.testEcc)(ecc2);
+      function BIP32Factory(ecc6) {
+        (0, testecc_js_1.testEcc)(ecc6);
         const BITCOIN = {
           messagePrefix: "Bitcoin Signed Message:\n",
           bech32: "bc",
@@ -32887,7 +32887,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           }
           get publicKey() {
             if (this.__Q === void 0)
-              this.__Q = ecc2.pointFromScalar(this.__D, true);
+              this.__Q = ecc6.pointFromScalar(this.__D, true);
             return this.__Q;
           }
           get privateKey() {
@@ -32899,15 +32899,15 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
             if (lowR === void 0)
               lowR = this.lowR;
             if (lowR === false) {
-              return ecc2.sign(hash, this.privateKey);
+              return ecc6.sign(hash, this.privateKey);
             } else {
-              let sig = ecc2.sign(hash, this.privateKey);
+              let sig = ecc6.sign(hash, this.privateKey);
               const extraData = new Uint8Array(32);
               let counter = 0;
               while (sig[0] > 127) {
                 counter++;
                 tools.writeUInt32(extraData, 0, counter, "LE");
-                sig = ecc2.sign(hash, this.privateKey, extraData);
+                sig = ecc6.sign(hash, this.privateKey, extraData);
               }
               return sig;
             }
@@ -32915,20 +32915,20 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           signSchnorr(hash) {
             if (!this.privateKey)
               throw new Error("Missing private key");
-            if (!ecc2.signSchnorr)
+            if (!ecc6.signSchnorr)
               throw new Error("signSchnorr not supported by ecc library");
-            return ecc2.signSchnorr(hash, this.privateKey);
+            return ecc6.signSchnorr(hash, this.privateKey);
           }
           verify(hash, signature2) {
-            return ecc2.verify(hash, this.publicKey, signature2);
+            return ecc6.verify(hash, this.publicKey, signature2);
           }
           verifySchnorr(hash, signature2) {
-            if (!ecc2.verifySchnorr)
+            if (!ecc6.verifySchnorr)
               throw new Error("verifySchnorr not supported by ecc library");
-            return ecc2.verifySchnorr(hash, this.publicKey.subarray(1, 33), signature2);
+            return ecc6.verifySchnorr(hash, this.publicKey.subarray(1, 33), signature2);
           }
         }
-        class BIP322 extends Bip32Signer {
+        class BIP326 extends Bip32Signer {
           chainCode;
           network;
           __DEPTH;
@@ -33013,16 +33013,16 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
             const I6 = crypto3.hmacSHA512(this.chainCode, data);
             const IL = I6.slice(0, 32);
             const IR = I6.slice(32);
-            if (!ecc2.isPrivate(IL))
+            if (!ecc6.isPrivate(IL))
               return this.derive(index + 1);
             let hd;
             if (!this.isNeutered()) {
-              const ki = ecc2.privateAdd(this.privateKey, IL);
+              const ki = ecc6.privateAdd(this.privateKey, IL);
               if (ki == null)
                 return this.derive(index + 1);
               hd = fromPrivateKeyLocal(ki, IR, this.network, this.depth + 1, index, tools.readUInt32(this.fingerprint, 0, "BE"));
             } else {
-              const Ki = ecc2.pointAddScalar(this.publicKey, IL, true);
+              const Ki = ecc6.pointAddScalar(this.publicKey, IL, true);
               if (Ki === null)
                 return this.derive(index + 1);
               hd = fromPublicKeyLocal(Ki, IR, this.network, this.depth + 1, index, tools.readUInt32(this.fingerprint, 0, "BE"));
@@ -33060,9 +33060,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           }
           tweakFromPublicKey(t29) {
             const xOnlyPubKey = toXOnly2(this.publicKey);
-            if (!ecc2.xOnlyPointAddTweak)
+            if (!ecc6.xOnlyPointAddTweak)
               throw new Error("xOnlyPointAddTweak not supported by ecc library");
-            const tweakedPublicKey = ecc2.xOnlyPointAddTweak(xOnlyPubKey, t29);
+            const tweakedPublicKey = ecc6.xOnlyPointAddTweak(xOnlyPubKey, t29);
             if (!tweakedPublicKey || tweakedPublicKey.xOnlyPubkey === null)
               throw new Error("Cannot tweak public key!");
             const parityByte = Uint8Array.from([
@@ -33079,12 +33079,12 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
             const privateKey = (() => {
               if (!hasOddY)
                 return this.privateKey;
-              else if (!ecc2.privateNegate)
+              else if (!ecc6.privateNegate)
                 throw new Error("privateNegate not supported by ecc library");
               else
-                return ecc2.privateNegate(this.privateKey);
+                return ecc6.privateNegate(this.privateKey);
             })();
-            const tweakedPrivateKey = ecc2.privateAdd(privateKey, t29);
+            const tweakedPrivateKey = ecc6.privateAdd(privateKey, t29);
             if (!tweakedPrivateKey)
               throw new Error("Invalid tweaked private key!");
             return new Bip32Signer(tweakedPrivateKey, void 0);
@@ -33127,9 +33127,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           v21.parse(types_js_1.Buffer256Bit, privateKey);
           v21.parse(types_js_1.Buffer256Bit, chainCode);
           network = network || BITCOIN;
-          if (!ecc2.isPrivate(privateKey))
+          if (!ecc6.isPrivate(privateKey))
             throw new TypeError("Private key not in range [1, n)");
-          return new BIP322(privateKey, void 0, chainCode, network, depth, index, parentFingerprint);
+          return new BIP326(privateKey, void 0, chainCode, network, depth, index, parentFingerprint);
         }
         function fromPublicKey(publicKey, chainCode, network) {
           return fromPublicKeyLocal(publicKey, chainCode, network);
@@ -33138,9 +33138,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           v21.parse(types_js_1.Buffer33Bytes, publicKey);
           v21.parse(types_js_1.Buffer256Bit, chainCode);
           network = network || BITCOIN;
-          if (!ecc2.isPoint(publicKey))
+          if (!ecc6.isPoint(publicKey))
             throw new TypeError("Point is not on the curve");
-          return new BIP322(void 0, publicKey, chainCode, network, depth, index, parentFingerprint);
+          return new BIP326(void 0, publicKey, chainCode, network, depth, index, parentFingerprint);
         }
         function fromSeed(seed, network) {
           v21.parse(v21.instance(Uint8Array), seed);
@@ -33542,45 +33542,45 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       var uint8array_tools_1 = (init_browser6(), __toCommonJS(browser_exports6));
       var h6 = (hex2) => (0, uint8array_tools_1.fromHex)(hex2);
       var eq = (a29, b8) => (0, uint8array_tools_1.compare)(a29, b8) === 0;
-      function testEcc(ecc2) {
+      function testEcc(ecc6) {
         assert(
-          ecc2.isPoint(
+          ecc6.isPoint(
             h6("0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798")
           )
         );
         assert(
-          !ecc2.isPoint(
+          !ecc6.isPoint(
             h6("030000000000000000000000000000000000000000000000000000000000000005")
           )
         );
         assert(
-          ecc2.isPrivate(
+          ecc6.isPrivate(
             h6("79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798")
           )
         );
         assert(
-          ecc2.isPrivate(
+          ecc6.isPrivate(
             h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140")
           )
         );
         assert(
-          !ecc2.isPrivate(
+          !ecc6.isPrivate(
             h6("0000000000000000000000000000000000000000000000000000000000000000")
           )
         );
         assert(
-          !ecc2.isPrivate(
+          !ecc6.isPrivate(
             h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141")
           )
         );
         assert(
-          !ecc2.isPrivate(
+          !ecc6.isPrivate(
             h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364142")
           )
         );
         assert(
           eq(
-            ecc2.privateAdd(
+            ecc6.privateAdd(
               h6("0000000000000000000000000000000000000000000000000000000000000001"),
               h6("0000000000000000000000000000000000000000000000000000000000000000")
             ),
@@ -33588,14 +33588,14 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           )
         );
         assert(
-          ecc2.privateAdd(
+          ecc6.privateAdd(
             h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd036413e"),
             h6("0000000000000000000000000000000000000000000000000000000000000003")
           ) === null
         );
         assert(
           eq(
-            ecc2.privateAdd(
+            ecc6.privateAdd(
               h6("e211078564db65c3ce7704f08262b1f38f1ef412ad15b5ac2d76657a63b2c500"),
               h6("b51fbb69051255d1becbd683de5848242a89c229348dd72896a87ada94ae8665")
             ),
@@ -33604,7 +33604,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         );
         assert(
           eq(
-            ecc2.privateNegate(
+            ecc6.privateNegate(
               h6("0000000000000000000000000000000000000000000000000000000000000001")
             ),
             h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140")
@@ -33612,7 +33612,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         );
         assert(
           eq(
-            ecc2.privateNegate(
+            ecc6.privateNegate(
               h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd036413e")
             ),
             h6("0000000000000000000000000000000000000000000000000000000000000003")
@@ -33620,7 +33620,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         );
         assert(
           eq(
-            ecc2.privateNegate(
+            ecc6.privateNegate(
               h6("b1121e4088a66a28f5b6b0f5844943ecd9f610196d7bb83b25214b60452c09af")
             ),
             h6("4eede1bf775995d70a494f0a7bb6bc11e0b8cccd41cce8009ab1132c8b0a3792")
@@ -33628,7 +33628,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         );
         assert(
           eq(
-            ecc2.pointCompress(
+            ecc6.pointCompress(
               h6(
                 "0479be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8"
               ),
@@ -33639,7 +33639,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         );
         assert(
           eq(
-            ecc2.pointCompress(
+            ecc6.pointCompress(
               h6(
                 "0479be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8"
               ),
@@ -33652,7 +33652,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         );
         assert(
           eq(
-            ecc2.pointCompress(
+            ecc6.pointCompress(
               h6("0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"),
               true
             ),
@@ -33661,7 +33661,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         );
         assert(
           eq(
-            ecc2.pointCompress(
+            ecc6.pointCompress(
               h6("0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"),
               false
             ),
@@ -33672,19 +33672,19 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         );
         assert(
           eq(
-            ecc2.pointFromScalar(
+            ecc6.pointFromScalar(
               h6("b1121e4088a66a28f5b6b0f5844943ecd9f610196d7bb83b25214b60452c09af")
             ),
             h6("02b07ba9dca9523b7ef4bd97703d43d20399eb698e194704791a25ce77a400df99")
           )
         );
         assert(
-          ecc2.xOnlyPointAddTweak(
+          ecc6.xOnlyPointAddTweak(
             h6("79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"),
             h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140")
           ) === null
         );
-        let xOnlyRes = ecc2.xOnlyPointAddTweak(
+        let xOnlyRes = ecc6.xOnlyPointAddTweak(
           h6("1617d38ed8d8657da4d4761e8057bc396ea9e4b9d29776d4be096016dbd2509b"),
           h6("a8397a935f0dfceba6ba9618f6451ef4d80637abf4e6af2669fbc9de6a8fd2ac")
         );
@@ -33694,7 +33694,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
             h6("e478f99dab91052ab39a33ea35fd5e6e4933f4d28023cd597c9a1f6760346adf")
           ) && xOnlyRes.parity === 1
         );
-        xOnlyRes = ecc2.xOnlyPointAddTweak(
+        xOnlyRes = ecc6.xOnlyPointAddTweak(
           h6("2c0b7cf95324a07d05398b240174dc0c2be444d96b159aa6c7f7b1e668680991"),
           h6("823c3cd2142744b075a87eade7e1b8678ba308d566226a0056ca2b7a76f86b47")
         );
@@ -33706,7 +33706,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         );
         assert(
           eq(
-            ecc2.sign(
+            ecc6.sign(
               h6("5e9f0a0d593efdcf78ac923bc3313e4e7d408d574354ee2b3288c0da9fbba6ed"),
               h6("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140")
             ),
@@ -33716,7 +33716,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           )
         );
         assert(
-          ecc2.verify(
+          ecc6.verify(
             h6("5e9f0a0d593efdcf78ac923bc3313e4e7d408d574354ee2b3288c0da9fbba6ed"),
             h6("0379be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"),
             h6(
@@ -33724,10 +33724,10 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
             )
           )
         );
-        if (ecc2.signSchnorr) {
+        if (ecc6.signSchnorr) {
           assert(
             eq(
-              ecc2.signSchnorr(
+              ecc6.signSchnorr(
                 h6("7e2d58d8b3bcdf1abadec7829054f90dda9805aab56c77333024b9d0a508b75c"),
                 h6("c90fdaa22168c234c4c6628b80dc1cd129024e088a67cc74020bbea63b14e5c9"),
                 h6("c87aa53824b4d7ae2eb035a2b5bbbccc080e76cdc6d1692c4b0b62d798e6d906")
@@ -33738,9 +33738,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
             )
           );
         }
-        if (ecc2.verifySchnorr) {
+        if (ecc6.verifySchnorr) {
           assert(
-            ecc2.verifySchnorr(
+            ecc6.verifySchnorr(
               h6("7e2d58d8b3bcdf1abadec7829054f90dda9805aab56c77333024b9d0a508b75c"),
               h6("dd308afec5777e13121fa72b9cc1b7cc0139715309b086c960e18fd969774eb8"),
               h6(
@@ -33796,8 +33796,8 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.networks = void 0;
       exports.ECPairFactory = ECPairFactory;
-      var networks2 = __importStar(require_networks3());
-      exports.networks = networks2;
+      var networks6 = __importStar(require_networks3());
+      exports.networks = networks6;
       var types = __importStar(require_types3());
       var wif = __importStar(require_cjs6());
       var testecc_1 = require_testecc2();
@@ -33824,20 +33824,20 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         })
       );
       var toXOnly2 = (pubKey) => pubKey.length === 32 ? pubKey : pubKey.subarray(1, 33);
-      function ECPairFactory(ecc2) {
-        (0, testecc_1.testEcc)(ecc2);
+      function ECPairFactory(ecc6) {
+        (0, testecc_1.testEcc)(ecc6);
         function isPoint4(maybePoint) {
-          return ecc2.isPoint(maybePoint);
+          return ecc6.isPoint(maybePoint);
         }
         function fromPrivateKey(buffer, options) {
           v21.parse(types.Buffer256Bit, buffer);
-          if (!ecc2.isPrivate(buffer))
+          if (!ecc6.isPrivate(buffer))
             throw new TypeError("Private key not in range [1, n)");
           v21.parse(ECPairOptionsSchema, options);
           return new ECPair(buffer, void 0, options);
         }
         function fromPublicKey(buffer, options) {
-          if (!ecc2.isPoint(buffer)) {
+          if (!ecc6.isPoint(buffer)) {
             throw new Error("Point not on the curve");
           }
           v21.parse(ECPairOptionsSchema, options);
@@ -33852,7 +33852,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
             }).pop();
             if (!network) throw new Error("Unknown network version");
           } else {
-            network = network || networks2.bitcoin;
+            network = network || networks6.bitcoin;
             if (version !== network.wif) throw new Error("Invalid network version");
           }
           return fromPrivateKey(decoded.privateKey, {
@@ -33868,7 +33868,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           do {
             d19 = rng2(32);
             v21.parse(types.Buffer256Bit, d19);
-          } while (!ecc2.isPrivate(d19));
+          } while (!ecc6.isPrivate(d19));
           return fromPrivateKey(d19, options);
         }
         class ECPair {
@@ -33883,15 +33883,15 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
             this.lowR = false;
             if (options === void 0) options = {};
             this.compressed = options.compressed === void 0 ? true : options.compressed;
-            this.network = options.network || networks2.bitcoin;
-            if (__Q !== void 0) this.__Q = ecc2.pointCompress(__Q, this.compressed);
+            this.network = options.network || networks6.bitcoin;
+            if (__Q !== void 0) this.__Q = ecc6.pointCompress(__Q, this.compressed);
           }
           get privateKey() {
             return this.__D;
           }
           get publicKey() {
             if (!this.__Q) {
-              const p36 = ecc2.pointFromScalar(this.__D, this.compressed);
+              const p36 = ecc6.pointFromScalar(this.__D, this.compressed);
               this.__Q = p36;
             }
             return this.__Q;
@@ -33912,36 +33912,36 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
             if (!this.__D) throw new Error("Missing private key");
             if (lowR === void 0) lowR = this.lowR;
             if (lowR === false) {
-              return ecc2.sign(hash, this.__D);
+              return ecc6.sign(hash, this.__D);
             } else {
-              let sig = ecc2.sign(hash, this.__D);
+              let sig = ecc6.sign(hash, this.__D);
               const extraData = new Uint8Array(32);
               let counter = 0;
               while (sig[0] > 127) {
                 counter++;
                 tools.writeUInt32(extraData, 0, counter, "LE");
-                sig = ecc2.sign(hash, this.__D, extraData);
+                sig = ecc6.sign(hash, this.__D, extraData);
               }
               return sig;
             }
           }
           signSchnorr(hash) {
             if (!this.privateKey) throw new Error("Missing private key");
-            if (!ecc2.signSchnorr)
+            if (!ecc6.signSchnorr)
               throw new Error("signSchnorr not supported by ecc library");
-            return ecc2.signSchnorr(hash, this.privateKey);
+            return ecc6.signSchnorr(hash, this.privateKey);
           }
           verify(hash, signature2) {
-            return ecc2.verify(hash, this.publicKey, signature2);
+            return ecc6.verify(hash, this.publicKey, signature2);
           }
           verifySchnorr(hash, signature2) {
-            if (!ecc2.verifySchnorr)
+            if (!ecc6.verifySchnorr)
               throw new Error("verifySchnorr not supported by ecc library");
-            return ecc2.verifySchnorr(hash, this.publicKey.subarray(1, 33), signature2);
+            return ecc6.verifySchnorr(hash, this.publicKey.subarray(1, 33), signature2);
           }
           tweakFromPublicKey(t29) {
             const xOnlyPubKey = toXOnly2(this.publicKey);
-            const tweakedPublicKey = ecc2.xOnlyPointAddTweak(xOnlyPubKey, t29);
+            const tweakedPublicKey = ecc6.xOnlyPointAddTweak(xOnlyPubKey, t29);
             if (!tweakedPublicKey || tweakedPublicKey.xOnlyPubkey === null)
               throw new Error("Cannot tweak public key!");
             const parityByte = Uint8Array.from([
@@ -33957,8 +33957,8 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           }
           tweakFromPrivateKey(t29) {
             const hasOddY = this.publicKey[0] === 3 || this.publicKey[0] === 4 && (this.publicKey[64] & 1) === 1;
-            const privateKey = hasOddY ? ecc2.privateNegate(this.privateKey) : this.privateKey;
-            const tweakedPrivateKey = ecc2.privateAdd(privateKey, t29);
+            const privateKey = hasOddY ? ecc6.privateNegate(this.privateKey) : this.privateKey;
+            const tweakedPrivateKey = ecc6.privateAdd(privateKey, t29);
             if (!tweakedPrivateKey) throw new Error("Invalid tweaked private key!");
             return fromPrivateKey(tweakedPrivateKey, {
               network: this.network,
@@ -34017,11 +34017,11 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       var bip32_1 = require_cjs7();
       var ecpair_1 = require_cjs8();
       var bitcoinLib_1 = require_bitcoinLib();
-      function createBitcoinjsLib(ecc2) {
-        (0, bitcoinjs_lib_1.initEccLib)(ecc2);
-        const ECPair = (0, ecpair_1.ECPairFactory)(ecc2);
-        const BIP322 = (0, bip32_1.BIP32Factory)(ecc2);
-        if (!ecc2.verifySchnorr)
+      function createBitcoinjsLib(ecc6) {
+        (0, bitcoinjs_lib_1.initEccLib)(ecc6);
+        const ECPair = (0, ecpair_1.ECPairFactory)(ecc6);
+        const BIP326 = (0, bip32_1.BIP32Factory)(ecc6);
+        if (!ecc6.verifySchnorr)
           throw new Error("TinySecp256k1Interface is not initialized properly: verifySchnorr is missing.");
         return (0, bitcoinLib_1.setBitcoinLib)({
           kind: "bitcoinjs",
@@ -34031,7 +34031,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           crypto: bitcoinjs_lib_1.crypto,
           address: bitcoinjs_lib_1.address,
           ECPair,
-          BIP32: BIP322,
+          BIP32: BIP326,
           toPsbt(psbt) {
             if ((0, bitcoinLib_1.isScureTransaction)(psbt)) {
               throw new Error("Scure transaction support is not available for the active backend. Initialize descriptors-core with createScureLib() or use @bitcoinerlab/descriptors-scure before passing @scure/btc-signer transactions.");
@@ -34056,7 +34056,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
             }
             return node;
           },
-          verifySchnorr: ecc2.verifySchnorr
+          verifySchnorr: ecc6.verifySchnorr
         });
       }
     }
@@ -36464,8 +36464,8 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       const monomial = Poly.monomial.basis(identifier, commitment.length);
       return msm(commitment, monomial);
     };
-    const generateSecretPolynomial = (signers3, secret, coeffs, rng2 = randomBytes2) => {
-      validateSigners(signers3);
+    const generateSecretPolynomial = (signers7, secret, coeffs, rng2 = randomBytes2) => {
+      validateSigners(signers7);
       if (secret !== void 0)
         abytes2(secret, Fn.BYTES, "secret");
       if (coeffs !== void 0)
@@ -36475,10 +36475,10 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       const secretScalar = secret === void 0 ? randomScalar(rng2) : Fn.fromBytes(secret);
       if (!coeffs) {
         coeffs = [];
-        for (let i20 = 0; i20 < signers3.min - 1; i20++)
+        for (let i20 = 0; i20 < signers7.min - 1; i20++)
           coeffs.push(randomScalar(rng2));
       }
-      if (coeffs.length !== signers3.min - 1)
+      if (coeffs.length !== signers7.min - 1)
         throw new Error("wrong coefficients length");
       const coefficients = [secretScalar, ...coeffs];
       const commitment = coefficients.map((i20) => Point2.BASE.multiply(i20));
@@ -36597,10 +36597,10 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       DKG: Object.freeze({
         // NOTE: we allow to pass secret scalar from user side,
         // this way it can be derived, instead of random generation
-        round1: (id2, signers3, secret, rng2 = randomBytes2) => {
+        round1: (id2, signers7, secret, rng2 = randomBytes2) => {
           const idNum = parseIdentifier(id2, "id");
-          validateSigners(signers3);
-          const { coefficients, commitment } = generateSecretPolynomial(signers3, secret, void 0, rng2);
+          validateSigners(signers7);
+          const { coefficients, commitment } = generateSecretPolynomial(signers7, secret, void 0, rng2);
           const proofOfKnowledge = ProofOfKnowledge.compute(idNum, coefficients, commitment, rng2);
           const commitmentBytes = commitment.map(serializePoint);
           const round1Public = {
@@ -36613,7 +36613,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
             coefficients,
             commitment: commitment.map(serializePoint),
             // Copy threshold metadata instead of retaining the caller-owned object by reference.
-            signers: { min: signers3.min, max: signers3.max },
+            signers: { min: signers7.min, max: signers7.max },
             step: 1
           };
           return { public: round1Public, secret: round1Secret };
@@ -36757,16 +36757,16 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       }),
       // Trusted dealer setup
       // Generates keys for all participants
-      trustedDealer(signers3, identifiers, secret, rng2 = randomBytes2) {
-        validateSigners(signers3);
+      trustedDealer(signers7, identifiers, secret, rng2 = randomBytes2) {
+        validateSigners(signers7);
         if (identifiers === void 0) {
           identifiers = [];
-          for (let i20 = 1; i20 <= signers3.max; i20++)
+          for (let i20 = 1; i20 <= signers7.max; i20++)
             identifiers.push(Identifier.fromNumber(i20));
         } else {
           aarray(identifiers, "identifiers");
-          if (identifiers.length !== signers3.max)
-            throw new Error("identifiers should be array of " + signers3.max);
+          if (identifiers.length !== signers7.max)
+            throw new Error("identifiers should be array of " + signers7.max);
         }
         const identifierNums = {};
         for (const id2 of identifiers) {
@@ -36775,7 +36775,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
             throw new Error("duplicated id=" + id2);
           identifierNums[id2] = idNum;
         }
-        const sp = generateSecretPolynomial(signers3, secret, void 0, rng2);
+        const sp = generateSecretPolynomial(signers7, secret, void 0, rng2);
         const commitmentBytes = sp.commitment.map(serializePoint);
         const secretShares = {};
         const verifyingShares = {};
@@ -36789,7 +36789,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         }
         return {
           public: {
-            signers: { min: signers3.min, max: signers3.max },
+            signers: { min: signers7.min, max: signers7.max },
             commitments: commitmentBytes,
             verifyingShares
           },
@@ -36969,10 +36969,10 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         return Basic.verify(msg, R7, z2, PK);
       },
       // Combine multiple secret shares to restore secret
-      combineSecret(shares, signers3) {
+      combineSecret(shares, signers7) {
         aarray(shares, "shares");
-        validateSigners(signers3);
-        if (shares.length < signers3.min || shares.length > signers3.max)
+        validateSigners(signers7);
+        if (shares.length < signers7.min || shares.length > signers7.max)
           throw new Error("wrong secret shares array");
         const points = [];
         const seen = {};
@@ -36997,8 +36997,8 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         // Test RNG overrides still go through noble's non-zero scalar derivation; this is not a raw
         // "bytes become scalar" escape hatch.
         randomScalar: (rng2 = randomBytes2) => Fn.toBytes(genPointScalarPair(rng2).scalar),
-        generateSecretPolynomial: (signers3, secret, coeffs, rng2) => {
-          const res = generateSecretPolynomial(signers3, secret, coeffs, rng2);
+        generateSecretPolynomial: (signers7, secret, coeffs, rng2) => {
+          const res = generateSecretPolynomial(signers7, secret, coeffs, rng2);
           return { ...res, commitment: res.commitment.map(serializePoint) };
         }
       })
@@ -37014,15 +37014,15 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       init_curve();
       init_fft();
       init_modular();
-      validateSigners = (signers3, title = "signers") => {
-        validateObject(signers3, { min: "number", max: "number" }, {}, title);
-        asafenumber(signers3.min, title + ".min");
-        asafenumber(signers3.max, title + ".max");
-        if (signers3.min < 2 || signers3.max < 2 || signers3.min > signers3.max)
-          throw new Error("Wrong signers info: min=" + signers3.min + " max=" + signers3.max);
+      validateSigners = (signers7, title = "signers") => {
+        validateObject(signers7, { min: "number", max: "number" }, {}, title);
+        asafenumber(signers7.min, title + ".min");
+        asafenumber(signers7.max, title + ".max");
+        if (signers7.min < 2 || signers7.max < 2 || signers7.min > signers7.max)
+          throw new Error("Wrong signers info: min=" + signers7.min + " max=" + signers7.max);
       };
-      validateCommitmentsNum = (signers3, len) => {
-        if (len < signers3.min || len > signers3.max)
+      validateCommitmentsNum = (signers7, len) => {
+        if (len < signers7.min || len > signers7.max)
           throw new Error("Wrong number of commitments=" + len);
       };
       AggErr = class extends Error {
@@ -38804,7 +38804,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           extraEntropy: e29
         });
       }
-      function signRecoverable2(h6, d19, e29) {
+      function signRecoverable3(h6, d19, e29) {
         if (!isPrivate(d19)) {
           throw new Error(THROW_BAD_PRIVATE);
         }
@@ -38900,7 +38900,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       exports.privateSub = privateSub;
       exports.recover = recover;
       exports.sign = sign;
-      exports.signRecoverable = signRecoverable2;
+      exports.signRecoverable = signRecoverable3;
       exports.signSchnorr = signSchnorr;
       exports.verify = verify2;
       exports.verifySchnorr = verifySchnorr;
@@ -38956,8 +38956,8 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       exports.bound = void 0;
       var core = __importStar(require_dist2());
       var bitcoinjs_1 = require_bitcoinjs2();
-      var ecc2 = __importStar(require_dist5());
-      exports.bound = core.DescriptorsFactory((0, bitcoinjs_1.createBitcoinjsLib)(ecc2));
+      var ecc6 = __importStar(require_dist5());
+      exports.bound = core.DescriptorsFactory((0, bitcoinjs_1.createBitcoinjsLib)(ecc6));
     }
   });
 
@@ -39011,8 +39011,8 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       Object.defineProperty(exports, "createBitcoinjsLib", { enumerable: true, get: function() {
         return bitcoinjs_1.createBitcoinjsLib;
       } });
-      var ecc2 = __importStar(require_dist5());
-      exports.ecc = ecc2;
+      var ecc6 = __importStar(require_dist5());
+      exports.ecc = ecc6;
       var bitcoinjs_lib_1 = require_cjs5();
       Object.defineProperty(exports, "Psbt", { enumerable: true, get: function() {
         return bitcoinjs_lib_1.Psbt;
@@ -39031,8 +39031,8 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       function isBitcoinLib(maybeBitcoinLib) {
         return !!maybeBitcoinLib && typeof maybeBitcoinLib === "object" && "payments" in maybeBitcoinLib && "script" in maybeBitcoinLib;
       }
-      function DescriptorsFactory(eccOrBitcoinLib = ecc2) {
-        const bitcoinLib = isBitcoinLib(eccOrBitcoinLib) ? eccOrBitcoinLib : (0, bitcoinjs_1.createBitcoinjsLib)(eccOrBitcoinLib || ecc2);
+      function DescriptorsFactory(eccOrBitcoinLib = ecc6) {
+        const bitcoinLib = isBitcoinLib(eccOrBitcoinLib) ? eccOrBitcoinLib : (0, bitcoinjs_1.createBitcoinjsLib)(eccOrBitcoinLib || ecc6);
         return core.DescriptorsFactory(bitcoinLib);
       }
       function getLedgerModule() {
@@ -43207,7 +43207,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         }
         return secp256k12.secp256k1.sign(h6, d19, { extraEntropy: e29 }).toCompactRawBytes();
       }
-      function signRecoverable2(h6, d19, e29) {
+      function signRecoverable3(h6, d19, e29) {
         if (!isPrivate(d19)) {
           throw new Error(THROW_BAD_PRIVATE);
         }
@@ -43292,7 +43292,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       exports.privateSub = privateSub;
       exports.recover = recover;
       exports.sign = sign;
-      exports.signRecoverable = signRecoverable2;
+      exports.signRecoverable = signRecoverable3;
       exports.signSchnorr = signSchnorr;
       exports.verify = verify2;
       exports.verifySchnorr = verifySchnorr;
@@ -44794,7 +44794,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       exports.AppClient = exports.PartialSignature = void 0;
       var descriptors_1 = require_dist6();
       var secp256k12 = __importStar(require_dist7());
-      var { Output: Output2 } = (0, descriptors_1.DescriptorsFactory)(secp256k12);
+      var { Output: Output6 } = (0, descriptors_1.DescriptorsFactory)(secp256k12);
       var bitcoinjs_lib_1 = require_cjs5();
       var bip32_1 = require_bip322();
       var clientCommands_1 = require_clientCommands();
@@ -45082,7 +45082,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           let thirdPartyValidationApplicable = true;
           let thirdPartyGeneratedAddress;
           try {
-            thirdPartyGeneratedAddress = new Output2({
+            thirdPartyGeneratedAddress = new Output6({
               descriptor: expression,
               network
             }).getAddress();
@@ -45441,8 +45441,8 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           throw new Error(`Error: change passed for descriptor without multipath`);
       }
       function outputFromDescriptor({ descriptor, network, change, index, legacyOutput }) {
-        const Output2 = legacyOutput ?? (0, descriptors_1.getOutputConstructorOrThrow)();
-        return new Output2({
+        const Output6 = legacyOutput ?? (0, descriptors_1.getOutputConstructorOrThrow)();
+        return new Output6({
           descriptor,
           ...descriptor.includes("*") && index !== void 0 ? { index } : {},
           ...change !== void 0 ? { change } : {},
@@ -45541,7 +45541,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       async function policyForPsbtInput({ getMasterFingerprint, getAccountXpub, knownPolicies, network, psbt, index, legacyOutput }) {
         const bitcoinLib = (0, bitcoinLib_1.getBitcoinLibOrThrow)();
         psbt = (0, psbt_1.toPsbt)(psbt);
-        const Output2 = legacyOutput ?? (0, descriptors_1.getOutputConstructorOrThrow)();
+        const Output6 = legacyOutput ?? (0, descriptors_1.getOutputConstructorOrThrow)();
         const { Transaction: Transaction2 } = bitcoinLib;
         const input = psbt.data.inputs[index];
         if (!input)
@@ -45624,7 +45624,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
                     descriptor = descriptor.replace(new RegExp(`@${i20}`, "g"), keyRoot);
                   }
                   if (descriptor) {
-                    const policyScriptPubKey = new Output2({
+                    const policyScriptPubKey = new Output6({
                       descriptor,
                       network
                     }).getScriptPubKey();
@@ -59131,7 +59131,7 @@ ${ge(n19)}`;
   var U4 = ({ deviceModelDataSource: h6, loggerServiceFactory: e29, apduSenderServiceFactory: i20, apduReceiverServiceFactory: t29 }) => new R6(h6, e29, i20, t29);
 
   // entry.mjs
-  var ledgerApi2 = __toESM(require_ledger2(), 1);
+  var ledgerApi6 = __toESM(require_ledger2(), 1);
   var bitcoinApi = __toESM(require_main(), 1);
 
   // ../../app/node_modules/@ledgerhq/hw-transport/lib-es/Transport.js
@@ -59697,6 +59697,9 @@ ${ge(n19)}`;
   };
 
   // ../../app/src/wallet/core.mjs
+  init_shim();
+
+  // ../../app/src/wallet/base.mjs
   init_shim();
   var import_descriptors = __toESM(require_dist6(), 1);
   var ecc = __toESM(require_dist5(), 1);
@@ -65694,7 +65697,7 @@ ${ge(n19)}`;
     "Witness script"
   );
 
-  // ../../app/src/wallet/core.mjs
+  // ../../app/src/wallet/base.mjs
   var ledgerApi = __toESM(require_ledger2(), 1);
 
   // ../js/verify.mjs
@@ -66776,16 +66779,16 @@ ${ge(n19)}`;
     if (attestors.length < threshold) return { ok: false, reason: `the list names ${attestors.length} attestor(s) but requires ${threshold}`, signers: [] };
     const statement = attestationStatement(entry);
     const permitted = new Set(attestors);
-    const signers3 = /* @__PURE__ */ new Set();
+    const signers7 = /* @__PURE__ */ new Set();
     for (const a29 of entry.attestations ?? []) {
       const address = String(a29?.address ?? "").trim();
-      if (!permitted.has(address)) return { ok: false, reason: `entry ${entry.index} is attested by ${address || "nobody"}, who is not a listed attestor`, signers: [...signers3] };
+      if (!permitted.has(address)) return { ok: false, reason: `entry ${entry.index} is attested by ${address || "nobody"}, who is not a listed attestor`, signers: [...signers7] };
       const r11 = verifyMembership({ address, signature: String(a29?.signature ?? ""), message: statement, hrp });
-      if (!r11.valid) return { ok: false, reason: `entry ${entry.index}: ${address}'s attestation does not verify \u2014 ${r11.reason}`, signers: [...signers3] };
-      signers3.add(address);
+      if (!r11.valid) return { ok: false, reason: `entry ${entry.index}: ${address}'s attestation does not verify \u2014 ${r11.reason}`, signers: [...signers7] };
+      signers7.add(address);
     }
-    if (signers3.size < threshold) return { ok: false, reason: `entry ${entry.index} has ${signers3.size} valid attestation(s) from distinct attestors, needs ${threshold}`, signers: [...signers3] };
-    return { ok: true, reason: "", signers: [...signers3] };
+    if (signers7.size < threshold) return { ok: false, reason: `entry ${entry.index} has ${signers7.size} valid attestation(s) from distinct attestors, needs ${threshold}`, signers: [...signers7] };
+    return { ok: true, reason: "", signers: [...signers7] };
   }
   function chainIsIntact(entries, instance2 = null) {
     let expected14 = ZERO_PREV;
@@ -66828,7 +66831,7 @@ ${ge(n19)}`;
     return { permitted: true, reason: "" };
   }
 
-  // ../../app/src/wallet/core.mjs
+  // ../../app/src/wallet/base.mjs
   var NETWORKS = {
     mainnet: { network: import_descriptors.networks.bitcoin, coin: 0 },
     testnet4: { network: import_descriptors.networks.testnet, coin: 1 },
@@ -66846,11 +66849,30 @@ ${ge(n19)}`;
     const witness = script.length >= 4 && script.length <= 42 && (script[0] === 0 || script[0] >= 81 && script[0] <= 96) && script[1] === script.length - 2;
     return BigInt(3 * (8 + 1 + script.length + (witness ? 67 : 148)));
   }
+  function toBase647(bytes2) {
+    let bin = "";
+    for (const b8 of bytes2) bin += String.fromCharCode(b8);
+    return btoa(bin);
+  }
+  function fromHex7(hex2) {
+    return Uint8Array.from(hex2.match(/../g).map((x8) => parseInt(x8, 16)));
+  }
+  function toHex7(bytes2) {
+    let s23 = "";
+    for (const b8 of bytes2) s23 += b8.toString(16).padStart(2, "0");
+    return s23;
+  }
+
+  // ../../app/src/wallet/keys.mjs
+  init_shim();
+  var import_descriptors2 = __toESM(require_dist6(), 1);
+  var ecc2 = __toESM(require_dist5(), 1);
+  var ledgerApi2 = __toESM(require_ledger2(), 1);
   function readXpub(text) {
     const t29 = String(text ?? "").trim();
-    for (const net of [import_descriptors.networks.bitcoin, import_descriptors.networks.testnet]) {
+    for (const net of [import_descriptors2.networks.bitcoin, import_descriptors2.networks.testnet]) {
       try {
-        return { node: import_descriptors.BIP32.fromBase58(t29, net), network: net };
+        return { node: import_descriptors2.BIP32.fromBase58(t29, net), network: net };
       } catch {
       }
     }
@@ -66873,71 +66895,75 @@ ${ge(n19)}`;
     const k8 = String(key ?? "").toLowerCase();
     return (c25?.cosigner_xpubs ?? []).find((x8) => keyFromXpub(x8) === k8) ?? null;
   }
-  async function coinSource(chain, coin) {
-    const txHex = await chain.txHex(coin.txid);
-    let source;
-    try {
-      source = Transaction.fromHex(String(txHex).trim());
-    } catch {
-      throw new Error("the block explorer's record of a coin can't be read \u2014 refusing, nothing was signed");
-    }
-    const output2 = source.outs[coin.vout];
-    if (source.getId() !== coin.txid || !output2 || BigInt(output2.value) !== BigInt(coin.value)) {
-      throw new Error("the block explorer's figures for a coin don't agree with the coin itself \u2014 refusing, nothing was signed");
-    }
-    return txHex;
+  async function signStatementWith(account, statement) {
+    if (account.kind !== "ledger") return signStatement(account, statement);
+    const sig = await account.useLedger((session) => ledgerApi2.signMessage({ descriptor: `wpkh(${account.keyExpression})`, session, message: statement }));
+    return typeof sig === "string" ? sig : toBase647(sig);
   }
-  async function buildSend({ account, chain, to, amount, feeRate, policies = [] }) {
-    const net = account.network;
-    if (!Number.isFinite(feeRate) || feeRate < 1 || feeRate > 1e3) {
-      throw new Error("fee rate must be between 1 and 1000 sats per vbyte");
-    }
-    let dest;
-    try {
-      dest = new import_descriptors.Output({ descriptor: `addr(${String(to).trim()})`, network: net });
-    } catch {
-      throw new Error("that is not an address on this network");
-    }
-    const everyCoin = (await chain.utxos(account.address)).filter((c25) => c25.confirmed);
-    if (everyCoin.length === 0) throw new Error("there is no confirmed money to send yet");
-    const coins = worthSpending(everyCoin, account.output.inputWeight(true, "DANGEROUSLY_USE_FAKE_SIGNATURES"), feeRate);
-    if (coins.length === 0) throw new Error(TOO_SMALL);
-    const inputTotal = coins.reduce((s23, c25) => s23 + BigInt(c25.value), 0n);
-    const sendAll = amount === "all";
-    if (!sendAll && (typeof amount !== "bigint" || amount <= 0n)) throw new Error("amount must be a positive number of sats");
-    const inWeight = account.output.inputWeight(true, "DANGEROUSLY_USE_FAKE_SIGNATURES");
-    const weightOf = (withChange) => 44 + coins.length * inWeight + dest.outputWeight() + (withChange ? account.output.outputWeight() : 0);
-    const feeFor = (withChange) => BigInt(Math.ceil(weightOf(withChange) / 4 * feeRate));
-    let sent, change, fee;
-    if (sendAll) {
-      fee = feeFor(false);
-      sent = inputTotal - fee;
-      change = 0n;
-    } else {
-      fee = feeFor(true);
-      sent = amount;
-      change = inputTotal - amount - fee;
-      if (change >= 0n && change < DUST_SATS) {
-        fee = inputTotal - amount;
-        change = 0n;
+  function signStatement(account, statement) {
+    const node = account.signer().derivePath(account.path);
+    const { signature: signature2, recoveryId } = ecc2.signRecoverable(messageHash(statement), node.privateKey);
+    const out = new Uint8Array(65);
+    out[0] = 31 + recoveryId;
+    out.set(signature2, 1);
+    return toBase647(out);
+  }
+  function ledgerOriginPath(network = "mainnet") {
+    const { coin } = typeof network === "string" ? NETWORKS[network] : network;
+    return `/84'/${coin}'/0'`;
+  }
+  async function readLedgerAccount(session, network = "mainnet") {
+    return ledgerApi2.keyExpression({ session, originPath: ledgerOriginPath(network), keyPath: "/0/0" });
+  }
+  async function checkLedgerKey({ account, network, now = /* @__PURE__ */ new Date() }) {
+    if (account.kind !== "ledger") throw new Error("this wallet's key is not on a Ledger");
+    const statement = `Crowdlock key check ${now.toISOString().slice(0, 10)}`;
+    return account.useLedger(async (session) => {
+      const keyExpression2 = await readLedgerAccount(session, network);
+      if (keyExpression2 !== account.keyExpression) {
+        return { ok: false, reason: "This Ledger gives a different account from the one this wallet uses." };
       }
-    }
-    if (sent < DUST_SATS) throw new Error("that is too little to send \u2014 it would be stuck as dust");
-    if (change < 0n) throw new Error("there is not enough money for that amount plus the fee");
-    if (fee * 10n > sent) throw new Error("the fee would be more than a tenth of the amount \u2014 refusing");
-    const psbt = new import_descriptors.Psbt({ network: net });
-    const finalizers = [];
-    for (const c25 of coins) {
-      const txHex = await coinSource(chain, c25);
-      finalizers.push(account.output.updatePsbtAsInput({ psbt, txHex, vout: c25.vout }));
-    }
-    dest.updatePsbtAsOutput({ psbt, value: sent });
-    if (change > 0n) account.output.updatePsbtAsOutput({ psbt, value: change });
-    await signWith(account, psbt, policies);
-    for (const finalize2 of finalizers) finalize2({ psbt });
-    const tx = psbt.extractTransaction();
-    return { hex: tx.toHex(), txid: tx.getId(), fee, sent, change };
+      const sig = await ledgerApi2.signMessage({ descriptor: `wpkh(${account.keyExpression})`, session, message: statement });
+      const signature2 = typeof sig === "string" ? sig : toBase647(sig);
+      const r11 = verifyMembership({ address: account.address, signature: signature2, message: statement, hrp: account.network.bech32 });
+      if (!r11.valid) return { ok: false, reason: `The signature didn't check out (${r11.reason}).` };
+      return { ok: true, fingerprint: account.fingerprint, address: account.address, statement };
+    });
   }
+  function ledgerAccountFrom({ keyExpression: keyExpression2, network = "mainnet", useLedger }) {
+    const { network: net } = typeof network === "string" ? NETWORKS[network] : network;
+    const m15 = /^\[([0-9a-f]{8})(\/[0-9'h/]+)\]([xt]pub[1-9A-HJ-NP-Za-km-z]+)\/0\/0$/.exec(String(keyExpression2 ?? ""));
+    if (!m15) throw new Error("that is not a Ledger account the app understands");
+    const x8 = readXpub(m15[3]);
+    if (!x8) throw new Error("that Ledger account's xpub can't be read");
+    const output2 = new import_descriptors2.Output({ descriptor: `wpkh(${keyExpression2})`, network: net });
+    return {
+      kind: "ledger",
+      network: net,
+      fingerprint: m15[1],
+      path: `m${m15[2]}/0/0`,
+      publicKey: toHex7(x8.node.derive(0).derive(0).publicKey),
+      address: output2.getAddress(),
+      keyExpression: keyExpression2,
+      output: output2,
+      useLedger,
+      signer: () => {
+        throw new Error("this wallet's key is on a Ledger");
+      }
+    };
+  }
+
+  // ../../app/src/wallet/sending.mjs
+  init_shim();
+  var import_descriptors4 = __toESM(require_dist6(), 1);
+  var ecc4 = __toESM(require_dist5(), 1);
+  var ledgerApi4 = __toESM(require_ledger2(), 1);
+
+  // ../../app/src/wallet/locks.mjs
+  init_shim();
+  var import_descriptors3 = __toESM(require_dist6(), 1);
+  var ecc3 = __toESM(require_dist5(), 1);
+  var ledgerApi3 = __toESM(require_ledger2(), 1);
   var YEAR2 = 365.25 * 86400;
   var DAY3 = 86400;
   var PUBKEY = /^0[23][0-9a-f]{64}$/;
@@ -66957,11 +66983,11 @@ ${ge(n19)}`;
   async function signWith(account, psbt, policies = []) {
     if (account.kind === "ledger") {
       return account.useLedger(async (session) => {
-        for (const p36 of policies) await ledgerApi.registerPolicy({ descriptor: p36.descriptor, session, name: p36.name });
-        await ledgerApi.signers.sign({ psbt, session });
+        for (const p36 of policies) await ledgerApi3.registerPolicy({ descriptor: p36.descriptor, session, name: p36.name });
+        await ledgerApi3.signers.sign({ psbt, session });
       });
     }
-    import_descriptors.signers.signBIP32({ psbt, masterNode: account.signer() });
+    import_descriptors3.signers.signBIP32({ psbt, masterNode: account.signer() });
   }
   function lockFor({ account, cosignerPubkey, locktime }) {
     const cosigner = String(cosignerPubkey ?? "").toLowerCase();
@@ -66970,7 +66996,7 @@ ${ge(n19)}`;
       throw new Error("the co-signer key is your own key \u2014 that would not be a lock");
     }
     if (!Number.isInteger(locktime) || locktime < 5e8) throw new Error("a lock's date must be a date");
-    const output2 = new import_descriptors.Output({ descriptor: lockDescriptor({ ...account, kind: "words" }, cosigner, locktime), network: account.network });
+    const output2 = new import_descriptors3.Output({ descriptor: lockDescriptor({ ...account, kind: "words" }, cosigner, locktime), network: account.network });
     return { address: output2.getAddress(), ownerPubkey: account.publicKey, cosignerPubkey: cosigner, locktime };
   }
   async function buildLock({ account, chain, lock, feeRate, amount = "all" }) {
@@ -67007,10 +67033,10 @@ ${ge(n19)}`;
     const check15 = lockFor({ account, cosignerPubkey: lock.cosignerPubkey, locktime: lock.locktime });
     if (check15.address !== lock.address) throw new Error("those lock terms do not make that address \u2014 refusing");
     const descriptor = lockDescriptor(account, check15.cosignerPubkey, lock.locktime, lock.cosignerXpub);
-    const out = new import_descriptors.Output({ descriptor, network: net, signersPubKeys: [fromHex7(account.publicKey)] });
+    const out = new import_descriptors3.Output({ descriptor, network: net, signersPubKeys: [fromHex7(account.publicKey)] });
     let dest;
     try {
-      dest = new import_descriptors.Output({ descriptor: `addr(${String(to ?? account.address).trim()})`, network: net });
+      dest = new import_descriptors3.Output({ descriptor: `addr(${String(to ?? account.address).trim()})`, network: net });
     } catch {
       throw new Error("that is not an address on this network");
     }
@@ -67024,7 +67050,7 @@ ${ge(n19)}`;
     const sent = total - fee;
     if (sent < DUST_SATS) throw new Error("the fee would take almost all of it \u2014 too little to bring home");
     if (fee * 2n > total) throw new Error("the fee would be more than half of the lock \u2014 refusing");
-    const psbt = new import_descriptors.Psbt({ network: net });
+    const psbt = new import_descriptors3.Psbt({ network: net });
     const finalizers = [];
     for (const c25 of coins) {
       finalizers.push(out.updatePsbtAsInput({ psbt, txHex: await coinSource(chain, c25), vout: c25.vout }));
@@ -67035,6 +67061,79 @@ ${ge(n19)}`;
     const tx = psbt.extractTransaction();
     return { hex: tx.toHex(), txid: tx.getId(), fee, sent };
   }
+
+  // ../../app/src/wallet/sending.mjs
+  async function coinSource(chain, coin) {
+    const txHex = await chain.txHex(coin.txid);
+    let source;
+    try {
+      source = Transaction.fromHex(String(txHex).trim());
+    } catch {
+      throw new Error("the block explorer's record of a coin can't be read \u2014 refusing, nothing was signed");
+    }
+    const output2 = source.outs[coin.vout];
+    if (source.getId() !== coin.txid || !output2 || BigInt(output2.value) !== BigInt(coin.value)) {
+      throw new Error("the block explorer's figures for a coin don't agree with the coin itself \u2014 refusing, nothing was signed");
+    }
+    return txHex;
+  }
+  async function buildSend({ account, chain, to, amount, feeRate, policies = [] }) {
+    const net = account.network;
+    if (!Number.isFinite(feeRate) || feeRate < 1 || feeRate > 1e3) {
+      throw new Error("fee rate must be between 1 and 1000 sats per vbyte");
+    }
+    let dest;
+    try {
+      dest = new import_descriptors4.Output({ descriptor: `addr(${String(to).trim()})`, network: net });
+    } catch {
+      throw new Error("that is not an address on this network");
+    }
+    const everyCoin = (await chain.utxos(account.address)).filter((c25) => c25.confirmed);
+    if (everyCoin.length === 0) throw new Error("there is no confirmed money to send yet");
+    const coins = worthSpending(everyCoin, account.output.inputWeight(true, "DANGEROUSLY_USE_FAKE_SIGNATURES"), feeRate);
+    if (coins.length === 0) throw new Error(TOO_SMALL);
+    const inputTotal = coins.reduce((s23, c25) => s23 + BigInt(c25.value), 0n);
+    const sendAll = amount === "all";
+    if (!sendAll && (typeof amount !== "bigint" || amount <= 0n)) throw new Error("amount must be a positive number of sats");
+    const inWeight = account.output.inputWeight(true, "DANGEROUSLY_USE_FAKE_SIGNATURES");
+    const weightOf = (withChange) => 44 + coins.length * inWeight + dest.outputWeight() + (withChange ? account.output.outputWeight() : 0);
+    const feeFor = (withChange) => BigInt(Math.ceil(weightOf(withChange) / 4 * feeRate));
+    let sent, change, fee;
+    if (sendAll) {
+      fee = feeFor(false);
+      sent = inputTotal - fee;
+      change = 0n;
+    } else {
+      fee = feeFor(true);
+      sent = amount;
+      change = inputTotal - amount - fee;
+      if (change >= 0n && change < DUST_SATS) {
+        fee = inputTotal - amount;
+        change = 0n;
+      }
+    }
+    if (sent < DUST_SATS) throw new Error("that is too little to send \u2014 it would be stuck as dust");
+    if (change < 0n) throw new Error("there is not enough money for that amount plus the fee");
+    if (fee * 10n > sent) throw new Error("the fee would be more than a tenth of the amount \u2014 refusing");
+    const psbt = new import_descriptors4.Psbt({ network: net });
+    const finalizers = [];
+    for (const c25 of coins) {
+      const txHex = await coinSource(chain, c25);
+      finalizers.push(account.output.updatePsbtAsInput({ psbt, txHex, vout: c25.vout }));
+    }
+    dest.updatePsbtAsOutput({ psbt, value: sent });
+    if (change > 0n) account.output.updatePsbtAsOutput({ psbt, value: change });
+    await signWith(account, psbt, policies);
+    for (const finalize2 of finalizers) finalize2({ psbt });
+    const tx = psbt.extractTransaction();
+    return { hex: tx.toHex(), txid: tx.getId(), fee, sent, change };
+  }
+
+  // ../../app/src/wallet/commitments.mjs
+  init_shim();
+  var import_descriptors5 = __toESM(require_dist6(), 1);
+  var ecc5 = __toESM(require_dist5(), 1);
+  var ledgerApi5 = __toESM(require_ledger2(), 1);
   function proposalMarker(proposalHash) {
     const out = new Uint8Array(34);
     out[0] = 106;
@@ -67061,18 +67160,18 @@ ${ge(n19)}`;
     const check15 = lockFor({ account, cosignerPubkey: lock.cosignerPubkey, locktime: lock.locktime });
     if (check15.address !== lock.address) throw new Error("those lock terms do not make that address \u2014 refusing");
     const descriptor = lockDescriptor(account, check15.cosignerPubkey, lock.locktime, lock.cosignerXpub);
-    const out = new import_descriptors.Output({
+    const out = new import_descriptors5.Output({
       descriptor,
       network: net,
       signersPubKeys: [fromHex7(account.publicKey), fromHex7(check15.cosignerPubkey)]
     });
     let dest;
     try {
-      dest = new import_descriptors.Output({ descriptor: `addr(${String(destination).trim()})`, network: net });
+      dest = new import_descriptors5.Output({ descriptor: `addr(${String(destination).trim()})`, network: net });
     } catch {
       throw new Error("the proposal's destination is not an address on this network");
     }
-    const back = new import_descriptors.Output({ descriptor: lockDescriptor({ ...account, kind: "words" }, check15.cosignerPubkey, lock.locktime), network: net });
+    const back = new import_descriptors5.Output({ descriptor: lockDescriptor({ ...account, kind: "words" }, check15.cosignerPubkey, lock.locktime), network: net });
     const value2 = BigInt(coin.value);
     const destinationScript = dest.getScriptPubKey();
     const lockScriptLength = out.getWitnessScript()?.length;
@@ -67102,7 +67201,7 @@ ${ge(n19)}`;
       const btc = (v21) => (Number(v21) / 1e8).toFixed(8).replace(/0+$/, "").replace(/\.$/, "");
       throw new Error(`the fee (${fee} sats at ${feeRate} sat/vB) would be more than ${maxFee * 100}% of what is committed. At this fee rate the smallest commitment is about ${btc(smallest)} BTC \u2014 commit at least that, or choose a slower fee`);
     }
-    const psbt = new import_descriptors.Psbt({ network: net });
+    const psbt = new import_descriptors5.Psbt({ network: net });
     out.updatePsbtAsInput({ psbt, txHex: await coinSource(chain, coin), vout: coin.vout });
     dest.updatePsbtAsOutput({ psbt, value: committed });
     if (remainder > 0n) back.updatePsbtAsOutput({ psbt, value: remainder });
@@ -67182,7 +67281,7 @@ ${ge(n19)}`;
       try {
         const decoded = script_exports.signature.decode(w8[2]);
         const sighash = tx.hashForWitnessV0(0, script, value2, Transaction.SIGHASH_ALL);
-        sigOk = decoded.hashType === Transaction.SIGHASH_ALL && ecc.verify(sighash, fromHex7(L3.owner_pubkey), decoded.signature, true);
+        sigOk = decoded.hashType === Transaction.SIGHASH_ALL && ecc5.verify(sighash, fromHex7(L3.owner_pubkey), decoded.signature, true);
       } catch {
         sigOk = false;
       }
@@ -67313,76 +67412,6 @@ ${ge(n19)}`;
     }
     if (!seen) return null;
     return { sats: Number(tx.outs[0].value), confirmed: !!seen.status?.confirmed };
-  }
-  async function signStatementWith(account, statement) {
-    if (account.kind !== "ledger") return signStatement(account, statement);
-    const sig = await account.useLedger((session) => ledgerApi.signMessage({ descriptor: `wpkh(${account.keyExpression})`, session, message: statement }));
-    return typeof sig === "string" ? sig : toBase647(sig);
-  }
-  function signStatement(account, statement) {
-    const node = account.signer().derivePath(account.path);
-    const { signature: signature2, recoveryId } = ecc.signRecoverable(messageHash(statement), node.privateKey);
-    const out = new Uint8Array(65);
-    out[0] = 31 + recoveryId;
-    out.set(signature2, 1);
-    return toBase647(out);
-  }
-  function toBase647(bytes2) {
-    let bin = "";
-    for (const b8 of bytes2) bin += String.fromCharCode(b8);
-    return btoa(bin);
-  }
-  function fromHex7(hex2) {
-    return Uint8Array.from(hex2.match(/../g).map((x8) => parseInt(x8, 16)));
-  }
-  function toHex7(bytes2) {
-    let s23 = "";
-    for (const b8 of bytes2) s23 += b8.toString(16).padStart(2, "0");
-    return s23;
-  }
-  function ledgerOriginPath(network = "mainnet") {
-    const { coin } = typeof network === "string" ? NETWORKS[network] : network;
-    return `/84'/${coin}'/0'`;
-  }
-  async function readLedgerAccount(session, network = "mainnet") {
-    return ledgerApi.keyExpression({ session, originPath: ledgerOriginPath(network), keyPath: "/0/0" });
-  }
-  async function checkLedgerKey({ account, network, now = /* @__PURE__ */ new Date() }) {
-    if (account.kind !== "ledger") throw new Error("this wallet's key is not on a Ledger");
-    const statement = `Crowdlock key check ${now.toISOString().slice(0, 10)}`;
-    return account.useLedger(async (session) => {
-      const keyExpression2 = await readLedgerAccount(session, network);
-      if (keyExpression2 !== account.keyExpression) {
-        return { ok: false, reason: "This Ledger gives a different account from the one this wallet uses." };
-      }
-      const sig = await ledgerApi.signMessage({ descriptor: `wpkh(${account.keyExpression})`, session, message: statement });
-      const signature2 = typeof sig === "string" ? sig : toBase647(sig);
-      const r11 = verifyMembership({ address: account.address, signature: signature2, message: statement, hrp: account.network.bech32 });
-      if (!r11.valid) return { ok: false, reason: `The signature didn't check out (${r11.reason}).` };
-      return { ok: true, fingerprint: account.fingerprint, address: account.address, statement };
-    });
-  }
-  function ledgerAccountFrom({ keyExpression: keyExpression2, network = "mainnet", useLedger }) {
-    const { network: net } = typeof network === "string" ? NETWORKS[network] : network;
-    const m15 = /^\[([0-9a-f]{8})(\/[0-9'h/]+)\]([xt]pub[1-9A-HJ-NP-Za-km-z]+)\/0\/0$/.exec(String(keyExpression2 ?? ""));
-    if (!m15) throw new Error("that is not a Ledger account the app understands");
-    const x8 = readXpub(m15[3]);
-    if (!x8) throw new Error("that Ledger account's xpub can't be read");
-    const output2 = new import_descriptors.Output({ descriptor: `wpkh(${keyExpression2})`, network: net });
-    return {
-      kind: "ledger",
-      network: net,
-      fingerprint: m15[1],
-      path: `m${m15[2]}/0/0`,
-      publicKey: toHex7(x8.node.derive(0).derive(0).publicKey),
-      address: output2.getAddress(),
-      keyExpression: keyExpression2,
-      output: output2,
-      useLedger,
-      signer: () => {
-        throw new Error("this wallet's key is on a Ledger");
-      }
-    };
   }
 
   // ../../app/src/wallet/esplora.mjs
@@ -67827,7 +67856,7 @@ ${ge(n19)}`;
     const store = loadStore();
     let session;
     try {
-      session = await withTimeout2(ledgerApi2.connect({
+      session = await withTimeout2(ledgerApi6.connect({
         driver: {
           transport: Promise.resolve({ default: transportFor(dmk(), Transport) }),
           bitcoinApi: Promise.resolve(bitcoinApi),

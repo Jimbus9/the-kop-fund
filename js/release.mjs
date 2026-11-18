@@ -26,9 +26,8 @@ import { canonicalAddress } from "./verify.mjs";
  * Was this input opened with the co-signer's signature, in the standard shape?
  * A label only. earlyReleases does not rely on it: before a lock's date the
  * owner alone cannot open it at all, so every spend before the date was
- * co-signed, whatever its witness looks like. (Until 17 November 2026 a spend
- * whose branch selector was the byte 00 rather than empty, which Bitcoin's
- * rules accept in a block, was not read as co-signed and never showed.)
+ * co-signed, whatever its witness looks like (a branch selector of 00 rather
+ * than empty, say, which Bitcoin's rules accept in a block).
  */
 export function isCoSigned(vin) {
   const w = vin?.witness;
@@ -46,8 +45,8 @@ export function isCoSigned(vin) {
  *            the explorer describes them, { txid: tx } (stampsFor in
  *            proposals.mjs). Without the Crowdlock's file nothing is listed.
  *
- * Until 17 November 2026 this only asked whether the file had an `add` line
- * for the address, so one unattested line made a release read as a purchase.
+ * An `add` line alone is not enough: one unattested line would make a
+ * release read as a purchase.
  */
 export function isListedDestination(address, destinations, { crowdlock = null, stamps = {}, at = Infinity, hrp } = {}) {
   const entries = Array.isArray(destinations?.entries) ? destinations.entries : [];
@@ -60,9 +59,8 @@ export function isListedDestination(address, destinations, { crowdlock = null, s
   if (!added) return false;
   // A revocation stops payments from when it was published. One stamped on
   // the chain after this spend doesn't make a payment made before it a
-  // release (OpenAI review 7: lawful past payments read as releases once the
-  // destination was later revoked). One with no readable stamp counts from
-  // the start, as before: when it was made can't be shown.
+  // release. One with no readable stamp counts from the start: when it was
+  // made can't be shown.
   if (mine.some((e) => {
     if (e.op !== "revoke" || !(e.index > added.index)) return false;
     const s = stampedAt(e, stamps?.[e.stamp] ?? null);
@@ -79,11 +77,8 @@ export function isListedDestination(address, destinations, { crowdlock = null, s
  * Does money paid to this address stay locked? True if it is the same lock
  * (the remainder of a part-commitment, as the app makes it), or a genuine lock
  * of the same owner on the register with no earlier date, whose own history
- * the record also reads.
- *
- * Until 17 November 2026 any lock the same owner's key made under any of the
- * Crowdlock's co-signer keys counted, on the register or not, so money could
- * hop into a lock nobody watched and leave it unseen.
+ * the record also reads. A lock off the register doesn't count: money could
+ * hop into a lock nobody watches and leave it unseen.
  */
 export function staysLocked(address, lock, { crowdlock, register, hrp }) {
   const a = String(address ?? "").toLowerCase();
@@ -106,8 +101,7 @@ function holdsNothing(o) {
 // lock's date (BIP 113), not when the spending block's own timestamp is. A
 // miner chooses that timestamp, up to about two hours ahead, so a co-signed
 // spend in a block stamped just after the date may still have been early.
-// Until 17 November 2026 the block's own timestamp was used (OpenAI review,
-// C-02). Spends whose block is stamped before the date are early whatever the
+// Spends whose block is stamped before the date are early whatever the
 // clock; those stamped within CLOCK_WINDOW after it need the network's clock,
 // read with clocksFor; beyond that they are not early.
 // ---------------------------------------------------------------------------
@@ -170,12 +164,10 @@ export async function clocksFor(lock, txs, getBlock) {
  *   - where it pays a destination, no more than a commitment may leave: the
  *     Crowdlock's max_commitment_fee of what it pays the destination;
  *   - where it pays none (all of it stays locked), no more than
- *     max_commitment_fee of what it spends, COUNTING the fees of every
- *     earlier such move out of this lock.
- * (Until 17 November 2026 each spend's fee was measured on its own against
- * what it spent, so a lock could be emptied as fees a slice at a time, each
- * slice going "back into the same lock", and 300 slices took 95% of it:
- * security loop, round 3.)
+ *     max_commitment_fee of what leaves this lock, COUNTING the fees of every
+ *     earlier such move out of it, and into it from the same owner's other
+ *     locks: measured one at a time, a lock could be emptied as fees a slice
+ *     at a time, each slice going "back into the same lock".
  * `paidTo` is the first output that is none of these, or null when the money
  * went as fee.
  */
@@ -198,9 +190,8 @@ export function earlyReleases(lock, txs, context = {}, now = Math.floor(Date.now
     const ins = Array.isArray(tx.vin) ? tx.vin : [];
     const outs = Array.isArray(tx.vout) ? tx.vout : [];
     const spent = ins.reduce((n, v) => n + (Number(v?.prevout?.value) || 0), 0);
-    // What came out of this lock itself: the base fees are judged against.
-    // Every input counted before, so coins added from outside made a bigger
-    // allowance (OpenAI review 7).
+    // What came out of this lock itself: the base fees are judged against,
+    // so coins added from outside don't make a bigger allowance.
     const fromHere = ins.reduce((n, v) => n + (String(v?.prevout?.scriptpubkey_address ?? "").toLowerCase() === address ? (Number(v?.prevout?.value) || 0) : 0), 0);
     const paid = outs.reduce((n, o) => n + (Number(o?.value) || 0), 0);
     const markers = outs.filter(holdsNothing).length;
@@ -208,7 +199,7 @@ export function earlyReleases(lock, txs, context = {}, now = Math.floor(Date.now
     const toDestinations = outs.reduce((n, o) => n + (o?.scriptpubkey_address && isListedDestination(o.scriptpubkey_address, destinations, { crowdlock, stamps, at, hrp }) ? (Number(o?.value) || 0) : 0), 0);
     // A move into this lock from another of the same owner's locks, paying no
     // destination: its fee counts here too, so money passed between two
-    // locks can't spend a fresh allowance in each (OpenAI review 7).
+    // locks can't spend a fresh allowance in each.
     if (toDestinations === 0 && !ins.some((v) => String(v?.prevout?.scriptpubkey_address ?? "").toLowerCase() === address)
       && outs.some((o) => String(o?.scriptpubkey_address ?? "").toLowerCase() === address)
       && ins.length > 0 && ins.every((v) => staysLocked(v?.prevout?.scriptpubkey_address, { ...lock, locktime: 0 }, { crowdlock, register, hrp }))) {
@@ -248,9 +239,9 @@ export const MOST_PAGES = 40;
 /**
  * A lock's whole history, not just its newest page. Esplora answers
  * /address/<a>/txs with what is waiting (up to 50) and the newest 25
- * confirmed; /address/<a>/txs/chain/<last txid> gives the next 25. Until
- * 17 November 2026 only the first page was read, so 25 small payments to a
- * lock's address pushed an earlier release out of sight.
+ * confirmed; /address/<a>/txs/chain/<last txid> gives the next 25. Reading
+ * only the first, 25 small payments to a lock's address would push an
+ * earlier release out of sight.
  *
  *   first()      the first page
  *   after(txid)  the next page of confirmed history after this transaction
@@ -276,24 +267,22 @@ export async function readHistory(first, after, { mostPages = MOST_PAGES } = {})
 }
 
 // ---------------------------------------------------------------------------
-// Locks a reader has seen on a register (security loop, 17 November 2026).
+// Locks a reader has seen on a register.
 //
 // The record above is read from the chain, but WHICH locks it is read for
 // came from the register, which is a file its founder can write, and today
 // the founder is the co-signer. Taking a lock's record off the register, or
-// bending one digit of its date so it no longer reads as a lock, took its
-// early release off the record too: "no early releases", for a lock that was
-// released early. So a reader (the app on a phone, the register page in a
+// bending one digit of its date so it no longer reads as a lock, would take
+// its early release off the record too. So a reader (the app on a phone, the register page in a
 // browser) keeps what it has seen:
 //
 //   - the terms of the locks, up to LOCKS_REMEMBERED of them, so one that
 //     goes is still checked by name; and
 //   - how many locks there were and a running fingerprint of all of them in
 //     the register's order, so that ANY earlier record removed or changed
-//     shows, however long the register has grown. (Remembering terms alone
-//     was not enough: 500 newer records pushed an older lock out of memory
-//     while it was still listed, and it could then be removed unseen:
-//     round 3.) A register only ever grows at its end, like the destinations
+//     shows, however long the register has grown. (Terms alone are
+//     capped, so 500 newer records could push an older lock out of memory
+//     while it was still listed.) A register only ever grows at its end, like the destinations
 //     list; anything else is a rewrite, and a rewrite is never forgotten.
 // ---------------------------------------------------------------------------
 
@@ -371,14 +360,12 @@ export function locksSeen(ctx) {
 }
 
 // ---------------------------------------------------------------------------
-// The coins at an address, from its history (security loop, round 3).
+// The coins at an address, from its history.
 //
 // Public explorers refuse to list the coins at an address that holds more
 // than 500 ("Too many unspent transaction outputs"). Every lock's address is
-// published, so one payment of 501 tiny outputs to it made the lock
-// unreadable: its owner could not see it or take it home, the Crowdlock's
-// total could not be worked out, and a pile holding its commitment could not
-// be read by anyone. An address's history is paged, not capped that way, and
+// published, so one payment of 501 tiny outputs to it would make the lock
+// unreadable to everyone, its owner included. An address's history is paged, not capped that way, and
 // says the same thing: its coins are the outputs paying it that nothing in
 // the history has spent.
 // ---------------------------------------------------------------------------

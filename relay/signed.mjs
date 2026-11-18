@@ -51,7 +51,7 @@ function parse(txHex, lock) {
   // The owner's signature does not cover the input's own script, so anyone
   // can add one: the copy has another id, is still "signed", and the network
   // never takes it. Posted first it took the coin's place in the pile
-  // (security loop, 17 November 2026).
+  //.
   if (tx.ins[0].script.length !== 0) return { reason: "its input carries a script, which a spend of a lock never does — the network would not take it" };
   const w = tx.ins[0].witness;
   let script;
@@ -70,9 +70,9 @@ function parse(txHex, lock) {
 export function ownerSigned(record, coins) {
   const p = parse(record.tx, record.lock);
   if (!p.tx) return { ok: false, reason: p.reason };
-  // A commitment leaves the co-signer's place empty. Until 17 November 2026
-  // this was not asked, so copies of a member's real commitment with junk in
-  // that place still carried the owner's signature and used up the lock's places.
+  // A commitment leaves the co-signer's place empty: copies of a member's real
+  // commitment with junk in that place still carry the owner's signature, and
+  // would use up the lock's places.
   if (p.w[0].length !== 0) return { ok: false, reason: "the co-signer's place is not empty, so this is not a commitment" };
   // The payment names its proposal in its last output, inside what the owner
   // signed (spec/commitment-format.md). A record relabelled for another
@@ -112,15 +112,15 @@ export const ASKED_PER_PASS = 200;
 
 /**
  * One budget of explorer questions for one proposal in one pass, shared by
- * the commitment check and the completion check. Until 17 November 2026 each
- * had its own 200, so a proposal could cost 400 (OpenAI review, M-01).
+ * the commitment check and the completion check, so a proposal costs at most
+ * 200 questions, not 200 each.
  */
 export function explorerBudget(n = ASKED_PER_PASS) {
   // Some of it is kept back for completed payments. The commitment check
   // runs first and what it asks is decided by whoever posts to the relays:
   // junk naming 200 registered locks used every question, the completion
   // check got none, and the inbox recorded and sent no completed payment
-  // for as long as the junk was there (security loop, round 4).
+  // for as long as the junk was there.
   return { left: n, keptForCompletions: Math.min(KEPT_FOR_COMPLETIONS, Math.floor(n / 2)) };
 }
 export const KEPT_FOR_COMPLETIONS = 50;
@@ -205,7 +205,7 @@ export function coinsAt(chainApi, fetchImpl = fetch) {
       // than 500 (they answer 400). Anyone can send 501 tiny coins to a
       // lock's published address, and that lock's commitments could then
       // never be taken. Its history says the same thing, a page at a time
-      // (security loop, 17 November 2026).
+      //.
       else if (r.status === 400) {
         const page = async (path) => { const p = await ask(`${chainApi}/address/${address}/${path}`, {}, fetchImpl); if (!p.ok) throw new Error(String(p.status)); return p.json(); };
         const h = await readHistory(() => page("txs"), (last) => page(`txs/chain/${last}`));

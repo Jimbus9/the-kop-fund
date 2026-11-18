@@ -91,8 +91,7 @@ export function planLock({ crowdlock, register, member, years, now }) {
   if (cosigners.length === 0) return no("this Crowdlock has not published a co-signer key, so nobody can lock yet");
   // New locks use the newest key, the last in the list (spec/running-your-own.md,
   // "Changing the co-signer key"). Older keys stay listed only so that locks
-  // already made with them still count. This took the first until 17 November
-  // 2026, which was the same key only while the list held one.
+  // already made with them still count.
   const cosignerPubkey = cosigners[cosigners.length - 1];
 
   // The key behind a member is in their own signature, over the version of

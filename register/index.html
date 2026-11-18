@@ -169,7 +169,7 @@ import { stampsFor } from "../js/proposals.mjs";
 import { hrpFor, lockIsGenuine } from "../js/lockrecord.mjs";
 
 const el = (id) => document.getElementById(id);
-// What a register file says is text, never markup (security loop, round 4):
+// What a register file says is text, never markup:
 // with ?c= this page reads another site's register.
 const escText = (x) => String(x ?? "").replace(/[&<>"'`]/g, (ch) => `&#${ch.charCodeAt(0)};`);
 const fmtBtc = (sats) => (sats / 1e8).toFixed(8).replace(/0+$/, "").replace(/\.$/, "") || "0";
@@ -353,8 +353,8 @@ if (locks.length === 0) {
     seen.add(address);
     // A register is a file, and a file can say anything. A record is counted
     // only if it really is a lock of this Crowdlock: its address is the lock
-    // its own terms make, co-signed by this Crowdlock's key. Until 17 November
-    // 2026 this page counted whatever address a record named.
+    // its own terms make, co-signed by this Crowdlock's key, never whatever
+    // address a record names.
     const genuine = lockIsGenuine(lock, { crowdlock, register: data });
     if (!genuine.ok) { notLocks++; continue; }
     try {
@@ -401,7 +401,7 @@ if (locks.length === 0) {
   const MEMORY = `crowdlock.seenlocks.v1:${crowdlock.declaration.sha256}`;
   // What is kept: the terms of up to 500 locks, how many there were, and a
   // running fingerprint of all of them in order, so a record removed or
-  // changed further back than the terms kept still shows (round 3).
+  // changed further back than the terms kept still shows.
   let remembered = null;
   try { remembered = JSON.parse(localStorage.getItem(MEMORY) ?? "null"); } catch {}
   const watched = locksToWatch({ crowdlock, register: data, remembered });

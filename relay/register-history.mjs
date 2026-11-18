@@ -6,7 +6,7 @@
 //
 //   - where its register and its proposals live never changed: moving the
 //     register to a new file would have readers look at a different history
-//     while the old file stayed whole (OpenAI review 7);
+//     while the old file stayed whole;
 //   - its register only ever grew (js/history.mjs);
 //   - each lock added since 18 November 2026 kept the rules the inbox applies
 //     when it adds one: it names the Crowdlock's newest co-signer key as it

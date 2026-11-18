@@ -143,6 +143,7 @@
 // owner's half on the device, and checkCommitment checks it, as the app does.
 // This page adds no signing or transaction code.
 import { checkProposals, phaseOf, pilePath, checkPileShape, commitmentEventTemplate, commitmentFromEvent, PROPOSAL_TAG, proposalVersion, noticeIsGenuine, stillTakingCommitments, cleanRecord, relayOnlyCommitments, settleMargin, commitmentEligible } from "../js/proposals.mjs";
+import { readPile as readPileShared } from "../js/pile.mjs";
 import { memberAddressForOwnerKey } from "../js/verify.mjs";
 import { hrpFor, lockIsGenuine } from "../js/lockrecord.mjs";
 import { hasSigned, signedVersions, versionsOf } from "../js/crowdlock.mjs";
@@ -182,7 +183,7 @@ async function relayItems(hash) {
         const sub = relay.subscribe([{ kinds: [3713], [`#${PROPOSAL_TAG}`]: [hash], limit: 2000 }], {
           onevent(e) { const it = commitmentFromEvent(e, C.declaration.sha256, hash); // A commitment is told apart by its whole record, not its payment alone: a
           // stranger's copy with another lock or remainder beside the same payment must
-          // not take the real one's place (security loop, 17 November 2026).
+          // not take the real one's place.
           if (it) found.set(it.type === "commitment" ? JSON.stringify(cleanRecord(it.record) ?? it.record) : (it.tx ?? JSON.stringify(it.notice)), it); },
           oneose() { sub.close(); resolve(); },
         });
@@ -192,73 +193,19 @@ async function relayItems(hash) {
   return [...found.values()];
 }
 
-// Anybody can post a "declared dead" notice to the relays. Only one signed by
-// this Crowdlock's co-signer key counts; until 17 November 2026 this page
-// believed any, and took the commit button away.
-const genuine = (notice, p) => {
-  try { return noticeIsGenuine(notice, { crowdlock: C, hash: p.hash, hrp: hrpFor(C.network) ?? "bc", addressOf: memberAddressForOwnerKey }).ok === true; } catch { return false; }
-};
 
-/** The pile: the repository's record first, then the relays. Every commitment checked. */
+/** The pile, added up by the same module the app uses (js/pile.mjs). */
 async function readPile(p) {
   const chain = chainFor();
-  const items = [], inFile = new Set();
-  let notice = null;
-  // No pile yet is an empty pile; one that can't be read is said, not shown as nothing (OpenAI review 7).
-  let unreadable = null;
-  try {
-    const r = await fetch(`${BASE}${pilePath(C.register.proposals, p.hash)}`, { cache: "no-store" });
-    if (r.ok) {
-      const f = await r.json();
-      if (checkPileShape(f, p.hash).ok) {
-        for (const x of f.commitments) { items.push({ type: "commitment", record: x.record }); inFile.add(x.record.tx); }
-        if (f.notice && genuine(f.notice, p)) notice = f.notice;
-      } else unreadable = "the record of commitments isn't in its format";
-    } else if (r.status !== 404) unreadable = `the record of commitments couldn't be read (${r.status})`;
-  } catch (e) { unreadable = "the record of commitments couldn't be read"; }
-  // Commitments only on the relays count until an hour after closing; after
-  // that only the repository's record does, since a late one could carry any date.
-  const relaysCount = stillTakingCommitments(p, Date.now() / 1000);
-  // And only from a real lock on the register, a few per lock: what the
-  // repository's inbox could take. Anything else is a stranger's, and is not
-  // worth a question to the block explorer (security loop, 17 November 2026).
-  for (const it of relayOnlyCommitments(await relayItems(p.hash), { crowdlock: C, register: REGISTER ?? { locks: [] }, inPile: inFile, proposal: p })) {
-    if (it.type === "commitment" && relaysCount) items.push(it);
-    if (it.type === "notice" && !notice && genuine(it.notice, p)) notice = it.notice;
-  }
-  // `sent`: completed by the co-signer and on the network, waiting for a block.
-  // It counts toward the target, so a payment in flight is not read as missing.
-  let waiting = 0, paid = 0, sent = 0, count = 0, uncertain = 0;
-  // One coin counts once: of two commitments spending the same coin only one
-  // can ever be paid, so the earlier stands and the later is left out.
-  const counted = new Set();
-  // One payment counts once, however many copies of its commitment were posted (OpenAI review, H-05).
-  const paidIds = new Set();
-  for (const it of items) {
-    if (it.type !== "commitment") continue;
-    let v;
-    try { v = await L.checkCommitment({ record: it.record, crowdlock: C, proposal: p, destinations: DESTINATIONS, chain, network: C.network }); }
-    catch (e) { if (!it.relayOnly) throw e; continue; } // one that is only on the relays is left out if it can't be checked now
-    // The same eligibility the inbox applies, for the repository's record too (OpenAI review 7).
-    if (v.valid && !commitmentEligible(it.record, { crowdlock: C, register: REGISTER ?? { locks: [], members: [] }, proposal: p }).ok) continue;
-    if (v.valid && v.coin && counted.has(v.coin)) continue;
-    if (v.valid) { if (v.coin) counted.add(v.coin); waiting += v.committedSats; count++; }
-    else if (/already been spent/.test(v.reason)) {
-      const id = L.commitmentTxid(it.record);
-      if (id && paidIds.has(id)) continue;
-      const pay = await L.commitmentPayment({ record: it.record, chain, crowdlock: C });
-      if (pay?.unknown) { uncertain++; continue; }
-      if (pay && pay.sats > 0) {
-        if (id) paidIds.add(id);
-        if (pay.confirmed) paid += pay.sats; else sent += pay.sats;
-      }
-    }
-  }
-  // A proposal can't have failed while it is still gathering, so a notice then
-  // is ignored; one against a pile that reaches its target is contradicted.
-  if (notice && (phaseOf(p) === "soon" || phaseOf(p) === "gathering")) notice = null;
-  const contradicted = !!notice && waiting + paid + sent >= p.target.sats;
-  return { waiting, paid, sent, count, notice, contradicted, uncertain, unreadable };
+  const x = await readPileShared({
+    crowdlock: C, register: REGISTER ?? { locks: [], members: [] }, destinations: DESTINATIONS, proposal: p,
+    fetchPile: () => fetch(`${BASE}${pilePath(C.register.proposals, p.hash)}`, { cache: "no-store" }),
+    relayItems: () => relayItems(p.hash),
+    check: (record) => L.checkCommitment({ record, crowdlock: C, proposal: p, destinations: DESTINATIONS, chain, network: C.network }),
+    payment: (record) => L.commitmentPayment({ record, chain, crowdlock: C }),
+    txidOf: (record) => L.commitmentTxid(record),
+  });
+  return { waiting: x.sats, paid: x.paid, sent: x.sent, count: x.count, notice: x.notice, contradicted: !!x.noticeContradicted, uncertain: x.uncertain, unreadable: x.unreadable };
 }
 
 function renderList() {
@@ -327,7 +274,7 @@ async function showLocks() {
   // Only genuine locks of this key (never the record's `member` label), and
   // only those that stay shut until the proposal finishes settling: a lock
   // that opens sooner could be taken home first, so it can't back it.
-  const settles = Date.parse(CHOSEN.settles_by) / 1000 + settleMargin(C.network); // and a week after (security loop, item 9)
+  const settles = Date.parse(CHOSEN.settles_by) / 1000 + settleMargin(C.network); // and a week after
   const mineOnly = (x) => { const g = lockIsGenuine(x, { crowdlock: C, register: REGISTER }); return g.ok && g.owner === String(ACCOUNT.address).toLowerCase(); };
   for (const l of (REGISTER.locks ?? []).filter((x) => mineOnly(x) && x.locktime > now && x.locktime > settles)) {
     for (const coin of (await chain.utxos(l.address)).filter((u) => u.confirmed)) {

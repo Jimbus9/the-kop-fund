@@ -4,7 +4,7 @@
 // changes have been applied and before they are committed. It decides whether
 // those changes are the kind a pass makes, and refuses everything else.
 //
-// Why it exists (OpenAI review 7, 18 November 2026): the inbox's collecting
+// Why it exists: the inbox's collecting
 // job runs outside libraries (the Nostr client, bitcoinjs-lib). It used to run
 // them while holding this repository's write permission, so a library gone
 // bad could have rewritten the website's code or published a fake app release.

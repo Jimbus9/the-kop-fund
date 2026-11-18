@@ -1,4 +1,4 @@
-// Has a register only ever grown? (security loop, "Needs James" item 3.)
+// Has a register only ever grown?
 //
 // A register is a file in a repository, and its founder can write to it. The
 // phones and the register page remember what they have seen, so a lock taken
@@ -35,7 +35,7 @@ export function shrinkage(before, after) {
     if (!n || !same(rest, restNow)) { problems.push(`member ${m?.n ?? i + 1} (${m?.address ?? "?"}) was ${n ? "changed or moved" : "removed"}`); return; }
     // Later signatures are kept in version order, so an earlier one can move
     // along when a member signs a version in between: each must still be
-    // there, unchanged, but not necessarily in the same place (OpenAI review 7).
+    // there, unchanged, but not necessarily in the same place.
     if (!Array.isArray(now) || !was.every((e) => now.some((x) => same(x, e)))) problems.push(`member ${m.n}'s later signatures were changed or removed`);
   });
   return problems;

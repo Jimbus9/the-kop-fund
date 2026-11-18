@@ -110,8 +110,8 @@ line();
 // has my fingerprint in it. Anybody can write that claim into a proof file, so
 // it is checked: the proof works out a value that must be the block's own
 // summary of its transactions (its merkle root), and a block explorer is asked
-// what that block's really is. Until 17 November 2026 this script believed the
-// claim, and called a made-up proof finished.
+// what that block's really is. A claim alone could make a made-up proof look
+// finished.
 const claims = [];
 for (const [msg, a] of detached.timestamp.allAttestations()) {
   if (!(a instanceof OTS.Notary.BitcoinBlockHeaderAttestation)) continue;
@@ -146,9 +146,8 @@ async function askOne(base, height) {
  * believed only when at least two answer and all that answer agree.
  * Returns { root, time, from } (agreed), { missing: true } (all that answered
  * have no such block), { disagree: [...] }, { alone: answer } (only one
- * answered), or null (none did). Until 17 November 2026 the first explorer to
- * answer was believed and the second asked only if it failed, so one lying
- * explorer could call a made-up proof finished (OpenAI review, fix 6).
+ * answered), or null (none did). Believing the first to answer would let one
+ * lying explorer call a made-up proof finished.
  */
 async function blockAt(height) {
   const answers = (await Promise.all(EXPLORERS.map((b) => askOne(b, height)))).filter((a) => a !== null);
@@ -225,8 +224,7 @@ try {
     writeFileSync(proofPath, Buffer.from(detached.serializeToBytes()));
     rule();
     // Not "complete" yet: what the calendar servers sent back is checked
-    // against the blockchain like any other claim, on the next run (OpenAI
-    // review 7: it was called complete before that check).
+    // against the blockchain like any other claim, on the next run.
     line("UPGRADED, NOT YET CHECKED. The calendar servers say it is now in a block.");
     rule();
     line();
