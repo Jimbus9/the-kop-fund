@@ -22,6 +22,13 @@
 # the gap is over 30 hours, a day was skipped, and this run goes red at the
 # end, after doing its work, so the email says so.
 #
+# Two jobs. The first installs and runs the anchoring library with no
+# permission to change anything, and hands on only the proofs and snapshot it
+# made. The second runs no library: it checks that what it was handed is just
+# that (proofs, and a snapshot that is exactly the register it was taken
+# from) and commits it. So a library gone bad can at worst hand on a bad
+# proof, which verify.mjs reports.
+#
 # Uses no secrets: only the permission GitHub gives every repository's own jobs.
 # Run it by hand from the Actions tab ("Run workflow").
 
@@ -39,7 +46,7 @@ on:
         default: false
 
 permissions:
-  contents: write
+  contents: read
   actions: read
 
 # Both this and the relay inbox push to main; a run waits for its turn.
@@ -71,6 +78,8 @@ jobs:
           fi
 
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
@@ -144,8 +153,58 @@ jobs:
             test -s "anchors/registrations-$today.json.ots"
           fi
 
-      - name: Commit what changed
+      - name: Hand on what changed
+        shell: bash
         run: |
+          mkdir -p /tmp/handover
+          git rev-parse HEAD > /tmp/handover/from
+          if [ -f /tmp/skipped ]; then touch /tmp/handover/skipped; fi
+          git add -A anchors spec
+          git diff --cached --name-only --diff-filter=AM -z -- anchors spec | tar --null -T - -cf /tmp/handover/files.tar
+          git diff --cached --name-status -- anchors spec
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: anchor-handover
+          path: /tmp/handover/
+          retention-days: 3
+
+
+  publish:
+    needs: anchor
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write   # to commit the proofs and the snapshot
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: anchor-handover
+          path: /tmp/handover
+      - name: Check what was handed on, and commit it
+        shell: bash
+        run: |
+          from=$(cat /tmp/handover/from)
+          mkdir -p /tmp/in && tar -xf /tmp/handover/files.tar -C /tmp/in --no-same-owner --no-same-permissions
+          bad=0
+          while IFS= read -r -d '' f; do
+            rel="${f#/tmp/in/}"
+            case "$rel" in */*/*) echo "::error::$rel is in a folder this job never writes"; bad=1; continue ;; esac
+            if [ -L "$f" ] || [ ! -f "$f" ]; then echo "::error::$rel is not an ordinary file"; bad=1; continue; fi
+            case "$rel" in
+              anchors/registrations-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].json.ots|spec/declaration-v[0-9]*.txt.ots) ;;
+              anchors/registrations-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].json)
+                # A snapshot must be exactly the register it was taken from, and new.
+                if git cat-file -e "$from:$rel" 2>/dev/null; then echo "::error::$rel already exists"; bad=1; fi
+                if ! git show "$from:registrations.json" | cmp -s - "$f"; then echo "::error::$rel is not the register it was taken from"; bad=1; fi ;;
+              *) echo "::error::$rel is not something this job makes"; bad=1 ;;
+            esac
+          done < <(find /tmp/in -mindepth 1 \( -type f -o -type l \) -print0)
+          if find /tmp/in -mindepth 1 ! -type f ! -type d | grep -q .; then echo "::error::the handover holds something other than files"; bad=1; fi
+          [ "$bad" = 0 ] || exit 1
+          cp -r /tmp/in/. .
           git config user.name "Crowdlock anchor"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add anchors spec
@@ -164,7 +223,7 @@ jobs:
       - name: Say so if a day was skipped
         if: always()
         run: |
-          if [ -f /tmp/skipped ]; then
+          if [ -f /tmp/handover/skipped ]; then
             echo "A scheduled run was skipped before this one. The work above is done; this is only the flag."
             exit 1
           fi

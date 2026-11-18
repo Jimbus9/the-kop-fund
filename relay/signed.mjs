@@ -249,6 +249,53 @@ export function coinValue(chainApi, fetchImpl = fetch) {
  * all, seen or not, and for a while this job took that for "already there" and
  * sent nothing.
  */
+/**
+ * The lowest fee rate, in sats a vbyte, the network takes today: the block
+ * explorer's own figure where it gives one (mempool.space's minimumFee), else
+ * the lowest of its estimates (Esplora's fee-estimates). Null if neither answers.
+ */
+export async function feeFloor(chainApi, fetchImpl = fetch) {
+  try {
+    const r = await ask(`${chainApi}/v1/fees/recommended`, {}, fetchImpl);
+    if (r.ok) { const j = await r.json(); if (Number.isFinite(j?.minimumFee) && j.minimumFee > 0) return j.minimumFee; }
+  } catch {}
+  try {
+    const r = await ask(`${chainApi}/fee-estimates`, {}, fetchImpl);
+    if (r.ok) { const v = Object.values(await r.json()).map(Number).filter((x) => Number.isFinite(x) && x > 0); if (v.length) return Math.min(...v); }
+  } catch {}
+  return null;
+}
+
+/**
+ * May the inbox start sending a proposal's completed payments? Only those it
+ * would send count: one completed after the proposal was declared dead is
+ * kept as evidence and never sent, so it can't help reach the target. They
+ * must together reach the target, and every one not yet sent must pay at
+ * least the network's lowest fee rate today (`floor`): a payment's fee is
+ * fixed when its owner signs it, so one that the network would turn away
+ * means the others would pay part of a purchase that can't happen. Checked
+ * before each pass sends; it can't help once some have gone and fees then
+ * rise. `valueOf(coin)` gives a coin's value ("txid:vout"), or null.
+ * Returns { ok, sats, reason }.
+ */
+export async function readyToSend(completed, target, { floor, valueOf }) {
+  const eligible = (completed ?? []).filter((x) => !x.after_notice);
+  let sats = 0;
+  for (const x of eligible) { try { sats += Number(Transaction.fromHex(x.tx).outs[0].value); } catch {} }
+  if (!(sats >= target)) return { ok: false, sats, reason: `the completed payments it would send come to ${sats} sats, short of the ${target}-sat target` };
+  if (!(floor > 0)) return { ok: false, sats, reason: "the network's lowest fee rate couldn't be read" };
+  for (const x of eligible.filter((y) => !y.sent)) {
+    const id = String(x.txid).slice(0, 12);
+    let tx;
+    try { tx = Transaction.fromHex(x.tx); } catch { return { ok: false, sats, reason: `the payment ${id}… can't be read` }; }
+    const value = await valueOf(`${hex(Buffer.from(tx.ins[0].hash).reverse())}:${tx.ins[0].index}`);
+    if (!Number.isFinite(value)) return { ok: false, sats, reason: `what the payment ${id}… spends couldn't be read` };
+    const rate = (value - tx.outs.reduce((a, o) => a + Number(o.value), 0)) / tx.virtualSize();
+    if (rate < floor) return { ok: false, sats, reason: `the payment ${id}… pays ${rate.toFixed(2)} sats a vbyte, below the ${floor} the network takes today` };
+  }
+  return { ok: true, sats, reason: "" };
+}
+
 export async function sendCompleted(chainApi, { txid, tx }, fetchImpl = fetch) {
   try {
     const known = await ask(`${chainApi}/tx/${txid}/hex`, {}, fetchImpl);

@@ -398,8 +398,11 @@ one, which is the correct way round.
 
 The co-signer **publishes a signed notice** declaring the pile dead, and does not
 complete any commitment after `settles_by`. The notice is this sentence, signed
-by a co-signer key's native segwit address, the same way a member signs the
-declaration:
+by the native segwit address of the Crowdlock's newest co-signer key (the last
+in `cosigner_keys`), the same way a member signs the declaration. An older key
+stays listed only so that locks made with it still count; it says nothing
+about proposals, so a key retired because it was lost or stolen cannot declare
+one dead:
 
 ```
 I declare proposal <proposal hash> dead: it did not reach its target, and I will complete none of its commitments.
@@ -497,7 +500,10 @@ Two more keys appear as the co-signer acts:
   recorded only if its txid is the txid of a commitment in the pile (a txid
   leaves out the signatures, so a completion and its commitment share it) and
   it carries the owner's signature and the co-signer's. `sent` is when the
-  repository broadcast it, or first found it already on the network.
+  repository broadcast it, or first found it already on the network. The
+  repository sends none until those it would send (not `after_notice`) reach
+  the target together, and none while any still waiting pays below the
+  network's lowest fee rate that day.
 - `notice`: the co-signer's failure notice (below), once, if genuine, and only
   once the proposal has closed: while it is gathering it cannot have failed. A
   completion signed by both after a notice is still recorded, marked

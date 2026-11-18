@@ -13,7 +13,12 @@
 //     stood then, and runs at least the shortest length it offered, less a
 //     month. So a lock written into the register by hand, past the inbox,
 //     can't escape them;
-//   - each proposal's pile of commitments only ever grew (relay/accept.mjs).
+//   - each proposal's pile of commitments only ever grew (relay/accept.mjs);
+//   - no proposal's target changed after it closed. A target is restated as
+//     the price of bitcoin moves while it gathers, but once it has closed the
+//     commitments are counted against it, and a smaller one would let fewer
+//     pay for the purchase. (Its dates are in the commit, which whoever made
+//     it chooses, so a commit dated before the one it follows is reported too.)
 //
 // Every commit that touched a file is read, merges included, oldest first.
 // Needs the whole history: check out with fetch-depth: 0.
@@ -74,9 +79,25 @@ for (const file of files) {
     checked += steps.length;
   }
 
-  // Each proposal's pile.
+  // Each proposal's pile, and its target after closing.
   const props = [...propPaths].at(-1);
   if (props) {
+    let lastFile = null, lastTime = -Infinity;
+    for (const step of versions(props)) {
+      const now = show(step.commit, props);
+      if (step.time < lastTime) say(props, step.commit, "this version is dated before the one it follows");
+      lastTime = Math.max(lastTime, step.time);
+      if (now === null) continue;
+      const was = new Map((lastFile?.proposals ?? []).map((x) => [x?.hash, x]));
+      for (const x of now.proposals ?? []) {
+        const before = was.get(x?.hash);
+        if (before && step.time >= Date.parse(x.closes) / 1000 && JSON.stringify(before.target) !== JSON.stringify(x.target)) {
+          say(props, step.commit, `the target of "${x.title}" changed after it closed`);
+        }
+      }
+      lastFile = now;
+      checked++;
+    }
     const dir = `${props.includes("/") ? props.slice(0, props.lastIndexOf("/") + 1) : ""}commitments/`;
     const piles = new Set(git("log", "--format=", "--name-only", "--full-history", "--", dir).split("\n").filter((p) => /^.*\/?commitments\/[0-9a-f]{64}\.json$/.test(p) && p.startsWith(dir)));
     for (const pile of piles) {

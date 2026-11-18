@@ -160,7 +160,8 @@ export async function clocksFor(lock, txs, getBlock) {
  * until then, so the witness's shape is not asked about. It is a purchase only
  * if EVERY output is one of: a destination the co-signer could pay at that
  * moment (isListedDestination); money staying locked (staysLocked); or one
- * proposal marker holding nothing; AND what it leaves as fee is small:
+ * proposal marker holding nothing, which a payment to a destination must have
+ * and a move that pays none must not; AND what it leaves as fee is small:
  *   - where it pays a destination, no more than a commitment may leave: the
  *     Crowdlock's max_commitment_fee of what it pays the destination;
  *   - where it pays none (all of it stays locked), no more than
@@ -221,7 +222,11 @@ export function earlyReleases(lock, txs, context = {}, now = Math.floor(Date.now
       let feeTooBig;
       if (toDestinations > 0) feeTooBig = fee > toDestinations * maxFee;
       else { movedAsFees += Math.max(0, fee); feeTooBig = movedAsFees > fromHere * maxFee; }
-      if (outs.length > 0 && !stray && !feeTooBig && markers <= 1 && paid > 0) continue;
+      // A payment to a destination is a commitment completed, and every
+      // commitment names its proposal in exactly one marker; a move that only
+      // keeps the money locked names none.
+      const markersRight = toDestinations > 0 ? markers === 1 : markers === 0;
+      if (outs.length > 0 && !stray && !feeTooBig && markersRight && paid > 0) continue;
       found.push({
         txid: tx.txid, at, sats: vin.prevout?.value ?? 0, paidTo: stray?.scriptpubkey_address ?? null,
         confirmed: !!tx.status?.confirmed, cosigner: lock.cosigner_pubkey ?? null, ...(undecided ? { undecided: true } : {}),

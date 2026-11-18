@@ -19,7 +19,7 @@ import { recordPass, planSwaps, SILENT_DAYS } from "../js/relayhealth.mjs";
 import { checkProposals, phaseOf, pilePath, emptyPile, checkPileShape, applyCommitments, applySettlement, dueToSend, commitmentFromEvent } from "../js/proposals.mjs";
 import { memberAddressForOwnerKey } from "../js/verify.mjs";
 import { Transaction } from "bitcoinjs-lib";
-import { ownersSigned, completedByBoth, coinsAt, coinValue, sendCompleted, readTx, explorerBudget } from "./signed.mjs";
+import { ownersSigned, completedByBoth, coinsAt, coinValue, sendCompleted, readTx, explorerBudget, feeFloor, readyToSend } from "./signed.mjs";
 
 // A large settlement is sent a few at a time, every pass, rather than all at
 // once (spec/proposal-and-settlement.md, "Pacing is not optional").
@@ -201,13 +201,14 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
       // Send what is due, paced: at most SEND_PER_PASS a pass, oldest
       // commitment first, and only while the proposal is still settling.
       let sent = 0;
-      // The completed payments must, together, reach the target before any
-      // is sent: a set short of it would pay part of a purchase that can't
-      // happen.
-      const completedSats = (next.completed ?? []).reduce((a, x) => { try { return a + Number(Transaction.fromHex(x.tx).outs[0].value); } catch { return a; } }, 0);
-      const due = completedSats >= p.target.sats ? dueToSend(next, SEND_PER_PASS, txidOf) : [];
-      if (!due.length && (next.completed ?? []).some((x) => !x.sent) && completedSats < p.target.sats) {
-        console.log(`${file}: completed payments for "${p.title}" come to ${completedSats} sats, short of its ${p.target.sats}-sat target: none sent`);
+      // None is sent until those it would send reach the target together,
+      // and each still waiting pays a fee the network takes today
+      // (readyToSend): a set short of either would pay part of a purchase
+      // that can't happen.
+      let due = dueToSend(next, SEND_PER_PASS, txidOf);
+      if (due.length) {
+        const ready = await readyToSend(next.completed, p.target.sats, { floor: await feeFloor(crowdlock.chain_api), valueOf: coinValue(crowdlock.chain_api) });
+        if (!ready.ok) { console.log(`${file}: none of "${p.title}"'s completed payments sent: ${ready.reason}`); due = []; }
       }
       for (const c of due) {
         const { state, refused, unreachable } = await sendCompleted(crowdlock.chain_api, { ...c, tx: canonical(c.tx) ?? c.tx });

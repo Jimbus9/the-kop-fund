@@ -92,8 +92,12 @@ jobs:
             if as_inboxer bash -c "cd $work/relay && node inbox.mjs"; then last_ok=$(date -u +%Y-%m-%dT%H:%M:%SZ); else echo "This pass failed; trying again next pass."; fi
             rm -rf "$out" && mkdir -p "$out"
             as_inboxer bash -c "cd $work && git -c core.hooksPath=/dev/null add -A && git -c core.hooksPath=/dev/null diff --cached --binary" > "$out/patch" || : > "$out/patch"
-            sudo cat "$work/relay/.message" > "$out/message" 2>/dev/null || :
-            sudo cat "$work/relay/.broken" > "$out/broken" 2>/dev/null || :
+            # Read as the libraries' own user, never with sudo: a link left in
+            # place of either file reaches only what that user could read
+            # anyway, and only an ordinary file is read at all.
+            for f in message broken; do
+              as_inboxer bash -c 'f="$1"; [ -f "$f" ] && [ ! -L "$f" ] && head -c 4000 "$f"' _ "$work/relay/.$f" > "$out/$f" 2>/dev/null || :
+            done
             sudo pkill -u inboxer || true
             if [ -s "$out/broken" ]; then broken="$(head -c 4000 "$out/broken")"; fi
             if [ $((pass % 5)) -eq 1 ]; then heartbeat || echo "Could not write the sign of life."; fi

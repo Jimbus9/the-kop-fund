@@ -508,7 +508,10 @@ export function relayOnlyCommitments(found, { crowdlock, register, inPile = new 
     // Posted while the proposal was gathering, and by a member who may back
     // it: what the repository's inbox would take.
     if (proposal) {
-      if (Number.isFinite(it.at) && !(it.at >= Date.parse(proposal.opens) / 1000 && it.at <= Date.parse(proposal.closes) / 1000 + LATE_GRACE)) continue;
+      // The inbox's own window, to the second: the hour's grace after closing
+      // is for the inbox to see a post made before closing, never for a
+      // post made after it.
+      if (!(Number.isFinite(it.at) && it.at >= Date.parse(proposal.opens) / 1000 && it.at < Date.parse(proposal.closes) / 1000)) continue;
       if (!commitmentEligible(r, { crowdlock, register, proposal, hrp }).ok) continue;
     }
     const key = JSON.stringify(r);
@@ -699,13 +702,16 @@ export function noticeStatement(hash) {
 }
 
 /**
- * Is this a genuine notice for this proposal? It must be signed by the key
- * of one of the Crowdlock's co-signers (its native segwit address).
+ * Is this a genuine notice for this proposal? It must be signed by the key of
+ * the Crowdlock's newest co-signer key, the last listed (its native segwit
+ * address). An older key stays listed only so that locks made with it still
+ * count; once replaced it says nothing about proposals, so a key retired
+ * because it was lost or stolen can't declare one dead.
  * `addressOf(pubkey)` gives that address (memberAddressForOwnerKey in verify.mjs).
  */
 export function noticeIsGenuine(notice, { crowdlock, hash, hrp, addressOf }) {
-  const cosigners = new Set((crowdlock.cosigner_keys ?? []).map((k) => addressOf(k, hrp)));
-  if (!cosigners.has(notice?.address)) return { ok: false, reason: "it is not signed by this Crowdlock's co-signer" };
+  const keys = crowdlock.cosigner_keys ?? [];
+  if (!keys.length || notice?.address !== addressOf(keys[keys.length - 1], hrp)) return { ok: false, reason: "it is not signed by this Crowdlock's current co-signer key" };
   const r = verifyMembership({ address: notice.address, signature: notice.signature, message: noticeStatement(hash), hrp });
   return r.valid ? { ok: true, reason: "" } : { ok: false, reason: `its signature does not verify — ${r.reason}` };
 }

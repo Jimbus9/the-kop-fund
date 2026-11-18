@@ -80,8 +80,11 @@ export async function readPile({ crowdlock, register, destinations, proposal: p,
     }
     if (!v.valid) {
       // A commitment whose coin is gone may be one the co-signer completed:
-      // then it was paid, not refused.
-      if (/already been spent/.test(v.reason)) {
+      // then it was paid, not refused. So may one whose destination has since
+      // been taken off the list: taking it off stops new payments, and
+      // can't unmake one already made. (The check reads the destination only
+      // after the payment is seen to name this proposal.)
+      if (/already been spent|destination not permitted/.test(v.reason)) {
         const id = txidOf(it.record);
         if (id && paidIds.has(id)) continue;
         const pay = await payment(it.record);
