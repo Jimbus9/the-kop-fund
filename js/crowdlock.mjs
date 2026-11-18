@@ -12,7 +12,7 @@
 // See spec/running-your-own.md for what each parameter means.
 
 import { sha256 } from "./vendor/noble-hashes/sha256.js";
-import { memberAddressForOwnerKey } from "./verify.mjs";
+import { memberAddressForOwnerKey, verifyMembership } from "./verify.mjs";
 
 const HASH = /^[0-9a-f]{64}$/;
 const PUBKEY = /^0[23][0-9a-f]{64}$/; // compressed only, as the lock format requires
@@ -21,6 +21,37 @@ const XPUB = /^[xt]pub[1-9A-HJ-NP-Za-km-z]{107}$/;
 const NETWORKS = ["mainnet", "testnet4", "signet", "regtest"];
 
 const hex = (bytes) => Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+
+// Where a Crowdlock lives (security loop, "Needs James" item 4, 18 November
+// 2026). A copy of a Crowdlock's file put up at another address would show
+// the real one's locks under its own name. So a Crowdlock may say where it
+// lives, `home`, signed by one of its own co-signer keys: a standard Bitcoin
+// Signed Message, by that key's address, over homeLine. A copy can't sign its
+// own address with a key it doesn't hold; carrying the real `home` across
+// sends a reader to the real one; and dropping it shows the copy hasn't
+// proved where it lives. Adding a co-signer key later leaves `home` good.
+
+const HRP = { mainnet: "bc", testnet4: "tb", testnet: "tb", signet: "tb", regtest: "bcrt" };
+
+/** The line a co-signer key signs to say where this Crowdlock lives. */
+export function homeLine(url, fingerprint) {
+  return `crowdlock-home|${url}|${fingerprint}`;
+}
+
+/** Is a Crowdlock file's `home` well made and signed by one of its co-signer keys? */
+export function checkHome(c) {
+  const h = c?.home;
+  const problems = [];
+  if (!h || typeof h !== "object") return { ok: false, problems: ["home must be an object with url, key and signature"] };
+  if (!(typeof h.url === "string" && /^https:\/\/[^\s]+$/.test(h.url) && h.url.length <= 300)) problems.push("home.url must be the https:// link to this Crowdlock's file");
+  const key = String(h.key ?? "").toLowerCase();
+  if (!(c.cosigner_keys ?? []).includes(key)) problems.push("home must be signed by one of this Crowdlock's co-signer keys");
+  if (problems.length) return { ok: false, problems };
+  const hrp = HRP[c.network];
+  const v = verifyMembership({ address: memberAddressForOwnerKey(key, hrp), signature: h.signature, message: homeLine(h.url, c.declaration?.sha256), hrp });
+  if (!v.valid) problems.push("home's signature doesn't check: it wasn't made by that co-signer key over this link and this declaration");
+  return { ok: problems.length === 0, problems };
+}
 
 /** The highest fee limit any Crowdlock may set: 5% of what a commitment pays. */
 export const MAX_FEE_LIMIT = 0.05;
@@ -265,6 +296,8 @@ export function checkCrowdlock(c, { declarationText, versionTexts } = {}) {
       need(!c.spare_relays.some((r) => c.relays.includes(r)), "a relay is listed as both live and spare");
     }
   }
+
+  if (c.home !== undefined && !problems.length) problems.push(...checkHome(c).problems);
 
   return { ok: problems.length === 0, problems };
 }
