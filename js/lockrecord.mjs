@@ -107,6 +107,30 @@ const checkedSignatures = new Map();
  * 2026 the address alone made a lock's owner a committed member (OpenAI
  * review, H-03).
  */
+/**
+ * Has the member at this address really signed this version of the
+ * declaration? Their signature is checked, not just the version number the
+ * register gives (OpenAI review 7): the joining signature for the version they
+ * joined with, the later one in also_signed for any other.
+ */
+export function hasSignedVerified(address, version, { crowdlock, register, hrp }) {
+  const a = String(address ?? "").toLowerCase();
+  const m = (register?.members ?? []).find((x) => String(x?.address ?? "").toLowerCase() === a);
+  if (!m || !crowdlock?.declaration || !Number.isInteger(version)) return false;
+  const joined = joinedVersion(crowdlock, m);
+  const sig = version === joined ? m.signature : (Array.isArray(m.also_signed) ? m.also_signed.find((x) => x?.version === version)?.signature : null);
+  if (typeof sig !== "string") return false;
+  let statement;
+  try { statement = membershipStatement(crowdlock, version); } catch { return false; }
+  const key = `${hrp}|${a}|${sig}|${statement}`;
+  if (!checkedSignatures.has(key)) {
+    let ok = false;
+    try { ok = verifyMembership({ address: a, signature: sig, message: statement, hrp }).valid; } catch { ok = false; }
+    checkedSignatures.set(key, ok);
+  }
+  return checkedSignatures.get(key);
+}
+
 export function isSignedMember(address, { crowdlock, register, hrp }) {
   const a = String(address ?? "").toLowerCase();
   const m = (register?.members ?? []).find((x) => String(x?.address ?? "").toLowerCase() === a);

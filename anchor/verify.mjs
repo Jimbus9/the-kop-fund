@@ -224,12 +224,16 @@ try {
   if (collected) {
     writeFileSync(proofPath, Buffer.from(detached.serializeToBytes()));
     rule();
-    line("COMPLETE. The proof now points at the blockchain itself.");
+    // Not "complete" yet: what the calendar servers sent back is checked
+    // against the blockchain like any other claim, on the next run (OpenAI
+    // review 7: it was called complete before that check).
+    line("UPGRADED, NOT YET CHECKED. The calendar servers say it is now in a block.");
     rule();
     line();
     line(OTS.info(detached).trim().split("\n").map((l) => "  " + l).join("\n"));
     line();
-    line(`Updated ${proofPath} — commit it.`);
+    line(`Updated ${proofPath}. Run this again: it checks that block against the`);
+    line("blockchain, and only then says FINISHED. Commit the proof once it does.");
     line();
   } else {
     line("The calendars have not got it into a block yet. This is normal for");

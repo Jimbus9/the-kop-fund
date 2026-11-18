@@ -12,7 +12,7 @@
 import { sha256 } from "./vendor/noble-hashes/sha256.js";
 import { verifyMembership, memberAddressForOwnerKey, canonicalAddress } from "./verify.mjs";
 import { versionOf, hasSigned } from "./crowdlock.mjs";
-import { lockScript, lockIsGenuine, hrpFor } from "./lockrecord.mjs";
+import { lockScript, lockIsGenuine, hrpFor, hasSignedVerified } from "./lockrecord.mjs";
 
 export const PROPOSALS_FORMAT = "crowdlock-proposals/1";
 export const PILE_FORMAT = "crowdlock-commitments/1";
@@ -497,7 +497,7 @@ export const RELAY_ONLY_PER_LOCK = 20;
  * that lock has not already had RELAY_ONLY_PER_LOCK looked at. Each is
  * reduced to the parts a commitment has (cleanRecord) and marked `relayOnly`.
  */
-export function relayOnlyCommitments(found, { crowdlock, register, inPile = new Set(), hrp = hrpFor(crowdlock?.network) }) {
+export function relayOnlyCommitments(found, { crowdlock, register, inPile = new Set(), hrp = hrpFor(crowdlock?.network), proposal = null }) {
   const locks = new Map();
   for (const lock of register?.locks ?? []) {
     if (lockIsGenuine(lock, { crowdlock, register, hrp }).ok) locks.set(String(lock.address).toLowerCase(), lock);
@@ -512,6 +512,12 @@ export function relayOnlyCommitments(found, { crowdlock, register, inPile = new 
     const address = r.lock.address.toLowerCase();
     const on = locks.get(address);
     if (!on || on.owner_pubkey !== r.lock.owner_pubkey || on.cosigner_pubkey !== r.lock.cosigner_pubkey || on.locktime !== r.lock.locktime) continue;
+    // Posted while the proposal was gathering, and by a member who may back
+    // it: what the repository's inbox would take (OpenAI review 7).
+    if (proposal) {
+      if (Number.isFinite(it.at) && !(it.at >= Date.parse(proposal.opens) / 1000 && it.at <= Date.parse(proposal.closes) / 1000 + LATE_GRACE)) continue;
+      if (!commitmentEligible(r, { crowdlock, register, proposal, hrp }).ok) continue;
+    }
     const key = JSON.stringify(r);
     if (seen.has(key)) continue;
     seen.add(key);
@@ -521,6 +527,30 @@ export function relayOnlyCommitments(found, { crowdlock, register, inPile = new 
     out.push({ ...it, record: r, relayOnly: true });
   }
   return out;
+}
+
+/**
+ * May this commitment back this proposal? The same answer for the inbox, the
+ * app, the website and the co-signer's final check (OpenAI review 7: they
+ * disagreed). Its lock must be on the register with exactly these terms and
+ * genuine, and the lock's owner, re-derived from its key, must be a member
+ * whose own signature on the declaration version this proposal was published
+ * under checks. Returns { ok, reason }.
+ */
+export function commitmentEligible(record, { crowdlock, register, proposal, hrp = hrpFor(crowdlock?.network) }) {
+  const no = (reason) => ({ ok: false, reason });
+  const L = record?.lock;
+  if (!L || typeof L.address !== "string") return no("it names no lock");
+  const on = (register?.locks ?? []).find((l) => String(l.address).toLowerCase() === L.address.toLowerCase());
+  if (!on) return no("its lock is not on this Crowdlock's register");
+  if (on.owner_pubkey !== L.owner_pubkey || on.cosigner_pubkey !== L.cosigner_pubkey || on.locktime !== L.locktime) return no("its lock's terms are not the register's");
+  const g = lockIsGenuine(on, { crowdlock, register, hrp });
+  if (!g.ok) return no(`its lock doesn't count: ${g.reason}`);
+  const needs = proposalVersion(proposal, crowdlock);
+  if (!hasSignedVerified(memberAddressForOwnerKey(L.owner_pubkey, hrp), needs, { crowdlock, register, hrp })) {
+    return no(`its owner has not signed version ${needs} of the declaration, which this proposal was published under`);
+  }
+  return { ok: true };
 }
 
 /** A new, empty pile for a proposal. */
@@ -625,11 +655,8 @@ export async function applyCommitments(pile, events, { crowdlock, proposal, regi
     // Committing needs the version the proposal was published under. A lock
     // still counts in the total whatever its owner has signed; only backing
     // this purchase needs their agreement to the text it was proposed under.
-    const owner = (register?.members ?? []).find((m) => String(m.address).toLowerCase() === String(onRegister.member).toLowerCase());
-    const needs = proposalVersion(proposal, crowdlock);
-    if (!owner || !hasSigned(crowdlock, owner, needs)) {
-      refuse(`its owner has not signed version ${needs} of the declaration, which this proposal was published under`); continue;
-    }
+    const eligible = commitmentEligible(r, { crowdlock, register, proposal });
+    if (!eligible.ok) { refuse(eligible.reason); continue; }
     if ((perLock.get(lockAddress) ?? 0) >= PER_LOCK_LIMIT) { refuse(`that lock already has ${PER_LOCK_LIMIT} commitments in the pile`); continue; }
     // The remainder lock, which the owner's signature does not cover: it must
     // be the lock the payment's own remainder output pays, or every reader
@@ -781,7 +808,9 @@ export async function applySettlement(pile, items, { crowdlock, hash, hrp, addre
  */
 export function dueToSend(pile, limit, txidOf) {
   const order = new Map(pile.commitments.map((c, i) => [txidOf(c.record.tx), i]));
-  return (pile.completed ?? []).filter((c) => !c.sent)
+  // One the co-signer completed after declaring the proposal dead is kept on
+  // the record as evidence, never sent from here.
+  return (pile.completed ?? []).filter((c) => !c.sent && !c.after_notice)
     .sort((a, b) => (order.get(a.txid) ?? 1e9) - (order.get(b.txid) ?? 1e9))
     .slice(0, limit);
 }

@@ -17,8 +17,10 @@ on:
 permissions:
   contents: write
   pages: write
-  actions: write
+  actions: write   # only to start the next run of this same job
 
+# Never two runs at once: each reads the register, then writes it. A run that
+# arrives while one is going waits its turn.
 concurrency:
   group: relay-inbox
   cancel-in-progress: false
@@ -29,61 +31,93 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          # No token left in the repository's git settings: it is given to the
+          # two commands that need it, below, and to nothing else.
+          persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
 
-      - name: Install the relay library
-        working-directory: relay
-        # Without the libraries' own install scripts: this job's token can write to the
-        # repository, and none of them needs one (security loop, 17 November 2026).
-        run: npm ci --ignore-scripts --no-audit --no-fund
+      # The outside libraries (the Nostr client, bitcoinjs-lib) run as their
+      # own user, "inboxer", in a copy of this repository, with no token in
+      # their environment and no sudo. Only the patch each pass leaves comes
+      # back, and relay/accept.mjs, from a copy kept apart, decides whether it
+      # is the kind of change a pass makes before anything is committed
+      # (OpenAI review 7, 18 November 2026). Until then they ran with this
+      # job's permission to write to the repository, its website and its
+      # app releases.
+      - name: Set the libraries apart
+        run: |
+          (cd relay && npm ci --ignore-scripts --no-audit --no-fund)
+          sudo useradd --create-home --shell /usr/sbin/nologin inboxer
+          sudo mkdir -p /home/inboxer/work
+          sudo rsync -a ./ /home/inboxer/work/
+          sudo chown -R inboxer:inboxer /home/inboxer/work
+          mkdir -p "$RUNNER_TEMP/trusted/relay" "$RUNNER_TEMP/trusted/js"
+          cp relay/accept.mjs "$RUNNER_TEMP/trusted/relay/"
+          cp js/history.mjs "$RUNNER_TEMP/trusted/js/"
 
+      # About fifty minutes, a pass every two minutes. Each pass starts from the
+      # register as it now is on GitHub, has the libraries add whatever is new
+      # and valid, checks what came back, commits it, and asks for the site to
+      # be republished.
       - name: Collect records from the relays, every two minutes
         env:
           GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
         run: |
           git config user.name "Crowdlock relay inbox"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # A sign of life anyone can read without GitHub's API: one small file,
-          # alive.json, alone on its own branch (inbox-alive), replaced about
-          # every ten minutes. It never touches main's history, starts no other
-          # job, and if writing it fails the pass carries on regardless.
-          last_ok=$(git fetch -q --depth 1 origin inbox-alive 2>/dev/null && git show FETCH_HEAD:alive.json 2>/dev/null | sed -n 's/.*"last_ok":"\([^"]*\)".*/\1/p') || last_ok=""
+          # The token reaches git through its environment, never its command line.
+          auth() { GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.https://github.com/.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)" git "$@"; }
+          # A sign of life anyone can read without GitHub's API: alive.json,
+          # alone on its own branch (inbox-alive), replaced about every ten
+          # minutes. It never touches main's history.
+          last_ok=$(auth fetch -q --depth 1 origin inbox-alive 2>/dev/null && git show FETCH_HEAD:alive.json 2>/dev/null | sed -n 's/.*"last_ok":"\([^"]*\)".*/\1/p') || last_ok=""
           heartbeat() {
             blob=$(printf '{"last_pass":"%s","last_ok":"%s","run":"%s"}\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$last_ok" "$GITHUB_RUN_ID" | git hash-object -w --stdin) &&
             tree=$(printf '100644 blob %s\talive.json\n' "$blob" | git mktree) &&
             commit=$(git commit-tree "$tree" -m "Inbox alive") &&
-            git push -qf origin "$commit:refs/heads/inbox-alive"
+            auth push -qf origin "$commit:refs/heads/inbox-alive"
           }
+          as_inboxer() { sudo -u inboxer env -i HOME=/home/inboxer PATH="$PATH" "$@"; }
+          work=/home/inboxer/work
+          out="$RUNNER_TEMP/pass"
           broken=""
           for pass in $(seq 1 24); do
-            git pull --rebase -q || true
-            if (cd relay && node inbox.mjs); then
-              last_ok=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-            else
-              echo "This pass failed; trying again next pass."
-            fi
+            auth fetch -q origin "$BRANCH" && git reset -q --hard FETCH_HEAD || echo "Could not fetch; this pass uses the last copy."
+            # The libraries' copy, made the same as this one (their node
+            # modules and their relay reading place kept).
+            sudo rsync -a --delete --exclude node_modules/ --exclude relay/cursors.json ./ "$work/"
+            sudo chown -R inboxer:inboxer "$work"
+            if as_inboxer bash -c "cd $work/relay && node inbox.mjs"; then last_ok=$(date -u +%Y-%m-%dT%H:%M:%SZ); else echo "This pass failed; trying again next pass."; fi
+            rm -rf "$out" && mkdir -p "$out"
+            as_inboxer bash -c "cd $work && git -c core.hooksPath=/dev/null add -A && git -c core.hooksPath=/dev/null diff --cached --binary" > "$out/patch" || : > "$out/patch"
+            sudo cat "$work/relay/.message" > "$out/message" 2>/dev/null || :
+            sudo cat "$work/relay/.broken" > "$out/broken" 2>/dev/null || :
+            sudo pkill -u inboxer || true
+            if [ -s "$out/broken" ]; then broken="$(head -c 4000 "$out/broken")"; fi
             if [ $((pass % 5)) -eq 1 ]; then heartbeat || echo "Could not write the sign of life."; fi
-            if [ -n "$(git status --porcelain -- crowdlocks registrations.json commitments test relay/health.json relay/announced.json)" ]; then
-              # Only the paths this Crowdlock has: a test-only one has no
-              # top-level register, and git refuses a path that isn't there.
-              # commitments/ holds each proposal's pile, once there is one.
-              for f in crowdlocks registrations.json commitments test relay/health.json relay/announced.json; do
-                if [ -e "$f" ]; then git add "$f"; fi
-              done
-              git commit -q -m "$(cat relay/.message 2>/dev/null || echo 'Records via relays')"
-              pushed=no
-              for i in 1 2 3; do
-                if git pull --rebase -q && git push -q; then pushed=yes; break; fi
-                sleep 5
-              done
-              if [ "$pushed" = yes ]; then
-                gh api -X POST "repos/${{ github.repository }}/pages/builds" > /dev/null || echo "Could not request a site rebuild."
+            if [ -s "$out/patch" ]; then
+              if ! git apply --index --binary "$out/patch"; then
+                echo "This pass's changes no longer apply (the register moved on); the next pass starts afresh."
+              elif ! REPO_ROOT="$PWD" RELAY_DIR_ABS="$PWD/relay" node "$RUNNER_TEMP/trusted/relay/accept.mjs"; then
+                git reset -q --hard
+              else
+                message="$(tr -cd '[:print:]' < "$out/message" | head -c 300)"
+                git commit -q -m "${message:-Records via relays}"
+                pushed=no
+                for i in 1 2 3; do
+                  if auth pull --rebase -q origin "$BRANCH" && auth push -q origin "HEAD:$BRANCH"; then pushed=yes; break; fi
+                  sleep 5
+                done
+                if [ "$pushed" = yes ]; then
+                  gh api -X POST "repos/$REPO/pages/builds" > /dev/null || echo "Could not request a site rebuild."
+                fi
               fi
             fi
-            rm -f relay/.message
-            if [ -f relay/.broken ]; then broken="$(cat relay/.broken)"; rm -f relay/.broken; fi
             if [ "$pass" -lt 24 ]; then sleep 110; fi
           done
           # A Crowdlock whose file doesn't check out was skipped on every pass. Fail
@@ -94,6 +128,8 @@ jobs:
             exit 1
           fi
 
+      # Start the next run, so the inbox never depends on GitHub's schedule.
+      # GitHub lets a job's own token start a run this way and no other way.
       - name: Start the next run
         if: always()
         env:

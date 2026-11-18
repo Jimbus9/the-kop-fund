@@ -110,7 +110,10 @@ export function recordFromEvent(event, fingerprint) {
   if (c.type === "lock" && typeof c.owner_pubkey === "string" && typeof c.cosigner_pubkey === "string"
       && Number.isInteger(c.locktime) && typeof c.address === "string") {
     const r = { type: "lock", owner_pubkey: c.owner_pubkey, cosigner_pubkey: c.cosigner_pubkey, locktime: c.locktime, address: c.address };
-    if (typeof c.owner_signature === "string" && c.owner_signature.length <= 200) r.owner_signature = c.owner_signature;
+    // A signature that is there is kept as it came, whatever it is, so that a
+    // malformed one is refused rather than quietly dropped and the record
+    // taken unsigned (OpenAI review 7). prepareLock checks it.
+    if (c.owner_signature !== undefined) r.owner_signature = typeof c.owner_signature === "string" ? c.owner_signature.slice(0, 400) : String(c.owner_signature).slice(0, 400);
     return r;
   }
   return null;

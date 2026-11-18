@@ -201,10 +201,21 @@ for (const file of readdirSync(join(ROOT, "crowdlocks")).filter((f) => f.endsWit
       // Send what is due, paced: at most SEND_PER_PASS a pass, oldest
       // commitment first, and only while the proposal is still settling.
       let sent = 0;
-      for (const c of dueToSend(next, SEND_PER_PASS, txidOf)) {
+      // The completed payments must, together, reach the target before any
+      // is sent: a set short of it would pay part of a purchase that can't
+      // happen (OpenAI review 7).
+      const completedSats = (next.completed ?? []).reduce((a, x) => { try { return a + Number(Transaction.fromHex(x.tx).outs[0].value); } catch { return a; } }, 0);
+      const due = completedSats >= p.target.sats ? dueToSend(next, SEND_PER_PASS, txidOf) : [];
+      if (!due.length && (next.completed ?? []).some((x) => !x.sent) && completedSats < p.target.sats) {
+        console.log(`${file}: completed payments for "${p.title}" come to ${completedSats} sats, short of its ${p.target.sats}-sat target: none sent`);
+      }
+      for (const c of due) {
         const { state, refused, unreachable } = await sendCompleted(crowdlock.chain_api, { ...c, tx: canonical(c.tx) ?? c.tx });
         if (refused) console.log(`${file}: ${c.txid} for "${p.title}" — refused by the network: ${refused}`);
         if (unreachable) console.log(`${file}: ${c.txid} — could not reach the network: ${unreachable}`);
+        // Oldest first, and none after one that didn't go: the next pass
+        // starts again from that one (OpenAI review 7).
+        if (!state) { console.log(`${file}: stopped sending for "${p.title}" until that one goes`); break; }
         if (state) {
           next = { ...next, completed: next.completed.map((x) => x.txid === c.txid ? { ...x, sent: nowIso } : x) };
           console.log(`${file}: ${c.txid} for "${p.title}" — ${state}`);

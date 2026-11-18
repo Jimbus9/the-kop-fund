@@ -67242,6 +67242,16 @@ ${ge(n19)}`;
     }
     if (!coin) return fail("the coin has already been spent, so this commitment is void");
     if (!coin.confirmed) return fail("the coin it spends hasn't confirmed yet, so it counts toward nothing");
+    if (Number.isInteger(coin.height) && typeof chain.tipHeight === "function" && typeof chain.tx === "function") {
+      let maturing = false;
+      try {
+        const funding = await chain.tx(coin.txid);
+        if (funding?.vin?.[0]?.is_coinbase) maturing = await chain.tipHeight() - coin.height + 1 < 100;
+      } catch (e29) {
+        return fail(`whether the coin it spends can be spent yet couldn't be checked (${String(e29?.message ?? e29)})`);
+      }
+      if (maturing) return fail("the coin it spends is a new block's reward, which can't be spent until 100 blocks have followed it");
+    }
     const fee = coin.value - tx.outs.reduce((n19, o19) => n19 + Number(o19.value), 0);
     if (fee < 0) return fail("outputs exceed the input");
     const feeLimit = Math.min(crowdlock.max_commitment_fee, 0.05);
@@ -67266,7 +67276,7 @@ ${ge(n19)}`;
     const p36 = await commitmentPayment({ record, chain });
     return p36?.confirmed ? p36.sats : 0;
   }
-  async function commitmentPayment({ record, chain }) {
+  async function commitmentPayment({ record, chain, crowdlock = null }) {
     let tx;
     try {
       tx = Transaction.fromHex(record.tx);
@@ -67274,21 +67284,32 @@ ${ge(n19)}`;
       return null;
     }
     if (tx.ins.length !== 1) return null;
+    const unknown2 = (e29) => ({ unknown: true, reason: String(e29?.message ?? e29) });
+    let spent;
     try {
       const L3 = record.lock ?? {};
       const script = lockScript({ ownerPubkey: L3.owner_pubkey, cosignerPubkey: L3.cosigner_pubkey, locktime: L3.locktime });
       const from2 = toHex7(Uint8Array.from(tx.ins[0].hash).reverse());
-      const src = Transaction.fromHex(String(await chain.txHex(from2)).trim());
-      const spent = src.getId() === from2 ? src.outs[tx.ins[0].index] : null;
+      let src;
+      try {
+        src = Transaction.fromHex(String(await chain.txHex(from2)).trim());
+      } catch (e29) {
+        return unknown2(e29);
+      }
+      spent = src.getId() === from2 ? src.outs[tx.ins[0].index] : null;
       if (!spent || toHex7(spent.script) !== toHex7(lockOutputScript(script))) return null;
     } catch {
       return null;
     }
+    if (crowdlock) {
+      const fee = Number(spent.value) - tx.outs.reduce((a29, o19) => a29 + Number(o19.value), 0);
+      if (fee > Number(tx.outs[0].value) * Math.min(crowdlock.max_commitment_fee, 0.05)) return null;
+    }
     let seen;
     try {
       seen = await chain.tx(tx.getId());
-    } catch {
-      return null;
+    } catch (e29) {
+      return unknown2(e29);
     }
     if (!seen) return null;
     return { sats: Number(tx.outs[0].value), confirmed: !!seen.status?.confirmed };
@@ -67568,7 +67589,7 @@ ${ge(n19)}`;
           if (!h6.complete) throw e29;
           return coinsFromHistory(address, h6.txs);
         }
-        return list.map((u13) => ({ txid: u13.txid, vout: u13.vout, value: u13.value, confirmed: !!u13.status?.confirmed }));
+        return list.map((u13) => ({ txid: u13.txid, vout: u13.vout, value: u13.value, confirmed: !!u13.status?.confirmed, height: u13.status?.block_height ?? null }));
       },
       txHex: (txid) => get(`/tx/${txid}/hex`, "text"),
       /** Ask everything afresh: what "check again" means when the fan asks for it. */
@@ -67591,6 +67612,10 @@ ${ge(n19)}`;
        * lock's date is judged against this, not against any phone's clock, and
        * it runs about an hour behind real time.
        */
+      /** The height of the newest block. */
+      async tipHeight() {
+        return Number(String(await get("/blocks/tip/height", "text")).trim());
+      },
       async medianTime() {
         const hash = await get("/blocks/tip/hash", "text");
         return (await get(`/block/${hash.trim()}`, "json", true)).mediantime;

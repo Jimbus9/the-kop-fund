@@ -58,7 +58,16 @@ export function isListedDestination(address, destinations, { crowdlock = null, s
   const mine = entries.filter((e) => canonicalAddress(e.address) === canonicalAddress(address));
   const added = mine.filter((e) => e.op === "add").pop();
   if (!added) return false;
-  if (mine.some((e) => e.op === "revoke" && e.index > added.index)) return false;
+  // A revocation stops payments from when it was published. One stamped on
+  // the chain after this spend doesn't make a payment made before it a
+  // release (OpenAI review 7: lawful past payments read as releases once the
+  // destination was later revoked). One with no readable stamp counts from
+  // the start, as before: when it was made can't be shown.
+  if (mine.some((e) => {
+    if (e.op !== "revoke" || !(e.index > added.index)) return false;
+    const s = stampedAt(e, stamps?.[e.stamp] ?? null);
+    return !s.ok || s.at <= at;
+  })) return false;
   if (!attestationsAreValid(added, { attestors: rules.attestors, threshold: rules.threshold, hrp: rules.hrp }).ok) return false;
   const stamped = stampedAt(added, stamps?.[added.stamp] ?? null);
   if (!stamped.ok) return false;
@@ -189,10 +198,22 @@ export function earlyReleases(lock, txs, context = {}, now = Math.floor(Date.now
     const ins = Array.isArray(tx.vin) ? tx.vin : [];
     const outs = Array.isArray(tx.vout) ? tx.vout : [];
     const spent = ins.reduce((n, v) => n + (Number(v?.prevout?.value) || 0), 0);
+    // What came out of this lock itself: the base fees are judged against.
+    // Every input counted before, so coins added from outside made a bigger
+    // allowance (OpenAI review 7).
+    const fromHere = ins.reduce((n, v) => n + (String(v?.prevout?.scriptpubkey_address ?? "").toLowerCase() === address ? (Number(v?.prevout?.value) || 0) : 0), 0);
     const paid = outs.reduce((n, o) => n + (Number(o?.value) || 0), 0);
     const markers = outs.filter(holdsNothing).length;
     // What it pays destinations the co-signer could pay at that moment.
     const toDestinations = outs.reduce((n, o) => n + (o?.scriptpubkey_address && isListedDestination(o.scriptpubkey_address, destinations, { crowdlock, stamps, at, hrp }) ? (Number(o?.value) || 0) : 0), 0);
+    // A move into this lock from another of the same owner's locks, paying no
+    // destination: its fee counts here too, so money passed between two
+    // locks can't spend a fresh allowance in each (OpenAI review 7).
+    if (toDestinations === 0 && !ins.some((v) => String(v?.prevout?.scriptpubkey_address ?? "").toLowerCase() === address)
+      && outs.some((o) => String(o?.scriptpubkey_address ?? "").toLowerCase() === address)
+      && ins.length > 0 && ins.every((v) => staysLocked(v?.prevout?.scriptpubkey_address, { ...lock, locktime: 0 }, { crowdlock, register, hrp }))) {
+      movedAsFees += Math.max(0, spent - paid);
+    }
     for (const vin of ins) {
       if (String(vin.prevout?.scriptpubkey_address ?? "").toLowerCase() !== address) continue;
       // Early if the network's clock had not passed the date. Before it in the
@@ -208,7 +229,7 @@ export function earlyReleases(lock, txs, context = {}, now = Math.floor(Date.now
       const fee = spent - paid;
       let feeTooBig;
       if (toDestinations > 0) feeTooBig = fee > toDestinations * maxFee;
-      else { movedAsFees += Math.max(0, fee); feeTooBig = movedAsFees > spent * maxFee; }
+      else { movedAsFees += Math.max(0, fee); feeTooBig = movedAsFees > fromHere * maxFee; }
       if (outs.length > 0 && !stray && !feeTooBig && markers <= 1 && paid > 0) continue;
       found.push({
         txid: tx.txid, at, sats: vin.prevout?.value ?? 0, paidTo: stray?.scriptpubkey_address ?? null,
