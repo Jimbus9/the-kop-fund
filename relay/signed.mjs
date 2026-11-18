@@ -19,6 +19,7 @@ import { createHash } from "node:crypto";
 import { Transaction, script as bscript } from "bitcoinjs-lib";
 import { verify } from "../js/vendor/noble-secp256k1.js";
 import { lockScript } from "../js/lockrecord.mjs";
+import { readHistory, coinsFromHistory } from "../js/release.mjs";
 
 const hex = (b) => Buffer.from(b).toString("hex");
 const TIMEOUT_MS = 20000;
@@ -47,6 +48,11 @@ function parse(txHex, lock) {
   let tx;
   try { tx = Transaction.fromHex(txHex); } catch { return { reason: "its transaction cannot be read" }; }
   if (tx.ins.length !== 1) return { reason: "it does not spend exactly one coin" };
+  // The owner's signature does not cover the input's own script, so anyone
+  // can add one: the copy has another id, is still "signed", and the network
+  // never takes it. Posted first it took the coin's place in the pile
+  // (security loop, 17 November 2026).
+  if (tx.ins[0].script.length !== 0) return { reason: "its input carries a script, which a spend of a lock never does — the network would not take it" };
   const w = tx.ins[0].witness;
   let script;
   try { script = lockScript({ ownerPubkey: lock.owner_pubkey, cosignerPubkey: lock.cosigner_pubkey, locktime: lock.locktime }); } catch { return { reason: "its lock's terms do not make a lock" }; }
@@ -110,8 +116,14 @@ export const ASKED_PER_PASS = 200;
  * had its own 200, so a proposal could cost 400 (OpenAI review, M-01).
  */
 export function explorerBudget(n = ASKED_PER_PASS) {
-  return { left: n };
+  // Some of it is kept back for completed payments. The commitment check
+  // runs first and what it asks is decided by whoever posts to the relays:
+  // junk naming 200 registered locks used every question, the completion
+  // check got none, and the inbox recorded and sent no completed payment
+  // for as long as the junk was there (security loop, round 4).
+  return { left: n, keptForCompletions: Math.min(KEPT_FOR_COMPLETIONS, Math.floor(n / 2)) };
 }
+export const KEPT_FOR_COMPLETIONS = 50;
 
 /**
  * Which of these to ask about this pass, when there are more than a pass
@@ -132,7 +144,7 @@ const NEXT_PASS = "more was posted than one pass asks the block explorer about; 
  *   seed:     anything that differs from pass to pass
  */
 export async function ownersSigned(records, { coinsFor, limit = ASKED_PER_PASS, seed = "", budget = null }) {
-  const pick = thisPass([...new Set(records.map((r) => r.lock.address))], budget ? Math.min(limit, budget.left) : limit, seed);
+  const pick = thisPass([...new Set(records.map((r) => r.lock.address))], budget ? Math.min(limit, Math.max(0, budget.left - (budget.keptForCompletions ?? 0))) : limit, seed);
   if (budget) budget.left -= pick.size;
   const coins = new Map();
   for (const address of pick) coins.set(address, await coinsFor(address));
@@ -163,7 +175,7 @@ export function readTx(txHex) {
   try {
     const tx = Transaction.fromHex(txHex);
     if (tx.ins.length !== 1) return null;
-    return { txid: tx.getId(), coin: `${hex(Buffer.from(tx.ins[0].hash).reverse())}:${tx.ins[0].index}`, hex: tx.toHex() };
+    return { txid: tx.getId(), coin: `${hex(Buffer.from(tx.ins[0].hash).reverse())}:${tx.ins[0].index}`, hex: tx.toHex(), outputs: tx.outs.map((o) => hex(o.script)), inputScript: hex(tx.ins[0].script) };
   } catch { return null; }
 }
 
@@ -189,6 +201,16 @@ export function coinsAt(chainApi, fetchImpl = fetch) {
       // Confirmed coins only: an unconfirmed one can be replaced by its sender
       // and vanish, so a commitment spending it counts toward nothing.
       if (r.ok) coins = Object.fromEntries((await r.json()).filter((u) => u?.status?.confirmed).map((u) => [`${u.txid}:${u.vout}`, u.value]));
+      // Public explorers refuse to list the coins at an address holding more
+      // than 500 (they answer 400). Anyone can send 501 tiny coins to a
+      // lock's published address, and that lock's commitments could then
+      // never be taken. Its history says the same thing, a page at a time
+      // (security loop, 17 November 2026).
+      else if (r.status === 400) {
+        const page = async (path) => { const p = await ask(`${chainApi}/address/${address}/${path}`, {}, fetchImpl); if (!p.ok) throw new Error(String(p.status)); return p.json(); };
+        const h = await readHistory(() => page("txs"), (last) => page(`txs/chain/${last}`));
+        if (h.complete) coins = Object.fromEntries(coinsFromHistory(address, h.txs).filter((u) => u.confirmed).map((u) => [`${u.txid}:${u.vout}`, u.value]));
+      }
     } catch {}
     asked.set(address, coins);
     return coins;

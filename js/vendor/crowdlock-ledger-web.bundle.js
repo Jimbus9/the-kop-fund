@@ -20099,22 +20099,22 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       exports.ripemd160 = exports.RIPEMD160 = exports.md5 = exports.MD5 = exports.sha1 = exports.SHA1 = void 0;
       var _md_ts_1 = require_md();
       var utils_ts_1 = require_utils();
-      var SHA1_IV = /* @__PURE__ */ Uint32Array.from([
+      var SHA1_IV2 = /* @__PURE__ */ Uint32Array.from([
         1732584193,
         4023233417,
         2562383102,
         271733878,
         3285377520
       ]);
-      var SHA1_W = /* @__PURE__ */ new Uint32Array(80);
-      var SHA1 = class extends _md_ts_1.HashMD {
+      var SHA1_W2 = /* @__PURE__ */ new Uint32Array(80);
+      var SHA12 = class extends _md_ts_1.HashMD {
         constructor() {
           super(64, 20, 8, false);
-          this.A = SHA1_IV[0] | 0;
-          this.B = SHA1_IV[1] | 0;
-          this.C = SHA1_IV[2] | 0;
-          this.D = SHA1_IV[3] | 0;
-          this.E = SHA1_IV[4] | 0;
+          this.A = SHA1_IV2[0] | 0;
+          this.B = SHA1_IV2[1] | 0;
+          this.C = SHA1_IV2[2] | 0;
+          this.D = SHA1_IV2[3] | 0;
+          this.E = SHA1_IV2[4] | 0;
         }
         get() {
           const { A: A9, B: B4, C: C5, D: D8, E: E14 } = this;
@@ -20129,9 +20129,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         }
         process(view, offset) {
           for (let i20 = 0; i20 < 16; i20++, offset += 4)
-            SHA1_W[i20] = view.getUint32(offset, false);
+            SHA1_W2[i20] = view.getUint32(offset, false);
           for (let i20 = 16; i20 < 80; i20++)
-            SHA1_W[i20] = (0, utils_ts_1.rotl)(SHA1_W[i20 - 3] ^ SHA1_W[i20 - 8] ^ SHA1_W[i20 - 14] ^ SHA1_W[i20 - 16], 1);
+            SHA1_W2[i20] = (0, utils_ts_1.rotl)(SHA1_W2[i20 - 3] ^ SHA1_W2[i20 - 8] ^ SHA1_W2[i20 - 14] ^ SHA1_W2[i20 - 16], 1);
           let { A: A9, B: B4, C: C5, D: D8, E: E14 } = this;
           for (let i20 = 0; i20 < 80; i20++) {
             let F5, K6;
@@ -20148,7 +20148,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
               F5 = B4 ^ C5 ^ D8;
               K6 = 3395469782;
             }
-            const T7 = (0, utils_ts_1.rotl)(A9, 5) + F5 + E14 + K6 + SHA1_W[i20] | 0;
+            const T7 = (0, utils_ts_1.rotl)(A9, 5) + F5 + E14 + K6 + SHA1_W2[i20] | 0;
             E14 = D8;
             D8 = C5;
             C5 = (0, utils_ts_1.rotl)(B4, 30);
@@ -20163,18 +20163,18 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           this.set(A9, B4, C5, D8, E14);
         }
         roundClean() {
-          (0, utils_ts_1.clean)(SHA1_W);
+          (0, utils_ts_1.clean)(SHA1_W2);
         }
         destroy() {
           this.set(0, 0, 0, 0, 0);
           (0, utils_ts_1.clean)(this.buffer);
         }
       };
-      exports.SHA1 = SHA1;
-      exports.sha1 = (0, utils_ts_1.createHasher)(() => new SHA1());
+      exports.SHA1 = SHA12;
+      exports.sha1 = (0, utils_ts_1.createHasher)(() => new SHA12());
       var p322 = /* @__PURE__ */ Math.pow(2, 32);
       var K5 = /* @__PURE__ */ Array.from({ length: 64 }, (_9, i20) => Math.floor(p322 * Math.abs(Math.sin(i20 + 1))));
-      var MD5_IV = /* @__PURE__ */ SHA1_IV.slice(0, 4);
+      var MD5_IV = /* @__PURE__ */ SHA1_IV2.slice(0, 4);
       var MD5_W = /* @__PURE__ */ new Uint32Array(16);
       var MD5 = class extends _md_ts_1.HashMD {
         constructor() {
@@ -30962,22 +30962,22 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
       exports.ripemd160 = exports.RIPEMD160 = exports.md5 = exports.MD5 = exports.sha1 = exports.SHA1 = void 0;
       var _md_ts_1 = require_md3();
       var utils_ts_1 = require_utils4();
-      var SHA1_IV = /* @__PURE__ */ Uint32Array.from([
+      var SHA1_IV2 = /* @__PURE__ */ Uint32Array.from([
         1732584193,
         4023233417,
         2562383102,
         271733878,
         3285377520
       ]);
-      var SHA1_W = /* @__PURE__ */ new Uint32Array(80);
-      var SHA1 = class extends _md_ts_1.HashMD {
+      var SHA1_W2 = /* @__PURE__ */ new Uint32Array(80);
+      var SHA12 = class extends _md_ts_1.HashMD {
         constructor() {
           super(64, 20, 8, false);
-          this.A = SHA1_IV[0] | 0;
-          this.B = SHA1_IV[1] | 0;
-          this.C = SHA1_IV[2] | 0;
-          this.D = SHA1_IV[3] | 0;
-          this.E = SHA1_IV[4] | 0;
+          this.A = SHA1_IV2[0] | 0;
+          this.B = SHA1_IV2[1] | 0;
+          this.C = SHA1_IV2[2] | 0;
+          this.D = SHA1_IV2[3] | 0;
+          this.E = SHA1_IV2[4] | 0;
         }
         get() {
           const { A: A9, B: B4, C: C5, D: D8, E: E14 } = this;
@@ -30992,9 +30992,9 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
         }
         process(view, offset) {
           for (let i20 = 0; i20 < 16; i20++, offset += 4)
-            SHA1_W[i20] = view.getUint32(offset, false);
+            SHA1_W2[i20] = view.getUint32(offset, false);
           for (let i20 = 16; i20 < 80; i20++)
-            SHA1_W[i20] = (0, utils_ts_1.rotl)(SHA1_W[i20 - 3] ^ SHA1_W[i20 - 8] ^ SHA1_W[i20 - 14] ^ SHA1_W[i20 - 16], 1);
+            SHA1_W2[i20] = (0, utils_ts_1.rotl)(SHA1_W2[i20 - 3] ^ SHA1_W2[i20 - 8] ^ SHA1_W2[i20 - 14] ^ SHA1_W2[i20 - 16], 1);
           let { A: A9, B: B4, C: C5, D: D8, E: E14 } = this;
           for (let i20 = 0; i20 < 80; i20++) {
             let F5, K6;
@@ -31011,7 +31011,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
               F5 = B4 ^ C5 ^ D8;
               K6 = 3395469782;
             }
-            const T7 = (0, utils_ts_1.rotl)(A9, 5) + F5 + E14 + K6 + SHA1_W[i20] | 0;
+            const T7 = (0, utils_ts_1.rotl)(A9, 5) + F5 + E14 + K6 + SHA1_W2[i20] | 0;
             E14 = D8;
             D8 = C5;
             C5 = (0, utils_ts_1.rotl)(B4, 30);
@@ -31026,18 +31026,18 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
           this.set(A9, B4, C5, D8, E14);
         }
         roundClean() {
-          (0, utils_ts_1.clean)(SHA1_W);
+          (0, utils_ts_1.clean)(SHA1_W2);
         }
         destroy() {
           this.set(0, 0, 0, 0, 0);
           (0, utils_ts_1.clean)(this.buffer);
         }
       };
-      exports.SHA1 = SHA1;
-      exports.sha1 = (0, utils_ts_1.createHasher)(() => new SHA1());
+      exports.SHA1 = SHA12;
+      exports.sha1 = (0, utils_ts_1.createHasher)(() => new SHA12());
       var p322 = /* @__PURE__ */ Math.pow(2, 32);
       var K5 = /* @__PURE__ */ Array.from({ length: 64 }, (_9, i20) => Math.floor(p322 * Math.abs(Math.sin(i20 + 1))));
-      var MD5_IV = /* @__PURE__ */ SHA1_IV.slice(0, 4);
+      var MD5_IV = /* @__PURE__ */ SHA1_IV2.slice(0, 4);
       var MD5_W = /* @__PURE__ */ new Uint32Array(16);
       var MD5 = class extends _md_ts_1.HashMD {
         constructor() {
@@ -46687,6 +46687,7 @@ Learn more: https://github.com/bitcoinerlab/descriptors/blob/main/src/index.ts#L
     checkCommitment: () => checkCommitment,
     checkLedgerKey: () => checkLedgerKey,
     commitmentPaid: () => commitmentPaid,
+    commitmentPayment: () => commitmentPayment,
     commitmentTxid: () => commitmentTxid,
     connectLedger: () => connectLedger,
     esploraChain: () => esploraChain,
@@ -61708,6 +61709,17 @@ ${ge(n19)}`;
   init_shim();
 
   // ../../app/node_modules/bitcoinjs-lib/src/esm/crypto.js
+  var crypto_exports = {};
+  __export(crypto_exports, {
+    TAGGED_HASH_PREFIXES: () => TAGGED_HASH_PREFIXES2,
+    TAGS: () => TAGS,
+    hash160: () => hash160,
+    hash256: () => hash256,
+    ripemd160: () => ripemd1602,
+    sha1: () => sha12,
+    sha256: () => sha2565,
+    taggedHash: () => taggedHash2
+  });
   init_shim();
 
   // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/ripemd160.js
@@ -61901,6 +61913,78 @@ ${ge(n19)}`;
   ]);
 
   // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/legacy.js
+  var SHA1_IV = /* @__PURE__ */ Uint32Array.from([
+    1732584193,
+    4023233417,
+    2562383102,
+    271733878,
+    3285377520
+  ]);
+  var SHA1_W = /* @__PURE__ */ new Uint32Array(80);
+  var SHA1 = class extends HashMD3 {
+    constructor() {
+      super(64, 20, 8, false);
+      this.A = SHA1_IV[0] | 0;
+      this.B = SHA1_IV[1] | 0;
+      this.C = SHA1_IV[2] | 0;
+      this.D = SHA1_IV[3] | 0;
+      this.E = SHA1_IV[4] | 0;
+    }
+    get() {
+      const { A: A9, B: B4, C: C5, D: D8, E: E14 } = this;
+      return [A9, B4, C5, D8, E14];
+    }
+    set(A9, B4, C5, D8, E14) {
+      this.A = A9 | 0;
+      this.B = B4 | 0;
+      this.C = C5 | 0;
+      this.D = D8 | 0;
+      this.E = E14 | 0;
+    }
+    process(view, offset) {
+      for (let i20 = 0; i20 < 16; i20++, offset += 4)
+        SHA1_W[i20] = view.getUint32(offset, false);
+      for (let i20 = 16; i20 < 80; i20++)
+        SHA1_W[i20] = rotl(SHA1_W[i20 - 3] ^ SHA1_W[i20 - 8] ^ SHA1_W[i20 - 14] ^ SHA1_W[i20 - 16], 1);
+      let { A: A9, B: B4, C: C5, D: D8, E: E14 } = this;
+      for (let i20 = 0; i20 < 80; i20++) {
+        let F5, K5;
+        if (i20 < 20) {
+          F5 = Chi3(B4, C5, D8);
+          K5 = 1518500249;
+        } else if (i20 < 40) {
+          F5 = B4 ^ C5 ^ D8;
+          K5 = 1859775393;
+        } else if (i20 < 60) {
+          F5 = Maj3(B4, C5, D8);
+          K5 = 2400959708;
+        } else {
+          F5 = B4 ^ C5 ^ D8;
+          K5 = 3395469782;
+        }
+        const T7 = rotl(A9, 5) + F5 + E14 + K5 + SHA1_W[i20] | 0;
+        E14 = D8;
+        D8 = C5;
+        C5 = rotl(B4, 30);
+        B4 = A9;
+        A9 = T7;
+      }
+      A9 = A9 + this.A | 0;
+      B4 = B4 + this.B | 0;
+      C5 = C5 + this.C | 0;
+      D8 = D8 + this.D | 0;
+      E14 = E14 + this.E | 0;
+      this.set(A9, B4, C5, D8, E14);
+    }
+    roundClean() {
+      clean3(SHA1_W);
+    }
+    destroy() {
+      this.set(0, 0, 0, 0, 0);
+      clean3(this.buffer);
+    }
+  };
+  var sha1 = /* @__PURE__ */ createHasher4(() => new SHA1());
   var Rho160 = /* @__PURE__ */ Uint8Array.from([
     7,
     4,
@@ -62170,12 +62254,29 @@ ${ge(n19)}`;
 
   // ../../app/node_modules/bitcoinjs-lib/src/esm/crypto.js
   init_browser3();
+
+  // ../../app/node_modules/bitcoinjs-lib/node_modules/@noble/hashes/esm/sha1.js
+  init_shim();
+  var sha12 = sha1;
+
+  // ../../app/node_modules/bitcoinjs-lib/src/esm/crypto.js
   function hash160(buffer) {
     return ripemd1602(sha2565(buffer));
   }
   function hash256(buffer) {
     return sha2565(sha2565(buffer));
   }
+  var TAGS = [
+    "BIP0340/challenge",
+    "BIP0340/aux",
+    "BIP0340/nonce",
+    "TapLeaf",
+    "TapBranch",
+    "TapSighash",
+    "TapTweak",
+    "KeyAgg list",
+    "KeyAgg coefficient"
+  ];
   var TAGGED_HASH_PREFIXES2 = {
     "BIP0340/challenge": Uint8Array.from([
       123,
@@ -66565,8 +66666,8 @@ ${ge(n19)}`;
   // ../js/crowdlock.mjs
   init_shim();
   function isCosignerOf(c25, cosignerPubkeyHex) {
-    const x8 = String(cosignerPubkeyHex).toLowerCase().slice(2);
-    return (c25.cosigner_keys ?? []).some((k8) => k8.slice(2) === x8);
+    const key = String(cosignerPubkeyHex).toLowerCase();
+    return (c25.cosigner_keys ?? []).some((k8) => String(k8).toLowerCase() === key);
   }
 
   // ../js/lockrecord.mjs
@@ -66586,16 +66687,20 @@ ${ge(n19)}`;
     return out;
   }
   function lockScript({ ownerPubkey, cosignerPubkey, locktime }) {
+    if (!Number.isInteger(locktime) || locktime < 1 || locktime > 4294967295) throw new Error("a lock's date must be a whole number from 1 to 4294967295");
+    for (const [who, key] of [["owner", ownerPubkey], ["co-signer", cosignerPubkey]]) {
+      if (typeof key !== "string" || !/^0[23][0-9a-fA-F]{64}$/.test(key)) throw new Error(`the ${who}'s key must be a compressed public key: 33 bytes, 66 hex characters`);
+    }
     const owner = hexToBytes3(ownerPubkey);
     const cosigner = hexToBytes3(cosignerPubkey);
     const t29 = scriptNumber(locktime);
+    const pushed = locktime <= 16 ? [80 + locktime] : [t29.length, ...t29];
     return Uint8Array.from([
       33,
       ...owner,
       OP.CHECKSIGVERIFY,
       OP.IF,
-      t29.length,
-      ...t29,
+      ...pushed,
       OP.CHECKLOCKTIMEVERIFY,
       OP.ELSE,
       33,
@@ -66730,6 +66835,12 @@ ${ge(n19)}`;
     regtest: { network: import_descriptors.networks.regtest, coin: 1 }
   };
   var DUST_SATS = 294n;
+  var MOST_INPUTS = 200;
+  var TOO_SMALL = "every coin here is too small to be worth its own fee at this fee rate \u2014 choose a slower fee";
+  function worthSpending(coins, inputWeight, feeRate, most = MOST_INPUTS) {
+    const cost = BigInt(Math.ceil(inputWeight / 4 * feeRate));
+    return coins.filter((c25) => BigInt(c25.value) > cost).sort((a29, b8) => BigInt(b8.value) > BigInt(a29.value) ? 1 : BigInt(b8.value) < BigInt(a29.value) ? -1 : 0).slice(0, most);
+  }
   function dustFor(script) {
     const witness = script.length >= 4 && script.length <= 42 && (script[0] === 0 || script[0] >= 81 && script[0] <= 96) && script[1] === script.length - 2;
     return BigInt(3 * (8 + 1 + script.length + (witness ? 67 : 148)));
@@ -66786,8 +66897,10 @@ ${ge(n19)}`;
     } catch {
       throw new Error("that is not an address on this network");
     }
-    const coins = (await chain.utxos(account.address)).filter((c25) => c25.confirmed);
-    if (coins.length === 0) throw new Error("there is no confirmed money to send yet");
+    const everyCoin = (await chain.utxos(account.address)).filter((c25) => c25.confirmed);
+    if (everyCoin.length === 0) throw new Error("there is no confirmed money to send yet");
+    const coins = worthSpending(everyCoin, account.output.inputWeight(true, "DANGEROUSLY_USE_FAKE_SIGNATURES"), feeRate);
+    if (coins.length === 0) throw new Error(TOO_SMALL);
     const inputTotal = coins.reduce((s23, c25) => s23 + BigInt(c25.value), 0n);
     const sendAll = amount === "all";
     if (!sendAll && (typeof amount !== "bigint" || amount <= 0n)) throw new Error("amount must be a positive number of sats");
@@ -66900,8 +67013,10 @@ ${ge(n19)}`;
     } catch {
       throw new Error("that is not an address on this network");
     }
-    const coins = (await chain.utxos(lock.address)).filter((c25) => c25.confirmed);
-    if (coins.length === 0) throw new Error("there is no confirmed money in this lock");
+    const everyCoin = (await chain.utxos(lock.address)).filter((c25) => c25.confirmed);
+    if (everyCoin.length === 0) throw new Error("there is no confirmed money in this lock");
+    const coins = worthSpending(everyCoin, out.inputWeight(true, "DANGEROUSLY_USE_FAKE_SIGNATURES"), feeRate);
+    if (coins.length === 0) throw new Error(TOO_SMALL);
     const total = coins.reduce((s23, c25) => s23 + BigInt(c25.value), 0n);
     const weight = 44 + coins.length * out.inputWeight(true, "DANGEROUSLY_USE_FAKE_SIGNATURES") + dest.outputWeight();
     const fee = BigInt(Math.ceil(weight / 4 * feeRate));
@@ -67028,7 +67143,9 @@ ${ge(n19)}`;
     }
     if (derived !== L3.address) return fail("lock address does not re-derive from the stated keys and locktime");
     if (!isCosignerOf(crowdlock, L3.cosigner_pubkey)) return fail(`the lock's co-signer is not ${crowdlock.name}'s \u2014 this commitment belongs to a different Crowdlock, or to none`);
-    if (L3.locktime >= 5e8) {
+    if (L3.locktime < 5e8) {
+      if (hrp !== "bcrt") return fail("the lock is dated by block height, which only a private test chain uses \u2014 on a real network it may already be open, so its money isn't committed");
+    } else {
       const settles = Date.parse(proposal.settles_by ?? proposal.settlesBy ?? "");
       if (Number.isNaN(settles)) return fail("the proposal's settling date can't be read, so whether the lock outlasts it can't be checked");
       if (!(L3.locktime > settles / 1e3)) return fail("the lock opens before the proposal's settling ends, so its owner could take the money home first");
@@ -67040,6 +67157,7 @@ ${ge(n19)}`;
       return fail(`transaction will not parse: ${e29.message}`);
     }
     if (tx.ins.length !== 1) return fail(`${tx.ins.length} inputs, must be exactly 1`);
+    if (tx.ins[0].script.length !== 0) return fail("its input carries a script, which a spend of a lock never does \u2014 the network would not take it");
     const w8 = tx.ins[0].witness;
     if (w8.length !== 4) return fail(`witness has ${w8.length} items, the purchase branch has 4`);
     if (w8[0].length !== 0) return fail("the co-signer's slot is not empty \u2014 this is a completed spend, not a commitment");
@@ -67051,7 +67169,9 @@ ${ge(n19)}`;
     if (value2 === null) {
       try {
         const src = Transaction.fromHex(String(await chain.txHex(txid)).trim());
-        if (src.getId() === txid && src.outs[tx.ins[0].index]) value2 = BigInt(src.outs[tx.ins[0].index].value);
+        const spent = src.getId() === txid ? src.outs[tx.ins[0].index] : null;
+        if (spent && toHex7(spent.script) !== toHex7(lockOutputScript(script))) return fail("the coin it spends was never a coin of the lock it names, so this is not a spend of that lock");
+        if (spent) value2 = BigInt(spent.value);
       } catch {
       }
       if (value2 === null) return fail("the coin it spends can't be read from the chain just now, so its signature can't be checked");
@@ -67130,6 +67250,9 @@ ${ge(n19)}`;
     if (fee < least) return fail(`fee of ${fee} sats is below the ${least} the network needs to pass this payment on`);
     return { valid: true, reason: "", committedSats, fee, ownerPubkey: L3.owner_pubkey, coin: `${txid}:${tx.ins[0].index}` };
   }
+  function lockOutputScript(witnessScript) {
+    return Uint8Array.from([0, 32, ...crypto_exports.sha256(Uint8Array.from(witnessScript))]);
+  }
   function commitmentTxid(record) {
     try {
       return Transaction.fromHex(record.tx).getId();
@@ -67138,18 +67261,35 @@ ${ge(n19)}`;
     }
   }
   async function commitmentPaid({ record, chain }) {
+    const p36 = await commitmentPayment({ record, chain });
+    return p36?.confirmed ? p36.sats : 0;
+  }
+  async function commitmentPayment({ record, chain }) {
     let tx;
     try {
       tx = Transaction.fromHex(record.tx);
     } catch {
-      return 0;
+      return null;
     }
+    if (tx.ins.length !== 1) return null;
     try {
-      if (!(await chain.tx(tx.getId()))?.status?.confirmed) return 0;
+      const L3 = record.lock ?? {};
+      const script = lockScript({ ownerPubkey: L3.owner_pubkey, cosignerPubkey: L3.cosigner_pubkey, locktime: L3.locktime });
+      const from2 = toHex7(Uint8Array.from(tx.ins[0].hash).reverse());
+      const src = Transaction.fromHex(String(await chain.txHex(from2)).trim());
+      const spent = src.getId() === from2 ? src.outs[tx.ins[0].index] : null;
+      if (!spent || toHex7(spent.script) !== toHex7(lockOutputScript(script))) return null;
     } catch {
-      return 0;
+      return null;
     }
-    return Number(tx.outs[0].value);
+    let seen;
+    try {
+      seen = await chain.tx(tx.getId());
+    } catch {
+      return null;
+    }
+    if (!seen) return null;
+    return { sats: Number(tx.outs[0].value), confirmed: !!seen.status?.confirmed };
   }
   async function signStatementWith(account, statement) {
     if (account.kind !== "ledger") return signStatement(account, statement);
@@ -67224,6 +67364,48 @@ ${ge(n19)}`;
 
   // ../../app/src/wallet/esplora.mjs
   init_shim();
+
+  // ../js/release.mjs
+  init_shim();
+  var CLOCK_WINDOW = 7 * 86400;
+  var PAGE = 25;
+  var MOST_PAGES = 40;
+  async function readHistory(first, after, { mostPages = MOST_PAGES } = {}) {
+    const page = await first();
+    const list = Array.isArray(page) ? page : [];
+    const txs = [...list];
+    const seen = new Set(list.map((t29) => t29.txid));
+    let complete = list.filter((t29) => !t29.status?.confirmed).length < 50;
+    let confirmed = list.filter((t29) => t29.status?.confirmed);
+    for (let pages = 1; confirmed.length >= PAGE; pages++) {
+      if (pages >= mostPages) {
+        complete = false;
+        break;
+      }
+      const next = await after(confirmed[confirmed.length - 1].txid);
+      confirmed = (Array.isArray(next) ? next : []).filter((t29) => t29.status?.confirmed && !seen.has(t29.txid));
+      for (const t29 of confirmed) {
+        seen.add(t29.txid);
+        txs.push(t29);
+      }
+    }
+    return { txs, complete };
+  }
+  function coinsFromHistory(address, txs) {
+    const a29 = String(address).toLowerCase();
+    const at2 = (x8) => String(x8 ?? "").toLowerCase() === a29;
+    const spent = /* @__PURE__ */ new Set();
+    const made = [];
+    for (const tx of Array.isArray(txs) ? txs : []) {
+      for (const v21 of tx?.vin ?? []) if (at2(v21?.prevout?.scriptpubkey_address)) spent.add(`${v21.txid}:${v21.vout}`);
+      (tx?.vout ?? []).forEach((o19, n19) => {
+        if (at2(o19?.scriptpubkey_address)) made.push({ txid: tx.txid, vout: n19, value: o19.value, confirmed: !!tx.status?.confirmed });
+      });
+    }
+    return made.filter((c25) => !spent.has(`${c25.txid}:${c25.vout}`));
+  }
+
+  // ../../app/src/wallet/esplora.mjs
   var TIMEOUT_MS = 2e4;
   var FIRST_TRY = 0.4;
   var PAUSE = 0.075;
@@ -67375,7 +67557,15 @@ ${ge(n19)}`;
     };
     return {
       async utxos(address) {
-        const list = await get(`/address/${address}/utxo`);
+        let list;
+        try {
+          list = await get(`/address/${address}/utxo`);
+        } catch (e29) {
+          if (!/answered 400/.test(String(e29?.message ?? e29))) throw e29;
+          const h6 = await readHistory(() => get(`/address/${address}/txs`), (last2) => get(`/address/${address}/txs/chain/${last2}`));
+          if (!h6.complete) throw e29;
+          return coinsFromHistory(address, h6.txs);
+        }
         return list.map((u13) => ({ txid: u13.txid, vout: u13.vout, value: u13.value, confirmed: !!u13.status?.confirmed }));
       },
       txHex: (txid) => get(`/tx/${txid}/hex`, "text"),

@@ -35,7 +35,9 @@ jobs:
 
       - name: Install the relay library
         working-directory: relay
-        run: npm ci --no-audit --no-fund
+        # Without the libraries' own install scripts: this job's token can write to the
+        # repository, and none of them needs one (security loop, 17 November 2026).
+        run: npm ci --ignore-scripts --no-audit --no-fund
 
       - name: Collect records from the relays, every two minutes
         env:

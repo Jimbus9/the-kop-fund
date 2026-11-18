@@ -17,7 +17,8 @@
 // Works on the transaction JSON an Esplora-style explorer returns for
 // /address/<lock>/txs, so the register page and the app read it the same way.
 
-import { lockIsGenuine, hrpFor } from "./lockrecord.mjs";
+import { lockIsGenuine, hrpFor, lockAddress } from "./lockrecord.mjs";
+import { sha256 } from "./vendor/noble-hashes/sha256.js";
 import { chainIsIntact, attestationsAreValid, stampedAt, attestorsOf } from "./proposals.mjs";
 import { canonicalAddress } from "./verify.mjs";
 
@@ -78,8 +79,8 @@ export function isListedDestination(address, destinations, { crowdlock = null, s
 export function staysLocked(address, lock, { crowdlock, register, hrp }) {
   const a = String(address ?? "").toLowerCase();
   if (!a || !lock?.owner_pubkey) return false;
-  const own = String(lock.cosigner_pubkey ?? "").slice(2);
-  if (a === String(lock.address ?? "").toLowerCase() && (crowdlock?.cosigner_keys ?? []).some((k) => String(k).slice(2) === own)) return true;
+  const own = String(lock.cosigner_pubkey ?? "").toLowerCase();
+  if (a === String(lock.address ?? "").toLowerCase() && (crowdlock?.cosigner_keys ?? []).some((k) => String(k).toLowerCase() === own)) return true;
   return (register?.locks ?? []).some((r) => String(r.address).toLowerCase() === a
     && r.owner_pubkey === lock.owner_pubkey && r.locktime >= lock.locktime
     && lockIsGenuine(r, { crowdlock, register, hrp }).ok);
@@ -156,8 +157,16 @@ export async function clocksFor(lock, txs, getBlock) {
  * until then, so the witness's shape is not asked about. It is a purchase only
  * if EVERY output is one of: a destination the co-signer could pay at that
  * moment (isListedDestination); money staying locked (staysLocked); or one
- * proposal marker holding nothing; AND what it leaves as fee is no more than
- * a commitment may (the Crowdlock's max_commitment_fee of what it spends).
+ * proposal marker holding nothing; AND what it leaves as fee is small:
+ *   - where it pays a destination, no more than a commitment may leave: the
+ *     Crowdlock's max_commitment_fee of what it pays the destination;
+ *   - where it pays none (all of it stays locked), no more than
+ *     max_commitment_fee of what it spends, COUNTING the fees of every
+ *     earlier such move out of this lock.
+ * (Until 17 November 2026 each spend's fee was measured on its own against
+ * what it spent, so a lock could be emptied as fees a slice at a time, each
+ * slice going "back into the same lock", and 300 slices took 95% of it:
+ * security loop, round 3.)
  * `paidTo` is the first output that is none of these, or null when the money
  * went as fee.
  */
@@ -167,7 +176,12 @@ export function earlyReleases(lock, txs, context = {}, now = Math.floor(Date.now
   const maxFee = typeof crowdlock?.max_commitment_fee === "number" ? crowdlock.max_commitment_fee : 0.01;
   const address = String(lock.address).toLowerCase();
   const found = [];
-  for (const tx of Array.isArray(txs) ? txs : []) {
+  // Oldest first, so the fees of moves that pay no destination add up in the
+  // order they were made. (An explorer lists the newest first.)
+  const when = (tx) => (tx?.status?.confirmed ? tx.status.block_time : now);
+  const inOrder = (Array.isArray(txs) ? txs : []).map((tx, i) => ({ tx, i })).sort((a, b) => when(a.tx) - when(b.tx) || b.i - a.i).map((x) => x.tx);
+  let movedAsFees = 0;
+  for (const tx of inOrder) {
     const at = tx.status?.confirmed ? tx.status.block_time : now;
     const accounted = (o) => holdsNothing(o)
       || (!!o?.scriptpubkey_address && isListedDestination(o.scriptpubkey_address, destinations, { crowdlock, stamps, at, hrp }))
@@ -177,6 +191,8 @@ export function earlyReleases(lock, txs, context = {}, now = Math.floor(Date.now
     const spent = ins.reduce((n, v) => n + (Number(v?.prevout?.value) || 0), 0);
     const paid = outs.reduce((n, o) => n + (Number(o?.value) || 0), 0);
     const markers = outs.filter(holdsNothing).length;
+    // What it pays destinations the co-signer could pay at that moment.
+    const toDestinations = outs.reduce((n, o) => n + (o?.scriptpubkey_address && isListedDestination(o.scriptpubkey_address, destinations, { crowdlock, stamps, at, hrp }) ? (Number(o?.value) || 0) : 0), 0);
     for (const vin of ins) {
       if (String(vin.prevout?.scriptpubkey_address ?? "").toLowerCase() !== address) continue;
       // Early if the network's clock had not passed the date. Before it in the
@@ -189,7 +205,10 @@ export function earlyReleases(lock, txs, context = {}, now = Math.floor(Date.now
         else undecided = true;
       }
       const stray = outs.find((o) => !accounted(o));
-      const feeTooBig = spent - paid > spent * maxFee;
+      const fee = spent - paid;
+      let feeTooBig;
+      if (toDestinations > 0) feeTooBig = fee > toDestinations * maxFee;
+      else { movedAsFees += Math.max(0, fee); feeTooBig = movedAsFees > spent * maxFee; }
       if (outs.length > 0 && !stray && !feeTooBig && markers <= 1 && paid > 0) continue;
       found.push({
         txid: tx.txid, at, sats: vin.prevout?.value ?? 0, paidTo: stray?.scriptpubkey_address ?? null,
@@ -233,4 +252,129 @@ export async function readHistory(first, after, { mostPages = MOST_PAGES } = {})
     for (const t of confirmed) { seen.add(t.txid); txs.push(t); }
   }
   return { txs, complete };
+}
+
+// ---------------------------------------------------------------------------
+// Locks a reader has seen on a register (security loop, 17 November 2026).
+//
+// The record above is read from the chain, but WHICH locks it is read for
+// came from the register, which is a file its founder can write, and today
+// the founder is the co-signer. Taking a lock's record off the register, or
+// bending one digit of its date so it no longer reads as a lock, took its
+// early release off the record too: "no early releases", for a lock that was
+// released early. So a reader (the app on a phone, the register page in a
+// browser) keeps what it has seen:
+//
+//   - the terms of the locks, up to LOCKS_REMEMBERED of them, so one that
+//     goes is still checked by name; and
+//   - how many locks there were and a running fingerprint of all of them in
+//     the register's order, so that ANY earlier record removed or changed
+//     shows, however long the register has grown. (Remembering terms alone
+//     was not enough: 500 newer records pushed an older lock out of memory
+//     while it was still listed, and it could then be removed unseen:
+//     round 3.) A register only ever grows at its end, like the destinations
+//     list; anything else is a rewrite, and a rewrite is never forgotten.
+// ---------------------------------------------------------------------------
+
+const TERMS_KEY = /^0[23][0-9a-f]{64}$/;
+const hexOf = (bytes) => Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+
+/** A running fingerprint of the first `n` locks, in order: each link covers the one before and a lock's terms. */
+function chainOf(locks, n) {
+  let h = "";
+  for (let i = 0; i < n; i++) {
+    const l = locks[i];
+    h = hexOf(sha256(new TextEncoder().encode(`${h}|${l.owner_pubkey}|${l.cosigner_pubkey}|${l.locktime}`)));
+  }
+  return h;
+}
+
+/**
+ * The locks to read the co-signer's record for: every genuine lock on the
+ * register now, and every lock this reader saw there before that is no
+ * longer on it as it was (`gone`). A remembered lock is believed only for
+ * what its terms make: its address is worked out here, never stored.
+ *
+ *   remembered  what locksSeen returned last time: { locks, count, chain,
+ *               rewritten? } (a plain list of terms, the older form, is read
+ *               as its `locks`)
+ * Returns { locks, gone, rewritten }. Each lock in `gone` carries
+ * `removed: true`. `rewritten` is true when the locks this reader saw before
+ * are not all still there, in the same order, with the same terms, whether
+ * or not it can still say which: a caller then says the record cannot be
+ * called clean.
+ */
+export function locksToWatch({ crowdlock, register, remembered = null, hrp = hrpFor(crowdlock?.network) }) {
+  const mem = Array.isArray(remembered) ? { locks: remembered } : (remembered && typeof remembered === "object" ? remembered : {});
+  const now = new Map();
+  for (const lock of register?.locks ?? []) {
+    const address = String(lock?.address ?? "").toLowerCase();
+    if (now.has(address) || !lockIsGenuine(lock, { crowdlock, register, hrp }).ok) continue;
+    now.set(address, lock);
+  }
+  const current = [...now.values()];
+  const gone = new Map();
+  for (const r of Array.isArray(mem.locks) ? mem.locks : []) {
+    if (!r || typeof r !== "object" || !TERMS_KEY.test(String(r.owner_pubkey)) || !TERMS_KEY.test(String(r.cosigner_pubkey)) || !Number.isInteger(r.locktime)) continue;
+    let address;
+    try { address = lockAddress({ ownerPubkey: r.owner_pubkey, cosignerPubkey: r.cosigner_pubkey, locktime: r.locktime }, hrp); } catch { continue; }
+    if (now.has(address) || gone.has(address)) continue;
+    gone.set(address, { address, owner_pubkey: r.owner_pubkey, cosigner_pubkey: r.cosigner_pubkey, locktime: r.locktime, removed: true });
+  }
+  const count = Number.isInteger(mem.count) && mem.count > 0 ? mem.count : 0;
+  const rewritten = mem.rewritten === true || gone.size > 0
+    || (count > 0 && (current.length < count || chainOf(current, count) !== mem.chain));
+  return { locks: [...current, ...gone.values()], gone: [...gone.values()], rewritten, current };
+}
+
+// How many locks' terms a reader keeps for one Crowdlock. Those already gone
+// from the register are kept first: they are the ones that matter.
+export const LOCKS_REMEMBERED = 500;
+
+/**
+ * What to remember now: { locks, count, chain, rewritten? }. The terms of the
+ * locks watched (at most LOCKS_REMEMBERED), how many genuine locks the
+ * register holds, the fingerprint of all of them in order, and whether the
+ * register has ever been seen rewritten.
+ */
+export function locksSeen(ctx) {
+  const w = locksToWatch(ctx);
+  const terms = (l) => ({ owner_pubkey: l.owner_pubkey, cosigner_pubkey: l.cosigner_pubkey, locktime: l.locktime });
+  const room = Math.max(0, LOCKS_REMEMBERED - w.gone.length);
+  return {
+    locks: [...w.gone.slice(0, LOCKS_REMEMBERED).map(terms), ...w.current.slice(Math.max(0, w.current.length - room)).map(terms)],
+    count: w.current.length,
+    chain: chainOf(w.current, w.current.length),
+    ...(w.rewritten ? { rewritten: true } : {}),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// The coins at an address, from its history (security loop, round 3).
+//
+// Public explorers refuse to list the coins at an address that holds more
+// than 500 ("Too many unspent transaction outputs"). Every lock's address is
+// published, so one payment of 501 tiny outputs to it made the lock
+// unreadable: its owner could not see it or take it home, the Crowdlock's
+// total could not be worked out, and a pile holding its commitment could not
+// be read by anyone. An address's history is paged, not capped that way, and
+// says the same thing: its coins are the outputs paying it that nothing in
+// the history has spent.
+// ---------------------------------------------------------------------------
+
+/**
+ * The unspent outputs at `address`, from its whole history (readHistory).
+ * Returns [{ txid, vout, value, confirmed }]. An output spent by a payment
+ * that is still waiting counts as spent, as an explorer's own list has it.
+ */
+export function coinsFromHistory(address, txs) {
+  const a = String(address).toLowerCase();
+  const at = (x) => String(x ?? "").toLowerCase() === a;
+  const spent = new Set();
+  const made = [];
+  for (const tx of Array.isArray(txs) ? txs : []) {
+    for (const v of tx?.vin ?? []) if (at(v?.prevout?.scriptpubkey_address)) spent.add(`${v.txid}:${v.vout}`);
+    (tx?.vout ?? []).forEach((o, n) => { if (at(o?.scriptpubkey_address)) made.push({ txid: tx.txid, vout: n, value: o.value, confirmed: !!tx.status?.confirmed }); });
+  }
+  return made.filter((c) => !spent.has(`${c.txid}:${c.vout}`));
 }

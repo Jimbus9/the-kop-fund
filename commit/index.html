@@ -142,7 +142,7 @@
 // method/ledger-web in the method's repository): buildCommitment signs the
 // owner's half on the device, and checkCommitment checks it, as the app does.
 // This page adds no signing or transaction code.
-import { checkProposals, phaseOf, pilePath, checkPileShape, commitmentEventTemplate, commitmentFromEvent, PROPOSAL_TAG, proposalVersion, noticeIsGenuine, stillTakingCommitments } from "../js/proposals.mjs";
+import { checkProposals, phaseOf, pilePath, checkPileShape, commitmentEventTemplate, commitmentFromEvent, PROPOSAL_TAG, proposalVersion, noticeIsGenuine, stillTakingCommitments, cleanRecord, relayOnlyCommitments } from "../js/proposals.mjs";
 import { memberAddressForOwnerKey } from "../js/verify.mjs";
 import { hrpFor, lockIsGenuine } from "../js/lockrecord.mjs";
 import { hasSigned, signedVersions, versionsOf } from "../js/crowdlock.mjs";
@@ -180,7 +180,10 @@ async function relayItems(hash) {
       relay = await Promise.race([Relay.connect(url), new Promise((_, no) => setTimeout(() => no(new Error("timeout")), 8000))]);
       await Promise.race([new Promise((resolve) => {
         const sub = relay.subscribe([{ kinds: [3713], [`#${PROPOSAL_TAG}`]: [hash], limit: 2000 }], {
-          onevent(e) { const it = commitmentFromEvent(e, C.declaration.sha256, hash); if (it) found.set(it.type === "commitment" ? it.record.tx : (it.tx ?? JSON.stringify(it.notice)), it); },
+          onevent(e) { const it = commitmentFromEvent(e, C.declaration.sha256, hash); // A commitment is told apart by its whole record, not its payment alone: a
+          // stranger's copy with another lock or remainder beside the same payment must
+          // not take the real one's place (security loop, 17 November 2026).
+          if (it) found.set(it.type === "commitment" ? JSON.stringify(cleanRecord(it.record) ?? it.record) : (it.tx ?? JSON.stringify(it.notice)), it); },
           oneose() { sub.close(); resolve(); },
         });
       }), new Promise((r) => setTimeout(r, 8000))]);
@@ -214,11 +217,16 @@ async function readPile(p) {
   // Commitments only on the relays count until an hour after closing; after
   // that only the repository's record does, since a late one could carry any date.
   const relaysCount = stillTakingCommitments(p, Date.now() / 1000);
-  for (const it of await relayItems(p.hash)) {
-    if (it.type === "commitment" && !inFile.has(it.record.tx) && relaysCount) items.push(it);
+  // And only from a real lock on the register, a few per lock: what the
+  // repository's inbox could take. Anything else is a stranger's, and is not
+  // worth a question to the block explorer (security loop, 17 November 2026).
+  for (const it of relayOnlyCommitments(await relayItems(p.hash), { crowdlock: C, register: REGISTER ?? { locks: [] }, inPile: inFile })) {
+    if (it.type === "commitment" && relaysCount) items.push(it);
     if (it.type === "notice" && !notice && genuine(it.notice, p)) notice = it.notice;
   }
-  let waiting = 0, paid = 0, count = 0;
+  // `sent`: completed by the co-signer and on the network, waiting for a block.
+  // It counts toward the target, so a payment in flight is not read as missing.
+  let waiting = 0, paid = 0, sent = 0, count = 0;
   // One coin counts once: of two commitments spending the same coin only one
   // can ever be paid, so the earlier stands and the later is left out.
   const counted = new Set();
@@ -226,22 +234,26 @@ async function readPile(p) {
   const paidIds = new Set();
   for (const it of items) {
     if (it.type !== "commitment") continue;
-    const v = await L.checkCommitment({ record: it.record, crowdlock: C, proposal: p, destinations: DESTINATIONS, chain, network: C.network });
+    let v;
+    try { v = await L.checkCommitment({ record: it.record, crowdlock: C, proposal: p, destinations: DESTINATIONS, chain, network: C.network }); }
+    catch (e) { if (!it.relayOnly) throw e; continue; } // one that is only on the relays is left out if it can't be checked now
     if (v.valid && v.coin && counted.has(v.coin)) continue;
     if (v.valid) { if (v.coin) counted.add(v.coin); waiting += v.committedSats; count++; }
     else if (/already been spent/.test(v.reason)) {
       const id = L.commitmentTxid(it.record);
       if (id && paidIds.has(id)) continue;
-      const sats = await L.commitmentPaid({ record: it.record, chain });
-      if (sats > 0 && id) paidIds.add(id);
-      paid += sats;
+      const pay = await L.commitmentPayment({ record: it.record, chain });
+      if (pay && pay.sats > 0) {
+        if (id) paidIds.add(id);
+        if (pay.confirmed) paid += pay.sats; else sent += pay.sats;
+      }
     }
   }
   // A proposal can't have failed while it is still gathering, so a notice then
   // is ignored; one against a pile that reaches its target is contradicted.
   if (notice && (phaseOf(p) === "soon" || phaseOf(p) === "gathering")) notice = null;
-  const contradicted = !!notice && waiting + paid >= p.target.sats;
-  return { waiting, paid, count, notice, contradicted };
+  const contradicted = !!notice && waiting + paid + sent >= p.target.sats;
+  return { waiting, paid, sent, count, notice, contradicted };
 }
 
 function renderList() {
@@ -272,7 +284,7 @@ function renderList() {
       else if (x.notice) status.textContent = x.contradicted
         ? "Declared dead by the co-signer, although the commitments checked here add up to its target. The co-signer has said it will complete none of them."
         : "Declared dead by the co-signer: it didn't reach its target, and none of its commitments will be completed.";
-      else status.textContent = `${PHASE[phaseOf(p)]} · needs ${money(p.requires, p.currency)} · committed ${btc(x.waiting + x.paid)} of ${btc(p.target.sats)} (${x.count} waiting${x.paid ? `, ${btc(x.paid)} paid` : ""})`;
+      else status.textContent = `${PHASE[phaseOf(p)]} · needs ${money(p.requires, p.currency)} · committed ${btc(x.waiting + x.paid + x.sent)} of ${btc(p.target.sats)} (${x.count} waiting${x.sent ? `, ${btc(x.sent)} sent and waiting for a block` : ""}${x.paid ? `, ${btc(x.paid)} paid` : ""})`;
       if (!funded && !x.notice && phaseOf(p) === "gathering") {
         const b = document.createElement("button"); b.type = "button"; b.className = "go"; b.textContent = "Commit to this";
         b.addEventListener("click", () => choose(p));

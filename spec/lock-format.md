@@ -4,6 +4,8 @@
 
 **11 November 2026:** a lapsed lock is not counted and no total of lapsed money is published (cross-reference to the counting rule corrected). The format itself is unchanged.
 
+**17 November 2026, security loop:** a lock dated by block height is a lock only on a private test chain. The register's inbox always refused one on a real network; readers and commitment checkers now refuse it too. The format itself is unchanged.
+
 A lock is how a supporter commits money without anyone taking custody of it.
 It is an ordinary Bitcoin output with a script that permits exactly two ways
 out and no others.
@@ -72,10 +74,18 @@ median-time-past, so a lock becomes spendable at approximately rather than
 exactly that moment — typically within an hour. Immaterial for a lock measured
 in years.
 
-A block height may be used instead and behaves identically. Heights are used
-in testing because they are exact. An instance uses one or the other for every
-lock, never both: a single transaction cannot spend a date lock and a height
-lock together.
+A block height may be used instead and behaves identically, **on a private
+test chain (regtest) only**, where heights are exact and quick. On every other
+network a lock is dated by a date, and a record dated by a height is not a
+lock: it is not added to a register, not counted by a reader, and not taken as
+a commitment. A height below the chain's present height is a "lock" its owner
+can open alone today, and nothing about a height says which it is without
+asking the chain.
+
+A locktime is a whole number from 1 to 4,294,967,295, the most a transaction's
+own locktime can hold. In the script it is pushed as a minimal number; 1 to 16
+are written with their own opcodes (`OP_1` to `OP_16`), as Bitcoin's tools
+write them. (Only a test chain's heights are ever that small.)
 
 ### Rounding, and why it is UTC
 
@@ -179,9 +189,18 @@ Given a lock address, an owner key, a co-signer key and a locktime:
    the same — or one is the other's mirror image, sharing its x-coordinate — it
    is not a lock: one person could supply both purchase signatures and move the
    coin at any time. It is not counted.
-2. Rebuild the witness script exactly as above.
+2. Rebuild the witness script exactly as above. Both keys must be compressed
+   public keys: 33 bytes, beginning `02` or `03`. Anything else makes no
+   script and is not a lock.
 3. Derive the P2WSH address from it.
 4. The lock is genuine if and only if the derived address matches.
+
+The co-signer key is compared **whole**, sign byte included, with the keys
+the Crowdlock's file names. A key and its mirror image (`02…` and `03…` over
+the same x-coordinate) make different locks, and the co-signer's key opens
+only one of them: a lock naming the mirror is not a lock of this Crowdlock.
+(Step 1 compares the owner's key and the co-signer's on the x-coordinate alone,
+because there the question is whether one person holds both.)
 
 The co-signer therefore cannot lock their own coins with their co-signing key.
 Anyone who is both a member and a co-signer uses a separate key for each role.
@@ -229,8 +248,9 @@ Before a lock is published, the register checks that:
    rebuilds from the terms;
 2. its co-signer key is this Crowdlock's, because a lock is counted by the
    Crowdlock whose co-signer it names;
-3. its locktime is a date, not already past, and no longer than the longest
-   offered length plus a month;
+3. its locktime is a date (never a block height, except on a private test
+   chain), not already past, and no longer than the longest offered length
+   plus a month;
 4. its owner is a member — the owner key hashes to an address on the register;
 5. it is not already on the register;
 6. confirmed coins are at the address. Until a coin has confirmed there is
@@ -239,6 +259,14 @@ Before a lock is published, the register checks that:
 
 A lock **below the minimum is still published**. The minimum is a counting rule,
 not a validity rule; such a lock is shown and not counted.
+
+**A lock record carries no signature**, so anybody can post any number of
+them naming a member's published key, and each costs the register a question
+to a block explorer. The repository's inbox therefore asks about a limited
+number in each pass: at most 200 in all and 5 for any one owner's key, a
+different selection each pass. A flood naming one member's key can delay that
+member's next lock reaching the register by this route; it does not hold up
+anybody else's, and a pull request is not affected.
 
 **Submit** either way, and both count the same:
 
