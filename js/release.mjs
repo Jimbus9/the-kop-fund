@@ -173,7 +173,7 @@ export async function clocksFor(lock, txs, getBlock) {
 export function earlyReleases(lock, txs, context = {}, now = Math.floor(Date.now() / 1000)) {
   const { destinations = null, crowdlock = null, register = null, stamps = {}, clocks = {} } = context ?? {};
   const hrp = context?.hrp ?? hrpFor(crowdlock?.network) ?? "bc";
-  const maxFee = typeof crowdlock?.max_commitment_fee === "number" ? crowdlock.max_commitment_fee : 0.01;
+  const maxFee = typeof crowdlock?.max_commitment_fee === "number" ? Math.min(crowdlock.max_commitment_fee, 0.05) : 0.01;
   const address = String(lock.address).toLowerCase();
   const found = [];
   // Oldest first, so the fees of moves that pay no destination add up in the

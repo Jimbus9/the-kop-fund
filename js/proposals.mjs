@@ -29,6 +29,16 @@ function hex(bytes) {
 const utf8 = (s) => new TextEncoder().encode(String(s).normalize("NFC"));
 
 /** The SHA-256 of a proposal's prose: its `document` field. */
+// How long a lock must stay shut AFTER a proposal's settling ends to back it.
+// A commitment's fee is fixed when its owner signs it, maybe weeks before
+// settling; if fees are higher by then, the payment can wait unconfirmed, and
+// a lock that opened in the meantime could be taken home alone, losing the
+// purchase its money. A week gives a slow payment time to confirm (James's
+// decision, 18 November 2026: security loop "Needs James" item 9). None on a
+// private test chain, where everything takes minutes.
+export const SETTLE_MARGIN = 7 * 86400;
+export const settleMargin = (network) => (network === "regtest" ? 0 : SETTLE_MARGIN);
+
 export function documentHash(text) {
   return hex(sha256(utf8(text)));
 }
@@ -584,8 +594,8 @@ export async function applyCommitments(pile, events, { crowdlock, proposal, regi
     if (onRegister.locktime < 500000000 && crowdlock.network !== "regtest") {
       refuse("its lock is dated by block height, which only a private test chain uses, so its money isn't committed"); continue;
     }
-    if (onRegister.locktime >= 500000000 && !(onRegister.locktime > settles)) {
-      refuse("its lock opens before this proposal's settling ends, so its money isn't committed"); continue;
+    if (onRegister.locktime >= 500000000 && !(onRegister.locktime > settles + settleMargin(crowdlock.network))) {
+      refuse("its lock opens before this proposal's settling ends, or within a week of it, so its money isn't committed"); continue;
     }
     // Committing needs the version the proposal was published under. A lock
     // still counts in the total whatever its owner has signed; only backing

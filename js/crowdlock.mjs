@@ -22,7 +22,11 @@ const NETWORKS = ["mainnet", "testnet4", "signet", "regtest"];
 
 const hex = (bytes) => Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
 
+/** The highest fee limit any Crowdlock may set: 5% of what a commitment pays. */
+export const MAX_FEE_LIMIT = 0.05;
+
 /** The declaration's canonical form: UTF-8, NFC, LF, no trailing whitespace, one trailing newline. */
+
 export function canonicalise(raw) {
   return raw.normalize("NFC").replace(/\r\n?/g, "\n").split("\n")
     .map((l) => l.replace(/[ \t]+$/, ""))
@@ -209,8 +213,12 @@ export function checkCrowdlock(c, { declarationText, versionTexts } = {}) {
     need(c.attestor_threshold <= c.attestor_keys.length, "attestor_threshold is more than the number of attestors");
   }
 
-  need(typeof c.max_commitment_fee === "number" && c.max_commitment_fee > 0 && c.max_commitment_fee < 1,
-    "max_commitment_fee must be a fraction between 0 and 1");
+  // At most 5%: the fee goes to miners, not the seller, and a Crowdlock that
+  // let a commitment leave half as "fee" would let its co-signer, working
+  // with a miner, take half of what members commit (James's decision, 18
+  // November 2026: security loop "Needs James" item 6).
+  need(typeof c.max_commitment_fee === "number" && c.max_commitment_fee > 0 && c.max_commitment_fee <= MAX_FEE_LIMIT,
+    `max_commitment_fee must be a fraction above 0 and at most ${MAX_FEE_LIMIT} (5%)`);
 
   need(typeof c.register?.registrations === "string" && typeof c.register?.destinations === "string",
     "register must name the registrations and destinations files");

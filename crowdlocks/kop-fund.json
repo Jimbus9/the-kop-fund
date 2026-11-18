@@ -29,7 +29,7 @@
   "destination_wait_days": 7,
   "attestor_keys": [],
   "attestor_threshold": 1,
-  "max_commitment_fee": 0.01,
+  "max_commitment_fee": 0.02,
   "register": {
     "registrations": "registrations.json",
     "destinations": "destinations.json"

@@ -231,6 +231,15 @@ export function prepareLock(submission, { crowdlock, register, now }) {
     if (locktime > now + years * YEAR + SLACK) {
       return no(400, `that lock runs longer than this Crowdlock offers (at most ${years} years)`);
     }
+    // Nor shorter than the shortest length it offers (James's decision, 18
+    // November 2026: security loop "Needs James" item 7). The app and the
+    // site only offer those lengths, but a lock record can be posted by hand,
+    // and a week-long lock would pad the total. A month's allowance, because
+    // a lock is only added once its coins have confirmed, maybe days later.
+    const shortest = Math.min(...(crowdlock.lock_lengths_years ?? [0]));
+    if (locktime < now + shortest * YEAR - 30 * 86400) {
+      return no(400, `that lock is shorter than this Crowdlock offers (at least ${shortest} year${shortest === 1 ? "" : "s"})`);
+    }
   } else if (locktime <= 0 || locktime > 0xffffffff) {
     return no(400, "locktime must be positive, and no larger than a locktime can hold");
   }

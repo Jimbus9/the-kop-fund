@@ -142,7 +142,7 @@
 // method/ledger-web in the method's repository): buildCommitment signs the
 // owner's half on the device, and checkCommitment checks it, as the app does.
 // This page adds no signing or transaction code.
-import { checkProposals, phaseOf, pilePath, checkPileShape, commitmentEventTemplate, commitmentFromEvent, PROPOSAL_TAG, proposalVersion, noticeIsGenuine, stillTakingCommitments, cleanRecord, relayOnlyCommitments } from "../js/proposals.mjs";
+import { checkProposals, phaseOf, pilePath, checkPileShape, commitmentEventTemplate, commitmentFromEvent, PROPOSAL_TAG, proposalVersion, noticeIsGenuine, stillTakingCommitments, cleanRecord, relayOnlyCommitments, settleMargin } from "../js/proposals.mjs";
 import { memberAddressForOwnerKey } from "../js/verify.mjs";
 import { hrpFor, lockIsGenuine } from "../js/lockrecord.mjs";
 import { hasSigned, signedVersions, versionsOf } from "../js/crowdlock.mjs";
@@ -320,7 +320,7 @@ async function showLocks() {
   // Only genuine locks of this key (never the record's `member` label), and
   // only those that stay shut until the proposal finishes settling: a lock
   // that opens sooner could be taken home first, so it can't back it.
-  const settles = Date.parse(CHOSEN.settles_by) / 1000;
+  const settles = Date.parse(CHOSEN.settles_by) / 1000 + settleMargin(C.network); // and a week after (security loop, item 9)
   const mineOnly = (x) => { const g = lockIsGenuine(x, { crowdlock: C, register: REGISTER }); return g.ok && g.owner === String(ACCOUNT.address).toLowerCase(); };
   for (const l of (REGISTER.locks ?? []).filter((x) => mineOnly(x) && x.locktime > now && x.locktime > settles)) {
     for (const coin of (await chain.utxos(l.address)).filter((u) => u.confirmed)) {
