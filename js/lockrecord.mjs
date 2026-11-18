@@ -183,6 +183,11 @@ function normalise(address) {
  * record that would be published. The caller then reads the chain for
  * lock.address and calls addLock().
  */
+/** The line a lock's owner signs: this Crowdlock's fingerprint, then the lock's terms. */
+export function lockLine(fingerprint, { address, owner_pubkey, cosigner_pubkey, locktime }) {
+  return `${fingerprint}|lock|${address}|${owner_pubkey}|${cosigner_pubkey}|${locktime}`;
+}
+
 export function prepareLock(submission, { crowdlock, register, now }) {
   const no = (status, reason) => ({ ok: false, status, reason });
 
@@ -261,9 +266,25 @@ export function prepareLock(submission, { crowdlock, register, now }) {
     return no(409, "that lock is already on the register");
   }
 
+  // A lock record may carry its owner's signature over lockLine: a standard
+  // Bitcoin Signed Message by the member's own address, the same kind the
+  // declaration is signed with. It is optional, so the website and a Ledger
+  // can still post a lock, but a signed one is asked about first: a flood of
+  // records naming somebody else's key can't hold it up, because nobody else
+  // can sign for that key (James's decision, 18 November 2026: security loop
+  // "Needs James" item 8). A signature that is there must check.
+  let signed = false;
+  if (submission.owner_signature !== undefined) {
+    const message = lockLine(crowdlock?.declaration?.sha256, { address, owner_pubkey: owner, cosigner_pubkey: cosigner, locktime });
+    const v = verifyMembership({ address: member, signature: submission.owner_signature, message, hrp });
+    if (!v.valid) return no(400, `its owner signature doesn't check (${v.reason ?? "it was made by another key or over other terms"})`);
+    signed = true;
+  }
+
   return {
     ok: true,
     status: 200,
+    signed,
     lock: {
       address,
       member,

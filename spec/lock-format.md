@@ -242,6 +242,18 @@ A lock on the register is a record of exactly these fields:
 | `unlocks` | The same date written as `YYYY-MM-DD`, for reading at a glance |
 | `submitted` | When it was published |
 
+A lock record posted to the relays may also carry `owner_signature`: a standard
+Bitcoin Signed Message, by the member's own address, over the line
+
+    <declaration sha256>|lock|<address>|<owner_pubkey>|<cosigner_pubkey>|<locktime>
+
+It is optional, and not kept on the register. A signature that is there must
+check, or the record is refused; a signed record is asked about ahead of
+unsigned ones naming the same key, so a flood of records naming somebody's key
+can't hold their own lock up (decided 18 November 2026). The phone signs every
+lock it posts when the key is on the phone; a Ledger's lock, and one posted
+from the website, go unsigned and are still taken.
+
 Before a lock is published, the register checks that:
 
 1. it passes "Verifying a lock" above — two different keys, and the address

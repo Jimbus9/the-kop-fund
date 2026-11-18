@@ -25,9 +25,9 @@ import { prepareLock, addLock, hrpFor } from "./lockrecord.mjs";
 import { sha256 } from "./vendor/noble-hashes/sha256.js";
 
 // How many lock records one pass asks the block explorer about, in all and
-// for any one owner's key. A lock record carries no signature, so anybody can
-// post any number of them naming a member's published key, and each costs a
-// question. Until 17 November 2026 (security loop, round 4) there was no
+// for any one owner's key. A lock record need carry no signature, so anybody
+// can post any number of them naming a member's published key, and each costs
+// a question. One its owner signed is asked about first (lockrecord.mjs). Until 17 November 2026 (security loop, round 4) there was no
 // limit: 20,000 of them made a pass longer than the job is allowed to run,
 // on every pass, and nothing was registered or collected. The per-owner
 // limit keeps a flood naming one member's key from holding up anybody else's
@@ -50,7 +50,8 @@ function locksToAsk(prepared, seed) {
   }
   const queues = [...byOwner.entries()]
     .sort((a, b) => orderKey(seed, a[0]).localeCompare(orderKey(seed, b[0])))
-    .map(([, list]) => list.sort((a, b) => orderKey(seed, a.lock.address).localeCompare(orderKey(seed, b.lock.address))).slice(0, LOCKS_ASKED_PER_OWNER));
+    // Signed records first: only the owner can make one (lockrecord.mjs, lockLine).
+    .map(([, list]) => list.sort((a, b) => (b.signed - a.signed) || orderKey(seed, a.lock.address).localeCompare(orderKey(seed, b.lock.address))).slice(0, LOCKS_ASKED_PER_OWNER));
   const chosen = new Set();
   for (let round = 0; round < LOCKS_ASKED_PER_OWNER && chosen.size < LOCKS_ASKED_PER_PASS; round++) {
     for (const q of queues) {
@@ -108,7 +109,9 @@ export function recordFromEvent(event, fingerprint) {
   }
   if (c.type === "lock" && typeof c.owner_pubkey === "string" && typeof c.cosigner_pubkey === "string"
       && Number.isInteger(c.locktime) && typeof c.address === "string") {
-    return { type: "lock", owner_pubkey: c.owner_pubkey, cosigner_pubkey: c.cosigner_pubkey, locktime: c.locktime, address: c.address };
+    const r = { type: "lock", owner_pubkey: c.owner_pubkey, cosigner_pubkey: c.cosigner_pubkey, locktime: c.locktime, address: c.address };
+    if (typeof c.owner_signature === "string" && c.owner_signature.length <= 200) r.owner_signature = c.owner_signature;
+    return r;
   }
   return null;
 }
@@ -164,9 +167,16 @@ export async function applyRecords(register, events, { crowdlock, statement, now
   for (const r of records.filter((x) => x.type === "lock")) {
     const p = prepareLock(r, { crowdlock, register: reg, now });
     if (!p.ok) { outcome.push({ added: false, type: "lock", address: r.address, reason: p.reason }); continue; }
-    if (seenAddress.has(p.lock.address)) continue; // the same lock, posted with its address written another way
+    if (seenAddress.has(p.lock.address)) {
+      // The same lock posted again (its address written another way, say). A
+      // signed copy takes the place of an unsigned one, so posting an unsigned
+      // copy of somebody's lock can't take its place in the queue.
+      const i = prepared.findIndex((x) => x.lock.address === p.lock.address);
+      if (p.signed && i >= 0 && !prepared[i].signed) prepared[i] = { r, lock: p.lock, signed: true };
+      continue;
+    }
     seenAddress.add(p.lock.address);
-    prepared.push({ r, lock: p.lock });
+    prepared.push({ r, lock: p.lock, signed: p.signed === true });
   }
   const ask = locksToAsk(prepared, seed);
   let unanswered = 0;
