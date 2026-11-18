@@ -22,34 +22,47 @@ const NETWORKS = ["mainnet", "testnet4", "signet", "regtest"];
 
 const hex = (bytes) => Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
 
-// Where a Crowdlock lives (security loop, "Needs James" item 4, 18 November
-// 2026). A copy of a Crowdlock's file put up at another address would show
-// the real one's locks under its own name. So a Crowdlock may say where it
-// lives, `home`, signed by one of its own co-signer keys: a standard Bitcoin
-// Signed Message, by that key's address, over homeLine. A copy can't sign its
-// own address with a key it doesn't hold; carrying the real `home` across
-// sends a reader to the real one; and dropping it shows the copy hasn't
-// proved where it lives. Adding a co-signer key later leaves `home` good.
+// Where a Crowdlock lives (security loop, "Needs James" item 4; reworked the
+// same day after OpenAI review 7). A copy of a Crowdlock's file put up at
+// another address would show the real one's locks under its own name. So a
+// Crowdlock may say where it lives, `home`, and then EVERY one of its co-signer
+// keys must have signed that: a standard Bitcoin Signed Message by the key's
+// address over homeLine (network, link and declaration). A copy can't get the
+// real co-signer key's signature over its own address, so a copy that lists
+// the real key fails; one that drops the real key counts none of the real
+// locks; and one that keeps the real `home` sends a reader to the real one.
+// (The first version let any one listed key sign, so a copy could list the
+// real key beside one of its own and sign with its own.)
 
 const HRP = { mainnet: "bc", testnet4: "tb", testnet: "tb", signet: "tb", regtest: "bcrt" };
 
-/** The line a co-signer key signs to say where this Crowdlock lives. */
-export function homeLine(url, fingerprint) {
-  return `crowdlock-home|${url}|${fingerprint}`;
+/** The line each co-signer key signs to say where this Crowdlock lives. */
+export function homeLine(network, url, fingerprint) {
+  return `crowdlock-home|${network}|${url}|${fingerprint}`;
 }
 
-/** Is a Crowdlock file's `home` well made and signed by one of its co-signer keys? */
+/** Does this key's signature say this Crowdlock lives at `url`? */
+export function homeSignatureChecks(c, url, key, signature) {
+  const hrp = HRP[c?.network];
+  if (!hrp) return false;
+  return verifyMembership({ address: memberAddressForOwnerKey(String(key).toLowerCase(), hrp), signature, message: homeLine(c.network, url, c.declaration?.sha256), hrp }).valid;
+}
+
+/** Is a Crowdlock file's `home` well made, and signed by every one of its co-signer keys? */
 export function checkHome(c) {
   const h = c?.home;
   const problems = [];
-  if (!h || typeof h !== "object") return { ok: false, problems: ["home must be an object with url, key and signature"] };
+  if (!h || typeof h !== "object") return { ok: false, problems: ["home must be an object with url and signatures"] };
   if (!(typeof h.url === "string" && /^https:\/\/[^\s]+$/.test(h.url) && h.url.length <= 300)) problems.push("home.url must be the https:// link to this Crowdlock's file");
-  const key = String(h.key ?? "").toLowerCase();
-  if (!(c.cosigner_keys ?? []).includes(key)) problems.push("home must be signed by one of this Crowdlock's co-signer keys");
+  const sigs = h.signatures && typeof h.signatures === "object" && !Array.isArray(h.signatures) ? h.signatures : null;
+  if (!sigs) problems.push("home.signatures must name each co-signer key with its signature");
   if (problems.length) return { ok: false, problems };
-  const hrp = HRP[c.network];
-  const v = verifyMembership({ address: memberAddressForOwnerKey(key, hrp), signature: h.signature, message: homeLine(h.url, c.declaration?.sha256), hrp });
-  if (!v.valid) problems.push("home's signature doesn't check: it wasn't made by that co-signer key over this link and this declaration");
+  for (const k of c.cosigner_keys ?? []) {
+    const key = String(k).toLowerCase();
+    if (typeof sigs[key] !== "string") problems.push(`home is not signed by co-signer key ${key.slice(0, 10)}…: every co-signer key must sign where it lives`);
+    else if (!homeSignatureChecks(c, h.url, key, sigs[key])) problems.push(`home's signature by ${key.slice(0, 10)}… doesn't check: it wasn't made by that key over this network, link and declaration`);
+  }
+  for (const k of Object.keys(sigs)) if (!(c.cosigner_keys ?? []).map((x) => String(x).toLowerCase()).includes(k.toLowerCase())) problems.push(`home is signed by ${k.slice(0, 10)}…, which is not one of this Crowdlock's co-signer keys`);
   return { ok: problems.length === 0, problems };
 }
 

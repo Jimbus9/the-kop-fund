@@ -33,7 +33,10 @@ export function shrinkage(before, after) {
     const { also_signed: was = [], ...rest } = m ?? {};
     const { also_signed: now = [], ...restNow } = n ?? {};
     if (!n || !same(rest, restNow)) { problems.push(`member ${m?.n ?? i + 1} (${m?.address ?? "?"}) was ${n ? "changed or moved" : "removed"}`); return; }
-    if (!Array.isArray(now) || !same(was, now.slice(0, was.length))) problems.push(`member ${m.n}'s later signatures were changed or removed`);
+    // Later signatures are kept in version order, so an earlier one can move
+    // along when a member signs a version in between: each must still be
+    // there, unchanged, but not necessarily in the same place (OpenAI review 7).
+    if (!Array.isArray(now) || !was.every((e) => now.some((x) => same(x, e)))) problems.push(`member ${m.n}'s later signatures were changed or removed`);
   });
   return problems;
 }

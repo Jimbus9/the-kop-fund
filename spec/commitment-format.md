@@ -13,6 +13,12 @@
 
 No real commitment had been made under version 1. A version-1 commitment does not verify under version 2.
 
+**17 November 2026, later.** A second review found that a pile counted money that was not committed. Two checks are added, in every checker: **the coin must have confirmed**, and **the lock must stay shut until the proposal's settling ends** (`settles_by`). An unconfirmed coin can be replaced by its sender and vanish; a lock that opens sooner can be taken home by its owner alone, even after the co-signer has completed the commitment. The format itself is unchanged.
+
+**17 November 2026, security loop.** Three things. **A lock dated by block height is refused** on every network but a private test chain: it used to be left uncompared with the settling date, so a lock dated by a height already passed, which its owner can take home alone, counted as committed money and could be completed. **The record's `remainder` is written down here**; the code always had it. And **only the parts of a record listed here are judged or kept**: anything else a poster adds is dropped.
+
+**17 November 2026, security loop, round 2.** Two more. **The input's own script must be empty** (step 2): the owner's signature does not cover it, so anybody could add one to a member's commitment, and the copy counted and could never be paid. And **a commitment counts as paid only if the coin it spent was the lock's** ("Counting the pile"): a payment's id says nothing about who signed, so an ordinary payment to the seller could be dressed as a paid commitment.
+
 A commitment is how a supporter backs one specific purchase with their own
 locked money. What a proposal is and how it settles is in the **proposal and
 settlement format**; this document is the record itself.
@@ -37,11 +43,21 @@ it.
     "address": "bc1q…",
     "owner_pubkey": "<33 bytes, hex>",
     "cosigner_pubkey": "<33 bytes, hex>",
-    "locktime": 2900000
+    "locktime": 1900000000
   },
-  "tx": "<raw transaction, hex, owner-signed, co-signer's slot empty>"
+  "tx": "<raw transaction, hex, owner-signed, co-signer's slot empty>",
+  "remainder": { "owner_pubkey": "…", "cosigner_pubkey": "…", "locktime": 1900000000 }
 }
 ```
+
+`remainder` is present only when the transaction has three outputs: it gives
+the terms of the lock that output 1 pays, so a verifier can rebuild that lock's
+address (step 7). **The owner's signature covers the transaction and nothing
+beside it.** The `lock` and `remainder` fields sit outside what is signed, so
+anybody can re-post a commitment with them changed. That is harmless only as
+long as a changed copy is never mistaken for the commitment: it must be judged
+as its own record, refused on its own, and never stand in the real one's way.
+A record has these parts and no others; anything else found in one is dropped.
 
 The transaction carries everything of substance: which coin, how much, to whom,
 and the signature. The `lock` fields are there so a verifier can re-derive the
@@ -112,13 +128,17 @@ overstate every proposal by the total of its fees.
 
 Anybody, with no permission and no account. The owner's signature covers the
 amount of the coin it spends, so checking it (step 4), the fee, and whether the
-coin is still there (step 8) need that coin from any public block explorer. The
+coin is still there and confirmed (step 8) need that coin from any public block explorer. The
 rest needs no network.
 
 1. **Re-derive the lock address** from `owner_pubkey`, `cosigner_pubkey` and
    `locktime`, exactly as the lock format specifies. It must equal
    `lock.address`.
-2. **Exactly one input.**
+2. **Exactly one input, and its own script (scriptSig) is empty.** A spend of a
+   lock carries everything in its witness. The owner's signature does not
+   cover the input's script, so one can be added by anybody: the result has
+   another transaction id, still carries the owner's signature, and is never
+   mined.
 3. **The witness is the purchase branch** in the shape above, with the
    co-signer's slot empty and the witness script matching the one just derived.
 4. **The owner's signature verifies** over the transaction's sighash for that
@@ -136,8 +156,16 @@ rest needs no network.
 7. **If there are three outputs**, output 1 pays a lock re-derived from the same
    `owner_pubkey` with a locktime no earlier than `lock.locktime`, co-signed by
    this Crowdlock, and holds at least 330 sats.
-8. **The coin is still unspent.** A supporter whose lock has lapsed may have
-   taken it home, which voids their commitment permanently.
+8. **The coin is still unspent, and has confirmed.** A supporter whose lock has
+   lapsed may have taken it home, which voids their commitment permanently. A
+   coin that has not confirmed can be replaced by whoever sent it, so it counts
+   toward nothing until it has.
+9. **The lock stays shut until the proposal's settling ends**: its locktime is
+   after the proposal's `settles_by`. A lock that opens sooner can be taken
+   home by its owner alone at any time from then on, so its money is not
+   committed. **A lock dated by block height is refused outright** on every
+   network but a private test chain: a height already passed is a lock its
+   owner can open alone today.
 
 One more check needs the register rather than the transaction: **the lock's
 owner has signed the version of the declaration the proposal was published
@@ -151,7 +179,10 @@ the pile checkable.
 ### The fee sanity check
 
 Fee is the input value minus the sum of the outputs. A verifier **must** reject a
-commitment whose fee exceeds **one per cent** of the committed amount.
+commitment whose fee exceeds the Crowdlock's `max_commitment_fee` of the
+committed amount, and never more than **five per cent**, whatever the file says
+(The Kop Fund sets two per cent). Until 18 November 2026 this said a flat one
+per cent.
 
 This is not about economy. It is to stop a bug in somebody's client, or a
 mistyped figure, destroying a supporter's money as miner fee — an error nobody
@@ -166,7 +197,7 @@ pass a payment on, so the commitment could not be settled.
 
 ```
 committed = Σ (output 0 value of every commitment that passes verification
-               and whose coin is still unspent)
+               and whose coin is confirmed and still unspent)
 ```
 
 - **One coin, one commitment, per proposal.** A second commitment for the same
@@ -179,6 +210,26 @@ committed = Σ (output 0 value of every commitment that passes verification
   why. Each proposal's own total is honest; their sum double-counts.
 - A pile total is **not money that has moved**. Until broadcast it is a
   collection of signatures. It must never be presented as settled.
+- **A commitment has been paid** when a transaction with its id is in a
+  block **and the coin that transaction spent was a coin of the commitment's
+  own lock**. Both halves are needed. A transaction's id leaves out its
+  signatures, so it says which coin was spent and where the money went, and
+  nothing about who signed: an ordinary payment from anybody's wallet to the
+  destination, carrying the proposal's marker, has the id of a "commitment"
+  written around it. Only a coin that really sat in the lock can have left it
+  this way, and only with the co-signer's signature, because the payment
+  declares no date and the lock's going-home exit refuses it.
+- **A payment that has been sent and is waiting for a block is neither
+  "waiting" nor "paid", and is counted beside them.** Once the co-signer has
+  completed a commitment and sent it, its coin is spent on the network before
+  any block holds the payment. A reader that called such a commitment void
+  would see the pile's total fall, and in an oversubscribed proposal the
+  commitments that were left out could then reach the target by themselves
+  and be completed too. So a reader adds up three things toward the target:
+  what is waiting, what is sent and awaiting a block, and what is paid.
+- **The value a signature is checked against must come from a coin at the
+  lock's address** (or, once spent, from the output that paid that address).
+  A value read from any other coin proves nothing about the lock.
 
 ## Submission
 

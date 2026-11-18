@@ -145,7 +145,12 @@ export function checkProposals(file, crowdlock) {
     // 18 November 2026).
     const r = /^1 BTC = (\d+(?:\.\d{1,8})?) ([A-Z]{3})$/.exec(t.rate);
     if (!r || r[2] !== p.currency) return bad(`its target's rate must read "1 BTC = <price> ${p.currency}"`);
-    const expected = targetSats(p.requires, p.currency, Number(r[1]));
+    // A price of zero, or one too long to be a number, gives an endless or a
+    // zero target, which any target "matched" (OpenAI review 7).
+    const price = Number(r[1]);
+    if (!(Number.isFinite(price) && price > 0 && r[1].length <= 20)) return bad("its target's rate must be a real, positive price");
+    const expected = targetSats(p.requires, p.currency, price);
+    if (!(Number.isSafeInteger(expected) && expected > 0 && Number.isSafeInteger(t.sats) && t.sats > 0)) return bad("its target doesn't come to a real number of sats");
     if (!(Math.abs(t.sats - expected) <= Math.max(1, expected / 100))) {
       return bad(`its target of ${t.sats} sats is not what it requires at the rate it states (${expected} sats)`);
     }

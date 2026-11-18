@@ -281,6 +281,7 @@ function renderList() {
     readPile(p).then((x) => {
       const funded = x.paid >= p.target.sats;
       if (funded) status.textContent = `Funded and paid · ${btc(x.paid)} sent to the seller · closed`;
+      else if (x.notice && x.paid + x.sent > 0) status.textContent = `Declared dead by the co-signer, yet ${btc(x.paid + x.sent)} of its commitments has been sent to the seller. The co-signer said it would complete none of them: this breaks that notice.`;
       else if (x.notice) status.textContent = x.contradicted
         ? "Declared dead by the co-signer, although the commitments checked here add up to its target. The co-signer has said it will complete none of them."
         : "Declared dead by the co-signer: it didn't reach its target, and none of its commitments will be completed.";
