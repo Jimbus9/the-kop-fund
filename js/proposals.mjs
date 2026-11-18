@@ -88,6 +88,15 @@ export function proposalVersion(p, crowdlock) {
   return Number.isInteger(p?.declaration_version) ? p.declaration_version : crowdlock.declaration.version;
 }
 
+// Minor units per currency (ISO 4217): most have 100, these have none or 1000.
+const NO_MINOR = new Set(["BIF", "CLP", "DJF", "GNF", "ISK", "JPY", "KMF", "KRW", "PYG", "RWF", "UGX", "VND", "VUV", "XAF", "XOF", "XPF"]);
+const THOUSANDTHS = new Set(["BHD", "IQD", "JOD", "KWD", "LYD", "OMR", "TND"]);
+/** What `requires` (in minor units of `currency`) comes to in sats, at `price` of the currency for 1 BTC. */
+export function targetSats(requiresMinor, currency, price) {
+  const per = NO_MINOR.has(currency) ? 1 : THOUSANDTHS.has(currency) ? 1000 : 100;
+  return Math.round((requiresMinor / per / price) * 1e8);
+}
+
 const isoZ = (v) => typeof v === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(v) && !Number.isNaN(Date.parse(v));
 
 /**
@@ -128,6 +137,17 @@ export function checkProposals(file, crowdlock) {
     const t = p.target;
     if (!t || !Number.isInteger(t.sats) || t.sats <= 0 || typeof t.rate !== "string" || !isoZ(t.at)) {
       return bad("its target must give whole sats, the rate used and when");
+    }
+    // The target is restated as the bitcoin price moves, so it stays out of
+    // the hash; but it must be what `requires` comes to at the rate it states.
+    // Cutting it then means stating a rate anyone can see is wrong, rather than
+    // quietly changing one number (security loop, "Needs James" item 5,
+    // 18 November 2026).
+    const r = /^1 BTC = (\d+(?:\.\d{1,8})?) ([A-Z]{3})$/.exec(t.rate);
+    if (!r || r[2] !== p.currency) return bad(`its target's rate must read "1 BTC = <price> ${p.currency}"`);
+    const expected = targetSats(p.requires, p.currency, Number(r[1]));
+    if (!(Math.abs(t.sats - expected) <= Math.max(1, expected / 100))) {
+      return bad(`its target of ${t.sats} sats is not what it requires at the rate it states (${expected} sats)`);
     }
     seen.add(hash);
     good.push({ ...p, hash });

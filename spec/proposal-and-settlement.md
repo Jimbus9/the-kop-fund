@@ -6,6 +6,8 @@
 
 **17 November 2026:** the relay inbox now checks the owner's signature before it takes a commitment into the pile, and both signatures before it records a completed payment. Nothing about a commitment or a proposal changes.
 
+**17 November 2026, security loop:** a stranger's altered or misdated copy of a member's commitment can no longer keep the member's own out of the pile; the inbox checks the remainder lock and keeps only the parts a commitment has; and a reader looks at a commitment that is only on the relays only if its lock is a real lock on the register. See "Where the pile lives".
+
 How money committed to this fund is actually spent.
 
 **There is no vote.** A proposal is funded or it is not. Nobody counts anything,
@@ -227,7 +229,7 @@ can be bound to a specific purchase for years is wrong.
 ## A commitment
 
 A commitment is **one transaction, spending one lock, signed by its owner only**.
-Its record, its eight verification steps and how a pile is counted are in the
+Its record, its nine verification steps and how a pile is counted are in the
 **commitment format**; what follows is what it means.
 
 It is not a payment. It is the owner's half of a transaction nobody has
@@ -312,6 +314,45 @@ order** until `requires` is met, and then no further.
 Submission order is used because it is already recorded, timestamped and public
 in the repository, so anybody can verify that the rule was followed. Unsettled
 commitments are harmless: those coins never moved.
+
+### If the network refuses a payment, the co-signer stops
+
+Payments are sent in submission order. If the network refuses one (a fee
+signed weeks ago can fall below what the network takes that day), that
+payment will not arrive and the purchase is now short by it. The co-signer
+sends no more: every further payment would be a member's money paid toward a
+purchase that is no longer funded. The ones already sent cannot be recalled,
+which is why this risk is stated in "Fees" below and is not closed by it.
+
+### What the co-signer adds up before signing
+
+Before completing anything the co-signer checks every commitment again and
+adds the total up again, from those that still pass **and that the key in
+hand can complete**. A lock names one co-signer key, and a Crowdlock may list
+more than one (an older key stays listed so its locks keep counting). A
+commitment whose lock names another key cannot be completed with this one. It
+is left out of the sum, and if what is left falls short of the target, nothing
+is completed. Completing the ones that can be and skipping the rest would send
+members' money to a purchase that stays short.
+
+### The target is outside the hash, so it is watched
+
+`target` is restated as the price moves and is deliberately not in a
+proposal's hash. That leaves it a number whoever can write the proposals file
+can change, and it decides whether a reader says "the target is met". A reader
+therefore remembers the highest target it has seen for each proposal, and
+pauses committing and co-signing, with a warning, when a target falls to less
+than half of it. This catches a target cut to a fraction; it does not replace
+looking at the price.
+
+**A target must be what `requires` comes to at the rate it states**, within
+1% for rounding: `rate` reads exactly `1 BTC = <price> <currency>`, with the
+proposal's own currency, and `sats` is `requires` (in minor units) divided by
+that price. A proposal file that breaks this is refused. Cutting a target
+therefore means stating a price anyone can compare with the market, not quietly
+changing one number (decided 18 November 2026). Whoever writes the proposals
+file still restates it; a reader that wants more than this checks the stated
+price against the market itself.
 
 ## Fees
 
@@ -400,14 +441,44 @@ Each `record` is a commitment in the commitment format. `submitted` is when the
 repository first received it, which is the order oversubscription settles in.
 
 The repository's relay inbox keeps this file. It records what arrived and when;
-it refuses a commitment whose lock is not on the register, one posted outside
-the gathering window, a malformed one, a copy, more than five per lock, and one
-the lock's owner has not signed. It records a completed payment only if the
-owner and the co-signer have both signed it. (Anybody can post to the relays:
-without those two checks a stranger could use up a member's five places with
-junk, or post a fake completion ahead of the real one.) It judges nothing else
+it refuses a commitment whose lock is not on the register, one whose lock is
+dated by block height (on any real network), one whose lock
+opens before the proposal's settling ends, one that returns a remainder to
+anything but the remainder lock its record names (which must be the same
+owner's, co-signed by this Crowdlock, and open no earlier), one posted outside the gathering
+window, one it first sees more than an hour after the proposal closed (whatever
+time the record gives itself, which its poster chooses), a malformed one, a copy, a second for the same coin, more than five per
+lock, one whose co-signer's place is not empty, one whose input carries a script of
+its own (the owner's signature does not cover it, and the network never takes
+such a payment), one spending a coin that has
+not confirmed, and one the lock's owner has not signed. A copy is the same
+payment, however it is written: the same transaction id. It records a
+completed payment only if the owner and the co-signer have both signed it, and
+keeps and sends it in its standard encoding. (Anybody can post to the relays:
+without those checks a stranger could use up a member's five places with
+copies of their own commitment, or post a copy of a completion, written so the
+network will not take it, ahead of the real one.) It judges nothing else
 about a commitment: **every reader checks every commitment in full** before
 counting or completing it (`method/js/proposals.mjs`).
+
+**A refusal is of the record that was posted, and of nothing else.** The
+owner's signature covers the payment, not the lock terms and remainder lock
+written beside it, and not the time on the post. So the same payment can be
+posted again by anybody with those changed. Each such post is judged as its
+own record: one refused for what stands beside the payment, or for the time
+its poster gave it, does not stop the member's own record being taken. (Until
+17 November 2026 a refusal was remembered by the payment alone, so a
+stranger's altered copy, dated a second earlier, was refused and the member's
+own was then passed over on every pass; and a copy naming another remainder
+lock was taken in the real one's place, where every reader refused it.) What
+is kept is only the parts a commitment has (commitment format, "The record").
+
+**A reader looks at a commitment that is only on the relays** (posted, not yet
+in the repository's pile) only if it could be taken into the pile: its lock is
+a real lock on the register with the terms the record gives, and no more than
+twenty are looked at for one lock. The rest are strangers' and are not worth a
+question to a block explorer, which is how a flood of them used to stop a
+phone reading the pile at all.
 
 Two more keys appear as the co-signer acts:
 
@@ -417,8 +488,12 @@ Two more keys appear as the co-signer acts:
   leaves out the signatures, so a completion and its commitment share it) and
   it carries the owner's signature and the co-signer's. `sent` is when the
   repository broadcast it, or first found it already on the network.
-- `notice`: the co-signer's failure notice (below), once, if genuine. After it,
-  no completion is recorded.
+- `notice`: the co-signer's failure notice (below), once, if genuine, and only
+  once the proposal has closed: while it is gathering it cannot have failed. A
+  completion signed by both after a notice is still recorded, marked
+  `after_notice`, because it is evidence the co-signer went back on its word.
+  A reader shows a notice against a pile that reaches its target as
+  contradicted, not as a failure.
 
 Not on a server we run. A collection held by us could have an individual
 commitment quietly dropped from it with no way for anyone to prove it happened.
@@ -432,7 +507,8 @@ Anyone, with no permission and no account:
 1. Check the signature is valid for the lock it spends.
 2. Check the lock address re-derives from the owner key, co-signer key and
    locktime, exactly as the lock format specifies.
-3. Check the coin is **still unspent**. A supporter whose lock has lapsed may have
+3. Check the coin is **still unspent, and has confirmed**, and that the lock
+   stays shut until the proposal's settling ends. A supporter whose lock has lapsed may have
    taken it home, which voids their commitment.
 4. Check the destination matches the proposal, and that the proposal's destination
    is on the published list.
