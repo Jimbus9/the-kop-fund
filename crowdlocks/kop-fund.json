@@ -48,5 +48,12 @@
     "wss://relay.snort.social",
     "wss://nostr-pub.wellorder.net",
     "wss://relay.nostr.bg"
-  ]
+  ],
+  "home": {
+    "url": "https://thekopfund.org/crowdlocks/kop-fund.json",
+    "signatures": {
+      "03811ead45a2cf0870ba7c2d31b3ca20d2875e02b5dc91b8f3d4e55f9c86baf68b": "KKd1dBzfLhUk0EGNt1C38aqT51bTiEvOeSO/Bro+gZCjd2qz24hsv/EOGTIAyXAIQdfFcnTxVKPLHosMn5QJ4T4=",
+      "03f67aa138fa7e80b590f4fa941534a641aea1d73c6cd2cad26afcf84e4a015149": "Jz+7JnSiUi7j0zI+uqIOy6+M7O/h1bqxF1RthYADyM65blfzldBLm9FQNAPk8iqJCGbvsKf2yRlfWU+OpSn98ak="
+    }
+  }
 }
