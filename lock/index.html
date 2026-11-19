@@ -108,6 +108,13 @@
 
   <section id="plan" hidden>
     <h2><span class="num">3</span>Send it</h2>
+    <div class="warn red if-no-hid"><div>
+      <b>This device has no proved way home</b>
+      <p>On this phone or browser you can only lock by sending from another wallet, and nobody has yet shown another wallet can take a lock home. The proved ways home are the Crowdlock app, which is on Android only for now, and a Ledger on a computer.</p>
+      <p>If you have neither, don't lock from here yet.</p>
+      <button class="quiet" type="button" data-share>Carry on on a computer</button>
+      <p class="note" data-share-msg role="status" aria-live="polite"></p>
+    </div></div>
     <div class="warn yellow"><div>
       <b>Know the way home before you send</b>
       <p>Taking a lock home has been tested with a Ledger on this page and with the Crowdlock app. Sparrow, Electrum and other wallets can send to a lock, but nobody has yet shown they can sign to take it home. Use one only if you can do that yourself.</p>
@@ -128,7 +135,7 @@
         <p class="if-no-hid"><strong>This browser cannot reach a Ledger.</strong> It needs Chrome, Edge or Brave on a computer. Phones, Firefox and Safari cannot do it. Use the app or any wallet below, or come back on a computer.</p>
         <p class="note">Chrome, Edge or Brave on a computer, with your Ledger plugged in, unlocked and the <span id="ledgerAppName">Bitcoin</span> app open. Close Ledger Live first. The Ledger shows you the payment and you approve it on the device. This page never sees a key.</p>
         <p class="note">Once it is sent, this page publishes it to the register for you.</p>
-        <button id="ledgerConnect" type="button">Connect my Ledger</button>
+        <button id="ledgerConnect" class="if-hid" type="button">Connect my Ledger</button>
         <div class="verdict-live" id="ledgerStatus" role="status" aria-live="polite" hidden></div>
         <div id="ledgerLockRow" hidden>
           <div class="field">
@@ -153,14 +160,17 @@
 
       <details name="route">
         <summary>With the Crowdlock app</summary>
-        <p>If you have the Crowdlock app, lock there. It is a bitcoin wallet that knows about locks, and it can take them home too. The app is in early test builds.</p>
+        <p>If you have the Crowdlock app, lock there. It is a bitcoin wallet that knows about locks, and it can take them home too. The app is in early test builds, on Android only for now.</p>
       </details>
 
       <details name="route">
         <summary>From any wallet</summary>
         <p>Send to this address from a wallet you control.</p>
         <div class="address" id="address"></div>
+        <div class="qr" id="addressQr" role="img" aria-label="QR code of the lock address"></div>
         <button id="copyAddress" type="button">Copy the address</button>
+        <a class="quiet" id="payLink" href="#">Open it in my wallet app</a>
+        <p class="note">The QR code and the button carry the address only. Your wallet asks you how much to send.</p>
         <div class="warn yellow"><div>
           <b>Send only to this address</b>
           <p>It is for this length, made today. The date is rounded to midnight (UTC), so on another day the same choice gives a different address. That is fine, it is simply another lock, but send everything for one lock to the one address you were shown. Add a little extra for the network fee your wallet will charge.</p>
@@ -211,7 +221,7 @@
     <p>On the date, the key you signed the declaration with can move the bitcoin to any address you choose, with nobody else involved. You do it at <a href="../take-home/">step 6</a>. Know before you lock which ways home have been proved.</p>
     <p>Sending to a lock works from any wallet. Taking the bitcoin <em>out</em> needs your wallet to sign for an unusual kind of address, and that is where wallets differ.</p>
     <ul>
-      <li><strong>The Crowdlock app's own wallet:</strong> proved on a test network.</li>
+      <li><strong>The Crowdlock app's own wallet:</strong> proved on a test network. The app is on Android only for now.</li>
       <li><strong>A Ledger:</strong> proved on a test network, in the Crowdlock app by cable and Bluetooth, and on this page. One real-bitcoin lock has been made with a Ledger in the app. Nobody has taken a real-bitcoin lock home yet, because none has reached its date.</li>
       <li><strong>Sparrow, Electrum and others used directly:</strong> not tested. We do not know that they can sign for this kind of address, and will not say they can until it has been tried.</li>
     </ul>

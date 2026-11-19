@@ -2,7 +2,7 @@
 // register that belongs to its key, and send home any whose date has passed.
 // What it shares with the Lock page is in assets/lock-common.mjs.
 
-import { el } from "./shared.mjs";
+import { el, wireShare } from "./shared.mjs";
 import { loadPage, setBox, L, same, chainFor, txLink, showFee, chosenRate, connect } from "./lock-common.mjs";
 import { lockIsGenuine } from "../js/lockrecord.mjs";
 
@@ -78,3 +78,5 @@ el("homeConnect").addEventListener("click", async () => {
 });
 
 load();
+
+wireShare();

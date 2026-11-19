@@ -5,7 +5,8 @@
 
 import { planLock } from "../js/lockplan.mjs";
 import { recordEventTemplate } from "../js/inbox.mjs";
-import { el, copyTo, postToRelays } from "./shared.mjs";
+import { el, copyTo, postToRelays, wireShare, drawQr } from "./shared.mjs";
+import qrcode from "../js/vendor/qrcode-generator-2.0.4.mjs";
 import { loadPage, setBox, L, same, chainFor, txLink, showFee, chosenRate, connect } from "./lock-common.mjs";
 
 let C = null;          // the Crowdlock file
@@ -63,6 +64,8 @@ function update() {
     + `${lengthLabel(YEARS)}, opening on ${r.unlocks}.`);
 
   el("address").textContent = r.address;
+  drawQr(el("addressQr"), r.address, qrcode);
+  el("payLink").href = `bitcoin:${r.address}`;
   const min = r.minimumSats;
   el("amountNote").textContent =
     `This Crowdlock counts a lock of ${min.toLocaleString("en-GB")} sats (${(min / 1e8).toFixed(8)} BTC) or more. `
@@ -82,6 +85,7 @@ function update() {
 }
 
 el("member").addEventListener("input", update);
+wireShare();
 el("copyAddress").addEventListener("click", (e) => PLAN && copyTo(e.target, PLAN.address, "Copied"));
 el("copyTerms").addEventListener("click", (e) => copyTo(e.target, el("terms").textContent, "Copied"));
 
