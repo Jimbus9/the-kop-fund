@@ -160,8 +160,7 @@ a hardware wallet work just as well), at the
 first address of a standard native segwit wallet, `m/84'/0'/0'/0/0`. Nothing
 about it belongs to any one program, so make it whichever way you trust:
 
-- **The Crowdlock app**, under *Make a co-signer key*, with the phone in
-  airplane mode.
+- **The Crowdlock app**, under *Make a co-signer key*.
 - **`method/cosigner/generate.mjs`** in this repository, on a computer that is
   offline.
 - **Sparrow or Electrum**: make a new native segwit wallet, write down its
