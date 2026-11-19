@@ -59,3 +59,56 @@ export async function copyTo(btn, text, done) {
   btn.textContent = done;
   setTimeout(() => { btn.textContent = was; }, 1600);
 }
+
+/**
+ * "Carry on on a computer": every [data-share] button sends this page to
+ * another device through the phone's share sheet, or copies its link where
+ * there is no share sheet. The link is the page and its ?c= Crowdlock name,
+ * nothing else: no address, amount or anything typed in, because people send
+ * links to themselves through messaging apps.
+ */
+export function wireShare() {
+  const c = new URLSearchParams(location.search).get("c");
+  const url = location.origin + location.pathname + (c && /^[a-z0-9-]+$/.test(c) ? `?c=${c}` : "");
+  for (const btn of document.querySelectorAll("[data-share]")) {
+    const msg = btn.parentElement.querySelector("[data-share-msg]");
+    btn.addEventListener("click", async () => {
+      if (navigator.share) {
+        try { await navigator.share({ title: document.title, url }); return; }
+        catch (e) { if (e?.name === "AbortError") return; }
+      }
+      try {
+        await navigator.clipboard.writeText(url);
+        if (msg) msg.textContent = "Link copied. Send it to yourself and open it on a computer.";
+      } catch {
+        if (msg) msg.textContent = `Open this on a computer: ${url}`;
+      }
+    });
+  }
+}
+
+/**
+ * Draws a QR code of `text` into `box` as an SVG, made on this page by the
+ * vendored qrcode-generator (no outside service). Dark squares on white with
+ * the four-square quiet zone scanners need.
+ */
+export function drawQr(box, text, qrcode) {
+  const qr = qrcode(0, "M");
+  qr.addData(text);
+  qr.make();
+  const n = qr.getModuleCount(), q = 4, size = n + 2 * q;
+  let d = "";
+  for (let r = 0; r < n; r++) for (let col = 0; col < n; col++) {
+    if (qr.isDark(r, col)) d += `M${col + q} ${r + q}h1v1h-1z`;
+  }
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${size} ${size}`);
+  svg.setAttribute("shape-rendering", "crispEdges");
+  const bg = document.createElementNS(NS, "rect");
+  bg.setAttribute("width", size); bg.setAttribute("height", size); bg.setAttribute("fill", "#fff");
+  const path = document.createElementNS(NS, "path");
+  path.setAttribute("d", d); path.setAttribute("fill", "#000");
+  svg.append(bg, path);
+  box.replaceChildren(svg);
+}

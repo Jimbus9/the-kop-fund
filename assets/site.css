@@ -312,6 +312,9 @@ footer a { color: var(--ink); }
 .if-no-hid { display: none; }
 .no-hid .if-no-hid { display: block; }
 .no-hid .if-hid { display: none; }
+.no-hid .warn.if-no-hid { display: grid; }
+.qr { width: 220px; max-width: 70%; margin-top: 14px; padding: 0; background: #fff; border-radius: 8px; }
+.qr svg { display: block; width: 100%; height: auto; }
 
 /* A new version of the declaration: what changed, paragraph by paragraph.
    Words carry the meaning ("Taken out", "Added"); the edge colour only repeats it. */

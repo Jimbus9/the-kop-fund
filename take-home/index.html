@@ -81,7 +81,12 @@
       <b>Only locks on the register show here</b>
       <p>A lock that was never published will not appear in this list. The date is judged by the bitcoin network's own clock, which runs about an hour behind real time on real bitcoin.</p>
     </div></div>
-    <p class="if-no-hid"><strong>This browser cannot reach a Ledger.</strong> It needs Chrome, Edge or Brave on a computer. Use the Crowdlock app, or come back on a computer.</p>
+    <div class="warn yellow if-no-hid"><div>
+      <b>This browser cannot reach a Ledger</b>
+      <p>It needs Chrome, Edge or Brave on a computer. Phones, Firefox and Safari cannot do it. Take your lock home on a computer with your Ledger, or in the Crowdlock app, which is on Android only for now.</p>
+      <button class="quiet" type="button" data-share>Carry on on a computer</button>
+      <p class="note" data-share-msg role="status" aria-live="polite"></p>
+    </div></div>
     <p class="note" id="homeFeeLine"></p>
     <details class="last">
       <summary>Change the fee</summary>
@@ -91,7 +96,7 @@
       </div>
       <p class="note" id="homeFeeHelp"></p>
     </details>
-    <button id="homeConnect" type="button">Connect my Ledger</button>
+    <button id="homeConnect" class="if-hid" type="button">Connect my Ledger</button>
     <div class="verdict-live" id="homeStatus" role="status" aria-live="polite" hidden></div>
     <div id="homeLocks"></div>
     <p class="note">If a message here mentions an xpub: that is a public key a Ledger needs to see before it will sign. It is not secret.</p>
@@ -102,7 +107,7 @@
     <div class="stack">
       <div class="card">
         <b class="head">The Crowdlock app</b>
-        <p>If you locked in the app, take it home in the app. It keeps its own list of your locks and shows the ones that are ready.</p>
+        <p>If you locked in the app, take it home in the app. It keeps its own list of your locks and shows the ones that are ready. The app is on Android only for now.</p>
       </div>
       <div class="card">
         <b class="head">Other wallets</b>
