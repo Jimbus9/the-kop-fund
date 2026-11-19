@@ -19,10 +19,12 @@
   ],
   "minimum_counted_lock_sats": 200000,
   "cosigner_keys": [
-    "03811ead45a2cf0870ba7c2d31b3ca20d2875e02b5dc91b8f3d4e55f9c86baf68b"
+    "03811ead45a2cf0870ba7c2d31b3ca20d2875e02b5dc91b8f3d4e55f9c86baf68b",
+    "03f67aa138fa7e80b590f4fa941534a641aea1d73c6cd2cad26afcf84e4a015149"
   ],
   "cosigner_xpubs": [
-    "xpub6CntvpexEbhzNCZPTqfRUNkNZDG5FjuWNopshKmXEkm6RHxvL43u2B6ZADmvEs4UUJWnG3YehtuKXNLsvEnuxYETGd6q5XqwqNEo8pFv7yn"
+    "xpub6CntvpexEbhzNCZPTqfRUNkNZDG5FjuWNopshKmXEkm6RHxvL43u2B6ZADmvEs4UUJWnG3YehtuKXNLsvEnuxYETGd6q5XqwqNEo8pFv7yn",
+    "xpub6CCRwvuC7phuMhbwPgxHLX4rBDNPhgT2RYzPHd4dz47hpVM6WjQSmPBBqkADwK8WLzFcxjASMduPYzdPmcpxMLUgP4T6sbf8fpd9rwVMys3"
   ],
   "gathering_window_max_days": 28,
   "settlement_window_max_days": 14,
