@@ -85,6 +85,10 @@
     <div id="locks"></div>
     <label for="amount" hidden id="amountLabel">Amount in BTC. Leave it empty to commit all of this lock.</label>
     <input id="amount" type="text" inputmode="decimal" autocomplete="off" hidden>
+    <div class="warn yellow" id="reserveWarn" hidden><div>
+      <b>Its target is already met</b>
+      <p>The commitments already made add up to this proposal's target, so yours would go into its reserve. A reserve commitment is completed only if one made before it fails, which most likely won't happen. Until your lock opens it is still a signed payment the co-signer could complete. Commit only if you want to back this purchase in case one of the others fails.</p>
+    </div></div>
     <div class="verdict-live" id="binding" hidden>
       <b>Before you sign</b>
       <p>A commitment holds until the proposal closes, and can't be withdrawn. Nothing moves unless the proposal reaches its target and the co-signer completes it. If it doesn't, your money stays locked and comes home on its date. One catch: until your lock opens, your signed commitment stays valid, even after the proposal closes or fails, so a dishonest co-signer could still complete it, but only to that same listed seller and only for the amount you signed. <a href="../risk/">The risks page</a> explains. Your Ledger will show the payment to the seller: approve it only if the address matches the one above.</p>
@@ -202,7 +206,7 @@ async function readPile(p) {
     fetchPile: () => fetch(`${BASE}${pilePath(C.register.proposals, p.hash)}`, { cache: "no-store" }),
     relayItems: () => relayItems(p.hash),
     check: (record) => L.checkCommitment({ record, crowdlock: C, proposal: p, destinations: DESTINATIONS, chain, network: C.network }),
-    payment: (record) => L.commitmentPayment({ record, chain, crowdlock: C }),
+    payment: (record) => L.commitmentPayment({ record, chain, crowdlock: C, proposal: p, network: C.network }),
     txidOf: (record) => L.commitmentTxid(record),
   });
   return { waiting: x.sats, paid: x.paid, sent: x.sent, count: x.count, notice: x.notice, contradicted: !!x.noticeContradicted, uncertain: x.uncertain, unreadable: x.unreadable };
@@ -231,8 +235,11 @@ function renderList() {
     card.append(dates);
     box.append(card);
     readPile(p).then((x) => {
-      const funded = x.paid >= p.target.sats;
-      if (funded) status.textContent = `Funded and paid · ${btc(x.paid)} sent to the seller · closed`;
+      p._pile = x;
+      // Paid, or sent and waiting for a block: either way nothing more is needed.
+      const funded = x.paid + x.sent >= p.target.sats;
+      if (funded && x.sent) status.textContent = `Funded · ${btc(x.paid + x.sent)} sent to the seller, ${btc(x.sent)} of it waiting for a block`;
+      else if (funded) status.textContent = `Funded and paid · ${btc(x.paid)} sent to the seller · closed`;
       else if (x.notice && x.paid + x.sent > 0) status.textContent = `Declared dead by the co-signer, yet ${btc(x.paid + x.sent)} of its commitments has been sent to the seller. The co-signer said it would complete none of them: this breaks that notice.`;
       else if (x.notice) status.textContent = x.contradicted
         ? "Declared dead by the co-signer, although the commitments checked here add up to its target. The co-signer has said it will complete none of them."
@@ -240,7 +247,8 @@ function renderList() {
       else if (x.unreadable || x.uncertain) status.textContent = `${PHASE[phaseOf(p)]} · needs ${money(p.requires, p.currency)} · can't be added up just now: ${x.unreadable ?? `whether ${x.uncertain} payment${x.uncertain === 1 ? " has" : "s have"} gone couldn't be checked`}. Try again in a few minutes.`;
       else status.textContent = `${PHASE[phaseOf(p)]} · needs ${money(p.requires, p.currency)} · committed ${btc(x.waiting + x.paid + x.sent)} of ${btc(p.target.sats)} (${x.count} waiting${x.sent ? `, ${btc(x.sent)} sent and waiting for a block` : ""}${x.paid ? `, ${btc(x.paid)} paid` : ""})`;
       if (!funded && !x.notice && phaseOf(p) === "gathering") {
-        const b = document.createElement("button"); b.type = "button"; b.className = "go"; b.textContent = "Commit to this";
+        const full = x.waiting + x.paid + x.sent >= p.target.sats;
+        const b = document.createElement("button"); b.type = "button"; b.className = "go"; b.textContent = full ? "Commit as a reserve" : "Commit to this";
         b.addEventListener("click", () => choose(p));
         card.append(b);
       }
@@ -252,6 +260,8 @@ function choose(p) {
   CHOSEN = p;
   el("commitBox").hidden = false;
   el("commitTitle").textContent = `Commit to "${p.title}"`;
+  const x = p._pile;
+  el("reserveWarn").hidden = !(x && x.waiting + x.paid + x.sent >= p.target.sats);
   el("result").textContent = "";
   if (ACCOUNT) showLocks();
   el("commitBox").scrollIntoView({ behavior: "smooth" });

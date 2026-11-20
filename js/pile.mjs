@@ -79,12 +79,12 @@ export async function readPile({ crowdlock, register, destinations, proposal: p,
       pile.refused.push("a commitment that is only on the relays couldn't be checked just now"); continue;
     }
     if (!v.valid) {
-      // A commitment whose coin is gone may be one the co-signer completed:
-      // then it was paid, not refused. So may one whose destination has since
-      // been taken off the list: taking it off stops new payments, and
-      // can't unmake one already made. (The check reads the destination only
-      // after the payment is seen to name this proposal.)
-      if (/already been spent|destination not permitted/.test(v.reason)) {
+      // One that doesn't count now may still be one the co-signer completed
+      // and sent: then it was paid, not refused, whatever is refused it now.
+      // A destination revoked since, or a rule brought in since, can't unmake
+      // a payment already made. `payment` reads it from the payment itself:
+      // it must name this proposal and pay its destination.
+      {
         const id = txidOf(it.record);
         if (id && paidIds.has(id)) continue;
         const pay = await payment(it.record);

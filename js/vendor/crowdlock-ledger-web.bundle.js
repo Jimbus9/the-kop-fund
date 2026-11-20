@@ -67375,7 +67375,13 @@ ${ge(n19)}`;
     const p36 = await commitmentPayment({ record, chain });
     return p36?.confirmed ? p36.sats : 0;
   }
-  async function commitmentPayment({ record, chain, crowdlock = null }) {
+  async function commitmentPayment({ record, chain, crowdlock = null, proposal = (
+    /** @type {any} */
+    null
+  ), network = (
+    /** @type {any} */
+    null
+  ) }) {
     let tx;
     try {
       tx = Transaction.fromHex(record.tx);
@@ -67383,6 +67389,20 @@ ${ge(n19)}`;
       return null;
     }
     if (tx.ins.length !== 1) return null;
+    if (proposal) {
+      const marker = tx.outs[tx.outs.length - 1];
+      if (tx.outs.length < 2 || toHex7(marker.script) !== toHex7(proposalMarker(proposal.hash)) || BigInt(marker.value) !== 0n) return null;
+      const nets = network ? [typeof network === "string" ? NETWORKS[network].network : network.network ?? network] : Object.values(NETWORKS).map((n19) => n19.network);
+      const pays = nets.some((n19) => {
+        try {
+          return toHex7(address_exports.toOutputScript(canonicalAddress(proposal.destination), n19)) === toHex7(tx.outs[0].script);
+        } catch {
+          return false;
+        }
+      });
+      if (!pays) return null;
+      if (crowdlock && !isCosignerOf(crowdlock, record.lock?.cosigner_pubkey)) return null;
+    }
     const unknown2 = (e29) => ({ unknown: true, reason: String(e29?.message ?? e29) });
     let spent;
     try {
